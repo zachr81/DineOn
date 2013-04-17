@@ -13,7 +13,7 @@
   <widgets xsi:type="model:Button" id="3" x="272" y="155" text="Check Me In" measuredWidth="92" measuredHeight="25">
     <font/>
   </widgets>
-  <widgets xsi:type="model:TabbedPane" id="4" x="47" y="190" width="360" height="526" text="Menu,Make Reservation,Info" measuredWidth="360" measuredHeight="526" selection="2">
+  <widgets xsi:type="model:TabbedPane" id="4" x="47" y="190" width="360" height="526" text="Menu,Make Reservation,Info" measuredWidth="360" measuredHeight="526" selection="1">
     <items x="10" y="0" width="52" height="27" text="Menu"/>
     <items x="62" y="0" width="123" height="27" text="Make Reservation"/>
     <items x="185" y="0" width="43" height="27" text="Info"/>
@@ -32,7 +32,7 @@
   </widgets>
   <widgets xsi:type="model:Icon" id="7" x="280" y="341" measuredWidth="32" measuredHeight="32" icon="usergroup (large)"/>
   <widgets xsi:type="model:DateField" id="8" x="92" y="345" width="149" text="  /  /  " measuredWidth="149" measuredHeight="23"/>
-  <widgets xsi:type="model:Master" id="9" x="128" y="456" measuredWidth="201" measuredHeight="39">
+  <widgets xsi:type="model:Master" id="9" x="128" y="456" measuredWidth="184" measuredHeight="39">
     <screen xsi:type="model:WidgetGroup" href="assets/Android4/Android4.screen#Button"/>
     <overrides>
       <widgets ref="497" text="Check for Reservation"/>
