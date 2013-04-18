@@ -10,7 +10,7 @@
       <widgets ref="669" text="DineOn"/>
     </overrides>
   </widgets>
-  <widgets xsi:type="model:Button" id="3" x="272" y="155" text="Check Me In" measuredWidth="92" measuredHeight="25">
+  <widgets xsi:type="model:Button" id="3" x="264" y="155" text="Check Me In" measuredWidth="92" measuredHeight="25">
     <font/>
   </widgets>
   <widgets xsi:type="model:Master" id="5" x="61" y="334" measuredWidth="156" measuredHeight="31">
