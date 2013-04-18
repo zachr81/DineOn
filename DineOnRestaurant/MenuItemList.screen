@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model:Screen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:model="http://wireframesketcher.com/1.0/model.ecore" xmlns:o="http://wireframesketcher.com/1.0/model/overrides">
+  <widgets xsi:type="model:Master" id="1" x="37" y="135" measuredWidth="360" measuredHeight="46">
+    <screen xsi:type="model:WidgetGroup" href="../DIneOn/assets/Android4/Android4.screen#Action%20Bar"/>
+    <overrides>
+      <widgetChanges xsi:type="o:Delete" ref="672"/>
+      <widgets ref="669" text="DineOn"/>
+    </overrides>
+  </widgets>
+  <widgets xsi:type="model:Master" id="2" measuredWidth="430" measuredHeight="844">
+    <screen xsi:type="model:WidgetGroup" href="../DIneOn/assets/Android4/Android4.screen#Phone"/>
+  </widgets>
+  <widgets xsi:type="model:TabbedPane" id="3" x="37" y="180" width="360" height="526" text="Info,Menu Items" measuredWidth="360" measuredHeight="526" selection="1">
+    <items x="10" y="0" width="43" height="27" text="Info"/>
+    <items x="53" y="0" width="88" height="27" text="Menu Items"/>
+    <font/>
+  </widgets>
+  <widgets xsi:type="model:Master" id="10" x="38" y="207" width="359" height="499" measuredWidth="359" measuredHeight="499">
+    <screen xsi:type="model:WidgetGroup" href="assets/Android4/Android4.screen#Menu%20with%20Icons"/>
+    <overrides>
+      <widgets ref="531" width="359" height="499" text="{image} Item 1&#xA;{image} Item 2&#xA;{image} Item 3&#xA;{image} Item 4">
+        <items ref="@items.0" text="{image} Item 1"/>
+        <items ref="@items.1" text="{image} Item 2"/>
+        <items ref="@items.2" text="{image} Item 3"/>
+        <items ref="@items.3" text="{image} Item 4"/>
+      </widgets>
+    </overrides>
+  </widgets>
+  <widgets xsi:type="model:Icon" id="11" x="349" y="217" measuredWidth="32" measuredHeight="32" icon="assets/1-navigation-next-item (large)"/>
+  <widgets xsi:type="model:Icon" id="12" x="357" y="264" measuredWidth="32" measuredHeight="32" icon="assets/1-navigation-next-item (large)"/>
+  <widgets xsi:type="model:Icon" id="13" x="357" y="312" measuredWidth="32" measuredHeight="32" icon="assets/1-navigation-next-item (large)"/>
+  <widgets xsi:type="model:Icon" id="14" x="357" y="368" measuredWidth="32" measuredHeight="32" icon="assets/1-navigation-next-item (large)"/>
+  <hRuler/>
+  <vRuler/>
+  <font size="12px"/>
+</model:Screen>
