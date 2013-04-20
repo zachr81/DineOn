@@ -9,7 +9,7 @@ import com.parse.ParseUser;
 
 import android.app.Application;
 
-public class ParseApplication extends Application {
+public class DineOnRestaurantApplication extends Application {
 
 	@Override
 	public void onCreate() {
