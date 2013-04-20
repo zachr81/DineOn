@@ -6,7 +6,7 @@ import android.os.Bundle;
 import com.parse.ParseAnalytics;
 import com.parse.starter.R;
 
-public class ParseStarterProjectActivity extends Activity {
+public class UserLoginActivity extends Activity {
 	/** Called when the activity is first created. */
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
