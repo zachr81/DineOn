@@ -1,6 +1,6 @@
 package uw.cse.dineon.user;
 
-import uw.cse.dineon.shared.DineOnConstants;
+import uw.cse.dineon.library.DineOnConstants;
 
 import com.parse.Parse;
 import com.parse.ParseACL;

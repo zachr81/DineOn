@@ -1,4 +1,4 @@
-package uw.cse.dineon.shared;
+package uw.cse.dineon.library;
 
 /**
  * Generalized wrapper class to hold constants that pertain to multiple modules with the applications

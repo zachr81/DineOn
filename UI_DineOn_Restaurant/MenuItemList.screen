@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <model:Screen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:model="http://wireframesketcher.com/1.0/model.ecore" xmlns:o="http://wireframesketcher.com/1.0/model/overrides">
   <widgets xsi:type="model:Master" id="1" x="37" y="135" measuredWidth="360" measuredHeight="46">
-    <screen xsi:type="model:WidgetGroup" href="../UI_DineOn_User/assets/Android4/Android4.screen#Action%20Bar"/>
+    <screen xsi:type="model:WidgetGroup" href="../UI_DineOn_User_test/assets/Android4/Android4.screen#Action%20Bar"/>
     <overrides>
       <widgetChanges xsi:type="o:Delete" ref="672"/>
       <widgets ref="669" text="DineOn"/>
     </overrides>
   </widgets>
   <widgets xsi:type="model:Master" id="2" measuredWidth="430" measuredHeight="844">
-    <screen xsi:type="model:WidgetGroup" href="../UI_DineOn_User/assets/Android4/Android4.screen#Phone"/>
+    <screen xsi:type="model:WidgetGroup" href="../UI_DineOn_User_test/assets/Android4/Android4.screen#Phone"/>
   </widgets>
   <widgets xsi:type="model:TabbedPane" id="3" x="37" y="180" width="360" height="526" text="Info,Menu Items" measuredWidth="360" measuredHeight="526" selection="1">
     <items x="10" y="0" width="43" height="27" text="Info"/>
