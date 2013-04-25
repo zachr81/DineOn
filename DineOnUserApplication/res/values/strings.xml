@@ -3,4 +3,14 @@
     <string name="hello">Hello World, ParseStarterProjectActivity!</string>
     <string name="app_name">DineOn</string>
     <string name="OrderListTitle">Customer Orders</string>
+    <string name="button_login">Log In</string>
+    <string name="button_facebook">Facebook</string>
+    <string name="button_twitter">Twitter</string>
+    <string name="create_new_account">Create New Account</string>
+    <string name="hint_email_address">Email Address</string>
+    <string name="password_label">Password</string>
+    <string name="password_repeat_label">Repeat Password</string>
+    <string name="create_account">Create Account</string>
+    <string name="or">Or</string>
+    <string name="login_label">Log in to DineOn</string>
 </resources>

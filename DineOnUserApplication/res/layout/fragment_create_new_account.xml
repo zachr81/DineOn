@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <TextView
+        android:id="@+id/label_create_new_account"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:text="@string/create_new_account"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+
+    <EditText
+        android:id="@+id/input_createnewaccount_email"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/label_create_new_account"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="16dp"
+        android:ems="10"
+        android:hint="@string/hint_email_address"
+        android:inputType="textEmailAddress" />
+
+    <EditText
+        android:id="@+id/input_createnewaccount_password"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/input_createnewaccount_email"
+        android:layout_below="@+id/input_createnewaccount_email"
+        android:ems="10"
+        android:hint="@string/password_label"
+        android:inputType="textPassword" />
+
+    <EditText
+        android:id="@+id/input_createnewaccount_repeat_password"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/input_createnewaccount_email"
+        android:layout_below="@+id/input_createnewaccount_password"
+        android:ems="10"
+        android:hint="@string/password_repeat_label"
+        android:inputType="textPassword" >
+
+        <requestFocus />
+    </EditText>
+
+    <Button
+        android:id="@+id/button_create_account"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/input_createnewaccount_repeat_password"
+        android:layout_alignRight="@+id/input_createnewaccount_repeat_password"
+        android:layout_below="@+id/input_createnewaccount_repeat_password"
+        android:text="@string/create_account" />
+
+    <TextView
+        android:id="@+id/label_or1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/button_create_account"
+        android:layout_centerHorizontal="true"
+        android:text="@string/or"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <Button
+        android:id="@+id/button_createnewaccount_facebook"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/button_create_account"
+        android:layout_alignRight="@+id/button_create_account"
+        android:layout_below="@+id/label_or1"
+        android:text="@string/button_facebook" />
+
+    <TextView
+        android:id="@+id/label_or2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/label_or1"
+        android:layout_below="@+id/button_createnewaccount_facebook"
+        android:text="@string/or"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <Button
+        android:id="@+id/button_createnewaccount_twitter"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/button_createnewaccount_facebook"
+        android:layout_alignRight="@+id/button_createnewaccount_facebook"
+        android:layout_below="@+id/label_or2"
+        android:text="@string/button_twitter" />
+
+</RelativeLayout>

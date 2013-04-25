@@ -18,6 +18,11 @@ public class DineOnUserApplication extends Application {
 		// Add your initialization code here
 		Parse.initialize(this, DineOnConstants.APPLICATION_ID, DineOnConstants.CLIENT_KEY);
 
+		// TODO Initialize Twitter
+		// https://www.parse.com/docs/android_guide#twitterusers-setup
+		
+		// TODO Initialize Facebook
+		// https://www.parse.com/docs/android_guide#fbusers-setup		
 
 		ParseUser.enableAutomaticUser();
 		ParseACL defaultACL = new ParseACL();
