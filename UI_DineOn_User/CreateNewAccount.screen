@@ -22,7 +22,7 @@
   <widgets xsi:type="model:TextField" id="7" x="144" y="320" width="176" text="Password Again" measuredWidth="176" measuredHeight="23">
     <font/>
   </widgets>
-  <widgets xsi:type="model:Button" id="8" x="144" y="368" width="176" text="Create Account" measuredWidth="176" measuredHeight="25">
+  <widgets xsi:type="model:Button" id="8" x="144" y="368" width="176" text="Create Account" measuredWidth="176" measuredHeight="25" link="RestaurantSelection.screen">
     <font/>
   </widgets>
   <widgets xsi:type="model:Label" id="9" x="223" y="416" text="OR" measuredWidth="22" measuredHeight="23" textAlignment="Center">

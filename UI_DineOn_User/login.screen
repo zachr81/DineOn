@@ -16,7 +16,7 @@
   <widgets xsi:type="model:TextField" id="6" x="136" y="238" width="176" text="Password" measuredWidth="176" measuredHeight="23">
     <font/>
   </widgets>
-  <widgets xsi:type="model:Button" id="7" x="195" y="270" text="Log In" measuredWidth="56" measuredHeight="25">
+  <widgets xsi:type="model:Button" id="7" x="195" y="270" text="Log In" measuredWidth="56" measuredHeight="25" link="RestaurantSelection.screen">
     <font/>
   </widgets>
   <widgets xsi:type="model:Label" id="9" x="215" y="310" text="OR" measuredWidth="22" measuredHeight="23" textAlignment="Center">
@@ -35,7 +35,7 @@
   <widgets xsi:type="model:Button" id="14" x="216" y="614" width="179" height="92" text="Forgot Password" measuredWidth="179" measuredHeight="92">
     <font/>
   </widgets>
-  <widgets xsi:type="model:Button" id="15" x="37" y="614" width="179" height="92" text="Create new Account" measuredWidth="179" measuredHeight="92">
+  <widgets xsi:type="model:Button" id="15" x="37" y="614" width="179" height="92" text="Create new Account" measuredWidth="179" measuredHeight="92" link="CreateNewAccount.screen">
     <font/>
   </widgets>
   <widgets xsi:type="model:Label" id="17" x="193" y="533" text="HuskySoft" measuredWidth="62" measuredHeight="58" textAlignment="Center" icon="image (large)" iconPosition="top">

@@ -10,12 +10,12 @@
       <widgets ref="669" text="DineOn"/>
     </overrides>
   </widgets>
-  <widgets xsi:type="model:Button" id="3" x="272" y="155" text="Check Me In" measuredWidth="92" measuredHeight="25">
+  <widgets xsi:type="model:Button" id="3" x="272" y="155" text="Check Me In" measuredWidth="92" measuredHeight="25" link="CheckIn.screen">
     <font/>
   </widgets>
   <widgets xsi:type="model:TabbedPane" id="4" x="47" y="190" width="360" height="526" text="Menu,Make Reservation,Info" measuredWidth="360" measuredHeight="526" selection="2">
-    <items x="10" y="0" width="52" height="27" text="Menu"/>
-    <items x="62" y="0" width="123" height="27" text="Make Reservation"/>
+    <items link="RestaurantMenu.screen" x="10" y="0" width="52" height="27" text="Menu"/>
+    <items link="Reservation.screen" x="62" y="0" width="123" height="27" text="Make Reservation"/>
     <items x="185" y="0" width="43" height="27" text="Info"/>
     <font/>
   </widgets>

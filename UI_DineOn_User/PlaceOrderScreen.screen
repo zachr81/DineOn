@@ -10,9 +10,6 @@
       <widgets ref="669" text="DineOn"/>
     </overrides>
   </widgets>
-  <widgets xsi:type="model:Button" id="3" x="272" y="155" text="Check Me In" measuredWidth="92" measuredHeight="25">
-    <font/>
-  </widgets>
   <widgets xsi:type="model:Master" id="5" x="47" y="190" measuredWidth="360" measuredHeight="173">
     <screen xsi:type="model:WidgetGroup" href="assets/Android4/Android4.screen#List%201%20Line"/>
     <overrides>
@@ -42,7 +39,7 @@
       <widgets ref="5" text="Total"/>
     </overrides>
   </widgets>
-  <widgets xsi:type="model:Master" id="15" x="47" y="677" width="360" measuredWidth="360" measuredHeight="39">
+  <widgets xsi:type="model:Master" id="15" x="47" y="677" width="360" measuredWidth="360" measuredHeight="39" link="PaymentScreen.screen">
     <screen xsi:type="model:WidgetGroup" href="assets/Android4/Android4.screen#Button"/>
     <overrides>
       <widgets ref="497" width="360" text="Place Order"/>

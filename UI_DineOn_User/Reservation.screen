@@ -14,9 +14,9 @@
     <font/>
   </widgets>
   <widgets xsi:type="model:TabbedPane" id="4" x="47" y="190" width="360" height="526" text="Menu,Make Reservation,Info" measuredWidth="360" measuredHeight="526" selection="1">
-    <items x="10" y="0" width="52" height="27" text="Menu"/>
+    <items link="RestaurantMenu.screen" x="10" y="0" width="52" height="27" text="Menu"/>
     <items x="62" y="0" width="123" height="27" text="Make Reservation"/>
-    <items x="185" y="0" width="43" height="27" text="Info"/>
+    <items link="RestaurantInfo.screen" x="185" y="0" width="43" height="27" text="Info"/>
     <font/>
   </widgets>
   <widgets xsi:type="model:Master" id="5" x="47" y="217" measuredWidth="361" measuredHeight="30">
