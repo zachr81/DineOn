@@ -5,8 +5,8 @@
     android:orientation="vertical" >
 
     <fragment
-        android:id="@+id/fragment1"
-        android:name="uw.cse.dineon.user.restaurant.home.RestaurantHomeMainFragment"
+        android:id="@+id/check_in_fragment"
+        android:name="uw.cse.dineon.user.checkin.CheckInFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 

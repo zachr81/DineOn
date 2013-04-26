@@ -1,10 +1,16 @@
 package uw.cse.dineon.user.restaurant.home;
 
+import uw.cse.dineon.library.DineOnConstants;
 import uw.cse.dineon.user.R;
+import uw.cse.dineon.user.checkin.CheckInActivity;
 import uw.cse.dineon.user.restaurantselection.RestaurantInfoFragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 
 /**
  * TODO
@@ -16,32 +22,90 @@ implements SubMenuFragment.MenuItemListListener,
 RestaurantInfoFragment.RestaurantInfoListener,
 RestaurantHomeMainFragment.ReferenceDataListener
 {
-	
-	private final String TAG = this.getClass().getSimpleName();
-	
-	public final static String EXTRA_RESTAURANT = "restaurant"; 
 
-	private String /*Change to restaurant datatype*/ mRestaurant;
+	private final String TAG = this.getClass().getSimpleName();
+
+	public final static String EXTRA_RESTAURANT = "restaurant"; 
 	
+	private String /*Change to restaurant datatype*/ mRestaurant;
+
+	//////////////////////////////////////////////////////////////////////
+	////  Android specific 
+	//////////////////////////////////////////////////////////////////////
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		
+
 		// Attempt to get the restaurant name
 		Bundle extras = getIntent().getExtras();
 		if (extras != null) {
 			mRestaurant = extras.getString(EXTRA_RESTAURANT);
 		}
-		
+
 		setContentView(R.layout.activity_restaurant_home);
-		
+
 		// TODO FIX: Extract the value of the restaurant
 		// Pull out all its menus and information
-		
+
 		// Then Replace fragments as appropiately
 	}
 
-	// This activity has the capabilties of handling this
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		MenuInflater inflater = getMenuInflater();
+		inflater.inflate(R.menu.restaurant_home_menu, menu);
+		return true;
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case R.id.option_view_order:
+			
+			break;
+		case R.id.option_check_in:
+			// Start an activity for result
+			// Attempt to check in at a special
+			Intent i = new Intent(getApplicationContext(), CheckInActivity.class);
+			startActivityForResult(i, DineOnConstants.REQUEST_CHECK_IN);
+			break;
+		case R.id.option_profile:
+
+			break;
+		case R.id.option_settings:
+
+			break;
+		case R.id.option_filter:
+
+			break;
+		default:
+			// Dunno what happened here
+			break;
+		}
+		return true;
+	}
+	
+	@Override
+	protected void onActivityResult (int requestCode, int resultCode, Intent data){
+		super.onActivityResult(requestCode, resultCode, data);
+		
+		if (resultCode != RESULT_OK) {
+			// TODO REmove Log for release
+			Log.w(TAG, "Check in Failed or Cancelled");
+			return;
+		}
+		
+		if (requestCode == DineOnConstants.REQUEST_CHECK_IN) {
+			// Register this user with this restaurant
+		}
+		
+	}
+
+	//////////////////////////////////////////////////////////////////////
+	////   Call backs for Fragment methods
+	//////////////////////////////////////////////////////////////////////
+
 
 	@Override
 	public void onMakeReservation(String reservation) {
@@ -65,7 +129,7 @@ RestaurantHomeMainFragment.ReferenceDataListener
 			startActivity(i);
 		}
 	}
-	
+
 	@Override
 	public void onRestaurantInfoRequested() {
 		// TODO Auto-generated method stub
@@ -97,7 +161,7 @@ RestaurantHomeMainFragment.ReferenceDataListener
 		return mRestaurant;
 	}
 
-	
+
 
 
 }
