@@ -1,12 +1,14 @@
 package uw.cse.dineon.user.restaurantselection;
 
 import uw.cse.dineon.user.R;
-import android.app.Activity;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 
-public class RestaurantInfoActivity extends Activity{
+public class RestaurantInfoActivity extends FragmentActivity implements
+RestaurantInfoFragment.RestaurantInfoListener
+{
 
 	private final String TAG = this.getClass().getSimpleName();
 
@@ -15,6 +17,8 @@ public class RestaurantInfoActivity extends Activity{
 	 */
 	public static final String EXTRA_RESTAURANT = "RESTAURANT";
 
+	private String mRestaurant;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -28,17 +32,29 @@ public class RestaurantInfoActivity extends Activity{
 		setContentView(R.layout.activity_restaurant_info);
 		Bundle extras = getIntent().getExtras();
 		if (extras != null) {
-			String restaurantName = extras.getString(EXTRA_RESTAURANT);
-			if (restaurantName == null) { // Improper call of activity check
+			mRestaurant = extras.getString(EXTRA_RESTAURANT);
+			if (mRestaurant == null) { // Improper call of activity check
 				Log.e(TAG, "Null restaurant name found when extrating bundle");
 				return;
 			}
 			
-			RestaurantInfoFragment frag = (RestaurantInfoFragment) getFragmentManager()
+			RestaurantInfoFragment frag = (RestaurantInfoFragment) getSupportFragmentManager()
 					.findFragmentById(R.id.restaurantInfo);
-			frag.setRestaurantForDisplay(restaurantName);
+			frag.setRestaurantForDisplay(mRestaurant);
 
 		}
 
+	}
+
+	@Override
+	public void onMakeReservation(String reservation) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public String getCurrentRestaurant() {
+		// TODO Auto-generated method stub
+		return mRestaurant;
 	}
 }

@@ -2,7 +2,6 @@ package uw.cse.dineon.user.login;
 
 import uw.cse.dineon.user.R;
 import android.app.Activity;
-import android.app.Fragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,7 +13,7 @@ import android.widget.EditText;
  * TODO
  * @author mhotan
  */
-public class LoginFragment extends Fragment {
+public class LoginFragment extends android.support.v4.app.Fragment {
 
 	/**
 	 * TODO

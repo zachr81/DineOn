@@ -7,19 +7,18 @@
 
     <fragment
         android:id="@+id/restaurantList"
+        android:name="uw.cse.dineon.user.restaurantselection.RestaurantListFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@+id/restaurantSelectionButtons"
-        class="uw.cse.dineon.user.restaurantselection.RestaurantListFragment" >
-
+        android:layout_above="@+id/restaurantSelectionButtons" >
     </fragment>
 
     <fragment
         android:id="@+id/restaurantSelectionButtons"
+        android:name="uw.cse.dineon.user.restaurantselection.RestaurantSelectionButtonsFragment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
-        class="uw.cse.dineon.user.restaurantselection.RestaurantSelectionButtonsFragment" />
+        android:layout_alignParentLeft="true" />
 
 </RelativeLayout>

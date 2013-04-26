@@ -2,9 +2,9 @@ package uw.cse.dineon.user.login;
 
 import uw.cse.dineon.user.R;
 import uw.cse.dineon.user.restaurantselection.RestaurantSelectionActivity;
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 import android.widget.Toast;
 
 /**
@@ -16,7 +16,7 @@ import android.widget.Toast;
  * 
  * @author mhotan
  */
-public class UserLoginActivity extends Activity implements 
+public class UserLoginActivity extends FragmentActivity implements 
 LoginFragment.OnLoginListener {
 
 	private static final String TAG = UserLoginActivity.class.getSimpleName();

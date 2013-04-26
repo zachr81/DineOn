@@ -35,6 +35,8 @@
         <activity android:name=".login.CreateNewAccountActivity"></activity>
         <activity android:name=".restaurantselection.RestaurantInfoActivity"></activity>
         <activity android:name=".restaurantselection.RestaurantSelectionActivity"></activity>
+        <activity android:name=".restaurant.home.MenuItemDetailActivity"></activity>
+        <activity android:name=".restaurant.home.RestaurantHomeActivity"></activity>
     </application>
 
 </manifest>

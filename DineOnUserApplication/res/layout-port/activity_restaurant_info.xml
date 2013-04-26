@@ -6,7 +6,7 @@
 
     <fragment
         android:id="@+id/restaurantInfo"
-       	class="uw.cse.dineon.user.restaurantselection.RestaurantInfoFragment"
+       	android:name="uw.cse.dineon.user.restaurantselection.RestaurantInfoFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 

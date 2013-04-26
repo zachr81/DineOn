@@ -6,9 +6,9 @@ import java.util.List;
 
 import uw.cse.dineon.user.R;
 import android.app.Activity;
-import android.app.ListFragment;
 import android.content.Context;
 import android.os.Bundle;
+import android.support.v4.app.ListFragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -96,8 +96,8 @@ public class RestaurantListFragment extends ListFragment {
 	 */
 	private class RestaurantListAdapter extends ArrayAdapter<String> {
 
-		private final Context context;
-		private final List<String> values;
+		private final Context mContext;
+		private final List<String> mValues;
 
 		/**
 		 * This is a runtime mapping between "More Info buttons"
@@ -111,8 +111,8 @@ public class RestaurantListFragment extends ListFragment {
 
 		public RestaurantListAdapter(Context context, List<String> values) {
 			super(context, R.layout.listitem_restaurant, values); // Use our custom row layout
-			this.context = context;
-			this.values = new ArrayList<String>(values);
+			this.mContext = context;
+			this.mValues = new ArrayList<String>(values);
 			mMapping = new HashMap<View, String>();
 			mButtonListener = new View.OnClickListener() {
 
@@ -150,18 +150,19 @@ public class RestaurantListFragment extends ListFragment {
 
 		@Override
 		public View getView(int position, View covnertView, ViewGroup parent){
-			LayoutInflater inflater = (LayoutInflater) context
+			LayoutInflater inflater = (LayoutInflater) mContext
 					.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 			View rowView = inflater.inflate(R.layout.listitem_restaurant, parent, false);
 
-
 			// TODO Here is where we adjust the contents of the list row
 			// with attributes determined by the restaurant
+			// Now we are just setting the text to be the name of restaurant
+			
 			TextView restLabel = (TextView) rowView.findViewById(R.id.label_restaurant_name);
 			restLabel.setOnClickListener(mItemSelectedListener);
 			
 			// Get the restaurant name by associating with the position
-			String name = values.get(position);
+			String name = mValues.get(position);
 			restLabel.setText(name);	
 
 			// TODO Change the button to a more intuitive picture that describes "more info"

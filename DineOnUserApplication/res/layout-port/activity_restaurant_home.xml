@@ -5,10 +5,10 @@
     android:orientation="vertical" >
 
     <fragment
-        android:name="uw.cse.dineon.user.login.LoginFragment"
-        android:id="@+id/loginFragment"        
+        android:id="@+id/fragment1"
+        android:name="uw.cse.dineon.user.restaurant.home.RestaurantHomeMainFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="?android:attr/actionBarSize" />
-    
+
 </LinearLayout>

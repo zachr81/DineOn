@@ -1,11 +1,11 @@
 package uw.cse.dineon.user.login;
 
 import uw.cse.dineon.user.R;
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 
-public class CreateNewAccountActivity extends Activity 
+public class CreateNewAccountActivity extends FragmentActivity 
 implements CreateNewAccountFragment.onCreateNewAccountListener {
 
 	@Override
@@ -14,7 +14,6 @@ implements CreateNewAccountFragment.onCreateNewAccountListener {
 		setContentView(R.layout.activity_create_new_account);
 
 		// TODO Complete Initialization
-
 	}
 
 	@Override

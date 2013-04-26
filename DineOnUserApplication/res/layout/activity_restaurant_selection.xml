@@ -17,7 +17,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_above="@+id/restaurantSelectionButtons"
-            class="uw.cse.dineon.user.restaurantselection.RestaurantListFragment" >
+            android:name="uw.cse.dineon.user.restaurantselection.RestaurantListFragment" >
         </fragment>
 
         <fragment
@@ -26,7 +26,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:layout_alignParentLeft="true"
-            class="uw.cse.dineon.user.restaurantselection.RestaurantSelectionButtonsFragment" />
+            android:name="uw.cse.dineon.user.restaurantselection.RestaurantSelectionButtonsFragment" />
     </RelativeLayout>
 
     <fragment
@@ -34,7 +34,7 @@
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="2"
-        class="uw.cse.dineon.user.restaurantselection.RestaurantInfoFragment" >
+        android:name="uw.cse.dineon.user.restaurantselection.RestaurantInfoFragment" >
     </fragment>
 
 </LinearLayout>
