@@ -22,5 +22,7 @@
     <string name="option_view_order">View Order</string>
     <string name="label_title_order_summary">Order Summary</string>
     <string name="button_place_order">Place Order</string>
-    <string name="label_tip">Tip:</string>
+    <string name="label_tip">Tip (%):</string>
+    <string name="content_description_delete_button">Delete Button</string>
+    <string name="option_paybill">Pay Your Bill</string>
 </resources>

@@ -44,7 +44,7 @@ public class CheckInFragment extends Fragment {
 		mQRButton.setOnClickListener(l);
 		mValidateCheckInButton.setOnClickListener(l);
 		
-		String[] debugRestaurants = {"Marty's, Sponge Bob's squishy eats, HUB"};
+		String[] debugRestaurants = {"Marty's", "Sponge Bob's squishy eats", "HUB"};
 		// TODO grab the closest restaurants
 		
 		ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(),
@@ -109,6 +109,7 @@ public class CheckInFragment extends Fragment {
 				break;
 			case R.id.button_checkin_validate:
 				// TODO Handle Manual input
+				mListener.onCheckInSuccess();
 				break;
 			}
 		}

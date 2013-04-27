@@ -1,15 +1,22 @@
 package uw.cse.dineon.user.restaurant.home;
 
+import uw.cse.dineon.library.DineOnConstants;
+import uw.cse.dineon.user.DineOnUserActivity;
 import uw.cse.dineon.user.R;
+import uw.cse.dineon.user.bill.CurrentOrderActivity;
+import uw.cse.dineon.user.checkin.CheckInActivity;
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.widget.TextView;
 
-public class MenuItemDetailActivity extends FragmentActivity {
+public class MenuItemDetailActivity extends DineOnUserActivity {
 
 	public static final String EXTRA_MENUITEM = "menuitem";
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -27,6 +34,36 @@ public class MenuItemDetailActivity extends FragmentActivity {
 			TextView view = (TextView) findViewById(R.id.label_menuitem_details);
 			view.setText(s);
 		}
+	}
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		MenuInflater inflater = getMenuInflater();
+		inflater.inflate(R.menu.restaurant_home_menu, menu);
+		return true;
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		super.onOptionsItemSelected(item);
+		Intent i;
+		switch (item.getItemId()) {
+		case R.id.option_view_order:
+			i = new Intent(getApplicationContext(), CurrentOrderActivity.class);
+			// Count all the elements that the user has currently selected
+			startActivityForResult(i, DineOnConstants.REQUEST_VIEW_CURRENT_ORDER);
+			break;
+		case R.id.option_check_in:
+			// Start an activity for result
+			// Attempt to check in at a special
+			i = new Intent(getApplicationContext(), CheckInActivity.class);
+			startActivityForResult(i, DineOnConstants.REQUEST_CHECK_IN);
+			break;
+		default:
+			// Dunno what happened here
+			break;
+		}
+		return true;
 	}
 
 }

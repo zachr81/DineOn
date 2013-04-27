@@ -3,12 +3,12 @@
 package uw.cse.dineon.user.restaurantselection;
 
 import uw.cse.dineon.library.DineOnConstants;
+import uw.cse.dineon.user.DineOnUserActivity;
 import uw.cse.dineon.user.R;
 import uw.cse.dineon.user.checkin.CheckInActivity;
 import uw.cse.dineon.user.restaurant.home.RestaurantHomeActivity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.util.Log;
 import android.view.Menu;
@@ -20,7 +20,7 @@ import android.widget.Toast;
  * TODO
  * @author mhotan
  */
-public class RestaurantSelectionActivity extends FragmentActivity implements 
+public class RestaurantSelectionActivity extends DineOnUserActivity implements 
 RestaurantSelectionButtonsFragment.OnClickListener, // Listening for button actions
 RestaurantListFragment.RestaurantListListener, //  Listening for List items
 RestaurantInfoFragment.RestaurantInfoListener
@@ -66,15 +66,6 @@ RestaurantInfoFragment.RestaurantInfoListener
 			// Attempt to check in at a special
 			Intent i = new Intent(getApplicationContext(), CheckInActivity.class);
 			startActivityForResult(i, DineOnConstants.REQUEST_CHECK_IN);
-			break;
-		case R.id.option_profile:
-
-			break;
-		case R.id.option_settings:
-
-			break;
-		case R.id.option_filter:
-
 			break;
 		default:
 			// Dunno what happened here

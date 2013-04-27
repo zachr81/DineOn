@@ -1,12 +1,18 @@
 package uw.cse.dineon.user.restaurantselection;
 
+import uw.cse.dineon.library.DineOnConstants;
+import uw.cse.dineon.user.DineOnUserActivity;
 import uw.cse.dineon.user.R;
+import uw.cse.dineon.user.checkin.CheckInActivity;
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 
-public class RestaurantInfoActivity extends FragmentActivity implements
+public class RestaurantInfoActivity extends DineOnUserActivity implements
 RestaurantInfoFragment.RestaurantInfoListener
 {
 
@@ -18,7 +24,7 @@ RestaurantInfoFragment.RestaurantInfoListener
 	public static final String EXTRA_RESTAURANT = "RESTAURANT";
 
 	private String mRestaurant;
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -37,7 +43,7 @@ RestaurantInfoFragment.RestaurantInfoListener
 				Log.e(TAG, "Null restaurant name found when extrating bundle");
 				return;
 			}
-			
+
 			RestaurantInfoFragment frag = (RestaurantInfoFragment) getSupportFragmentManager()
 					.findFragmentById(R.id.restaurantInfo);
 			frag.setRestaurantForDisplay(mRestaurant);
@@ -49,12 +55,36 @@ RestaurantInfoFragment.RestaurantInfoListener
 	@Override
 	public void onMakeReservation(String reservation) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public String getCurrentRestaurant() {
 		// TODO Auto-generated method stub
 		return mRestaurant;
+	}
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		MenuInflater inflater = getMenuInflater();
+		inflater.inflate(R.menu.restaurant_selection_menu, menu);
+		return true;
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		super.onOptionsItemSelected(item);
+		switch (item.getItemId()) {
+		case R.id.option_check_in:
+			// Start an activity for result
+			// Attempt to check in at a special
+			Intent i = new Intent(getApplicationContext(), CheckInActivity.class);
+			startActivityForResult(i, DineOnConstants.REQUEST_CHECK_IN);
+			break;
+		default:
+			// Dunno what happened here
+			break;
+		}
+		return true;
 	}
 }

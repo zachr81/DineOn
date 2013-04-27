@@ -38,6 +38,9 @@
         <activity android:name=".restaurant.home.MenuItemDetailActivity"></activity>
         <activity android:name=".restaurant.home.RestaurantHomeActivity"></activity>
         <activity android:name=".checkin.CheckInActivity"></activity>
+        <activity android:name=".bill.CurrentBillActivity"></activity>
+        <activity android:name=".bill.CurrentOrderActivity"></activity>
+        <activity android:name="DineOnUserActivity"></activity>
     </application>
 
 </manifest>
