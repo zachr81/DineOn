@@ -46,15 +46,6 @@ public class RestaurantListFragment extends ListFragment {
 	}
 
 	@Override
-	public void onListItemClick(ListView l, View v, int position, long id) {
-		// Do something with the data
-		// Never gets touched
-//		TextView restaurantView = (TextView) v.findViewById(R.id.label_restaurant_name);
-//		String restName = restaurantView.getText().toString();
-//		mListener.onRestaurantSelected(restName);
-	}
-
-	@Override
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
 		if (activity instanceof RestaurantListListener) {

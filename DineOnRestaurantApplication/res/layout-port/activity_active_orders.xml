@@ -9,14 +9,6 @@
         android:id="@+id/fragment_orderrequest_pager"
         android:name="uw.cse.dineon.restaurant.active.OrderAndRequestFragment"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="1" />
-
-   <!--  <FrameLayout
-        android:id="@+id/container_order_request"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="1" >
-    </FrameLayout> -->
-
+        android:layout_height="match_parent" />
+    
 </LinearLayout>

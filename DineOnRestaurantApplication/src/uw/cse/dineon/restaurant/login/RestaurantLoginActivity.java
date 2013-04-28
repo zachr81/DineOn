@@ -62,7 +62,7 @@ implements LoginFragment.OnLoginListener {
 		// TODO Validate credentials
 		Intent i = new Intent(this, ActiveOrderListActivity.class);
 		// Add some data about the user
-//		startActivity(i);
+		startActivity(i);
 	}
 
 	/**

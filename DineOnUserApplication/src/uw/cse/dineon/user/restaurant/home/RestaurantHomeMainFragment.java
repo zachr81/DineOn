@@ -13,6 +13,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+/**
+ * This Fragment shows a swipable pager that can flip through
+ * The restaurant Information page, And all other sub parts of the
+ * menu.
+ * 
+ * It passes user interaction back to the user via its containing
+ * interface 
+ * 
+ * @author mhotan
+ */
 public class RestaurantHomeMainFragment extends Fragment {
 
 	private final String TAG = this.getClass().getSimpleName();
@@ -38,6 +48,7 @@ public class RestaurantHomeMainFragment extends Fragment {
 
 		// Set initial page to the menu page
 		pager.setCurrentItem(1);
+		
 		// TODO Need to figure a process of passing the restaurant we chose
 		// in the previous process and send to this containing context
 		// However we cant assume the previous activity is RestaurantSelectionActivity
@@ -103,6 +114,10 @@ public class RestaurantHomeMainFragment extends Fragment {
 		}
 	}
 
+	/**
+	 * TODO
+	 * @author mhotan
+	 */
 	public interface ReferenceDataListener {
 
 		/**

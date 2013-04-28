@@ -15,6 +15,8 @@ import android.view.MenuItem;
  */
 public class DineOnRestaurantActivity extends FragmentActivity {
 
+	private final String TAG = this.getClass().getSimpleName();
+	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		MenuInflater inflater = getMenuInflater();

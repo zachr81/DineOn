@@ -15,7 +15,7 @@ public class RestaurantInfo extends Storable {
 	private int phone;
 	private int imageMain;
 	private List<Integer> imageList;
-	private Menu menu;
+//	private Menu menu;
 
 	/**
 	 *

@@ -34,6 +34,9 @@
 		</receiver>
  
         <service android:name="com.parse.PushService" />
+        <activity android:name=".active.ActiveOrderListActivity"></activity>
+        <activity android:name=".active.OrderDetailActivity"></activity>
+        <activity android:name=".active.RequestDetailActivity"></activity>
         
     </application>
 

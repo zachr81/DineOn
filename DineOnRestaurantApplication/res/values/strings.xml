@@ -11,4 +11,13 @@
     <string name="option_create_new_account">Create New Account</string>
     <string name="option_forgot_password">Forgot Password?</string>
     <string name="label_login_title">Log in to Work in Dine On</string>
+    <string name="button_assign_waiter">Assign</string>
+    <string name="content_description_dismiss">Dismiss the current request</string>
+    <string name="label_request_blank">Request Title Goes here</string>
+    <string name="label_order_blank">Order Title goes here</string>
+    <string name="content_description_complete_order">Click to instantly fulfill this order</string>
+    <string name="hint_send_message">Message the customer</string>
+    <string name="label_radio_urgency_normal">Normal</string>
+    <string name="label_urgency_important">Important</string>
+    <string name="label_urgency_priority">Do it NOW!</string>
 </resources>
