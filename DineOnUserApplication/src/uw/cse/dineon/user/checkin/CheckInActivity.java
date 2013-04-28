@@ -24,6 +24,9 @@ implements CheckInFragment.CheckInListener{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_checkin);
 		mCheckedIn = false;
+		
+		// Set up the broadcast receiver for push notifications
+		
 	}
 
 	@Override

@@ -4,6 +4,7 @@ import uw.cse.dineon.library.DineOnConstants;
 
 import com.parse.Parse;
 import com.parse.ParseACL;
+import com.parse.ParseInstallation;
 
 import com.parse.ParseUser;
 
@@ -31,6 +32,8 @@ public class DineOnUserApplication extends Application {
 		defaultACL.setPublicReadAccess(true);
 		
 		ParseACL.setDefaultACL(defaultACL, true);
+		
+		ParseInstallation.getCurrentInstallation().saveInBackground();
 	}
 
 }

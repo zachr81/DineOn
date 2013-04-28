@@ -10,11 +10,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.json.JSONObject;
+
 import android.util.Log;
 
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
+import com.parse.ParsePush;
 import com.parse.ParseQuery;
 import com.parse.SaveCallback;
 
@@ -82,9 +85,11 @@ public class ParseUtil {
 		        				s.unpackObject(p);
 		        				classList.add(s);
 		        			}
-		        			h.invoke(null, classList);
+		        			List<List<Storable>> retList = new LinkedList<List<Storable>>();
+		        			retList.add(classList);
+		        			h.invoke(null, retList);
 		        		} catch (Exception ex) {
-		        			
+		        			Log.d(TAG, "Error: " + ex.getMessage());
 		        		}
 		        	}
 		        } else {
@@ -92,5 +97,38 @@ public class ParseUtil {
 		        }
 		    }
 		});
+	}
+	
+	/**
+	 * Notify a recipient that an action has occured or state has changed
+	 * via a push notification configured with the specified properties.
+	 * There must be a custom broadcast receiver on the receiving end which
+	 * is subscribed to the sending channel.
+	 * 
+	 * @param action A string to differenciate b/t different actions causing
+	 * a push
+	 * @param attr The key-value attributes that describe the information to
+	 * send in the form of JSON obj
+	 * @param channel The channel which the push is sent over
+	 * 
+	 * Note: There must must coordination b/t the sender and receiver on the
+	 * format of attributes.
+	 */
+	public static void notifyApplication(String action, Map<String, String> attr, String channel) {
+		try{
+			JSONObject data = new JSONObject();
+	        data.put("action", action);
+	        Set<String> kSet = attr.keySet();
+	        for (String k : kSet) {
+	        	data.put(k, attr.get(k));
+	        }
+			ParsePush push = new ParsePush();
+			push.setChannel(channel);
+			push.setData(data);
+			push.sendInBackground();
+		}
+		catch(Exception e){
+			Log.d(TAG, e.getMessage());
+		}
 	}
 }
