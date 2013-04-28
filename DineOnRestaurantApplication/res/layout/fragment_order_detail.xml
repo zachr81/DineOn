@@ -33,15 +33,13 @@
                 android:id="@+id/label_table_number"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Table Number: "
-                android:textAppearance="?android:attr/textAppearanceMedium" />
+                android:text="Table Number: " />
 
             <TextView
                 android:id="@+id/input_table_number"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="REPLACE WITH NUMBER"
-                android:textAppearance="?android:attr/textAppearanceMedium" />
+                android:text="REPLACE WITH NUMBER" />
         </TableRow>
 
         <TableRow
@@ -53,15 +51,13 @@
                 android:id="@+id/label_time_taken"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Time taken: "
-                android:textAppearance="?android:attr/textAppearanceMedium" />
+                android:text="Time taken: " />
 
             <TextView
                 android:id="@+id/input_time_taken"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="REPLACE WITH TIME"
-                android:textAppearance="?android:attr/textAppearanceMedium" />
+                android:text="REPLACE WITH TIME" />
             />
         </TableRow>
     </TableLayout>
@@ -70,7 +66,7 @@
         android:id="@+id/list_order"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/textView1" />
+        android:layout_below="@+id/edittext_message_block" />
 
     <EditText
         android:id="@+id/edittext_message_block"
@@ -94,16 +90,5 @@
         android:layout_below="@+id/table"
         android:layout_toRightOf="@+id/edittext_message_block"
         android:src="@drawable/send_message" />
-
-    <TextView
-        android:id="@+id/textView1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentRight="true"
-        android:layout_below="@+id/edittext_message_block"
-        android:gravity="bottom|center_horizontal"
-        android:text="Order Items"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
 
 </RelativeLayout>
