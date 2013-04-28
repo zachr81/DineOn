@@ -4,7 +4,7 @@ import uw.cse.dineon.library.util.DevelopTools;
 import uw.cse.dineon.restaurant.DineOnRestaurantActivity;
 import uw.cse.dineon.restaurant.MyCustomReceiver;
 import uw.cse.dineon.restaurant.R;
-import uw.cse.dineon.restaurant.active.ActiveOrderListActivity;
+import uw.cse.dineon.restaurant.active.RestauarantMainActivity;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
@@ -60,7 +60,7 @@ implements LoginFragment.OnLoginListener {
 	@Override
 	public void onLogin(String loginCredentials) {
 		// TODO Validate credentials
-		Intent i = new Intent(this, ActiveOrderListActivity.class);
+		Intent i = new Intent(this, RestauarantMainActivity.class);
 		// Add some data about the user
 		startActivity(i);
 	}

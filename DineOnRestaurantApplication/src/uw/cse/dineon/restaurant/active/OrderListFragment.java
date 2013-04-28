@@ -1,5 +1,6 @@
 package uw.cse.dineon.restaurant.active;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -33,14 +34,54 @@ public class OrderListFragment extends ListFragment {
 	//TODO change string to order
 	private ArrayAdapter<String> mAdapter;
 	
+	/**
+	 * Key for getting list
+	 */
+	private static final String KEY_LIST = "MY LIST";
+	
+	/**
+	 * Creates a new customer list fragment
+	 * @param customers TODO Change to user class
+	 * @return new fragment
+	 */
+	public static OrderListFragment newInstance(List<String> order){
+		OrderListFragment frag = new OrderListFragment();
+		ArrayList<String> mList = new ArrayList<String>();
+		if (order != null) 
+			mList.addAll(order);
+
+		Bundle args = new Bundle();
+		args.putStringArrayList(KEY_LIST, mList);
+		frag.setArguments(args);
+		return frag;
+	}
+	
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		List<String> mOrders = getArguments() != null ? 
+				getArguments().getStringArrayList(KEY_LIST) : null;
+		if (mOrders == null){
+			if (mListener != null)
+				mOrders = mListener.getCurrentOrders();
+			else
+				mOrders = new ArrayList<String>(); // Empty
+		}
+
+		//TODO Create custom adapter to handle custom layoutss
+		mAdapter = new OrderListAdapter(getActivity(), mOrders);
+		setListAdapter(mAdapter);	
+	}
+	
+	
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 
-		List<String> requests = mListener.getCurrentOrders();
-		
-		mAdapter = new OrderListAdapter(this.getActivity(), requests);
-		setListAdapter(mAdapter);
+//		List<String> requests = mListener.getCurrentOrders();
+//		
+//		mAdapter = new OrderListAdapter(this.getActivity(), requests);
+//		setListAdapter(mAdapter);
 	}
 
 	@Override
