@@ -2,19 +2,13 @@ package uw.cse.dineon.restaurant.login;
 
 import uw.cse.dineon.library.util.DevelopTools;
 import uw.cse.dineon.restaurant.DineOnRestaurantActivity;
-import uw.cse.dineon.restaurant.MyCustomReceiver;
 import uw.cse.dineon.restaurant.R;
 import uw.cse.dineon.restaurant.active.ActiveOrderListActivity;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.widget.TextView;
-
-import com.parse.ParseInstallation;
-import com.parse.PushService;
 
 public class RestaurantLoginActivity extends DineOnRestaurantActivity 
 implements LoginFragment.OnLoginListener {
@@ -24,20 +18,12 @@ implements LoginFragment.OnLoginListener {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_login);
-
-		//ParseAnalytics.trackAppOpened(this.getIntent());
-		MyCustomReceiver rec = new MyCustomReceiver((TextView)this.findViewById(R.id.taskList));
-		IntentFilter iff = new IntentFilter("com.parse.starter.UPDATE_STATUS");
-		PushService.subscribe(this, "push", RestaurantLoginActivity.class);
-		this.registerReceiver(rec, iff);
-//		this.getOrders(null);
-		ParseInstallation.getCurrentInstallation().saveInBackground();
 	}
 	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		MenuInflater inflater = getMenuInflater();
-		// Note that override this method does not mean the actualy 
+		// Note that override this method does not mean the actually 
 		//  UI Menu is updated this is done manually
 		//  See basic_menu under res/menu for ids
 		inflater.inflate(R.menu.login_menu, menu);
