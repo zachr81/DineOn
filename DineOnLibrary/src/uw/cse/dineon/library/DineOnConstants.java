@@ -12,7 +12,8 @@ public class DineOnConstants {
 	
 	// Request Code for multiple Activity use
 	public final static int REQUEST_CHECK_IN = 0x1;
-
+	public final static int REQUEST_VIEW_CURRENT_ORDER = 0x2;
+	public final static int REQUEST_PAY_BILL = 0x2;
 	// some change
 	
 }
