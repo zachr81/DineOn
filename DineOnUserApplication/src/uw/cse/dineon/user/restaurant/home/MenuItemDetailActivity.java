@@ -39,7 +39,7 @@ public class MenuItemDetailActivity extends DineOnUserActivity {
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		MenuInflater inflater = getMenuInflater();
-		inflater.inflate(R.menu.restaurant_home_menu, menu);
+		inflater.inflate(R.menu.basic_menu, menu);
 		return true;
 	}
 

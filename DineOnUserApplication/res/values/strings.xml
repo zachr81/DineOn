@@ -25,4 +25,8 @@
     <string name="label_tip">Tip (%):</string>
     <string name="content_description_delete_button">Delete Button</string>
     <string name="option_paybill">Pay Your Bill</string>
+    <string name="preference_test">Be Happy?</string>
+    <string name="preference_behappy_checkbox_key">checkbox_preference_behappy</string>
+    <string name="tab_title_profile">Profile</string>
+    <string name="tab_title_settings">Settings</string>
 </resources>

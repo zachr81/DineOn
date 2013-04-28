@@ -67,7 +67,7 @@ RestaurantInfoFragment.RestaurantInfoListener
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		MenuInflater inflater = getMenuInflater();
-		inflater.inflate(R.menu.restaurant_selection_menu, menu);
+		inflater.inflate(R.menu.basic_menu, menu);
 		return true;
 	}
 

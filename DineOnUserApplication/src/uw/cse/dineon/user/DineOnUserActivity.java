@@ -1,5 +1,8 @@
 package uw.cse.dineon.user;
 
+import uw.cse.dineon.user.general.ProfileActivity;
+import uw.cse.dineon.user.general.UserPreferencesActivity;
+import android.content.Intent;
 import android.support.v4.app.FragmentActivity;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -24,20 +27,20 @@ public class DineOnUserActivity extends FragmentActivity {
 		inflater.inflate(R.menu.basic_menu, menu);
 		return true;
 	}
-	
+
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
+		Intent i = null;
 		switch (item.getItemId()) {
 		case R.id.option_profile:
-
+			i = new Intent(getApplicationContext(), ProfileActivity.class);
 			break;
 		case R.id.option_settings:
-
-			break;
-		case R.id.option_filter:
-
+			i = new Intent(getApplicationContext(), UserPreferencesActivity.class);
 			break;
 		}
+		if (i != null)
+			startActivity(i);
 		return true;
 	}
 
