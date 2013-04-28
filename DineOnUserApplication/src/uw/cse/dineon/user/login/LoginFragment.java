@@ -60,21 +60,21 @@ public class LoginFragment extends android.support.v4.app.Fragment {
 				attemptLogin(twitterCred);
 			}
 		});
-		Button createNewAccountButton = (Button) view.findViewById(R.id.button_create_new_account);
-		createNewAccountButton.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				createNewAccount();
-			}
-		});
-		Button forgotPasswordButton = (Button) view.findViewById(R.id.button_forgot_password);
-		forgotPasswordButton.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				forgotPassword(email_input.getText().toString());
-			}
-
-		});
+//		Button createNewAccountButton = (Button) view.findViewById(R.id.button_create_new_account);
+//		createNewAccountButton.setOnClickListener(new View.OnClickListener() {
+//			@Override
+//			public void onClick(View v) {
+//				createNewAccount();
+//			}
+//		});
+//		Button forgotPasswordButton = (Button) view.findViewById(R.id.button_forgot_password);
+//		forgotPasswordButton.setOnClickListener(new View.OnClickListener() {
+//			@Override
+//			public void onClick(View v) {
+//				forgotPassword(email_input.getText().toString());
+//			}
+//
+//		});
 		return view;
 	}
 
@@ -88,21 +88,20 @@ public class LoginFragment extends android.support.v4.app.Fragment {
 					+ " must implemenet LoginFragment.OnLoginListener");
 		}
 	}
-
-	/**
-	 * 
-	 */
-	public void forgotPassword(String email) {
-		// TODO Auto-generated method stub
-		mListener.onForgotPassword(email);
-	}
 	
 	/**
 	 * Create new account
 	 */
-	public void createNewAccount() {
+	private void createNewAccount() {
 		// TODO Auto-generated method stub
 		mListener.onCreateNewAccount();
+	}
+	
+	/**
+	 * @return The email address that was forgotten
+	 */
+	public String getCurrentEmail(){
+		return email_input.getText().toString();
 	}
 
 	/**
@@ -141,9 +140,6 @@ public class LoginFragment extends android.support.v4.app.Fragment {
 		public void onLogin(String loginCredentials);
 
 		public void onCreateNewAccount();
-
-		public void onForgotPassword(String emailAddress);
-
 	}
 
 }

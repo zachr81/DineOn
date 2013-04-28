@@ -36,6 +36,8 @@ public class RestaurantHomeMainFragment extends Fragment {
 
 		pager.setAdapter(adapter);
 
+		// Set initial page to the menu page
+		pager.setCurrentItem(1);
 		// TODO Need to figure a process of passing the restaurant we chose
 		// in the previous process and send to this containing context
 		// However we cant assume the previous activity is RestaurantSelectionActivity
@@ -68,23 +70,24 @@ public class RestaurantHomeMainFragment extends Fragment {
 
 		@Override
 		public Fragment getItem(int position) {
-			// Show the appropiate menu on according to position
-			if (Math.min(position, CONTENT.length - 1) <= CONTENT.length - 1) {
+			Fragment f =null;
+			Bundle data = new Bundle();
+			// make sure position is within bounds
+			position = Math.min(Math.max(position, 0), CONTENT.length - 1);
+			switch (position) {
+			case 0: // Show restaurant info
+				String restaurant = "FIXME: Restaurant should be here!";
+				f = new RestaurantInfoFragment();
+				data.putString(RestaurantInfoActivity.EXTRA_RESTAURANT, mListener.getCurrentRestaurant());
+				f.setArguments(data);
+				break;
+			default:
 				String menuType = CONTENT[Math.min(position, CONTENT.length - 1)];
-				Fragment f = new SubMenuFragment();
-				Bundle data = new Bundle();
+				f = new SubMenuFragment();
 				data.putString(SubMenuFragment.EXTRA_MENU_TYPE, menuType);
 				f.setArguments(data);
-				return f;
 			}
-
-			// Here the value is 0 or negative indicating the first information screen
-			// TODO Figure out restaurant
-			String restaurant = "FIXME: Restaurant should be here!";
-			Fragment f = new RestaurantInfoFragment();
-			Bundle data = new Bundle();
-			data.putString(RestaurantInfoActivity.EXTRA_RESTAURANT, mListener.getCurrentRestaurant());
-			f.setArguments(data);
+			
 			return f;
 		}
 
@@ -99,14 +102,14 @@ public class RestaurantHomeMainFragment extends Fragment {
 			return CONTENT.length;
 		}
 	}
-	
+
 	public interface ReferenceDataListener {
-		
+
 		/**
 		 * TODO change to Restaurant datatype
 		 */
 		public String getCurrentRestaurant();
-		
+
 	}
 
 }

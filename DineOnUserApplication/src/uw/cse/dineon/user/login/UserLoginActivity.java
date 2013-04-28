@@ -1,10 +1,14 @@
 package uw.cse.dineon.user.login;
 
+import uw.cse.dineon.library.util.DevelopTools;
 import uw.cse.dineon.user.R;
 import uw.cse.dineon.user.restaurantselection.RestaurantSelectionActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.widget.Toast;
 
 /**
@@ -47,18 +51,33 @@ LoginFragment.OnLoginListener {
 	}
 
 	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		MenuInflater inflater = getMenuInflater();
+		// Note that override this method does not mean the actualy 
+		//  UI Menu is updated this is done manually
+		//  See basic_menu under res/menu for ids
+		inflater.inflate(R.menu.login_menu, menu);
+		return true;
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case R.id.option_forgot_password: 
+			// TODO Implement
+		case R.id.option_create_new_account:
+			// TODO Implement
+			DevelopTools.getUnimplementedDialog(this, null).show();
+			break;
+		}
+		return true;
+	}
+	
+	@Override
 	public void onCreateNewAccount() {
 		// TODO Auto-generated method stub
 		Intent creatAccountIntent = new Intent(this, CreateNewAccountActivity.class);
 		startActivityForResult(creatAccountIntent, REQUEST_CREATE_NEW_ACCOUNT);
-	}
-
-	@Override
-	public void onForgotPassword(String emailAddress) {
-		// TODO Auto-generated method stub
-		// TODO look up username
-		// If user is found then send email
-		// If user is not found the notify through an alert dialog
 	}
 
 	@Override

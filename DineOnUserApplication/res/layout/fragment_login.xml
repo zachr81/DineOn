@@ -12,45 +12,6 @@
         android:text="@string/login_label"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
-    <SlidingDrawer
-        android:id="@+id/slidingdrawer_login_options"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="20dp"
-        android:content="@+id/content"
-        android:handle="@+id/handle" >
-
-        <Button
-            android:id="@+id/handle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Handle" />
-
-        <LinearLayout
-            android:id="@+id/content"
-            android:layout_width="match_parent"
-            android:layout_height="58dp"
-            android:orientation="horizontal" >
-          
-            <Button
-            android:id="@+id/button_create_new_account"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Create New Account" />
-            
-            <Button
-            android:id="@+id/button_forgot_password"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Forgot your password?" />
-            
-        </LinearLayout>
-    </SlidingDrawer>
-
     <EditText
         android:id="@+id/input_login_email"
         android:layout_width="wrap_content"
@@ -105,5 +66,14 @@
         android:layout_below="@+id/button_facebook_login"
         android:layout_marginTop="24dp"
         android:text="@string/button_facebook" />
+
+    <ImageView
+        android:id="@+id/imageView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="17dp"
+        android:src="@drawable/husky_soft_logo" />
 
 </RelativeLayout>
