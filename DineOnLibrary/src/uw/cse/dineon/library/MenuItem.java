@@ -1,5 +1,9 @@
 package uw.cse.dineon.library;
 
+import android.os.Bundle;
+
+import com.parse.ParseObject;
+
 /**
  * 
  * @author zachr81
@@ -64,6 +68,30 @@ public class MenuItem extends Storable {
 	 */
 	public void setDescription(String description) {
 		this.description = description;
+	}
+
+	@Override
+	public Bundle bundle() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void unbundle(Bundle b) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public ParseObject packObject() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void unpackObject(ParseObject pobj) {
+		// TODO Auto-generated method stub
+		
 	}
 	
 	

@@ -2,6 +2,10 @@ package uw.cse.dineon.library;
 
 import java.util.List;
 
+import android.os.Bundle;
+
+import com.parse.ParseObject;
+
 /**
  * 
  * @author zachr81
@@ -100,5 +104,29 @@ public class Order extends Storable {
 	 */
 	public void setMenuItems(List<MenuItem> menuItems) {
 		this.menuItems = menuItems;
+	}
+
+	@Override
+	public Bundle bundle() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void unbundle(Bundle b) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public ParseObject packObject() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void unpackObject(ParseObject pobj) {
+		// TODO Auto-generated method stub
+		
 	}
 }

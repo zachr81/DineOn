@@ -2,6 +2,10 @@ package uw.cse.dineon.library;
 
 import java.util.List;
 
+import android.os.Bundle;
+
+import com.parse.ParseObject;
+
 /**
  * 
  * @author zachr81
@@ -78,6 +82,30 @@ public class DiningSession extends Storable {
 	 */
 	public void removeOrder(Order order) {
 		orders.remove(order);
+	}
+
+	@Override
+	public Bundle bundle() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void unbundle(Bundle b) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public ParseObject packObject() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void unpackObject(ParseObject pobj) {
+		// TODO Auto-generated method stub
+		
 	}
 	
 }
