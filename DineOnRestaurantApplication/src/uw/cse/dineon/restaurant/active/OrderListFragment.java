@@ -1,5 +1,6 @@
 package uw.cse.dineon.restaurant.active;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -27,20 +28,55 @@ import android.widget.TextView;
 public class OrderListFragment extends ListFragment {
 
 	private final String TAG = this.getClass().getSimpleName();
-	
+
 	private OrderItemListener mListener;
-	
+
 	//TODO change string to order
 	private ArrayAdapter<String> mAdapter;
-	
+
+
+	private static final String KEY_LIST = "MY LIST";
+
+	/**
+	 * Creates a new customer list fragment
+	 * @param orders TODO Change to order class
+	 * @return new fragment
+	 */
+	public static OrderListFragment newInstance(List<String> orders){
+		OrderListFragment frag = new OrderListFragment();
+		ArrayList<String> mList = new ArrayList<String>();
+		if (orders != null) 
+			mList.addAll(orders);
+
+		Bundle args = new Bundle();
+		args.putStringArrayList(KEY_LIST, mList);
+		frag.setArguments(args);
+		return frag;
+	}
+
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		List<String> mOrders = getArguments() != null ? getArguments().getStringArrayList(KEY_LIST) : null;
+		if (mOrders == null){
+			if (mListener != null)
+				mOrders = mListener.getCurrentOrders();
+			else
+				mOrders = new ArrayList<String>(); // Empty
+		}
+
+		//TODO Create custom adapter to handle custom layoutss
+		mAdapter = new OrderListAdapter(this.getActivity(), mOrders);
+		setListAdapter(mAdapter);	
+	}
+
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 
-		List<String> requests = mListener.getCurrentOrders();
-		
-		mAdapter = new OrderListAdapter(this.getActivity(), requests);
-		setListAdapter(mAdapter);
+//		List<String> requests = mListener.getCurrentOrders();
+//		mAdapter = new OrderListAdapter(this.getActivity(), requests);
+//		setListAdapter(mAdapter);
 	}
 
 	@Override
@@ -53,13 +89,13 @@ public class OrderListFragment extends ListFragment {
 					+ " must implemenet OrderListFragment.OrderItemListener");
 		}
 	}
-	
+
 	//////////////////////////////////////////////////////
 	//// Following are public setters.  That Activities Or parent Fragments can use
 	//// to set the values of what is showed to the user for this 
 	//// fragment TODO Change string to Order
 	//////////////////////////////////////////////////////
-	
+
 	/**
 	 * Adds order to this view
 	 * @param order
@@ -78,7 +114,7 @@ public class OrderListFragment extends ListFragment {
 			mAdapter.add(o);
 		mAdapter.notifyDataSetChanged();
 	}
-	
+
 	/**
 	 * Deletes this order if it finds it
 	 * @param order
@@ -87,7 +123,7 @@ public class OrderListFragment extends ListFragment {
 		mAdapter.remove(order);
 		mAdapter.notifyDataSetChanged();
 	}
-	
+
 	/**
 	 * Clears all orders
 	 */
@@ -95,7 +131,7 @@ public class OrderListFragment extends ListFragment {
 		mAdapter.clear();
 		mAdapter.notifyDataSetChanged();
 	}
-	
+
 	//////////////////////////////////////////////////////
 	//// Following is the interface in which activities
 	//// that wish to attach this Fragment must implement
@@ -126,7 +162,7 @@ public class OrderListFragment extends ListFragment {
 		 * @param order order to reference
 		 */
 		public void onOrderComplete(String order);
-		
+
 		/**
 		 * Used to get the most recent up to date list of items to show
 		 * Cannot return null
@@ -237,6 +273,13 @@ public class OrderListFragment extends ListFragment {
 					boolean fromUser) {
 				// TODO Auto-generated method stub
 				String order = mViewToOrder.get(seekBar);
+				mListener.onProgressChanged(order, progress);
+				
+				if (progress == seekBar.getMax()) {
+					mAdapter.remove(order);
+					mListener.onOrderComplete(order);
+					mAdapter.notifyDataSetChanged();
+				}
 			}
 
 			@Override

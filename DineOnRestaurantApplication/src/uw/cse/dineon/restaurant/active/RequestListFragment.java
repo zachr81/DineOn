@@ -32,17 +32,52 @@ public class RequestListFragment extends ListFragment {
 	//TODO change string to order
 	private ArrayAdapter<String> mAdapter;
 
+	private static final String KEY_LIST = "MY LIST";
+	
+	/**
+	 * Creates a new customer list fragment
+	 * @param requests TODO Change to request class
+	 * @return new fragment
+	 */
+	public static RequestListFragment newInstance(List<String> requests){
+		RequestListFragment frag = new RequestListFragment();
+		ArrayList<String> mList = new ArrayList<String>();
+		if (requests != null) 
+			mList.addAll(requests);
+
+		Bundle args = new Bundle();
+		args.putStringArrayList(KEY_LIST, mList);
+		frag.setArguments(args);
+		return frag;
+	}
+
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		List<String> mRequests = getArguments() != null ? getArguments().getStringArrayList(KEY_LIST) : null;
+		if (mRequests == null){
+			if (mListener != null)
+				mRequests = mListener.getCurrentRequests();
+			else
+				mRequests = new ArrayList<String>(); // Empty
+		}
+
+		//TODO Create custom adapter to handle custom layoutss
+		mAdapter = new RequestListAdapter(this.getActivity(), mRequests);
+		setListAdapter(mAdapter);	
+	}
+	
 	/**
 	 * Activity Created its on create
 	 */
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
-		
-		List<String> requests = mListener.getCurrentRequests();
-		
-		mAdapter = new RequestListAdapter(this.getActivity(), requests);
-		setListAdapter(mAdapter);
+//		 TODO Check Functionality before deleting		
+//		List<String> requests = mListener.getCurrentRequests();
+//		
+//		mAdapter = new RequestListAdapter(this.getActivity(), requests);
+//		setListAdapter(mAdapter);
 	}
 
 	@Override
@@ -194,6 +229,7 @@ public class RequestListFragment extends ListFragment {
 			ImageButton sendToStaff = (ImageButton) view.findViewById(R.id.button_send_to_staff);
 			CheckBox dismissBox = (CheckBox) view.findViewById(R.id.checkBox_dismiss_request);
 			Spinner staff = (Spinner) view.findViewById(R.id.spinner_staff_to_assign);
+			staff.setAdapter(new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, mStaff));
 			
 			AllAroundListener listener = new AllAroundListener(request,
 					staff,
@@ -238,6 +274,9 @@ public class RequestListFragment extends ListFragment {
 				mAssignToStaff.setOnClickListener(this);
 				mDetailButton.setOnClickListener(this);
 				mDismiss.setOnCheckedChangeListener(this);
+				
+				// Default selection is first on the list
+				mStaff.setSelection(0);
 			}
 
 			@Override
