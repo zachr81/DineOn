@@ -14,7 +14,7 @@ public class Reservation extends Storable {
 	private UserInfo userInfo;
 	private RestaurantInfo restInfo;
 	private Time startTime;
-//	private DiningSession currSession;
+	private DiningSession currSession;
 
 	/**
 	 *
