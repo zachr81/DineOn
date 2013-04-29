@@ -3,6 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
 
+
     <TextView
         android:id="@+id/label_title_order_summary"
         android:layout_width="wrap_content"
@@ -11,6 +12,7 @@
         android:layout_centerVertical="true"
         android:text="Or"
         android:textAppearance="?android:attr/textAppearanceMedium" />
+
 
     <Button
         android:id="@+id/button_qr_code"
@@ -21,6 +23,7 @@
         android:layout_below="@+id/label_title_order_summary"
         android:layout_marginTop="25dp"
         android:text="QR Code" />
+	
 
     <Button
         android:id="@+id/button_checkin_validate"
@@ -32,6 +35,7 @@
         android:layout_marginBottom="24dp"
         android:text="Validate" />
 
+	
     <Spinner
         android:id="@+id/spinner_restaurants"
         android:layout_width="wrap_content"
@@ -39,6 +43,7 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
         android:layout_marginTop="18dp" />
+
 
     <EditText
         android:id="@+id/input_restaurant_code"

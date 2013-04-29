@@ -5,6 +5,8 @@ import uw.cse.dineon.user.DineOnUserActivity;
 import uw.cse.dineon.user.R;
 import uw.cse.dineon.user.bill.CurrentOrderActivity;
 import uw.cse.dineon.user.checkin.CheckInActivity;
+import uw.cse.dineon.user.checkin.IntentIntegrator;
+import uw.cse.dineon.user.checkin.QRCheckin;
 import uw.cse.dineon.user.restaurantselection.RestaurantInfoFragment;
 import android.content.Intent;
 import android.os.Bundle;
@@ -72,8 +74,13 @@ RestaurantHomeMainFragment.ReferenceDataListener
 		case R.id.option_check_in:
 			// Start an activity for result
 			// Attempt to check in at a special
-			i = new Intent(getApplicationContext(), CheckInActivity.class);
-			startActivityForResult(i, DineOnConstants.REQUEST_CHECK_IN);
+			//i = new Intent(getApplicationContext(), CheckInActivity.class);
+			//startActivityForResult(i, DineOnConstants.REQUEST_CHECK_IN);
+			
+			// Start the QR code scan activity
+			IntentIntegrator integrator = new IntentIntegrator(this);
+			integrator.initiateScan();
+			
 			break;
 		default:
 			// Dunno what happened here
@@ -94,6 +101,8 @@ RestaurantHomeMainFragment.ReferenceDataListener
 
 		if (requestCode == DineOnConstants.REQUEST_CHECK_IN) {
 			// Register this user with this restaurant
+			QRCheckin.QRResult(requestCode, resultCode, data);
+			
 		} else if (requestCode == DineOnConstants.REQUEST_VIEW_CURRENT_ORDER) {
 			//TODO handle cases where user paid or cancelled current order
 		}

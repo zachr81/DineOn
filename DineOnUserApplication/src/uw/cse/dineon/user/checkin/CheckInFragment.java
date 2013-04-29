@@ -2,8 +2,10 @@ package uw.cse.dineon.user.checkin;
 
 import uw.cse.dineon.user.R;
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -40,9 +42,9 @@ public class CheckInFragment extends Fragment {
 		
 		CheckInClickListener l = new CheckInClickListener();
 		mQRButton = (Button) view.findViewById(R.id.button_qr_code);
-		mValidateCheckInButton = (Button) view.findViewById(R.id.button_checkin_validate);
+		//mValidateCheckInButton = (Button) view.findViewById(R.id.button_checkin_validate);
 		mQRButton.setOnClickListener(l);
-		mValidateCheckInButton.setOnClickListener(l);
+		//mValidateCheckInButton.setOnClickListener(l);
 		
 		String[] debugRestaurants = {"Marty's", "Sponge Bob's squishy eats", "HUB"};
 		// TODO grab the closest restaurants
@@ -54,7 +56,7 @@ public class CheckInFragment extends Fragment {
 		mRestaurantList.setAdapter(adapter);
 		mRestaurantList.setOnItemSelectedListener(l);
 		
-		mRestaurantCode = (EditText) view.findViewById(R.id.input_restaurant_code);
+		//mRestaurantCode = (EditText) view.findViewById(R.id.input_restaurant_code);
 		
 		return view;
 	}
@@ -106,11 +108,15 @@ public class CheckInFragment extends Fragment {
 			switch (v.getId()) {
 			case R.id.button_qr_code :
 				// TODO Implement QR Code
+				
+				mListener.onCheckInSuccess();
+				
 				break;
-			case R.id.button_checkin_validate:
+			/*case R.id.button_checkin_validate:
 				// TODO Handle Manual input
 				mListener.onCheckInSuccess();
 				break;
+			*/
 			}
 		}
 

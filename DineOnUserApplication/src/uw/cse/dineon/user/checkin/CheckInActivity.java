@@ -33,7 +33,11 @@ implements CheckInFragment.CheckInListener{
 	public void onCheckInSuccess() {
 		// TODO Auto-generated method stub
 		mCheckedIn = true;
-		finish();
+		
+		IntentIntegrator integrator = new IntentIntegrator(this);
+		integrator.initiateScan();
+		
+		//finish();
 	}
 
 	@Override
@@ -54,5 +58,18 @@ implements CheckInFragment.CheckInListener{
 	public void onBackPressed() {
 		Log.d(TAG, "Check In Activity back pressed");
 		super.onBackPressed();
+	}
+	
+	@Override
+	public void onActivityResult(int requestCode, int resultCode, Intent intent) {
+	  IntentResult scanResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, intent);
+	  if (scanResult != null) {
+		  // handle scan result
+		  String contents = scanResult.getContents();
+		  Log.d("ZXing", contents);
+	  } else {
+		  // else continue with any other code you need in the method
+		  Log.d("ZXing", "Error getting the result");
+	  }
 	}
 }

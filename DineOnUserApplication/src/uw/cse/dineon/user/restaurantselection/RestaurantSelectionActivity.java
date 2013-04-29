@@ -6,6 +6,9 @@ import uw.cse.dineon.library.DineOnConstants;
 import uw.cse.dineon.user.DineOnUserActivity;
 import uw.cse.dineon.user.R;
 import uw.cse.dineon.user.checkin.CheckInActivity;
+import uw.cse.dineon.user.checkin.IntentIntegrator;
+import uw.cse.dineon.user.checkin.IntentResult;
+import uw.cse.dineon.user.checkin.QRCheckin;
 import uw.cse.dineon.user.restaurant.home.RestaurantHomeActivity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -64,8 +67,13 @@ RestaurantInfoFragment.RestaurantInfoListener
 		case R.id.option_check_in:
 			// Start an activity for result
 			// Attempt to check in at a special
-			Intent i = new Intent(getApplicationContext(), CheckInActivity.class);
-			startActivityForResult(i, DineOnConstants.REQUEST_CHECK_IN);
+			//Intent i = new Intent(getApplicationContext(), CheckInActivity.class);
+			//startActivityForResult(i, DineOnConstants.REQUEST_CHECK_IN);
+			
+			// Start up the QR scan activity
+			IntentIntegrator integrator = new IntentIntegrator(this);
+			integrator.initiateScan();
+			
 			break;
 		default:
 			// Dunno what happened here
@@ -86,11 +94,10 @@ RestaurantInfoFragment.RestaurantInfoListener
 		
 		if (requestCode == DineOnConstants.REQUEST_CHECK_IN) {
 			// Register this user with this restaurant
+			QRCheckin.QRResult(requestCode, resultCode, data);
 		}
 		
 	}
-
-
 
 	//////////////////////////////////////////////////////////////////////
 	////   Call backs for Fragment methods
