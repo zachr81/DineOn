@@ -62,7 +62,7 @@ public class Restaurant extends Storable {
 	 * @param reservationList: A List of Reservations to set as the new reservation list
 	 * 
 	 */
-	public void setReservationList(List<ReservationList> newReservationList) {
+	public void setReservationList(List<Reservation> newReservationList) {
 		this.reservationList = newReservationList;
 	}
 	
@@ -107,7 +107,7 @@ public class Restaurant extends Storable {
 	 * Sets sessions to the parameter value
 	 * @param List<DiningSession>
 	 */
-	public void setSessions(List<DiningSessions> newSessions) {
+	public void setSessions(List<DiningSession> newSessions) {
 		sessions = newSessions;
 	}
 	
