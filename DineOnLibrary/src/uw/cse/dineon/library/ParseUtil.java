@@ -4,6 +4,7 @@
 package uw.cse.dineon.library;
 
 
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.LinkedList;
 import java.util.List;
@@ -15,11 +16,16 @@ import org.json.JSONObject;
 import android.util.Log;
 
 import com.parse.FindCallback;
+import com.parse.LogInCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParsePush;
 import com.parse.ParseQuery;
+import com.parse.ParseUser;
 import com.parse.SaveCallback;
+import com.parse.SignUpCallback;
+
+//TODO Test the ParseUtil functions to ensure correctness.
 
 /**
  * @author mtrathjen08
@@ -29,6 +35,86 @@ import com.parse.SaveCallback;
  */
 public class ParseUtil {
 	private static final String TAG = "ParseUtil";
+	
+	
+	/**
+	 * Create a user for the user side of the DineOn application.
+	 *  
+	 * @param uname - user name to associate with the new account. 
+	 * Must not be already used by another user. 
+	 * @param passwd - The password to use with the new user will login
+	 * @param callback - the static method to call once the response returns from Parse Cloud
+	 * @throws IllegalArgumentException if any param is null.
+	 */
+	public static void createDineOnUser(String uname, String passwd, Method callback){
+		//TODO handle exception cases.
+		if(uname == null || passwd == null || callback == null)
+			throw new IllegalArgumentException();
+		ParseUser pu = new ParseUser();
+		pu.setUsername(uname);
+		pu.setPassword(passwd);
+		final Method m = callback;
+		pu.signUpInBackground(new SignUpCallback(){
+
+			@Override
+			public void done(ParseException e) {
+				if(e == null){
+					List<Boolean> params = new LinkedList<Boolean>();
+					params.add(Boolean.valueOf(true));
+					try {
+						m.invoke(null, params);
+					}catch(NullPointerException e1){
+						Log.d(TAG, "Error: " + e1.getMessage());
+					} catch (IllegalArgumentException e1) {
+						// TODO Auto-generated catch block
+						Log.d(TAG, "Error: " + e1.getMessage());
+						e1.printStackTrace();
+					} catch (IllegalAccessException e1) {
+						// TODO Auto-generated catch block
+						Log.d(TAG, "Error: " + e1.getMessage());
+						e1.printStackTrace();
+					} catch (InvocationTargetException e1) {
+						// TODO Auto-generated catch block
+						Log.d(TAG, "Error: " + e1.getMessage());
+						e1.printStackTrace();
+					}
+				}
+				
+			}
+			
+		});
+	}
+	
+	/**
+	 * 
+	 * @param uname - user name associated with the account
+	 * @param passwd - password associated with the account
+	 * @param callback - static method with param of type Storable 
+	 * to call once the response is heard from the Parse Cloud.
+ 	 * @throws IllegalArgumentException if any param is null.
+	 */
+	public static void logInDineOnCreds(String uname, String passwd, Method callback){
+		if(uname == null || passwd == null || callback == null)
+			throw new IllegalArgumentException();
+		
+		final Method m = callback;
+		ParseUser.logInInBackground(uname, passwd, new LogInCallback(){
+
+			@Override
+			public void done(ParseUser user, ParseException err) {
+				if(err == null && user != null){
+					//TODO setup default user and call callback with 
+					//Storable User object.
+					Log.d(TAG, "Log in success, user returned with no error");
+				}
+				else{
+					Log.d(TAG, "Log in error");
+				}
+				
+			}
+			
+		});
+	}
 	/**
 	 * Save obj into the cloud and store the acquired objID into obj
 	 * 
