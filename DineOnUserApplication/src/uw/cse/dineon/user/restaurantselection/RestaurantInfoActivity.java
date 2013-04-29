@@ -1,9 +1,7 @@
 package uw.cse.dineon.user.restaurantselection;
 
-import uw.cse.dineon.library.DineOnConstants;
 import uw.cse.dineon.user.DineOnUserActivity;
 import uw.cse.dineon.user.R;
-import uw.cse.dineon.user.checkin.CheckInActivity;
 import uw.cse.dineon.user.checkin.IntentIntegrator;
 import uw.cse.dineon.user.checkin.QRCheckin;
 import android.content.Intent;
@@ -83,15 +81,10 @@ RestaurantInfoFragment.RestaurantInfoListener
 		super.onOptionsItemSelected(item);
 		switch (item.getItemId()) {
 		case R.id.option_check_in:
-			// Start an activity for result
-			// Attempt to check in at a special
-			//Intent i = new Intent(getApplicationContext(), CheckInActivity.class);
-			//startActivityForResult(i, DineOnConstants.REQUEST_CHECK_IN);
-			
+			// TODO Clean up the number of menus to use
 			// Start a QR scanner activity
 			IntentIntegrator integrator = new IntentIntegrator(this);
 			integrator.initiateScan();
-			
 			break;
 		default:
 			// Dunno what happened here
