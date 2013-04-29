@@ -20,4 +20,6 @@
     <string name="label_radio_urgency_normal">Normal</string>
     <string name="label_urgency_important">Important</string>
     <string name="label_urgency_priority">Do it NOW!</string>
+    <string name="tablabel_profile">Profile</string>
+    <string name="tablabel_menuitems">Menu Items</string>
 </resources>
