@@ -1,18 +1,9 @@
 package uw.cse.dineon.user.restaurant.home;
 
-import uw.cse.dineon.library.util.DineOnConstants;
 import uw.cse.dineon.user.DineOnUserActivity;
 import uw.cse.dineon.user.R;
-import uw.cse.dineon.user.bill.CurrentOrderActivity;
-import uw.cse.dineon.user.checkin.IntentIntegrator;
-import uw.cse.dineon.user.checkin.QRCheckin;
-import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.widget.TextView;
 
 public class MenuItemDetailActivity extends DineOnUserActivity {
