@@ -36,6 +36,17 @@ RestaurantHomeMainFragment.ReferenceDataListener
 	//////////////////////////////////////////////////////////////////////
 
 	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		super.onCreateOptionsMenu(menu);
+		
+		MenuItem item = menu.findItem(R.id.option_view_bill);
+		item.setEnabled(true);
+		item.setVisible(true);
+		
+		return true;
+	}
+	
+	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
@@ -51,61 +62,6 @@ RestaurantHomeMainFragment.ReferenceDataListener
 		// Pull out all its menus and information
 
 		// Then Replace fragments as appropriately
-	}
-
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		MenuInflater inflater = getMenuInflater();
-		inflater.inflate(R.menu.restaurant_home_menu, menu);
-		return true;
-	}
-	
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		super.onOptionsItemSelected(item);
-		Intent i;
-		switch (item.getItemId()) {
-		case R.id.option_view_order:
-			i = new Intent(getApplicationContext(), CurrentOrderActivity.class);
-			// Count all the elements that the user has currently selected
-			startActivityForResult(i, DineOnConstants.REQUEST_VIEW_CURRENT_ORDER);
-			break;
-		case R.id.option_check_in:
-			// Start an activity for result
-			// Attempt to check in at a special
-			//i = new Intent(getApplicationContext(), CheckInActivity.class);
-			//startActivityForResult(i, DineOnConstants.REQUEST_CHECK_IN);
-			
-			// Start the QR code scan activity
-			IntentIntegrator integrator = new IntentIntegrator(this);
-			integrator.initiateScan();
-			
-			break;
-		default:
-			// Dunno what happened here
-			break;
-		}
-		return true;
-	}
-
-	@Override
-	protected void onActivityResult (int requestCode, int resultCode, Intent data){
-		super.onActivityResult(requestCode, resultCode, data);
-
-		if (resultCode != RESULT_OK) {
-			// TODO REmove Log for release
-			Log.w(TAG, "Check in Failed or Cancelled");
-			return;
-		}
-
-		if (requestCode == DineOnConstants.REQUEST_CHECK_IN) {
-			// Register this user with this restaurant
-			QRCheckin.QRResult(requestCode, resultCode, data);
-			
-		} else if (requestCode == DineOnConstants.REQUEST_VIEW_CURRENT_ORDER) {
-			//TODO handle cases where user paid or cancelled current order
-		}
-
 	}
 
 	//////////////////////////////////////////////////////////////////////

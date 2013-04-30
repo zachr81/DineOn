@@ -36,6 +36,8 @@ RestaurantInfoFragment.RestaurantInfoListener
 	private ParseUser /*Change to ParseUser*/ mUser;
 
 	private String mCurRestaurant;
+	
+	private static final int MENU_ITEM_FILTER = 1234;
 
 	//////////////////////////////////////////////////////////////////////
 	////  Android specific 
@@ -49,57 +51,22 @@ RestaurantInfoFragment.RestaurantInfoListener
 		mUser = ParseUser.getCurrentUser();
 		Toast.makeText(this, "User: " + mUser.getUsername() + " logged in!", Toast.LENGTH_SHORT).show();
 		
-//		Bundle extras = getIntent().getExtras();
-//		if (extras != null) {
-//			mUser = extras.getString(EXTRA_USER);
-//			Toast.makeText(this, "User: " + mUser + " logged in!", Toast.LENGTH_SHORT).show();
-//		}
 	}
-
+	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		MenuInflater inflater = getMenuInflater();
-		inflater.inflate(R.menu.restaurant_selection_menu, menu);
-		return true;
+		menu.add(0, MENU_ITEM_FILTER, 0, R.string.option_filter);
+		return super.onCreateOptionsMenu(menu);
 	}
-
+	
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		super.onOptionsItemSelected(item);
-		switch (item.getItemId()) {
-		case R.id.option_check_in:
-			// Start an activity for result
-			// Attempt to check in at a special
-			//Intent i = new Intent(getApplicationContext(), CheckInActivity.class);
-			//startActivityForResult(i, DineOnConstants.REQUEST_CHECK_IN);
-			
-			// Start up the QR scan activity
-			IntentIntegrator integrator = new IntentIntegrator(this);
-			integrator.initiateScan();
-			
-			break;
-		default:
-			// Dunno what happened here
+		switch (item.getItemId()){
+		case MENU_ITEM_FILTER:
+			// TODO
 			break;
 		}
-		return true;
-	}
-
-	@Override
-	protected void onActivityResult (int requestCode, int resultCode, Intent data){
-		super.onActivityResult(requestCode, resultCode, data);
-		
-		if (resultCode != RESULT_OK) {
-			// TODO REmove Log for release
-			Log.w(TAG, "Check in Failed or Cancelled");
-			return;
-		}
-		
-		if (requestCode == DineOnConstants.REQUEST_CHECK_IN) {
-			// Register this user with this restaurant
-			QRCheckin.QRResult(requestCode, resultCode, data);
-		}
-		
+		return super.onOptionsItemSelected(item);
 	}
 
 	//////////////////////////////////////////////////////////////////////

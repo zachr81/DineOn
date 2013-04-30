@@ -10,6 +10,9 @@ import uw.cse.dineon.library.DiningSession;
 import uw.cse.dineon.library.Storable;
 import uw.cse.dineon.library.util.DineOnConstants;
 import uw.cse.dineon.library.util.ParseUtil;
+import uw.cse.dineon.user.bill.CurrentOrderActivity;
+import uw.cse.dineon.user.checkin.IntentIntegrator;
+import uw.cse.dineon.user.checkin.QRCheckin;
 import uw.cse.dineon.user.general.ProfileActivity;
 import uw.cse.dineon.user.general.UserPreferencesActivity;
 import android.content.Intent;
@@ -41,6 +44,11 @@ public class DineOnUserActivity extends FragmentActivity {
 		//  UI Menu is updated this is done manually
 		//  See basic_menu under res/menu for ids
 		inflater.inflate(R.menu.basic_menu, menu);
+		
+		MenuItem item = menu.findItem(R.id.option_view_bill);
+		item.setEnabled(false);
+		item.setVisible(false);
+		
 		return true;
 	}
 
@@ -54,10 +62,24 @@ public class DineOnUserActivity extends FragmentActivity {
 		case R.id.option_settings:
 			i = new Intent(getApplicationContext(), UserPreferencesActivity.class);
 			break;
+		case R.id.option_check_in:
+			IntentIntegrator integrator = new IntentIntegrator(this);
+			integrator.initiateScan();
+			break;
+		case R.id.option_view_bill:
+			i = new Intent(getApplicationContext(), CurrentOrderActivity.class);
+			// Count all the elements that the user has currently selected
+			startActivityForResult(i, DineOnConstants.REQUEST_VIEW_CURRENT_ORDER);
+			break;
 		}
 		if (i != null)
 			startActivity(i);
 		return true;
+	}
+	
+	@Override
+	public void onActivityResult(int requestCode, int resultCode, Intent intent) {
+		QRCheckin.QRResult(requestCode, resultCode, intent);
 	}
 
 	/**

@@ -11,5 +11,15 @@
         android:showAsAction="never"
         android:title="@string/option_settings">
     </item>
+    <item
+        android:id="@+id/option_check_in"
+        android:showAsAction="always"
+        android:title="@string/option_check_in">
+    </item>
+    <item
+        android:id="@+id/option_view_bill"
+        android:showAsAction="always"
+        android:title="@string/option_view_bill">
+    </item>
 
 </menu>

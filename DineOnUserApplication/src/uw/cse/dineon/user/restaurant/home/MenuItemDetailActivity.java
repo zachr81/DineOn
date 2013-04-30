@@ -39,49 +39,4 @@ public class MenuItemDetailActivity extends DineOnUserActivity {
 			view.setText(s);
 		}
 	}
-
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		MenuInflater inflater = getMenuInflater();
-		inflater.inflate(R.menu.basic_menu, menu);
-		return true;
-	}
-
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		super.onOptionsItemSelected(item);
-		Intent i;
-		switch (item.getItemId()) {
-		case R.id.option_view_order:
-			i = new Intent(getApplicationContext(), CurrentOrderActivity.class);
-			// Count all the elements that the user has currently selected
-			startActivityForResult(i, DineOnConstants.REQUEST_VIEW_CURRENT_ORDER);
-			break;
-		case R.id.option_check_in:
-			// Start up the QR scan activity
-			IntentIntegrator integrator = new IntentIntegrator(this);
-			integrator.initiateScan();
-			break;
-		default:
-			// Dunno what happened here
-			break;
-		}
-		return true;
-	}
-	
-	@Override
-	protected void onActivityResult (int requestCode, int resultCode, Intent data){
-		super.onActivityResult(requestCode, resultCode, data);
-		
-		if (resultCode != RESULT_OK) {
-			// TODO REmove Log for release
-			Log.w(TAG, "Check in Failed or Cancelled");
-			return;
-		}
-		
-		if (requestCode == DineOnConstants.REQUEST_CHECK_IN) {
-			// Register this user with this restaurant
-			QRCheckin.QRResult(requestCode, resultCode, data);
-		}	
-	}
 }

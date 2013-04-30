@@ -2,15 +2,9 @@ package uw.cse.dineon.user.restaurantselection;
 
 import uw.cse.dineon.user.DineOnUserActivity;
 import uw.cse.dineon.user.R;
-import uw.cse.dineon.user.checkin.IntentIntegrator;
-import uw.cse.dineon.user.checkin.QRCheckin;
-import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 
 public class RestaurantInfoActivity extends DineOnUserActivity implements
 RestaurantInfoFragment.RestaurantInfoListener
@@ -62,34 +56,5 @@ RestaurantInfoFragment.RestaurantInfoListener
 	public String getCurrentRestaurant() {
 		// TODO Auto-generated method stub
 		return mRestaurant;
-	}
-
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		MenuInflater inflater = getMenuInflater();
-		inflater.inflate(R.menu.basic_menu, menu);
-		return true;
-	}
-
-	@Override
-	public void onActivityResult(int requestCode, int resultCode, Intent intent) {
-		QRCheckin.QRResult(requestCode, resultCode, intent);
-	}
-	
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		super.onOptionsItemSelected(item);
-		switch (item.getItemId()) {
-		case R.id.option_check_in:
-			// TODO Clean up the number of menus to use
-			// Start a QR scanner activity
-			IntentIntegrator integrator = new IntentIntegrator(this);
-			integrator.initiateScan();
-			break;
-		default:
-			// Dunno what happened here
-			break;
-		}
-		return true;
 	}
 }
