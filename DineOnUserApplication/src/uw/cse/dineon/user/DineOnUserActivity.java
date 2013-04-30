@@ -13,6 +13,7 @@ import uw.cse.dineon.library.util.ParseUtil;
 import uw.cse.dineon.user.general.ProfileActivity;
 import uw.cse.dineon.user.general.UserPreferencesActivity;
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.Menu;
@@ -31,6 +32,8 @@ public class DineOnUserActivity extends FragmentActivity {
 
 	private static final String TAG = DineOnUserActivity.class.getSimpleName();
 
+	protected DiningSession mDiningSession;
+	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		MenuInflater inflater = getMenuInflater();
@@ -60,7 +63,8 @@ public class DineOnUserActivity extends FragmentActivity {
 	/**
 	 * This is the defined call back method for when the 
 	 * User attempts to check in to a restaurant.  Once the check
-	 * @param session
+	 * @param session is a mapping from the arguments returned from the call
+	 * 	DineOnConstants.OBJ_ID => Parse Object ID for Dining Session
 	 */
 	public void onCheckInCallback(Map<String, String> session){
 		try {
@@ -92,7 +96,8 @@ public class DineOnUserActivity extends FragmentActivity {
 	}
 	
 	/**
-	 * 
+	 * This is a callback for when the Dining Session is recieved via local
+	 * caching or 
 	 * @param list
 	 */
 	public void onDiningSessionRecievedCallback(List<Storable> list){
@@ -101,12 +106,32 @@ public class DineOnUserActivity extends FragmentActivity {
 		if (list != null && list.size() == 1){
 			throw new IllegalArgumentException("List returned is not valid: " + list);
 		}
-		DiningSession currentSession = (DiningSession)list.get(0);
+		mDiningSession = (DiningSession)list.get(0);
 		// TODO Extract channel for push
+		// TODO Register for the channel and start listening for updates
 		// TODO Extract object id for restaurant
 
 		// Bundle up dining session
 		// Start RestaurantMainActivity with bundle 
-
 	}
+	
+	@Override
+	public void onSaveInstanceState(Bundle savedInstanceState) {
+		super.onSaveInstanceState(savedInstanceState);
+		// TODO Save state of all the fields of this activity
+		// mDiningSession
+		// Save to Parse then reference later
+	
+	}
+	
+	@Override
+	public void onRestoreInstanceState(Bundle savedInstanceState) {
+	  super.onRestoreInstanceState(savedInstanceState);
+	  // TODO Restore data
+	  // mDiningSession
+	}
+	
+	
+	
+	
 }
