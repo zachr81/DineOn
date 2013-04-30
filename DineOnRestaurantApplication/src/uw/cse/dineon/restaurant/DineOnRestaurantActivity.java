@@ -2,6 +2,7 @@ package uw.cse.dineon.restaurant;
 
 import uw.cse.dineon.restaurant.R;
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -32,5 +33,21 @@ public class DineOnRestaurantActivity extends FragmentActivity {
 		Intent i = null;
 		return true;
 
+	}
+	
+	@Override
+	public void onSaveInstanceState(Bundle savedInstanceState) {
+		super.onSaveInstanceState(savedInstanceState);
+		// TODO Save state of all the fields of this activity
+		// mDiningSession
+		// Save to Parse then reference later
+	
+	}
+	
+	@Override
+	public void onRestoreInstanceState(Bundle savedInstanceState) {
+	  super.onRestoreInstanceState(savedInstanceState);
+	  // TODO Restore data
+	  // mDiningSession
 	}
 }
