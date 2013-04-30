@@ -1,79 +1,75 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
 
-    <TextView
-        android:id="@+id/label_login"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:text="@string/login_label"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
+        android:gravity="center"
+        android:orientation="vertical" >
 
-    <EditText
-        android:id="@+id/input_login_email"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/label_login"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="16dp"
-        android:ems="10"
-        android:hint="@string/hint_email_address"
-        android:inputType="textEmailAddress" />
+        <TextView
+            android:id="@+id/label_login"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="18dp"
+            android:gravity="center"
+            android:text="@string/login_label"
+            android:textAppearance="?android:attr/textAppearanceLarge" />
 
-    <EditText
-        android:id="@+id/input_login_password"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/input_login_email"
-        android:layout_below="@+id/input_login_email"
-        android:layout_marginTop="18dp"
-        android:ems="10"
-        android:hint="@string/password_label"
-        android:inputType="textPassword" >
+        <EditText
+            android:id="@+id/input_login_email"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:ems="10"
+            android:gravity="center"
+            android:hint="@string/hint_email_address"
+            android:inputType="textEmailAddress" />
 
-        <requestFocus />
-    </EditText>
+        <EditText
+            android:id="@+id/input_login_password"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="18dp"
+            android:ems="10"
+            android:gravity="center"
+            android:hint="@string/password_label"
+            android:inputType="textPassword" >
 
-    <Button
-        android:id="@+id/button_login"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/input_login_password"
-        android:layout_alignRight="@+id/input_login_email"
-        android:layout_below="@+id/input_login_password"
-        android:layout_marginTop="21dp"
-        android:text="@string/button_login" />
+            <requestFocus android:layout_width="wrap_content" />
+        </EditText>
 
-    <Button
-        android:id="@+id/button_facebook_login"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/button_login"
-        android:layout_alignRight="@+id/button_login"
-        android:layout_below="@+id/button_login"
-        android:layout_marginTop="23dp"
-        android:text="@string/button_twitter" />
+        <Button
+            android:id="@+id/button_login"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:gravity="center"
+            android:text="@string/button_login" />
 
-    <Button
-        android:id="@+id/button_twitter_login"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/button_facebook_login"
-        android:layout_alignRight="@+id/button_facebook_login"
-        android:layout_below="@+id/button_facebook_login"
-        android:layout_marginTop="24dp"
-        android:text="@string/button_facebook" />
+        <Button
+            android:id="@+id/button_facebook_login"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="@string/button_facebook" />
 
-    <ImageView
-        android:id="@+id/imageView1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="17dp"
-        android:src="@drawable/husky_soft_logo" />
+        <Button
+            android:id="@+id/button_twitter_login"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="@string/button_twitter" />
 
-</RelativeLayout>
+        <ImageView
+            android:id="@+id/imageView1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="24dp"
+            android:contentDescription="@string/content_description_huskysoft_logo"
+            android:src="@drawable/husky_soft_logo" />
+    </LinearLayout>
+
+</ScrollView>
