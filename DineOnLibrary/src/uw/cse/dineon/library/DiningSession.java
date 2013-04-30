@@ -12,7 +12,7 @@ import com.parse.ParseObject;
  *
  */
 public class DiningSession extends Storable {
-
+	
 	private List<Order> orders;
 	private int sessToken;
 	private int tableID;

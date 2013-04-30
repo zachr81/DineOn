@@ -117,12 +117,12 @@ public class LoginFragment extends android.support.v4.app.Fragment {
 	/**
 	 * Attempt to login that can be accessed by external activities
 	 * to login
-	 * @param email email of user
+	 * @param username email of user
 	 * @param password password of user
 	 */
-	public void attemptLogin(String email, String password) {
+	public void attemptLogin(String username, String password) {
 		// TODO Translate email and password to a single login credential
-		mListener.onLogin(email);
+		mListener.onLogin(username);
 	}
 
 	/**
@@ -138,6 +138,8 @@ public class LoginFragment extends android.support.v4.app.Fragment {
 		
 		// TODO Perhaps create a login credential class and pass that back to the activity
 		public void onLogin(String loginCredentials);
+		
+		public void onLogin(String username, String password);
 
 		public void onCreateNewAccount();
 	}

@@ -10,11 +10,15 @@ import android.widget.TextView;
 
 public class MenuItemDetailFragment extends Fragment {
 
+	public static final String KEY_MENU = "menu";
+	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.fragment_menuitem_detail,
 				container, false);
+		
+		
 		return view;
 	}
 

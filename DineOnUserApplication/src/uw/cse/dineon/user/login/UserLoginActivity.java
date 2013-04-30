@@ -1,5 +1,7 @@
 package uw.cse.dineon.user.login;
 
+import com.parse.ParseUser;
+
 import uw.cse.dineon.library.util.DevelopTools;
 import uw.cse.dineon.user.R;
 import uw.cse.dineon.user.restaurantselection.RestaurantSelectionActivity;
@@ -41,13 +43,35 @@ LoginFragment.OnLoginListener {
 	}
 
 	@Override
+	protected void onResume(){
+		super.onResume();
+		
+		
+		ParseUser me = ParseUser.getCurrentUser();
+		if (me != null) {
+			startRestSelectionAct();
+		}
+	}
+	
+	private void startRestSelectionAct(){
+		Intent i = new Intent(this, RestaurantSelectionActivity.class);
+//		i.putExtra(RestaurantSelectionActivity.EXTRA_USER, loginCredentials);
+		startActivity(i);
+	}
+	
+	// TODO Static Callback
+	@Override
+	public void onLogin(String username, String password) {
+		// TODO Auto-generated method stub
+		
+	} 
+	
+	@Override
 	public void onLogin(String loginCredentials) {
 		// TODO Auto-generated method stub
 		// Check credentials
-		
-		Intent i = new Intent(this, RestaurantSelectionActivity.class);
-		i.putExtra(RestaurantSelectionActivity.EXTRA_USER, loginCredentials);
-		startActivity(i);
+
+		startRestSelectionAct();
 	}
 
 	@Override
@@ -65,14 +89,16 @@ LoginFragment.OnLoginListener {
 		switch (item.getItemId()) {
 		case R.id.option_forgot_password: 
 			// TODO Implement
-		case R.id.option_create_new_account:
 			// TODO Implement
 			DevelopTools.getUnimplementedDialog(this, null).show();
+		case R.id.option_create_new_account:
+			Intent i = new Intent(this.getApplicationContext(), CreateNewAccountActivity.class);
+			startActivity(i);
 			break;
 		}
 		return true;
 	}
-	
+
 	@Override
 	public void onCreateNewAccount() {
 		// TODO Auto-generated method stub
@@ -84,7 +110,7 @@ LoginFragment.OnLoginListener {
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if (resultCode == RESULT_OK && requestCode == REQUEST_CREATE_NEW_ACCOUNT) {
 			if (data.hasExtra(RETURN_CODE_LOGIN_CREDENTIALS)) {
-				
+
 				// TODO Remove this and place actual implementation
 				// Verify account actually exist
 				// automatically proceed once account is verified
@@ -92,98 +118,13 @@ LoginFragment.OnLoginListener {
 						+ " created!",
 						Toast.LENGTH_SHORT).show();
 			} else if (data.hasExtra(RETURN_CODE_LOGIN_3RDPARTY)) {
-				
+
 				Toast.makeText(this, "Login using " + data.getExtras().getString(RETURN_CODE_LOGIN_3RDPARTY)
 						+ " requested",
 						Toast.LENGTH_SHORT).show();
 			}
 		}
-	} 
-
-	// if the wizard generated an onCreateOptionsMenu you can delete
-	// it, not needed for this tutorial
+	}
 
 
-
-	//	/** Called when the activity is first created. */
-	//	public void onCreate(Bundle savedInstanceState) {
-	//		super.onCreate(savedInstanceState);
-	//		setContentView(R.layout.main);
-	//		//ParseAnalytics.trackAppOpened(this.getIntent());
-	//		CustomerReceiver rec = new CustomerReceiver((TextView)this.findViewById(R.id.taskList));
-	//		IntentFilter iff = new IntentFilter("com.parse.starter.UPDATE_STATUS");
-	//		PushService.subscribe(this, "push", UserLoginActivity.class);
-	//		this.registerReceiver(rec, iff);
-	//		this.getOrders(null);
-	//		ParseInstallation.getCurrentInstallation().saveInBackground();
-	//	}
-	//	
-	//	/** Called when the user clicks the add task button */
-	//	public void addTask(View view) {
-	//		EditText taskText = (EditText) findViewById(R.id.newTaskText);
-	//		final String message = taskText.getText().toString();
-	//		
-	//		String user = "customer";//ParseUser.getCurrentUser().getUsername();
-	//		
-	//		ParseObject testObject = new ParseObject("Order");
-	//		testObject.put("item", message);
-	//		testObject.put("uname", user);
-	//		
-	//		taskText.setText("");
-	//		
-	//		testObject.saveInBackground( new SaveCallback() {
-	//
-	//			@Override
-	//			public void done(ParseException e) {
-	//				if (e == null) {
-	//					// save was successful so send push
-	//					share(message);
-	//				} else {
-	//					// Error occured
-	//					Log.d("score", "Error: " + e.getMessage());
-	//				}
-	//			}
-	//		});
-	//	}
-	//	
-	//	/** Called when the user clicks the add task button */
-	//	public void getOrders(View view) {
-	//		final TextView list = (TextView) findViewById(R.id.taskList);
-	//		
-	//		ParseQuery query = new ParseQuery("Order");
-	//		query.findInBackground(new FindCallback() {
-	//		    public void done(List<ParseObject> taskList, ParseException e) {
-	//		        if (e == null) {
-	//		        	String newList = "";
-	//		        	for (int i = 0; i < taskList.size(); i++) {
-	//		        		newList += taskList.get(i).getString("uname") + " - " + taskList.get(i).getString("item") + "\n";
-	//		        	}
-	//		        	if (!newList.equals("")) list.setText(newList);
-	//		        } else {
-	//		            Log.d("score", "Error: " + e.getMessage());
-	//		        }
-	//		    }
-	//		});
-	//	}
-	//	
-	//	public void share(String msg){
-	//		
-	//		try{
-	//			String user = "customer";//ParseUser.getCurrentUser().getUsername();
-	//
-	//			JSONObject data = new JSONObject();
-	//	        data.put("action", "com.parse.starter.UPDATE_STATUS");
-	//	        data.put("uname", user);
-	//	        data.put("item", msg);
-	//	
-	//			Log.d(TAG, data.toString());
-	//			ParsePush push = new ParsePush();
-	//			push.setChannel("push");
-	//			push.setData(data);
-	//			push.sendInBackground();
-	//		}
-	//		catch(Exception e){
-	//			Log.d(TAG, e.getMessage());
-	//		}
-	//	}
 }

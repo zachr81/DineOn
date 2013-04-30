@@ -1,4 +1,4 @@
-package uw.cse.dineon.library;
+package uw.cse.dineon.library.util;
 
 /**
  * Generalized wrapper class to hold constants that pertain to multiple modules with the applications
@@ -16,4 +16,7 @@ public class DineOnConstants {
 	public final static int REQUEST_PAY_BILL = 0x2;
 	// some change
 	
+	
+	// Callback Key for braodcast receiver callbacks
+	public static final String OBJ_ID = "OBJ_ID";
 }

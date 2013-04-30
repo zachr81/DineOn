@@ -1,4 +1,4 @@
-package uw.cse.dineon.library;
+package uw.cse.dineon.library.util;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -77,11 +77,8 @@ public class DineOnReceiver extends BroadcastReceiver {
 				String next = it.next();
 				retMap.put(next, json.getString(next));
 			}
-			
-			List<Map<String, String>> retList = new LinkedList<Map<String, String>>();
-			retList.add(retMap);
-			
-			handler.invoke(null, retList);
+
+			handler.invoke(null, retMap);
 		
 		} catch (IllegalAccessException e) {
 			Log.d(TAG, "ReflectionException: " + e.getMessage());

@@ -1,7 +1,7 @@
 /**
  * 
  */
-package uw.cse.dineon.library;
+package uw.cse.dineon.library.util;
 
 
 import java.lang.reflect.InvocationTargetException;
@@ -12,6 +12,8 @@ import java.util.Map;
 import java.util.Set;
 
 import org.json.JSONObject;
+
+import uw.cse.dineon.library.Storable;
 
 import android.util.Log;
 
@@ -59,8 +61,7 @@ public class ParseUtil {
 			@Override
 			public void done(ParseException e) {
 				if(e == null){
-					List<Boolean> params = new LinkedList<Boolean>();
-					params.add(Boolean.valueOf(true));
+					Boolean params = true;
 					try {
 						m.invoke(null, params);
 					}catch(NullPointerException e1){
@@ -78,8 +79,9 @@ public class ParseUtil {
 						Log.d(TAG, "Error: " + e1.getMessage());
 						e1.printStackTrace();
 					}
-				}
-				
+				} // TODO
+					// Invoke our method with null notifying 
+					// User create account failed
 			}
 			
 		});
@@ -109,7 +111,10 @@ public class ParseUtil {
 				}
 				else{
 					Log.d(TAG, "Log in error");
-				}
+				} 
+				// TODO
+				// Invoke our method with null notifying 
+				// User create account failed
 				
 			}
 			
@@ -135,6 +140,8 @@ public class ParseUtil {
 				}
 			}
 		});
+		// TODO
+		// Handle failure
 	}
 	
 	/**
@@ -148,7 +155,7 @@ public class ParseUtil {
 	 * 
 	 * Note: Returns a List<Storable> to the handler.
 	 */
-	public static void getDataFromCloud(Class<Storable> c, Method handle, Map<String, String> attr) {
+	public static void getDataFromCloud(Class<? extends Storable> c, Method handle, Map<String, String> attr) {
 		
 		ParseQuery query = new ParseQuery(c.getSimpleName());
 		Set<String> kSet = attr.keySet();
@@ -170,17 +177,17 @@ public class ParseUtil {
 		        				s = (Storable) Class.forName(className).newInstance();
 		        				s.unpackObject(p);
 		        				classList.add(s);
-		        			}
-		        			List<List<Storable>> retList = new LinkedList<List<Storable>>();
-		        			retList.add(classList);
-		        			h.invoke(null, retList);
+		        			}		   
+		        			h.invoke(null, classList);
 		        		} catch (Exception ex) {
 		        			Log.d(TAG, "Error: " + ex.getMessage());
 		        		}
 		        	}
 		        } else {
 		            Log.d(TAG, "Error: " + e.getMessage());
-		        }
+		        }// TODO
+				// Invoke our method with null notifying 
+				// User create account failed
 		    }
 		});
 	}

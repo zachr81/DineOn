@@ -57,7 +57,8 @@ public class OrderListFragment extends ListFragment {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		List<String> mOrders = getArguments() != null ? getArguments().getStringArrayList(KEY_LIST) : null;
+		List<String> mOrders = getArguments() != null ? 
+				getArguments().getStringArrayList(KEY_LIST) : null;
 		if (mOrders == null){
 			if (mListener != null)
 				mOrders = mListener.getCurrentOrders();

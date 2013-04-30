@@ -1,6 +1,6 @@
 package uw.cse.dineon.restaurant;
 
-import uw.cse.dineon.library.DineOnConstants;
+import uw.cse.dineon.library.util.DineOnConstants;
 
 import com.parse.Parse;
 import com.parse.ParseACL;

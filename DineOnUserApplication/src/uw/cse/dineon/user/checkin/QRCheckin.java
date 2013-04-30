@@ -21,7 +21,7 @@ public class QRCheckin {
 		  if (scanResult != null) {
 			  // handle scan result
 			  String contents = scanResult.getContents();
-			  
+			  // TODO Handle Correct log in
 			  try {
 				  JSONObject data = new JSONObject(contents);
 				  Log.d("ZXing", data.toString());

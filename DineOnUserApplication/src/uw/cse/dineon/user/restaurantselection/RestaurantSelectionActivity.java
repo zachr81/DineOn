@@ -2,12 +2,12 @@
 
 package uw.cse.dineon.user.restaurantselection;
 
-import uw.cse.dineon.library.DineOnConstants;
+import com.parse.ParseUser;
+
+import uw.cse.dineon.library.util.DineOnConstants;
 import uw.cse.dineon.user.DineOnUserActivity;
 import uw.cse.dineon.user.R;
-import uw.cse.dineon.user.checkin.CheckInActivity;
 import uw.cse.dineon.user.checkin.IntentIntegrator;
-import uw.cse.dineon.user.checkin.IntentResult;
 import uw.cse.dineon.user.checkin.QRCheckin;
 import uw.cse.dineon.user.restaurant.home.RestaurantHomeActivity;
 import android.content.Intent;
@@ -33,7 +33,7 @@ RestaurantInfoFragment.RestaurantInfoListener
 
 	public static final String EXTRA_USER = "USER";
 
-	private String /*Change to ParseUser*/ mUser;
+	private ParseUser /*Change to ParseUser*/ mUser;
 
 	private String mCurRestaurant;
 
@@ -46,11 +46,14 @@ RestaurantInfoFragment.RestaurantInfoListener
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_restaurant_selection);
 
-		Bundle extras = getIntent().getExtras();
-		if (extras != null) {
-			mUser = extras.getString(EXTRA_USER);
-			Toast.makeText(this, "User: " + mUser + " logged in!", Toast.LENGTH_SHORT).show();
-		}
+		mUser = ParseUser.getCurrentUser();
+		Toast.makeText(this, "User: " + mUser.getUsername() + " logged in!", Toast.LENGTH_SHORT).show();
+		
+//		Bundle extras = getIntent().getExtras();
+//		if (extras != null) {
+//			mUser = extras.getString(EXTRA_USER);
+//			Toast.makeText(this, "User: " + mUser + " logged in!", Toast.LENGTH_SHORT).show();
+//		}
 	}
 
 	@Override
