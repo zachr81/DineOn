@@ -11,12 +11,14 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -38,7 +40,7 @@ public class CustomerListFragment extends ListFragment {
 	private static final String KEY_LIST = "MY LIST";
 
 	//TODO change string to User
-	private ArrayAdapter<String> mAdapter;
+	private UserListAdapter mAdapter;
 
 	/**
 	 * Creates a new customer list fragment
@@ -69,9 +71,7 @@ public class CustomerListFragment extends ListFragment {
 				mCustomers = new ArrayList<String>(); // Empty
 		}
 
-		//TODO Create custom adapter to handle custom layouts
-		mAdapter = new ArrayAdapter<String>(getActivity(), 
-				android.R.layout.simple_list_item_1, mCustomers);
+		mAdapter = new UserListAdapter(getActivity(), mCustomers);
 		setListAdapter(mAdapter);
 	}
 
@@ -136,7 +136,7 @@ public class CustomerListFragment extends ListFragment {
 	private class UserListAdapter extends BaseAdapter {
 		
 		private List<String> users;
-		private int expanded;
+		private int expanded = -1;
 		private Context mContext;
 		
 		/**
@@ -175,10 +175,12 @@ public class CustomerListFragment extends ListFragment {
 			} else {
 				expanded = position;
 			}
+			notifyDataSetChanged();
 		}
 		
 		public void add(String customer){
 			users.add(customer);
+			Log.v(TAG, "Added customer " + customer);
 		}
 		
 		public void remove(String customer){
@@ -201,19 +203,22 @@ public class CustomerListFragment extends ListFragment {
 				vw.setOrientation(LinearLayout.VERTICAL);
 				
 				LayoutInflater inflater = (LayoutInflater)mContext.getSystemService (Context.LAYOUT_INFLATER_SERVICE);
-				vw_top = inflater.inflate(R.layout.listitem_restaurant_user_top, vw, true);
-				vw_bot = inflater.inflate(R.layout.listitem_restaurant_user_bot, vw, true);
+				vw_top = inflater.inflate(R.layout.listitem_restaurant_user_top, null, true);
+				vw_bot = inflater.inflate(R.layout.listitem_restaurant_user_bot, null, true);
+				vw.addView(vw_top);
+				vw.addView(vw_bot);
 			} else {
 				vw = (LinearLayout) convertView;
 				vw_top = vw.findViewById(R.id.listitem_user_top);
 				vw_bot = vw.findViewById(R.id.listitem_user_bot);
 			}
 			//Set up expand button
-			Button expand = (Button) vw_top.findViewById(R.id.button_expand_user);
+			ImageButton expand = (ImageButton) vw_top.findViewById(R.id.button_expand_user);
 			
 			expand.setOnClickListener(new View.OnClickListener() {
 	             public void onClick(View v) {
 	            	 expand(position);
+	            	 Log.v(TAG, "Toggled position " + position);
 	            	 //Stick *that* in your closure and smoke it
 	             }
 	         });
@@ -222,6 +227,7 @@ public class CustomerListFragment extends ListFragment {
 				vw_bot.setVisibility(View.GONE);
 			else
 				vw_bot.setVisibility(View.VISIBLE);
+			
 			//Edit some text
 			TextView cust_name = (TextView) vw_top.findViewById(R.id.label_user_name);
 			cust_name.setText(users.get(position));
@@ -230,7 +236,7 @@ public class CustomerListFragment extends ListFragment {
 			infotext.setText("This text was modified!");
 			
 			
-			return null;
+			return vw;
 		}
 		
 		
