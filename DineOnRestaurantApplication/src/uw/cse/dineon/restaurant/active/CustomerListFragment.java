@@ -2,8 +2,6 @@ package uw.cse.dineon.restaurant.active;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
-
 import uw.cse.dineon.library.User;
 
 import uw.cse.dineon.restaurant.R;
@@ -26,17 +24,20 @@ import android.widget.TextView;
  * For displaying current restaurant customers
  * TODO Improve and complete
  * @author mhotan
+ * @author blasv
  */
+@SuppressWarnings("unused")
 public class CustomerListFragment extends ListFragment {
 
 	/**
-	 * For Logging
+	 * For Use with Log functions
 	 */
-	@SuppressWarnings("unused")
 	private final String TAG = this.getClass().getSimpleName();
 
+	//An activity that implements the required listener functions
 	private CustomerListener mListener;
 
+	//String for storing list in arguments
 	private static final String KEY_LIST = "MY LIST";
 
 	//TODO change string to User
@@ -45,7 +46,7 @@ public class CustomerListFragment extends ListFragment {
 	/**
 	 * Creates a new customer list fragment
 	 * @param customers TODO Change to user class
-	 * @return new fragment
+	 * @return New CustomerListFragment
 	 */
 	public static CustomerListFragment newInstance(List<String> customers){
 		CustomerListFragment frag = new CustomerListFragment();
@@ -53,6 +54,7 @@ public class CustomerListFragment extends ListFragment {
 		if (customers != null) 
 			mList.addAll(customers);
 
+		//Store list in arguments for future retrieval
 		Bundle args = new Bundle();
 		args.putStringArrayList(KEY_LIST, mList);
 		frag.setArguments(args);
@@ -98,16 +100,22 @@ public class CustomerListFragment extends ListFragment {
 		}
 	}
 
+	/**
+	 * @param customer
+	 */
 	public void addCustomer(String customer) {
 		if (mAdapter != null) {
 			mAdapter.add(customer);
-		}
+		} else
+			Log.d(TAG, "Attempted to add customer to nonexistant list!");
+		
 	}
 
 	public void removeCustomer(String customer){
 		if (mAdapter != null) {
 			mAdapter.remove(customer);
-		}
+		} else
+			Log.d(TAG, "Attempted to remove customer from nonexistant list!");
 	}
 
 	/**
@@ -127,7 +135,7 @@ public class CustomerListFragment extends ListFragment {
 		 * TODO Add more methods here as needed
 		 * To complete the full functionality of this fragment
 		 * These methods will probably be methods that signify the 
-		 * user wants do conduct a certain action for this user
+		 * user wants do conduct a certain action for this User
 		 * 
 		 * IE: Send the user a message
 		 */
@@ -169,6 +177,11 @@ public class CustomerListFragment extends ListFragment {
 			// (which isn't a big deal if we never use the method)
 		}
 		
+		/**
+		 * Toggles expansion of the given list item.
+		 * Currently only one item can be expanded at a time
+		 * @param position The position of the list item to toggle
+		 */
 		public void expand(int position){
 			if(expanded == position){//Already expanded, collapse it
 				expanded = -1;
@@ -181,17 +194,19 @@ public class CustomerListFragment extends ListFragment {
 		public void add(String customer){
 			users.add(customer);
 			Log.v(TAG, "Added customer " + customer);
+			notifyDataSetChanged();
 		}
 		
 		public void remove(String customer){
 			users.remove(customer);
+			Log.v(TAG, "Removed customer " + customer);
+			notifyDataSetChanged();
 		}
 		
 		
 
 		@Override
 		public View getView(final int position, View convertView, ViewGroup parent) {
-			// TODO Auto-generated method stub
 			LinearLayout vw;
 			//use vw.findViewById(R.id.whatever) to get children views
 			
@@ -208,6 +223,7 @@ public class CustomerListFragment extends ListFragment {
 				vw.addView(vw_top);
 				vw.addView(vw_bot);
 			} else {
+				//Everything already created, just find them
 				vw = (LinearLayout) convertView;
 				vw_top = vw.findViewById(R.id.listitem_user_top);
 				vw_bot = vw.findViewById(R.id.listitem_user_bot);
@@ -228,7 +244,7 @@ public class CustomerListFragment extends ListFragment {
 			else
 				vw_bot.setVisibility(View.VISIBLE);
 			
-			//Edit some text
+			//TODO Pull actual info from a User object
 			TextView cust_name = (TextView) vw_top.findViewById(R.id.label_user_name);
 			cust_name.setText(users.get(position));
 			
