@@ -1,8 +1,6 @@
 package uw.cse.dineon.user.login;
 
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.List;
 
 import uw.cse.dineon.library.util.ParseUtil;
 import uw.cse.dineon.user.R;

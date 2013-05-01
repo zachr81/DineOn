@@ -2,10 +2,6 @@ package uw.cse.dineon.user.general;
 
 import uw.cse.dineon.user.DineOnUserActivity;
 import uw.cse.dineon.user.R;
-import android.app.ActionBar;
-import android.app.ActionBar.Tab;
-import android.app.FragmentTransaction;
-import android.content.Intent;
 import android.os.Bundle;
 
 /**

@@ -1,7 +1,5 @@
 package uw.cse.dineon.user.login;
 
-import com.parse.ParseUser;
-
 import uw.cse.dineon.library.util.DevelopTools;
 import uw.cse.dineon.user.R;
 import uw.cse.dineon.user.restaurantselection.RestaurantSelectionActivity;
@@ -12,6 +10,8 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.Toast;
+
+import com.parse.ParseUser;
 
 /**
  * Initial activity that user is brought to in order to gain admittance.  
@@ -30,7 +30,14 @@ LoginFragment.OnLoginListener {
 	// Request code to create a new account
 	private static final int REQUEST_CREATE_NEW_ACCOUNT = 0x1;
 
+	/**
+	 * Return code for  
+	 */
 	public static final String RETURN_CODE_LOGIN_CREDENTIALS = TAG + ":LOGIN_NEW_CREDENTIALS";
+	
+	/**
+	 * 
+	 */
 	public static final String RETURN_CODE_LOGIN_3RDPARTY = TAG + ":LOGIN_3RD_PARTY";
 
 	@Override

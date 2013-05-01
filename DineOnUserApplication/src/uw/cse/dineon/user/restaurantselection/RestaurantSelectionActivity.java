@@ -2,22 +2,17 @@
 
 package uw.cse.dineon.user.restaurantselection;
 
-import com.parse.ParseUser;
-
-import uw.cse.dineon.library.util.DineOnConstants;
 import uw.cse.dineon.user.DineOnUserActivity;
 import uw.cse.dineon.user.R;
-import uw.cse.dineon.user.checkin.IntentIntegrator;
-import uw.cse.dineon.user.checkin.QRCheckin;
 import uw.cse.dineon.user.restaurant.home.RestaurantHomeActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
-import android.util.Log;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.Toast;
+
+import com.parse.ParseUser;
 
 /**
  * TODO
