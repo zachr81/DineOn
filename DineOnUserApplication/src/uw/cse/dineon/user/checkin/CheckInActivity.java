@@ -1,8 +1,19 @@
 package uw.cse.dineon.user.checkin;
 
+import java.lang.reflect.Method;
+import java.util.HashMap;
+import java.util.Map;
+
+import com.parse.ParseUser;
+import com.parse.PushService;
+
+import uw.cse.dineon.library.DineOnReceiver;
 import uw.cse.dineon.user.DineOnUserActivity;
 import uw.cse.dineon.user.R;
+import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.util.Log;
 
@@ -26,6 +37,19 @@ implements CheckInFragment.CheckInListener{
 		mCheckedIn = false;
 		
 		// Set up the broadcast receiver for push notifications
+		Map<String, String> m = new HashMap<String, String>();
+		DineOnReceiver rec = createDineOnRecevier(
+				this.getClass().getMethod("onDiningSessionConfirmation", m.getClass()), 
+				this.findViewById(R.layout.activity_checkin).getContext(), 
+				this, 
+				"uw.cse.dineon.user.CONFIRM_DINING_SESSION", 
+				"uw.cse.dineon.user." + ParseUser.getCurrentUser().getUsername());
+		IntentFilter iff = new IntentFilter("uw.cse.dineon.user.CONFIRM_DINING_SESSION");
+		PushService.subscribe(this, "push", CheckInActivity.class);
+		this.registerReceiver(rec, iff);
+	}
+	
+	public void onDiningSessionConfirmation(Map<String, String> attr) {
 		
 	}
 
