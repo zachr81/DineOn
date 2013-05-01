@@ -2,15 +2,27 @@ package uw.cse.dineon.restaurant.active;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
+import uw.cse.dineon.library.User;
+
+import uw.cse.dineon.restaurant.R;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
+import android.content.Context;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
+import android.widget.Button;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 /**
  * For displaying current restaurant customers
- * TODO Improve and comlete
+ * TODO Improve and complete
  * @author mhotan
  */
 public class CustomerListFragment extends ListFragment {
@@ -18,6 +30,7 @@ public class CustomerListFragment extends ListFragment {
 	/**
 	 * For Logging
 	 */
+	@SuppressWarnings("unused")
 	private final String TAG = this.getClass().getSimpleName();
 
 	private CustomerListener mListener;
@@ -47,6 +60,7 @@ public class CustomerListFragment extends ListFragment {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		//Retrieve customer list from stored arguments if available
 		List<String> mCustomers = getArguments() != null ? getArguments().getStringArrayList(KEY_LIST) : null;
 		if (mCustomers == null){
 			if (mListener != null)
@@ -55,10 +69,10 @@ public class CustomerListFragment extends ListFragment {
 				mCustomers = new ArrayList<String>(); // Empty
 		}
 
-		//TODO Create custom adapter to handle custom layoutss
+		//TODO Create custom adapter to handle custom layouts
 		mAdapter = new ArrayAdapter<String>(getActivity(), 
 				android.R.layout.simple_list_item_1, mCustomers);
-		setListAdapter(mAdapter);	
+		setListAdapter(mAdapter);
 	}
 
 	@Override
@@ -70,6 +84,7 @@ public class CustomerListFragment extends ListFragment {
 //		mAdapter = new ArrayAdapter<String>(getActivity(), 
 //				android.R.layout.simple_list_item_1, mCustomers);
 //		setListAdapter(mAdapter);	
+		
 	}
 
 	@Override
@@ -117,4 +132,109 @@ public class CustomerListFragment extends ListFragment {
 		 * IE: Send the user a message
 		 */
 	}
+	
+	private class UserListAdapter extends BaseAdapter {
+		
+		private List<String> users;
+		private int expanded;
+		private Context mContext;
+		
+		/**
+		 * Constructs a new UserList Adapter
+		 * 
+		 * @param context The current context
+		 * @param userlist The list of users to display
+		 */
+		public UserListAdapter(Context context, List<String> userlist){
+			mContext = context;
+			users = userlist;
+		}
+
+		@Override
+		public int getCount() {
+			return users.size();
+		}
+
+		@Override
+		public Object getItem(int position) {
+			return users.get(position);
+		}
+
+		@Override
+		//Get unique "ID" associated with the element at the given position
+		//For now we just use the position as the ID
+		public long getItemId(int position) {
+			return position;
+			// XXX This will likely break if we start reordering the list
+			// (which isn't a big deal if we never use the method)
+		}
+		
+		public void expand(int position){
+			if(expanded == position){//Already expanded, collapse it
+				expanded = -1;
+			} else {
+				expanded = position;
+			}
+		}
+		
+		public void add(String customer){
+			users.add(customer);
+		}
+		
+		public void remove(String customer){
+			users.remove(customer);
+		}
+		
+		
+
+		@Override
+		public View getView(final int position, View convertView, ViewGroup parent) {
+			// TODO Auto-generated method stub
+			LinearLayout vw;
+			//use vw.findViewById(R.id.whatever) to get children views
+			
+			View vw_top;
+			View vw_bot;
+			if (convertView == null){
+				//Initialize and verticalize parent container viewgroup
+				vw = new LinearLayout(mContext);
+				vw.setOrientation(LinearLayout.VERTICAL);
+				
+				LayoutInflater inflater = (LayoutInflater)mContext.getSystemService (Context.LAYOUT_INFLATER_SERVICE);
+				vw_top = inflater.inflate(R.layout.listitem_restaurant_user_top, vw, true);
+				vw_bot = inflater.inflate(R.layout.listitem_restaurant_user_bot, vw, true);
+			} else {
+				vw = (LinearLayout) convertView;
+				vw_top = vw.findViewById(R.id.listitem_user_top);
+				vw_bot = vw.findViewById(R.id.listitem_user_bot);
+			}
+			//Set up expand button
+			Button expand = (Button) vw_top.findViewById(R.id.button_expand_user);
+			
+			expand.setOnClickListener(new View.OnClickListener() {
+	             public void onClick(View v) {
+	            	 expand(position);
+	            	 //Stick *that* in your closure and smoke it
+	             }
+	         });
+			
+			if(expanded != position)
+				vw_bot.setVisibility(View.GONE);
+			else
+				vw_bot.setVisibility(View.VISIBLE);
+			//Edit some text
+			TextView cust_name = (TextView) vw_top.findViewById(R.id.label_user_name);
+			cust_name.setText(users.get(position));
+			
+			TextView infotext = (TextView) vw_bot.findViewById(R.id.label_user_info);
+			infotext.setText("This text was modified!");
+			
+			
+			return null;
+		}
+		
+		
+		
+	}
+	
 }
