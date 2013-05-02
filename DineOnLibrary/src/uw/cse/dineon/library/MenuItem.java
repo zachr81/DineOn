@@ -1,6 +1,7 @@
 package uw.cse.dineon.library;
 
-import android.os.Bundle;
+import android.os.Parcel;
+import android.os.Parcelable;
 
 import com.parse.ParseObject;
 
@@ -9,7 +10,7 @@ import com.parse.ParseObject;
  * @author zachr81
  *
  */
-public class MenuItem extends Storable {
+public class MenuItem extends Storable implements Parcelable {
 
 	private int productID;
 	private double price;
@@ -28,6 +29,10 @@ public class MenuItem extends Storable {
 		this.description = description;
 	}
 	
+	public MenuItem(Parcel source) {
+		readFromParcel(source);
+	}
+
 	/**
 	 * @return the productID
 	 */
@@ -71,18 +76,6 @@ public class MenuItem extends Storable {
 	}
 
 	@Override
-	public Bundle bundle() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public void unbundle(Bundle b) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
 	public ParseObject packObject() {
 		// TODO Auto-generated method stub
 		return null;
@@ -93,6 +86,52 @@ public class MenuItem extends Storable {
 		// TODO Auto-generated method stub
 		
 	}
+
+	@Override
+	public int describeContents() {
+		// TODO ?? - examples online use 0.
+		return 0;
+	}
+
+	/**
+	 * Writes this MenuItem to Parcel dest in the order:
+	 * int, double, String to be retrieved at a later time.
+	 * 
+	 * @param dest Parcel to write MenuItem data to.
+	 * @param flags
+	 */
+	@Override
+	public void writeToParcel(Parcel dest, int flags) {
+		dest.writeInt(productID);
+		dest.writeDouble(price);
+		dest.writeString(description);
+	}
 	
+	/**
+	 * Helper method for updating MenuItem with the data from a Parcel.
+	 * @param source Parcel containing data in the order: int, double, string
+	 */
+	private void readFromParcel(Parcel source) {
+		productID = source.readInt();
+		price = source.readDouble();
+		description = source.readString();
+	}
 	
+	/**
+	 * Parcelable creator object of a MenuItem.
+	 * Can create a MenuItem from a Parcel.
+	 */
+	public static final Parcelable.Creator<MenuItem> CREATOR = 
+			new Parcelable.Creator<MenuItem>() {
+
+				@Override
+				public MenuItem createFromParcel(Parcel source) {
+					return new MenuItem(source);
+				}
+
+				@Override
+				public MenuItem[] newArray(int size) {
+					return new MenuItem[size];
+				}
+			};
 }

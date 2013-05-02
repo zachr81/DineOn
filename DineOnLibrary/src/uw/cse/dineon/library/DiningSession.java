@@ -3,9 +3,9 @@ package uw.cse.dineon.library;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Set;
 
-import android.os.Bundle;
+import android.os.Parcel;
+import android.os.Parcelable;
 
 import com.parse.ParseObject;
 
@@ -14,7 +14,7 @@ import com.parse.ParseObject;
  * @author zachr81
  *
  */
-public class DiningSession extends Storable {
+public class DiningSession extends Storable implements Parcelable {
 	
 	private List<User> users;
 	private long startTime;
@@ -26,10 +26,11 @@ public class DiningSession extends Storable {
 	RequestType waiterRequest;
 	
 	/**
+	 * Creates a new DiningSession object.
 	 * 
-	 * @param orders
-	 * @param sessToken
-	 * @param tableID
+	 * @param orders List of Orders.
+	 * @param sessToken int token for tracking session.
+	 * @param tableID int ID of session's table.
 	 */
 	public DiningSession(List<Order> orders, int sessToken, int tableID) {
 		super();
@@ -38,6 +39,16 @@ public class DiningSession extends Storable {
 		this.tableID = tableID;
 	}
 	
+	/**
+	 * Creates a new DiningSession using a given parcel.
+	 * @param source Parcel of information in 
+	 * 		List<User>, long, long, (boolean stored as an) int, List<Order>, int, int
+	 * 		order.
+	 */
+	public DiningSession(Parcel source) {
+		readFromParcel(source);
+	}
+
 	/**
 	 * @return the orders
 	 */
@@ -94,18 +105,6 @@ public class DiningSession extends Storable {
 	}
 
 	@Override
-	public Bundle bundle() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public void unbundle(Bundle b) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
 	public ParseObject packObject() {
 		// TODO Auto-generated method stub
 		return null;
@@ -114,7 +113,6 @@ public class DiningSession extends Storable {
 	@Override
 	public void unpackObject(ParseObject pobj) {
 		// TODO Auto-generated method stub
-		
 	}
 	
 	/**
@@ -175,4 +173,65 @@ public class DiningSession extends Storable {
 	public void setCheckedIn(boolean isCheckedIn) {
 		this.isCheckedIn = isCheckedIn;
 	}
+
+	@Override
+	public int describeContents() {
+		// TODO ?? - examples online use 0.
+		return 0;
+	}
+
+	/**
+	 * Writes this DiningSession to Parcel dest in the order:
+	 * List<User>, long, long, (boolean stored as an) int, List<Order>, int, int
+	 * to be retrieved at a later time.
+	 * 
+	 * @param dest Parcel to write DiningSession data to.
+	 * @param flags int
+	 */
+	@Override
+	public void writeToParcel(Parcel dest, int flags) {
+		// dest.writeInt(productID);
+		dest.writeTypedList(users);
+		dest.writeLong(startTime);
+		dest.writeLong(endTime);
+		
+		// workaround to write boolean (1 = true, 0 = false)
+		dest.writeInt(isCheckedIn ? 1 : 0);
+		dest.writeTypedList(orders);
+		dest.writeInt(sessToken);
+		dest.writeInt(tableID);
+	}
+	
+	/**
+	 * Helper method for updating DiningSession with the data from a Parcel.
+	 * @param source Parcel containing data in the order:
+	 * 		List<User>, long, long, (boolean stored as an) int, List<Order>, int, int
+	 */
+	private void readFromParcel(Parcel source) {
+		source.readTypedList(users, User.CREATOR); // default class load used
+		startTime = source.readLong();
+		endTime = source.readLong();
+		isCheckedIn = (source.readInt() == 1 ? true : false);
+		source.readTypedList(orders, null);
+		sessToken = source.readInt();
+		tableID = source.readInt();
+	}
+	
+	/**
+	 * Parcelable creator object of a MenuItem.
+	 * Can create a MenuItem from a Parcel.
+	 */
+	public static final Parcelable.Creator<DiningSession> CREATOR = 
+			new Parcelable.Creator<DiningSession>() {
+
+				@Override
+				public DiningSession createFromParcel(Parcel source) {
+					return new DiningSession(source);
+				}
+
+				@Override
+				public DiningSession[] newArray(int size) {
+					return new DiningSession[size];
+				}
+			};
 }
