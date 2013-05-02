@@ -46,6 +46,7 @@ public class DineOnUserActivity extends FragmentActivity {
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
 		try {
 			// Set up the broadcast receiver for push notifications
 			Map<String, String> m = new HashMap<String, String>();
@@ -54,8 +55,7 @@ public class DineOnUserActivity extends FragmentActivity {
 					this,
 					this.getClass(), 
 					"uw.cse.dineon.user.CONFIRM_DINING_SESSION", 
-					"uw.cse.dineon.user." + ParseUser.getCurrentUser().getUsername()); 
-						// restaurant name
+					"uw.cse.dineon.user." + ParseUser.getCurrentUser().getUsername()); // restaurant name
 			
 		} catch (NoSuchMethodException e) {
 			// print out error msg
@@ -67,15 +67,15 @@ public class DineOnUserActivity extends FragmentActivity {
 	protected void onResume() {
 		super.onResume();
 		
-		IntentFilter iff = new IntentFilter("uw.cse.dineon.user.REQUEST_DINING_SESSION");
-		PushService.subscribe(this, "push", DineOnUserActivity.class);
-		this.registerReceiver(rec, iff);
+//		IntentFilter iff = new IntentFilter("uw.cse.dineon.user.REQUEST_DINING_SESSION");
+//		PushService.subscribe(this, "push", DineOnUserActivity.class);
+//		this.registerReceiver(rec, iff);
 	}
 	
 	@Override
 	protected void onStop() {
 		super.onStop();
-		this.unregisterReceiver(rec);
+//		this.unregisterReceiver(rec);
 	}
 
 	@Override
@@ -194,8 +194,11 @@ public class DineOnUserActivity extends FragmentActivity {
 	 */
 	@Override
 	public void onSaveInstanceState(Bundle savedInstanceState) {
-
-		savedInstanceState.putParcelable("DiningSession", mDiningSession);
+		// bundle mDiningSession w/ our bundle method
+//		Bundle diningBundle = mDiningSession.bundle();
+		
+		// save entire bundle w/ key value, retrieve using this string
+//		savedInstanceState.putBundle("diningSession", diningBundle);
 		super.onSaveInstanceState(savedInstanceState);
 	}
 
@@ -209,6 +212,6 @@ public class DineOnUserActivity extends FragmentActivity {
 	@Override
 	public void onRestoreInstanceState(Bundle savedInstanceState) {
 		super.onRestoreInstanceState(savedInstanceState);
-		mDiningSession = savedInstanceState.getParcelable("DiningSession");
+//		mDiningSession.unbundle(savedInstanceState.getBundle("diningSession"));
 	}
 }

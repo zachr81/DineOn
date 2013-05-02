@@ -26,4 +26,6 @@
     <string name="debug1">Test Message</string>
     <string name="debug2">Another Test Message</string>
     <string name="debug3">YANT (Yet Another Test Message)</string>
+    <string name="tab_actionbar_restaurant_profile">Profile</string>
+    <string name="tab_actionbar_restaurant_menuitems">The Menu</string>
 </resources>
