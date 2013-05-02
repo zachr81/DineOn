@@ -193,6 +193,8 @@ public class DineOnUserActivity extends FragmentActivity {
 	 */
 	@Override
 	public void onSaveInstanceState(Bundle savedInstanceState) {
+		
+		// TODO mDiningSession.writeToParcel(dest, flags);
 		super.onSaveInstanceState(savedInstanceState);
 	}
 
@@ -206,6 +208,6 @@ public class DineOnUserActivity extends FragmentActivity {
 	@Override
 	public void onRestoreInstanceState(Bundle savedInstanceState) {
 		super.onRestoreInstanceState(savedInstanceState);
-		mDiningSession.unbundle(savedInstanceState.getBundle("diningSession"));
+		//mDiningSession.unbundle(savedInstanceState.getBundle("diningSession"));
 	}
 }
