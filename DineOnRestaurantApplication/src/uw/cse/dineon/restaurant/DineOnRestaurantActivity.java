@@ -36,6 +36,7 @@ public class DineOnRestaurantActivity extends FragmentActivity {
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
 		try {
 			// Set up the broadcast receiver for push notifications
 			Map<String, String> m = new HashMap<String, String>();
@@ -58,13 +59,13 @@ public class DineOnRestaurantActivity extends FragmentActivity {
 		
 		IntentFilter iff = new IntentFilter("uw.cse.dineon.user.REQUEST_DINING_SESSION");
 		PushService.subscribe(this, "push", DineOnRestaurantActivity.class);
-		this.registerReceiver(rec, iff);
+//		this.registerReceiver(rec, iff);
 	}
 	
 	@Override
 	protected void onStop() {
 		super.onStop();
-		this.unregisterReceiver(rec);
+//		this.unregisterReceiver(rec);
 	}
 	
 	

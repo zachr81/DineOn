@@ -49,7 +49,7 @@ RestaurantInfoFragment.RestaurantInfoListener
 		
 		// Replace the Action bar title with a message letting the 
 		// user know this is the restaurant selection page
-		ActionBar actionBar = getActionBar();
+		final ActionBar actionBar = getActionBar();
 		if (actionBar != null) {
 			actionBar.setTitle(R.string.actionbar_title_restaurant_selection);
 		}

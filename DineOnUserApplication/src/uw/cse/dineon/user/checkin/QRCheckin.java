@@ -7,6 +7,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import uw.cse.dineon.library.util.ParseUtil;
+import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
@@ -23,6 +25,10 @@ public class QRCheckin {
 	 * @param intent Information returned from the QR scan activity
 	 */
 	public static void QRResult(int requestCode, int resultCode, Intent intent) {
+		if (resultCode != Activity.RESULT_OK) {
+			return; // TODO Handle failure
+		}
+		
 		IntentResult scanResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, intent);
 		  if (scanResult != null) {
 			  // handle scan result
