@@ -2,8 +2,7 @@ package uw.cse.dineon.library;
 
 import java.util.*;
 
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.os.Bundle;
 
 import com.parse.ParseObject;
 
@@ -12,7 +11,7 @@ import com.parse.ParseObject;
  * @author zachr81
  *
  */
-public class Restaurant extends Storable implements Parcelable {
+public class Restaurant extends Storable {
 
 	private Map<String,Menu> menus;
 	private List<Reservation> reservationList;
@@ -37,10 +36,6 @@ public class Restaurant extends Storable implements Parcelable {
 		this.sessions = sessions;
 	}
 	
-	public Restaurant(Parcel source) {
-		readFromParcel(source);
-	}
-
 	/**
 	 * @return a shallow copy of the Menu map
 	 */
@@ -196,6 +191,18 @@ public class Restaurant extends Storable implements Parcelable {
 	}
 
 	@Override
+	public Bundle bundle() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void unbundle(Bundle b) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
 	public ParseObject packObject() {
 		// TODO Auto-generated method stub
 		return null;
@@ -204,59 +211,6 @@ public class Restaurant extends Storable implements Parcelable {
 	@Override
 	public void unpackObject(ParseObject pobj) {
 		// TODO Auto-generated method stub
+		
 	}
-
-	@Override
-	public int describeContents() {
-		// TODO ?? - examples online use 0.
-		return 0;
-	}
-
-	/**
-	 * Writes this Restaurant to Parcel dest in the order:
-	 * Map<String, Menu>, List<Reservation>, RestaurantInfo, List<Order>, List<DiningSession>
-	 * to be retrieved at a later time.
-	 * 
-	 * @param dest Parcel to write Restaurant data to.
-	 * @param flags
-	 */
-	@Override
-	public void writeToParcel(Parcel dest, int flags) {
-		dest.writeMap(menus); // TODO use writeBundle instead (see writeMap documentation)
-		dest.writeTypedList(reservationList);
-		dest.writeParcelable(info, flags);
-		dest.writeTypedList(orders);
-		dest.writeTypedList(sessions);
-	}
-	
-	/**
-	 * Helper method for updating Restaurant with the data from a Parcel.
-	 * @param source Parcel containing data in the order:
-	 * 		Map<String, Menu>, List<Reservation>, RestaurantInfo, List<Order>, List<DiningSession>
-	 */
-	private void readFromParcel(Parcel source) {
-		source.readMap(menus, null); // TODO use readBundle instead (see writeToParcel above)
-		source.readTypedList(reservationList, null);
-		info = source.readParcelable(null);
-		source.readTypedList(orders, null);
-		source.readTypedList(sessions, null);
-	}
-	
-	/**
-	 * Parcelable creator object of a Restaurant.
-	 * Can create a Restaurant from a Parcel.
-	 */
-	public static final Parcelable.Creator<Restaurant> CREATOR = 
-			new Parcelable.Creator<Restaurant>() {
-
-				@Override
-				public Restaurant createFromParcel(Parcel source) {
-					return new Restaurant(source);
-				}
-
-				@Override
-				public Restaurant[] newArray(int size) {
-					return new Restaurant[size];
-				}
-			};
 }

@@ -4,8 +4,7 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.Collections;
 
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.os.Bundle;
 
 import com.parse.ParseObject;
 
@@ -14,7 +13,7 @@ import com.parse.ParseObject;
  * @author zachr81
  *
  */
-public class Order extends Storable implements Parcelable {
+public class Order extends Storable {
 
 	private int tableID;
 	private int userID;
@@ -112,6 +111,18 @@ public class Order extends Storable implements Parcelable {
 	}
 
 	@Override
+	public Bundle bundle() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void unbundle(Bundle b) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
 	public ParseObject packObject() {
 		// TODO Auto-generated method stub
 		return null;
@@ -119,18 +130,6 @@ public class Order extends Storable implements Parcelable {
 
 	@Override
 	public void unpackObject(ParseObject pobj) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public int describeContents() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
-	public void writeToParcel(Parcel dest, int flags) {
 		// TODO Auto-generated method stub
 		
 	}
