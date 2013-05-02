@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Map;
 
 import uw.cse.dineon.library.DiningSession;
-import uw.cse.dineon.library.Order;
 import uw.cse.dineon.library.Storable;
 import uw.cse.dineon.library.util.DineOnConstants;
 import uw.cse.dineon.library.util.ParseUtil;
