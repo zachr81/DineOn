@@ -1,8 +1,12 @@
 package uw.cse.dineon.library;
 
+import java.util.List;
+
 import com.parse.ParseObject;
 
-import android.os.Bundle;
+import android.annotation.SuppressLint;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.text.format.Time;
 
 /**
@@ -10,17 +14,36 @@ import android.text.format.Time;
  * @author Espeo196
  *
  */
-public class Reservation extends Storable {
+public class Reservation extends Storable implements Parcelable {
+	
+	public static final String USER_INFO = "userInfo";
+	public static final String REST_INFO = "restInfo";
+	public static final String START_TIME = "startTime";
+	public static final String CURR_SESSION = "currSession";
+	
 	private UserInfo userInfo;
 	private RestaurantInfo restInfo;
 	private Time startTime;
 	private DiningSession currSession;
 
 	/**
-	 *
+	 * Creates a new object to keep track of a reservation.
+	 * 
+	 * @param userInfo info of reserved user
+	 * @param restInfo info for restaurant holding the reservation
+	 * @param start Time of the reservation's start
+	 * @param currSession DiningSession that the user is engaged in
 	 */
-	public Reservation() {
-		// TODO
+	public Reservation(UserInfo userInfo, RestaurantInfo restInfo, Time start, 
+				DiningSession currSession) {
+		this.userInfo = userInfo;
+		this.restInfo = restInfo;
+		this.startTime = start;
+		this.currSession = currSession;
+	}
+
+	public Reservation(Parcel source) {
+		readFromParcel(source);
 	}
 
 	/**
@@ -87,25 +110,84 @@ public class Reservation extends Storable {
 		this.currSession = currSess;
 	}
 
-	@Override
-	public Bundle bundle() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public void unbundle(Bundle b) {
-		// TODO Auto-generated method stub
-	}
-
+	@SuppressLint("UseValueOf")
+	@SuppressWarnings("static-access")
 	@Override
 	public ParseObject packObject() {
-		// TODO Auto-generated method stub
-		return null;
+		ParseObject pobj = new ParseObject(this.getClass().getSimpleName());
+		pobj.add(this.USER_INFO, this.userInfo);
+		pobj.add(this.REST_INFO, this.restInfo);
+		pobj.add(this.START_TIME, this.startTime);
+		pobj.add(this.CURR_SESSION, this.currSession);
+
+		//in case this storable is going to be used after the pack.
+		this.setObjId(pobj.getObjectId());
+		
+		return pobj;
+	}
+
+	@SuppressWarnings({ "unchecked", "static-access" })
+	@Override
+	public void unpackObject(ParseObject pobj){
+		this.setObjId(pobj.getObjectId());
+		this.setUserInfo((UserInfo) pobj.get(this.USER_INFO));
+		this.setRestInfo((RestaurantInfo) pobj.get(this.REST_INFO));
+		this.setStartTime((Time) pobj.get(this.START_TIME));
+		this.setCurrSession((DiningSession) pobj.get(this.CURR_SESSION));
+
 	}
 
 	@Override
-	public void unpackObject(ParseObject pobj) {
-		// TODO Auto-generated method stub
+	public int describeContents() {
+		return 0;
 	}
+	
+	/**
+	 * Writes this Reservation to Parcel dest in the order:
+	 * UserInfo, RestaurantInfo, Time, DiningSession
+	 * to be retrieved at a later time.
+	 * 
+	 * @param dest Parcel to write Reservation data to.
+	 * @param flags int
+	 */
+	// NOTE: if you change the write order you must change the read order
+	// below.
+	@Override
+	public void writeToParcel(Parcel dest, int flags) {
+		dest.writeParcelable(userInfo, flags);	
+		dest.writeParcelable(restInfo, flags);	
+		dest.writeString(startTime.toString()); // YYYYMMDDTHHMMSS format
+		dest.writeParcelable(currSession, flags);	
+	}
+	
+	/**
+	 * Helper method for updating Reservation with the data from a Parcel.
+	 * @param source Parcel containing data in the order:
+	 * 		UserInfo, RestaurantInfo, Time, DiningSession
+	 */
+	private void readFromParcel(Parcel source) {
+		source.readParcelable(UserInfo.class.getClassLoader());
+		source.readParcelable(RestaurantInfo.class.getClassLoader());
+		// TODO convert string to time?
+		source.readString(); // reads YYYYMMDDTHHMMSS format string
+		source.readParcelable(Reservation.class.getClassLoader());
+	}
+	
+	/**
+	 * Parcelable creator object of a Reservation.
+	 * Can create a Reservation from a Parcel.
+	 */
+	public static final Parcelable.Creator<Reservation> CREATOR = 
+			new Parcelable.Creator<Reservation>() {
+
+				@Override
+				public Reservation createFromParcel(Parcel source) {
+					return new Reservation(source);
+				}
+
+				@Override
+				public Reservation[] newArray(int size) {
+					return new Reservation[size];
+				}
+			};
 }
