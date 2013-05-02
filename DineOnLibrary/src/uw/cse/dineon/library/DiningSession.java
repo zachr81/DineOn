@@ -250,10 +250,10 @@ public class DiningSession extends Storable implements Parcelable {
 	 * 		List<User>, long, long, (boolean stored as an) int, List<Order>, int, int
 	 */
 	private void readFromParcel(Parcel source) {
-		source.readTypedList(users, User.CREATOR); // default class load used
+		source.readTypedList(users, UserInfo.CREATOR); // default class load used
 		startTime = source.readLong();
 		endTime = source.readLong();
-		source.readTypedList(orders, null);
+		source.readTypedList(orders, Order.CREATOR);
 		sessToken = source.readInt();
 		tableID = source.readInt();
 	}
