@@ -191,18 +191,6 @@ public class Restaurant extends Storable {
 	}
 
 	@Override
-	public Bundle bundle() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public void unbundle(Bundle b) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
 	public ParseObject packObject() {
 		// TODO Auto-generated method stub
 		return null;

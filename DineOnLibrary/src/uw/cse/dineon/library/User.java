@@ -3,6 +3,8 @@ package uw.cse.dineon.library;
 import java.util.List;
 
 import android.os.Bundle;
+import android.os.Parcel;
+import android.os.Parcelable;
 
 import com.parse.ParseObject;
 
@@ -11,7 +13,7 @@ import com.parse.ParseObject;
  * @author Espeo196
  *
  */
-public class User extends Storable {
+public class User extends Storable implements Parcelable{
 	private List<RestaurantInfo> favs;
 	private UserInfo userInfo;
 	private List<Reservation> reserves;
@@ -134,20 +136,6 @@ public class User extends Storable {
 		this.friendList = friends;
 	}
 
-	/**
-	 * @return Bundle
-	 */
-	@Override
-	public Bundle bundle() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public void unbundle(Bundle b) {
-		// TODO Auto-generated method stub
-	}
-
 	@Override
 	public ParseObject packObject() {
 		// TODO Auto-generated method stub
@@ -157,5 +145,17 @@ public class User extends Storable {
 	@Override
 	public void unpackObject(ParseObject pobj) {
 		// TODO Auto-generated method stub
+	}
+
+	@Override
+	public int describeContents() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public void writeToParcel(Parcel dest, int flags) {
+		// TODO Auto-generated method stub
+		
 	}
 }

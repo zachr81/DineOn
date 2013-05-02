@@ -1,6 +1,8 @@
 package uw.cse.dineon.library;
 
 import android.os.Bundle;
+import android.os.Parcel;
+import android.os.Parcelable;
 
 import com.parse.ParseObject;
 
@@ -8,10 +10,18 @@ import com.parse.ParseObject;
  * @author Espeo196
  *
  */
-public class UserInfo extends Storable {
+public class UserInfo extends Storable implements Parcelable {
 	private String name;
 	private int phone;
 	private String email;
+
+	public UserInfo(){
+		
+	}
+	
+	public UserInfo(Parcel source) {
+		// TODO Auto-generated constructor stub
+	}
 
 	/**
 	 *
@@ -62,17 +72,6 @@ public class UserInfo extends Storable {
 	}
 
 	@Override
-	public Bundle bundle() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public void unbundle(Bundle b) {
-		// TODO Auto-generated method stub
-	}
-
-	@Override
 	public ParseObject packObject() {
 		// TODO Auto-generated method stub
 		return null;
@@ -82,4 +81,34 @@ public class UserInfo extends Storable {
 	public void unpackObject(ParseObject pobj) {
 		// TODO Auto-generated method stub
 	}
+
+	@Override
+	public int describeContents() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public void writeToParcel(Parcel dest, int flags) {
+		// TODO Auto-generated method stub
+		
+	}
+	
+	/**
+	 * Parcelable creator object of a Menu.
+	 * Can create a Menu from a Parcel.
+	 */
+	public static final Parcelable.Creator<UserInfo> CREATOR = 
+			new Parcelable.Creator<UserInfo>() {
+
+				@Override
+				public UserInfo createFromParcel(Parcel source) {
+					return new UserInfo(source);
+				}
+
+				@Override
+				public UserInfo[] newArray(int size) {
+					return new UserInfo[size];
+				}
+			};
 }

@@ -206,6 +206,6 @@ public class DineOnUserActivity extends FragmentActivity {
 	@Override
 	public void onRestoreInstanceState(Bundle savedInstanceState) {
 		super.onRestoreInstanceState(savedInstanceState);
-		mDiningSession.unbundle(savedInstanceState.getBundle("diningSession"));
+		mDiningSession = savedInstanceState.getParcelable("diningSession");
 	}
 }
