@@ -3,10 +3,8 @@ package uw.cse.dineon.library;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Set;
 
 import android.annotation.SuppressLint;
-import android.os.Bundle;
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -151,9 +149,15 @@ public class DiningSession extends Storable implements Parcelable {
 		return pobj;
 	}
 
+	/**
+	 * Unpacks the given ParseObject into this DiningSession setting
+	 * field values to the given data.
+	 * 
+	 * @param pobj ParseObject to be unpacked into a DiningSession
+	 */
 	@SuppressWarnings({ "unchecked", "static-access" })
 	@Override
-	public void unpackObject(ParseObject pobj){
+	public void unpackObject(ParseObject pobj) {
 		this.setObjId(pobj.getObjectId());
 		this.users.addAll((List<UserInfo>) pobj.get(this.USERS));
 		this.setStartTime(pobj.getLong(START_TIME));
@@ -164,13 +168,15 @@ public class DiningSession extends Storable implements Parcelable {
 		this.setWaiterRequest((RequestType) pobj.get(this.WAITER_REQUEST));
 	}
 	
-	public void setWaiterRequest(RequestType wreq){
+	/**
+	 * @param wreq RequestType from customer to waiter
+	 */
+	public void setWaiterRequest(RequestType wreq) {
 		this.waiterRequest = wreq;
 	}
 	
 	/**
 	 * @return the users
-	 * 
 	 */
 	public List<UserInfo> getUsers() {
 		List<UserInfo> copy = new ArrayList<UserInfo>(this.users.size());
@@ -179,7 +185,7 @@ public class DiningSession extends Storable implements Parcelable {
 	}
 
 	/**
-	 * @param users the users to set
+	 * @param userInfo to add to the session
 	 */
 	public void addUser(UserInfo userInfo) {
 		this.users.add(userInfo);

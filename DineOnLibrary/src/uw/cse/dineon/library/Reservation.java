@@ -1,7 +1,5 @@
 package uw.cse.dineon.library;
 
-import java.util.List;
-
 import com.parse.ParseObject;
 
 import android.annotation.SuppressLint;
@@ -16,15 +14,16 @@ import android.text.format.Time;
  */
 public class Reservation extends Storable implements Parcelable {
 	
+	// ID's used for easier parsing
 	public static final String USER_INFO = "userInfo";
 	public static final String REST_INFO = "restInfo";
 	public static final String START_TIME = "startTime";
 	public static final String CURR_SESSION = "currSession";
 	
-	private UserInfo userInfo;
-	private RestaurantInfo restInfo;
-	private Time startTime;
-	private DiningSession currSession;
+	private UserInfo userInfo;			// info for user who made the reservation
+	private RestaurantInfo restInfo;	// info of restaurant reservation is at
+	private Time startTime;				// start time of the reservation
+	private DiningSession currSession;	// session for this reservation
 
 	/**
 	 * Creates a new object to keep track of a reservation.
@@ -42,12 +41,18 @@ public class Reservation extends Storable implements Parcelable {
 		this.currSession = currSession;
 	}
 
+	/**
+	 * Creates a Reservation object from the given Parcel.
+	 * 
+	 * @param source Parcel of information in:
+	 * 		UserInfo, RestaurantInfo, Time, DiningSession
+	 * 		order.
+	 */
 	public Reservation(Parcel source) {
 		readFromParcel(source);
 	}
 
 	/**
-	 *
 	 * @return UserInfo
 	 */
 	public UserInfo getUserInfo() {
@@ -55,7 +60,6 @@ public class Reservation extends Storable implements Parcelable {
 	}
 
 	/**
-	 *
 	 * @param info UserInfo
 	 */
 	public void setUserInfo(UserInfo info) {
@@ -63,7 +67,6 @@ public class Reservation extends Storable implements Parcelable {
 	}
 
 	/**
-	 *
 	 * @return RestaurantInfo
 	 */
 	public RestaurantInfo getRestInfo() {
@@ -71,7 +74,6 @@ public class Reservation extends Storable implements Parcelable {
 	}
 
 	/**
-	 *
 	 * @param info RestaurantInfo
 	 */
 	public void setRestInfo(RestaurantInfo info) {
@@ -79,7 +81,6 @@ public class Reservation extends Storable implements Parcelable {
 	}
 
 	/**
-	 *
 	 * @return Time
 	 */
 	public Time getStartTime() {
@@ -87,7 +88,6 @@ public class Reservation extends Storable implements Parcelable {
 	}
 
 	/**
-	 *
 	 * @param start Time
 	 */
 	public void setStartTime(Time start) {
@@ -95,7 +95,6 @@ public class Reservation extends Storable implements Parcelable {
 	}
 
 	/**
-	 *
 	 * @return DiningSession
 	 */
 	public DiningSession getCurrSession() {
@@ -103,13 +102,17 @@ public class Reservation extends Storable implements Parcelable {
 	}
 
 	/**
-	 *
 	 * @param currSess DiningSession
 	 */
 	public void setCurrSession(DiningSession currSess) {
 		this.currSession = currSess;
 	}
 
+	/**
+	 * Packs this Reservation into a ParseObject to be stored.
+	 * 
+	 * @return ParseObject containing saved/packed data
+	 */
 	@SuppressLint("UseValueOf")
 	@SuppressWarnings("static-access")
 	@Override
@@ -126,6 +129,12 @@ public class Reservation extends Storable implements Parcelable {
 		return pobj;
 	}
 
+	/**
+	 * Unpacks the given ParseObject into this Reservation setting
+	 * field values to the given data.
+	 * 
+	 * @param pobj ParseObject to be unpacked into a Reservation
+	 */
 	@SuppressWarnings({ "unchecked", "static-access" })
 	@Override
 	public void unpackObject(ParseObject pobj){

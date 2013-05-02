@@ -6,25 +6,28 @@ import android.os.Parcelable;
 import com.parse.ParseObject;
 
 /**
+ * MenuItem object representing an item on a restaurant's menu.
  * 
  * @author zachr81
  *
  */
 public class MenuItem extends Storable implements Parcelable {
 
+	// ID's used for easier parsing
 	public static final String PRODUCT_ID = "productID";
 	public static final String PRICE = "price";
 	public static final String DESCRIPTION = "description";
 	
-	private int productID;
-	private double price;
-	private String description;
+	private int productID;		// ID of this product
+	private double price;		// price of this product
+	private String description;	// description of this product
 	
 	/**
+	 * Creates a new MenuItem with the given parameters.
 	 * 
-	 * @param productID
-	 * @param price
-	 * @param description
+	 * @param productID is an int ID representing the product
+	 * @param price double value of this item
+	 * @param description of this item in String form
 	 */
 	public MenuItem(int productID, double price, String description) {
 		super();
@@ -33,6 +36,13 @@ public class MenuItem extends Storable implements Parcelable {
 		this.description = description;
 	}
 	
+	/**
+	 * Creates a new MenuItem in from the given Parcel.
+	 * 
+	 * @param source Parcel of information in:
+	 * 		int, double, String
+	 * 		order.
+	 */
 	public MenuItem(Parcel source) {
 		readFromParcel(source);
 	}
@@ -79,6 +89,11 @@ public class MenuItem extends Storable implements Parcelable {
 		this.description = description;
 	}
 
+	/**
+	 * Packs this MenuItem into a ParseObject to be stored.
+	 * 
+	 * @return ParseObject containing saved/packed data
+	 */
 	@SuppressWarnings("static-access")
 	@Override
 	public ParseObject packObject() {
@@ -92,6 +107,12 @@ public class MenuItem extends Storable implements Parcelable {
 		return pobj;
 	}
 
+	/**
+	 * Unpacks the given ParseObject into this MenuItem setting
+	 * field values to the given data.
+	 * 
+	 * @param pobj ParseObject to be unpacked into a MenuItem
+	 */
 	@SuppressWarnings("static-access")
 	@Override
 	public void unpackObject(ParseObject pobj) {

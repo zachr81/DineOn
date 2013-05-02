@@ -10,31 +10,34 @@ import android.os.Parcelable;
 import com.parse.ParseObject;
 
 /**
+ * Order object representing an order placed by a client at a restaurant.
  * 
  * @author zachr81
  *
  */
 public class Order extends Storable implements Parcelable {
 
+	// ID's used for easier parsing
 	public static final String TABLE_ID = "tableID";
 	public static final String USER_ID = "userID";
 	public static final String REST_ID = "restID";
 	public static final String TIME_STAMP = "timestamp";
 	public static final String MENU_ITEMS = "menuItems";
 	
-	private int tableID;
-	private int userID;
-	private int restID;
-	private int timestamp;
-	private List<MenuItem> menuItems;
+	private int tableID;		// ID for table the order is from
+	private int userID;			// ID of user who placed order
+	private int restID;			// ID of restaurant order was placed at
+	private int timestamp;		// time order was placed
+	private List<MenuItem> menuItems;	// list of items in this order
 	
 	/**
+	 * Creates a new Order object from the given parameters.
 	 * 
-	 * @param tableID
-	 * @param userID
-	 * @param restID
-	 * @param timestamp
-	 * @param menuItems
+	 * @param tableID int ID of the table the order was place from
+	 * @param userID int ID of user placing order
+	 * @param restID int ID of restaurant order is placed at
+	 * @param timestamp int time order was placed
+	 * @param menuItems List of items in the order
 	 */
 	public Order(int tableID, int userID, int restID, int timestamp, List<MenuItem> menuItems) {
 		super();
@@ -45,6 +48,13 @@ public class Order extends Storable implements Parcelable {
 		this.menuItems = menuItems;
 	}
 	
+	/**
+	 * Creates a new Order in from the given Parcel.
+	 * 
+	 * @param source Parcel of information in:
+	 * 		int, int, int, int, List<MenuItem>
+	 * 		order.
+	 */
 	public Order(Parcel source) {
 		readFromParcel(source);
 	}
@@ -121,6 +131,11 @@ public class Order extends Storable implements Parcelable {
 		this.menuItems = menuItems;
 	}
 
+	/**
+	 * Packs this Order into a ParseObject to be stored.
+	 * 
+	 * @return ParseObject containing saved/packed data
+	 */
 	@SuppressWarnings("static-access")
 	@Override
 	public ParseObject packObject() {
@@ -136,6 +151,12 @@ public class Order extends Storable implements Parcelable {
 		return pobj;
 	}
 
+	/**
+	 * Unpacks the given ParseObject into this Order setting
+	 * field values to the given data.
+	 * 
+	 * @param pobj ParseObject to be unpacked into an Order
+	 */
 	@SuppressWarnings({ "unchecked", "static-access" })
 	@Override
 	public void unpackObject(ParseObject pobj) {

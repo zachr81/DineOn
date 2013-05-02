@@ -11,15 +11,17 @@ import com.parse.ParseObject;
 
 
 /**
+ * Menu object representing a restaurant menu containing various items.
  * 
  * @author zachr81
  *
  */
 public class Menu extends Storable implements Parcelable {
 
+	// ID used for easier parsing
 	public static final String ITEMS = "items";
 	
-	private List<MenuItem> items;
+	private List<MenuItem> items;	// list of items on the menu
 
 	/**
 	 * Creates a new Menu object containing MenuItems.
@@ -35,11 +37,12 @@ public class Menu extends Storable implements Parcelable {
 	/**
 	 * Creates a new Menu from a given Parcel.
 	 * 
-	 * @param source Parcel of information in 
+	 * @param source Parcel of information in:
 	 * 		List<MenuItem> 
 	 * 		order.
 	 */
 	public Menu(Parcel source) {
+		super();
 		readFromParcel(source);
 	}
 
@@ -77,6 +80,11 @@ public class Menu extends Storable implements Parcelable {
 		items.remove(item);
 	}
 
+	/**
+	 * Packs this Menu into a ParseObject to be stored.
+	 * 
+	 * @return ParseObject containing saved/packed data
+	 */
 	@SuppressWarnings("static-access")
 	@Override
 	public ParseObject packObject() {
@@ -88,6 +96,12 @@ public class Menu extends Storable implements Parcelable {
 		return pobj;
 	}
 
+	/**
+	 * Unpacks the given ParseObject into this Menu setting
+	 * field values to the given data.
+	 * 
+	 * @param pobj ParseObject to be unpacked into a Menu
+	 */
 	@SuppressWarnings({ "unchecked", "static-access" })
 	@Override
 	public void unpackObject(ParseObject pobj) {
