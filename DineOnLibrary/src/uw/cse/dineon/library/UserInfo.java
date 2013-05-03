@@ -1,6 +1,5 @@
 package uw.cse.dineon.library;
 
-import android.os.Bundle;
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -19,8 +18,11 @@ public class UserInfo extends Storable implements Parcelable {
 	private int phone;
 	private String email;
 
-	public UserInfo(){
-		
+	/**
+	 * Default constructor.
+	 */
+	public UserInfo() {
+		//TODO
 	}
 	
 	/**
@@ -104,7 +106,8 @@ public class UserInfo extends Storable implements Parcelable {
 	}
 	
 	/**
-	 * A Parcel method to describe the contents of the object
+	 * A Parcel method to describe the contents of the object.
+	 * @return an int describing contents
 	 */
 	@Override
 	public int describeContents() {
@@ -113,8 +116,9 @@ public class UserInfo extends Storable implements Parcelable {
 	}
 
 	/**
-	 * Write the object to a parcel object
-	 * @param the Parcel to write to and any set flags
+	 * Write the object to a parcel object.
+	 * @param dest Parcel to write to
+	 * @param flags to change write settings
 	 */
 	@Override
 	public void writeToParcel(Parcel dest, int flags) {
@@ -142,10 +146,14 @@ public class UserInfo extends Storable implements Parcelable {
 	};
 			
 
+	/**
+	 * 
+	 * @param source parcel to read from.
+	 */
 	//read an object back out of parcel
 	private void readFromParcel(Parcel source) {
-		name = source.readString();
-		phone = source.readInt();
-		email = source.readString();
+		this.setName(source.readString());
+		this.setPhone(source.readInt());
+		this.setEmail(source.readString());
 	}
 }

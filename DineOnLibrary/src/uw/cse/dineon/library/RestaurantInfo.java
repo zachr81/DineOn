@@ -224,11 +224,11 @@ public class RestaurantInfo extends Storable implements Parcelable {
 			
 	//read an object back out of parcel
 	private void readFromParcel(Parcel source) {
-		name = source.readString();
-		addr = source.readString();
-		phone = source.readInt();
-		imageMain = source.readInt();
+		this.setName(source.readString());
+		this.setAddr(source.readString());
+		this.setPhone(source.readInt());
+		this.setImageMain(source.readInt());
 		source.readList(imageList, Integer.class.getClassLoader());
-		menu = source.readParcelable(Menu.class.getClassLoader());
+		this.setMenu((Menu)source.readParcelable(Menu.class.getClassLoader()));
 	}
 }

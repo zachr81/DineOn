@@ -223,9 +223,9 @@ public class User extends Storable implements Parcelable {
 	//read an object back out of parcel
 	private void readFromParcel(Parcel source) {
 		source.readTypedList(favs, RestaurantInfo.CREATOR);
-		userInfo = source.readParcelable(UserInfo.class.getClassLoader());
+		this.setUserInfo((UserInfo)source.readParcelable(UserInfo.class.getClassLoader()));
 		source.readTypedList(reserves, Reservation.CREATOR);
-		fbToken = source.readInt();
+		this.setFbToken(source.readInt());
 		source.readList(friendList, String.class.getClassLoader());
 	}
 }
