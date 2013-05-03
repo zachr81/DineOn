@@ -151,7 +151,7 @@ LoginFragment.OnLoginListener {
 
 
 	/**
-	 * Starts an activity for a result to allow the user to start a new account
+	 * Starts an activity for a result to allow the user to start a new account.
 	 */
 	public void onCreateNewAccount() {
 		// TODO Auto-generated method stub
