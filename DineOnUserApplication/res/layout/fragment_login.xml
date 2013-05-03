@@ -25,7 +25,7 @@
             android:layout_marginTop="8dp"
             android:ems="10"
             android:gravity="center"
-            android:hint="@string/hint_username"
+            android:hint="@string/hint_email_address"
             android:inputType="textEmailAddress" />
 
         <EditText
@@ -43,7 +43,7 @@
 
         <Button
             android:id="@+id/button_login"
-            android:layout_width="215dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:gravity="center"
@@ -51,14 +51,14 @@
 
         <Button
             android:id="@+id/button_facebook_login"
-            android:layout_width="215dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:text="@string/button_facebook" />
 
         <Button
             android:id="@+id/button_twitter_login"
-            android:layout_width="215dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:text="@string/button_twitter" />

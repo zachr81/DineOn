@@ -3,8 +3,6 @@ package uw.cse.dineon.library;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import android.location.Address;
 import android.os.Bundle;
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -25,7 +23,7 @@ public class RestaurantInfo extends Storable implements Parcelable {
 	public static final String MENU = "menu";
 	
 	private String name;
-	private Address addr;
+	private String addr;
 	private int phone;
 	private int imageMain;
 	private List<Integer> imageList;
@@ -37,7 +35,7 @@ public class RestaurantInfo extends Storable implements Parcelable {
 	public RestaurantInfo() {
 	}
 	
-	public RestaurantInfo(String name, Address addr, int phone, int imageMain, List<Integer> imageList, Menu menu) {
+	public RestaurantInfo(String name, String addr, int phone, int imageMain, List<Integer> imageList, Menu menu) {
 		// TODO
 		this.name = name;
 		this.addr = addr;
@@ -78,7 +76,7 @@ public class RestaurantInfo extends Storable implements Parcelable {
 	 *
 	 * @return addr
 	 */
-	public Address getAddr() {
+	public String getAddr() {
 		return addr;
 	}
 
@@ -86,7 +84,7 @@ public class RestaurantInfo extends Storable implements Parcelable {
 	 *
 	 * @param a String
 	 */
-	public void setAddr(Address a) {
+	public void setAddr(String a) {
 		this.addr = a;
 	}
 
@@ -175,7 +173,7 @@ public class RestaurantInfo extends Storable implements Parcelable {
 	public void unpackObject(ParseObject pobj) {
 		this.setObjId(pobj.getObjectId());
 		this.setName(pobj.getString(RestaurantInfo.NAME));
-		this.setAddr((Address)pobj.get(RestaurantInfo.ADDR));
+		this.setAddr(pobj.getString(RestaurantInfo.ADDR));
 		this.setPhone(pobj.getInt(RestaurantInfo.PHONE));
 		this.setImageMain(pobj.getInt(RestaurantInfo.IMAGE_MAIN));
 		this.setImageList((List<Integer>) pobj.get(RestaurantInfo.IMAGE_LIST));
@@ -198,7 +196,7 @@ public class RestaurantInfo extends Storable implements Parcelable {
 	@Override
 	public void writeToParcel(Parcel dest, int flags) {
 		dest.writeString(name);
-		dest.writeParcelable(addr, flags);
+		dest.writeString(addr);
 		dest.writeInt(phone);
 		dest.writeInt(imageMain);
 		dest.writeList(imageList);
@@ -228,7 +226,7 @@ public class RestaurantInfo extends Storable implements Parcelable {
 	//read an object back out of parcel
 	private void readFromParcel(Parcel source) {
 		this.setName(source.readString());
-		this.setAddr((Address)source.readParcelable(Address.class.getClassLoader()));
+		this.setAddr(source.readString());
 		this.setPhone(source.readInt());
 		this.setImageMain(source.readInt());
 		source.readList(imageList, Integer.class.getClassLoader());
