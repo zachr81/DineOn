@@ -17,6 +17,8 @@ public class DineOnConstants {
 	public static final String APPLICATION_ID = "10dCEpc2D8Rp7pC2uFaLCN7CtRcNSeZkz8d7eAaX";
 	public static final String CLIENT_KEY = "4NAn0437HLZpDMa5v0gS6JeYT28Q0vmxW19qWdSw";
 	
+	public static final String FACEBOOK_APP_ID = "505185672873933";
+	
 	// Request Code for multiple Activity use
 	public final static int REQUEST_CHECK_IN = 0x1;
 	public final static int REQUEST_VIEW_CURRENT_ORDER = 0x2;

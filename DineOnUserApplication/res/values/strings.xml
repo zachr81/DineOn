@@ -56,5 +56,6 @@
     <string name="label_make_reservation">Make Reservation</string>
     <string name="activity_start_login">startLoginActivity</string>
     <string name="hint_username">Username</string>
+    <string name="facebook_app_id">505185672873933</string>
 
 </resources>
