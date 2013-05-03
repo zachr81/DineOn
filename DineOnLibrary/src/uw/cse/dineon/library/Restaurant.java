@@ -1,8 +1,13 @@
 package uw.cse.dineon.library;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
-import android.os.Bundle;
+import android.os.Parcel;
+import android.os.Parcelable;
 
 import com.parse.ParseObject;
 
@@ -11,13 +16,24 @@ import com.parse.ParseObject;
  * @author zachr81
  *
  */
-public class Restaurant extends Storable {
+public class Restaurant extends Storable implements Parcelable {
 
 	private Map<String,Menu> menus;
 	private List<Reservation> reservationList;
 	private RestaurantInfo info;
 	private List<Order> orders;
 	private List<DiningSession> sessions;
+	
+	/**
+	 * Creates an empty restaurant.
+	 */
+	public Restaurant(){
+		menus = new HashMap<String, Menu>();
+		reservationList = new ArrayList<Reservation>();
+		info = new RestaurantInfo();
+		orders = new ArrayList<Order>();
+		sessions = new ArrayList<DiningSession>();
+	}
 	
 	/**
 	 * @param Menu
@@ -198,6 +214,18 @@ public class Restaurant extends Storable {
 
 	@Override
 	public void unpackObject(ParseObject pobj) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public int describeContents() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public void writeToParcel(Parcel dest, int flags) {
 		// TODO Auto-generated method stub
 		
 	}
