@@ -29,7 +29,7 @@ public class UserInfo extends Storable implements Parcelable {
 	 * Creates a UserInfo object from the given Parcel.
 	 * 
 	 * @param source Parcel of information in:
-	 * 		String (name), int, String (email).
+	 * 		String (name), int, String (email), String(ObjID).
 	 */
 	public UserInfo(Parcel source) {
 		readFromParcel(source);
@@ -125,6 +125,7 @@ public class UserInfo extends Storable implements Parcelable {
 		dest.writeString(name);
 		dest.writeInt(phone);
 		dest.writeString(email);
+		dest.writeString(this.getObjId());
 	}
 	
 	/**
@@ -155,5 +156,6 @@ public class UserInfo extends Storable implements Parcelable {
 		this.setName(source.readString());
 		this.setPhone(source.readInt());
 		this.setEmail(source.readString());
+		this.setObjId(source.readString());
 	}
 }

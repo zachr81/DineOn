@@ -52,7 +52,8 @@ public class Restaurant extends Storable implements Parcelable {
 	 * Creates a Restaurant object from the given Parcel.
 	 * 
 	 * @param source Parcel of information in:
-	 * 		Menus, ReservationList, RestaurantInfo, Orders, Sessions, CustomerRequests.
+	 * 		Menus, ReservationList, RestaurantInfo, Orders, Sessions,
+	 * 		CustomerRequests, String.
 	 */
 	public Restaurant(Parcel source) {
 		readFromParcel(source);
@@ -286,6 +287,7 @@ public class Restaurant extends Storable implements Parcelable {
 		dest.writeTypedList(orders);
 		dest.writeTypedList(sessions);
 		dest.writeTypedList(customerRequests);
+		dest.writeString(this.getObjId());
 						
 	}
 	
@@ -316,5 +318,6 @@ public class Restaurant extends Storable implements Parcelable {
 		source.readTypedList(orders, Order.CREATOR);
 		source.readTypedList(sessions, DiningSession.CREATOR);
 		source.readTypedList(customerRequests, CustomerRequest.CREATOR);
+		this.setObjId(source.readString());
 	}
 }

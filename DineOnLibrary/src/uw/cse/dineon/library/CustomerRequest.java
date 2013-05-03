@@ -33,7 +33,7 @@ public class CustomerRequest extends Storable implements Parcelable {
 	 * Creates a CustomerRequest object from the given Parcel.
 	 * 
 	 * @param source Parcel of information in:
-	 * 		String, User.
+	 * 		String (description), User, String (objID).
 	 */
 	public CustomerRequest(Parcel source) {
 		readFromParcel(source);
@@ -46,6 +46,7 @@ public class CustomerRequest extends Storable implements Parcelable {
 	private void readFromParcel(Parcel source) {
 		this.setDescription(source.readString());
 		this.setUser((User)source.readParcelable(User.class.getClassLoader()));
+		this.setObjId(source.readString());
 		
 	}
 
@@ -93,6 +94,7 @@ public class CustomerRequest extends Storable implements Parcelable {
 	public void writeToParcel(Parcel dest, int flags) {
 		dest.writeString(description);
 		dest.writeParcelable(user, flags);
+		dest.writeString(this.getObjId());
 
 	}
 

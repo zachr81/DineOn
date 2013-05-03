@@ -50,7 +50,7 @@ public class RestaurantInfo extends Storable implements Parcelable {
 	 * 
 	 * @param source Parcel of information in:
 	 * 		String (name), String (addr), Int (phone), Int (imageMain),
-	 * 		imageList (ints), Menu
+	 * 		imageList (ints), Menu, String (objID)
 	 */
 	public RestaurantInfo(Parcel source) {
 		readFromParcel(source);
@@ -201,6 +201,7 @@ public class RestaurantInfo extends Storable implements Parcelable {
 		dest.writeInt(imageMain);
 		dest.writeList(imageList);
 		dest.writeParcelable(menu, flags);
+		dest.writeString(this.getObjId());
 		
 	}
 	
@@ -230,5 +231,6 @@ public class RestaurantInfo extends Storable implements Parcelable {
 		this.setImageMain(source.readInt());
 		source.readList(imageList, Integer.class.getClassLoader());
 		this.setMenu((Menu)source.readParcelable(Menu.class.getClassLoader()));
+		this.setObjId(source.readString());
 	}
 }

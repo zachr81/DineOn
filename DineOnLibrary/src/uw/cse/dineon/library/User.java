@@ -38,7 +38,7 @@ public class User extends Storable implements Parcelable {
 	* Creates a User object from the given Parcel.
 	* 
 	* @param source Parcel of information in:
-	* 		RestaurantInfos, UserInfo, Reservations, int, Strings.
+	* 		RestaurantInfos, UserInfo, Reservations, int, Strings, String.
 	*/
 	public User(Parcel source) {
 	readFromParcel(source);
@@ -198,6 +198,7 @@ public class User extends Storable implements Parcelable {
 		dest.writeTypedList(reserves);
 		dest.writeInt(fbToken);
 		dest.writeList(friendList);
+		dest.writeString(this.getObjId());
 						
 	}
 	
@@ -227,5 +228,6 @@ public class User extends Storable implements Parcelable {
 		source.readTypedList(reserves, Reservation.CREATOR);
 		this.setFbToken(source.readInt());
 		source.readList(friendList, String.class.getClassLoader());
+		this.setObjId(source.readString());
 	}
 }
