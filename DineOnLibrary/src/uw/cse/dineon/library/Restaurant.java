@@ -3,6 +3,8 @@ package uw.cse.dineon.library;
 import java.util.*;
 
 import android.os.Bundle;
+import android.os.Parcel;
+import android.os.Parcelable;
 
 import com.parse.ParseObject;
 
@@ -11,8 +13,14 @@ import com.parse.ParseObject;
  * @author zachr81
  *
  */
-public class Restaurant extends Storable {
+public class Restaurant extends Storable implements Parcelable {
 
+	public static final String MENUS = "menus";
+	public static final String RESERVATION_LIST = "reservationList";
+	public static final String INFO = "info";
+	public static final String ORDERS = "orders";
+	public static final String SESSIONS = "sessions";
+	
 	private Map<String,Menu> menus;
 	private List<Reservation> reservationList;
 	private RestaurantInfo info;
@@ -34,6 +42,16 @@ public class Restaurant extends Storable {
 		this.info = info;
 		this.orders = orders;
 		this.sessions = sessions;
+	}
+	
+	/**
+	 * Creates a Restaurant object from the given Parcel.
+	 * 
+	 * @param source Parcel of information in:
+	 * 		Menu, ReservationList, RestaurantInfo, Orders, Sessions.
+	 */
+	public Restaurant(Parcel source) {
+		readFromParcel(source);
 	}
 	
 	/**
@@ -190,15 +208,79 @@ public class Restaurant extends Storable {
 		sessions.remove(session);
 	}
 
+
 	@Override
 	public ParseObject packObject() {
-		// TODO Auto-generated method stub
-		return null;
+		ParseObject pobj = new ParseObject(this.getClass().getSimpleName());
+		pobj.add(Restaurant.MENUS, this.menus);
+		pobj.add(Restaurant.INFO, this.info);
+		pobj.add(Restaurant.RESERVATION_LIST, this.reservationList);
+		pobj.add(Restaurant.ORDERS, this.orders);
+		pobj.add(Restaurant.SESSIONS, this.sessions);
+		//in case this storable is going to be used after the pack.
+		this.setObjId(pobj.getObjectId());
+				
+		return pobj;
 	}
 
 	@Override
 	public void unpackObject(ParseObject pobj) {
-		// TODO Auto-generated method stub
+		this.setObjId(pobj.getObjectId());
+		this.setMenus((Map<String, Menu>) pobj.get(Restaurant.MENUS));
+		this.setInfo((RestaurantInfo)pobj.get(Restaurant.INFO));
+		this.setReservationList((List<Reservation>) pobj.get(Restaurant.RESERVATION_LIST));
+		this.setOrders((List<Order>) pobj.get(Restaurant.ORDERS));
+		this.setSessions((List<DiningSession>) pobj.get(Restaurant.SESSIONS));
 		
+	}
+
+	/**
+	 * A Parcel method to describe the contents of the object
+	 */
+	@Override
+	public int describeContents() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	/**
+	 * Write the object to a parcel object
+	 * @param the Parcel to write to and any set flags
+	 */
+	@Override
+	public void writeToParcel(Parcel dest, int flags) {
+		dest.writeMap(menus);
+		dest.writeTypedList(reservationList);
+		dest.writeParcelable(info, flags);
+		dest.writeTypedList(orders);
+		dest.writeTypedList(sessions);
+						
+	}
+	
+	/**
+	 * Parcelable creator object of a Restaurant.
+	 * Can create a Restaurant from a Parcel.
+	 */
+	public static final Parcelable.Creator<Restaurant> CREATOR = 
+			new Parcelable.Creator<Restaurant>() {
+
+				@Override
+				public Restaurant createFromParcel(Parcel source) {
+					return new Restaurant(source);
+				}
+
+				@Override
+				public Restaurant[] newArray(int size) {
+					return new Restaurant[size];
+				}
+	};
+			
+	//read an object back out of parcel
+	private void readFromParcel(Parcel source) {
+		source.readMap(menus, Menu.class.getClassLoader());
+		source.readTypedList(reservationList, Reservation.CREATOR);
+		info = source.readParcelable(RestaurantInfo.class.getClassLoader());
+		source.readTypedList(orders, Order.CREATOR);
+		source.readTypedList(sessions, DiningSession.CREATOR);
 	}
 }
