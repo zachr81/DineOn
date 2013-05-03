@@ -2,6 +2,7 @@ package uw.cse.dineon.library.util;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import uw.cse.dineon.library.CustomerRequest;
 import uw.cse.dineon.library.DiningSession;
@@ -15,6 +16,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
+import android.location.Address;
 
 /**
  * General Class that will help up build the project
@@ -76,7 +78,7 @@ public class DevelopTools {
 		Menu m = new Menu("Marty's Main Menu",items);
 		List<Menu> menus = new ArrayList<Menu>();
 		menus.add(m);
-		rInfo.setAddr("1234 Happy St.");
+		rInfo.setAddr(new Address(Locale.US));
 		rInfo.setMenu(m);
 		rInfo.setPhone(1234567890);
 		rInfo.setName("Marty's");

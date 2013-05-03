@@ -8,6 +8,7 @@ import java.util.Map;
 
 import uw.cse.dineon.library.DiningSession;
 import uw.cse.dineon.library.Storable;
+import uw.cse.dineon.library.User;
 import uw.cse.dineon.library.util.DineOnConstants;
 import uw.cse.dineon.library.util.DineOnReceiver;
 import uw.cse.dineon.library.util.ParseUtil;
@@ -41,8 +42,22 @@ public class DineOnUserActivity extends FragmentActivity {
 
 	private static final String TAG = DineOnUserActivity.class.getSimpleName();
 
+	/**
+	 * This represents a current dining session the user is in.
+	 * Once a User checks in to a location.
+	 * He or she 
+	 */
 	protected DiningSession mDiningSession;
 
+	/**
+	 * User instance that corresponds with user.
+	 * Once a User logs into our program this should not be null during the life span of 
+	 * this activity
+	 * 
+	 * 
+	 */
+	protected User mUser;
+	
 	private DineOnReceiver rec;
 
 	@Override
