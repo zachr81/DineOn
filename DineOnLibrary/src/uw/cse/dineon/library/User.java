@@ -24,7 +24,7 @@ public class User extends Storable implements Parcelable {
 	private UserInfo userInfo;
 	private List<Reservation> reserves;
 	private int fbToken;
-	private List<String> friendList;
+	private List<UserInfo> friendList;
 
 	/**
 	 *
@@ -140,7 +140,7 @@ public class User extends Storable implements Parcelable {
 	 *
 	 * @return list of strings
 	 */
-	public List<String> getFriendList() {
+	public List<UserInfo> getFriendList() {
 		return friendList;
 	}
 
@@ -148,7 +148,7 @@ public class User extends Storable implements Parcelable {
 	 *
 	 * @param friends list of strings
 	 */
-	public void setFriendList(List<String> friends) {
+	public void setFriendList(List<UserInfo> friends) {
 		this.friendList = friends;
 	}
 
@@ -174,7 +174,7 @@ public class User extends Storable implements Parcelable {
 		this.setFbToken(pobj.getInt(User.FB_TOKEN));
 		this.setReserves((List<Reservation>) pobj.get(User.RESERVES));
 		this.setUserInfo((UserInfo) pobj.get(User.USER_INFO));
-		this.setFriendList((List<String>) pobj.get(User.FRIEND_LIST));
+		this.setFriendList((List<UserInfo>) pobj.get(User.FRIEND_LIST));
 	}
 
 
@@ -197,7 +197,7 @@ public class User extends Storable implements Parcelable {
 		dest.writeParcelable(userInfo, flags);
 		dest.writeTypedList(reserves);
 		dest.writeInt(fbToken);
-		dest.writeList(friendList);
+		dest.writeTypedList(friendList);
 		dest.writeString(this.getObjId());
 						
 	}
@@ -227,7 +227,7 @@ public class User extends Storable implements Parcelable {
 		this.setUserInfo((UserInfo)source.readParcelable(UserInfo.class.getClassLoader()));
 		source.readTypedList(reserves, Reservation.CREATOR);
 		this.setFbToken(source.readInt());
-		source.readList(friendList, String.class.getClassLoader());
+		source.readTypedList(friendList, UserInfo.CREATOR);
 		this.setObjId(source.readString());
 	}
 }
