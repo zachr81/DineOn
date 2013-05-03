@@ -10,6 +10,10 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
+/**
+ * Login Activity for Restaurant users.  Usually sets up the initial
+ * @author mhotan
+ */
 public class RestaurantLoginActivity extends DineOnRestaurantActivity 
 implements LoginFragment.OnLoginListener {
 	private final String TAG = this.getClass().getSimpleName();

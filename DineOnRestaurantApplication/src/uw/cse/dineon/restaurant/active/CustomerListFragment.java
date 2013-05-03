@@ -44,15 +44,16 @@ public class CustomerListFragment extends ListFragment {
 	private UserListAdapter mAdapter;
 
 	/**
-	 * Creates a new customer list fragment
+	 * Creates a new customer list fragment.
 	 * @param customers TODO Change to user class
 	 * @return New CustomerListFragment
 	 */
-	public static CustomerListFragment newInstance(List<String> customers){
+	public static CustomerListFragment newInstance(List<String> customers) {
 		CustomerListFragment frag = new CustomerListFragment();
 		ArrayList<String> mList = new ArrayList<String>();
-		if (customers != null) 
+		if (customers != null) {
 			mList.addAll(customers);
+		}
 
 		//Store list in arguments for future retrieval
 		Bundle args = new Bundle();
@@ -78,18 +79,6 @@ public class CustomerListFragment extends ListFragment {
 	}
 
 	@Override
-	public void onActivityCreated(Bundle savedInstanceState) {
-		super.onActivityCreated(savedInstanceState);
-//	 TODO Check Functionality before deleting
-//		List<String> users = mListener.getCurrentUsers();
-//
-//		mAdapter = new ArrayAdapter<String>(getActivity(), 
-//				android.R.layout.simple_list_item_1, mCustomers);
-//		setListAdapter(mAdapter);	
-		
-	}
-
-	@Override
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
 		if (activity instanceof CustomerListener) {
@@ -106,7 +95,8 @@ public class CustomerListFragment extends ListFragment {
 	public void addCustomer(String customer) {
 		if (mAdapter != null) {
 			mAdapter.add(customer);
-		} else
+		} 
+		else
 			Log.d(TAG, "Attempted to add customer to nonexistant list!");
 		
 	}
@@ -191,13 +181,13 @@ public class CustomerListFragment extends ListFragment {
 			notifyDataSetChanged();
 		}
 		
-		public void add(String customer){
+		public void add(String customer) {
 			users.add(customer);
 			Log.v(TAG, "Added customer " + customer);
 			notifyDataSetChanged();
 		}
 		
-		public void remove(String customer){
+		public void remove(String customer) {
 			users.remove(customer);
 			Log.v(TAG, "Removed customer " + customer);
 			notifyDataSetChanged();
