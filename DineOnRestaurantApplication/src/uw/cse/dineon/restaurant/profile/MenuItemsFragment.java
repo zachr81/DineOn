@@ -28,28 +28,27 @@ import android.widget.TextView;
 public class MenuItemsFragment extends ListFragment {
 
 	/**
-	 * Adapter for restaurant menu Item adapter
+	 * Adapter for restaurant menu Item adapter.
 	 * Use this to add new Menuitems
 	 */
 	private RestaurantMenuItemAdapter mAdapter;
 
 	/**
-	 * Activity listener
+	 * Activity listener.
 	 */
 	private MenuItemListener mListener;
 
 	/**
 	 * Creates a MenuItemsFragment that is ready to build and view.
-	 * @param restaurant Restaurant that contains a group of menus that each contain menu items
+	 * @param info Restaurant that contains a group of menus that each contain menu items
 	 * @return A MenuItemsFragment that is ready to display all the items of the restaurant
 	 */
-	public static MenuItemsFragment newInstance(Restaurant restaurant){
+	public static MenuItemsFragment newInstance(RestaurantInfo info){
 		// Prepare a Bundle argument
 		// for starting an activity with
 		MenuItemsFragment frag = new MenuItemsFragment();
 		Bundle args = new Bundle();
-		// TODO Have Zach finish this implementation
-		//		args.putParcelable(DineOnConstants.KEY_RESTAURANTINFO, restaurant);
+		args.putParcelable(DineOnConstants.KEY_RESTAURANTINFO, info);
 		frag.setArguments(args);
 		return frag;
 	}

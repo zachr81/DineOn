@@ -4,6 +4,7 @@ import uw.cse.dineon.library.MenuItem;
 import uw.cse.dineon.library.Restaurant;
 import uw.cse.dineon.library.RestaurantInfo;
 import uw.cse.dineon.restaurant.DineOnRestaurantActivity;
+import uw.cse.dineon.restaurant.NotLoggedInFragment;
 import uw.cse.dineon.restaurant.R;
 import android.app.ActionBar;
 import android.app.ActionBar.Tab;
@@ -11,6 +12,7 @@ import android.app.ActionBar.TabListener;
 import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.Menu;
 
 /**
@@ -39,17 +41,24 @@ MenuItemsFragment.MenuItemListener {
 		// TODO Grab which action bar is selected
 		mLastTabPosition = 0; // Let the tab be either the 0 or 1
 
-		// Set the actiobar with associated tabs
-		final ActionBar actionBar = getActionBar();
-		if (actionBar != null) { // Support older builds
-			actionBar.addTab(actionBar.newTab().
-					setText(R.string.tab_actionbar_restaurant_profile).setTabListener(this));
-			actionBar.addTab(actionBar.newTab().
-					setText(R.string.tab_actionbar_restaurant_menuitems).setTabListener(this));
-		}
+		Fragment frag;
+		if (isLoggedIn()) { // If logged in fill views appropriately
+			// Set the actiobar with associated tabs
+			final ActionBar actionBar = getActionBar();
+			if (actionBar != null) { // Support older builds
+				actionBar.addTab(actionBar.newTab().
+						setText(R.string.tab_actionbar_restaurant_profile).setTabListener(this));
+				actionBar.addTab(actionBar.newTab().
+						setText(R.string.tab_actionbar_restaurant_menuitems).setTabListener(this));
+			}
 
-		// Obtain the most recently used Restaurant via intent or call
-		Fragment frag = RestaurantInfoFragment.newInstance(new RestaurantInfo());
+			// Obtain the most recently used Restaurant via intent or call
+			frag = RestaurantInfoFragment.newInstance(new RestaurantInfo());
+		} 
+		else {
+			Log.w(TAG, "User not logged in cant show profile");
+			frag = new NotLoggedInFragment();
+		}
 		
 		android.support.v4.app.FragmentTransaction ft = 
 				getSupportFragmentManager().beginTransaction();
@@ -61,17 +70,17 @@ MenuItemsFragment.MenuItemListener {
 	@Override
 	public boolean onPrepareOptionsMenu (Menu menu) {
 		super.onPrepareOptionsMenu(menu);
-		
+
 		android.view.MenuItem itemProfile = menu.findItem(R.id.item_restaurant_profile);
 		// Already at profile page so remove the button
 		if (itemProfile != null) { // If exists
 			itemProfile.setEnabled(false);
 			itemProfile.setVisible(false);
 		}
-		
+
 		return true;
 	}
-	
+
 	/*
 	 * Tab Listener to bring up the correct fragment
 	 * */
@@ -81,38 +90,37 @@ MenuItemsFragment.MenuItemListener {
 		// Obtain a reference on which tab is being selected
 		int pos = tab.getPosition();
 		int diff = pos - mLastTabPosition;
-		
+
 		// Ignore ft because it is not support fragment transaction 
-		
+
 		// get the support fragment transactions
 		android.support.v4.app.FragmentTransaction supFT = 
 				getSupportFragmentManager().beginTransaction();
 		
+		RestaurantInfo info = getRestaurant().getInfo();
+		
 		Fragment frag = null;
 		if (diff < 0) { // move to a tab that relatively left 
-			// TODO Correctly obtain the RestaurantInfo
-			RestaurantInfo info = new RestaurantInfo();
-			
+
 			frag = RestaurantInfoFragment.newInstance(info);
-			
+
 			// Assign the animation where the fragment slides
 			// in from the right
 			supFT.setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
 		} 
 		else if (diff > 0) { // move the tab relatively rights
 			// TODO Correctly obtain the Restaurant
-			Restaurant rest = new Restaurant();
-			
-			frag = MenuItemsFragment.newInstance(rest);
-			
+
+			frag = MenuItemsFragment.newInstance(info);
+
 			// Assign the animation where the fragment slides
 			// in from the 
 			supFT.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left);
 		}
-		
+
 		// Update the position
 		mLastTabPosition = pos;
-		
+
 		if (frag != null) {
 			supFT.replace(R.id.container_profile_fragment, frag);
 			supFT.commit();
@@ -129,7 +137,7 @@ MenuItemsFragment.MenuItemListener {
 	public void onTabUnselected(Tab tab, FragmentTransaction ft) {
 		// As of May 1st cant think of anything to add here
 	}
-	
+
 	//////////////////////////////////////////////////////
 	//// Folliing are fragment call backs that signify user interaction
 	//////////////////////////////////////////////////////
@@ -137,24 +145,24 @@ MenuItemsFragment.MenuItemListener {
 	@Override
 	public void onMenuItemDeleted(MenuItem item) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void onMenuItemAdded(MenuItem item) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void onMenuItemModified(MenuItem item) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void onRestaurantInfoUpdate(RestaurantInfo rest) {
 		// TODO Auto-generated method stub
-		
+
 	}
 }

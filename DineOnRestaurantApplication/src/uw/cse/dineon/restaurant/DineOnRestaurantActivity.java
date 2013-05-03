@@ -36,7 +36,7 @@ import com.parse.PushService;
  */
 public class DineOnRestaurantActivity extends FragmentActivity {
 
-	private static final String TAG = DineOnRestaurantActivity.class.getSimpleName();
+	protected static final String TAG = DineOnRestaurantActivity.class.getSimpleName();
 
 	/**
 	 * member that defines this restaurant user
@@ -162,7 +162,7 @@ public class DineOnRestaurantActivity extends FragmentActivity {
 	/**
 	 * Start log in activity. 
 	 */
-	private void startLoginActivity() {
+	public void startLoginActivity() {
 		Intent i = new Intent(this, RestaurantLoginActivity.class);
 		startActivity(i);
 	}
@@ -246,6 +246,7 @@ public class DineOnRestaurantActivity extends FragmentActivity {
 		if (thisRestaurant != null) {
 			return true;
 		}
+		Log.w(TAG, "Restaurant instance associated with this user is null");
 		return false;
 	}
 
