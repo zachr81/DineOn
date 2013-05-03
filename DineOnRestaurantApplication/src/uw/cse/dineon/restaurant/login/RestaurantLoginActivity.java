@@ -102,6 +102,10 @@ implements LoginFragment.OnLoginListener {
 		}
 
 		if (requestCode == REQUEST_CREATE_NEW_ACCOUNT) {
+			if (DineOnConstants.DEBUG) {
+				goToRestaurantMain(null);
+			}
+			
 			Restaurant rest;
 			if ((rest = data.getParcelableExtra(DineOnConstants.KEY_RESTAURANT)) != null) {
 				// Successfully created a new account
@@ -136,6 +140,9 @@ implements LoginFragment.OnLoginListener {
 			public void done(ParseUser user, ParseException e) {
 				if (user != null) {
 					// Successfuly logged in
+					if (DineOnConstants.DEBUG) {
+						goToRestaurantMain(null);
+					}
 					// TODO Download the current restaurant associated
 					// with this user from Parse.
 					// when complete call goToRestaurantMain(Restaurant) 

@@ -41,29 +41,9 @@ implements CreateNewAccountListener {
 	public void submitNewAccount(String username, String email, String pw,
 			String pwRepeat) {
 		// Handle the validation
-		Resolution emailRes = CredentialValidator.isValidEmail(email);
-		Resolution pwRes = CredentialValidator.isValidPassword(pw);
-		Resolution pwRepRes = CredentialValidator.isValidPassword(pwRepeat);
-		Resolution userName = CredentialValidator.isValidEmail(email);
+		Resolution completeRes = CredentialValidator.validateAll(username, email, pw, pwRepeat);
 
-		StringBuffer buf = new StringBuffer();
-		if (!userName.isValid()) {
-			buf.append(userName.getMessage() + "\n");
-		}
-		if (!emailRes.isValid()) {
-			buf.append(emailRes.getMessage() + "\n");
-		}
-		if (!pwRes.isValid()) {
-			buf.append(pwRes.getMessage() + "\n");
-		}
-		if (!pwRepRes.isValid()) {
-			buf.append(pwRepRes.getMessage() + "\n");
-		}
-		if (pw != null && !pw.equals(pwRepeat)) {
-			buf.append("Your passwords dont match");
-		}
-
-		if (buf.length() == 0) { // Valid passwords
+		if (completeRes.isValid()) { // Valid passwords
 			ParseUser user = new ParseUser();
 			user.setUsername(username);
 			user.setPassword(pw);
@@ -75,7 +55,11 @@ implements CreateNewAccountListener {
 					if (e == null) {
 						// Hooray! Let them use the app now.
 						// TODO Create a new Restaurant object and save it to Parse.
+						// Then return the Restaurant object to Login Activty for processing
 						
+						if (DineOnConstants.DEBUG) {
+							returnResult(null);
+						}
 					} 
 					else {
 						// Sign up didn't succeed. Look at the ParseException
@@ -86,7 +70,7 @@ implements CreateNewAccountListener {
 			});
 		} 
 		else {
-			showFailAlertDialog(buf.toString());
+			showFailAlertDialog(completeRes.getMessage());
 		}
 	}
 	

@@ -32,6 +32,7 @@ public final class CredentialValidator {
 			"Username can't contain spaces");
 	//TODO etc..
 
+	private static final Resolution NULL_EMAIL = new Resolution(false, "Can't have a null email");
 	private static final Resolution INVALID_EMAIL = new Resolution(false, "Invalid email"); 
 
 	private static final Pattern EMAIL_ADDRESS_PATTERN = Pattern.compile(
@@ -44,6 +45,42 @@ public final class CredentialValidator {
 					+ ")+" );
 
 	/**
+	 * Validates a complete set of attributes.
+	 * @param username
+	 * @param email
+	 * @param pw
+	 * @param pwRepeat
+	 * @return
+	 */
+	public static Resolution validateAll(String username, String email, String pw,
+			String pwRepeat) {
+		// Handle the validation
+		Resolution emailRes = CredentialValidator.isValidEmail(email);
+		Resolution pwRes = CredentialValidator.isValidPassword(pw);
+		Resolution pwRepRes = CredentialValidator.isValidPassword(pwRepeat);
+		Resolution userName = CredentialValidator.isValidEmail(email);
+
+		StringBuffer buf = new StringBuffer();
+		if (!userName.isValid()) {
+			buf.append(userName.getMessage() + "\n");
+		}
+		if (!emailRes.isValid()) {
+			buf.append(emailRes.getMessage() + "\n");
+		}
+		if (!pwRes.isValid()) {
+			buf.append(pwRes.getMessage() + "\n");
+		}
+		if (!pwRepRes.isValid()) {
+			buf.append(pwRepRes.getMessage() + "\n");
+		}
+		
+		if (buf.length() == 0) { // Success!
+			return RESOLVED_INSTANCE;
+		} 
+		return new Resolution(false, buf.toString());
+	}
+
+	/**
 	 * Can't create instance.
 	 */
 	private CredentialValidator() { }
@@ -54,6 +91,9 @@ public final class CredentialValidator {
 	 * @return Resolution to return.
 	 */
 	public static Resolution isValidEmail(String email) {
+		if (email == null) {
+			return NULL_EMAIL;
+		}
 		if (EMAIL_ADDRESS_PATTERN.matcher(email).matches()) {
 			return RESOLVED_INSTANCE;
 		}

@@ -11,8 +11,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.Toast;
 
-import com.parse.ParseUser;
-
 /**
  * Initial activity that user is brought to in order to gain admittance.  
  * Activity that allows users to login via Email and Password, Facebook, or Twitter
@@ -44,75 +42,13 @@ LoginFragment.OnLoginListener {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_login);
-
-		// TODO Complete Initialization
-		// check internet connection
 	}
 
 	@Override
 	protected void onResume(){
-		super.onResume();
-		
-		
-		ParseUser me = ParseUser.getCurrentUser();
-		if (me != null) {
-			startRestSelectionAct();
-		}
+		super.onResume();	
 	}
 	
-	private void startRestSelectionAct(){
-		Intent i = new Intent(this, RestaurantSelectionActivity.class);
-//		i.putExtra(RestaurantSelectionActivity.EXTRA_USER, loginCredentials);
-		startActivity(i);
-	}
-	
-	// TODO Static Callback
-	@Override
-	public void onLogin(String username, String password) {
-		// TODO Auto-generated method stub
-		
-	} 
-	
-	@Override
-	public void onLogin(String loginCredentials) {
-		// TODO Auto-generated method stub
-		// Check credentials
-
-		startRestSelectionAct();
-	}
-
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		MenuInflater inflater = getMenuInflater();
-		// Note that override this method does not mean the actualy 
-		//  UI Menu is updated this is done manually
-		//  See basic_menu under res/menu for ids
-		inflater.inflate(R.menu.login_menu, menu);
-		return true;
-	}
-
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-		case R.id.option_forgot_password: 
-			// TODO Implement
-			// TODO Implement
-			DevelopTools.getUnimplementedDialog(this, null).show();
-		case R.id.option_create_new_account:
-			Intent i = new Intent(this.getApplicationContext(), CreateNewAccountActivity.class);
-			startActivity(i);
-			break;
-		}
-		return true;
-	}
-
-	@Override
-	public void onCreateNewAccount() {
-		// TODO Auto-generated method stub
-		Intent creatAccountIntent = new Intent(this, CreateNewAccountActivity.class);
-		startActivityForResult(creatAccountIntent, REQUEST_CREATE_NEW_ACCOUNT);
-	}
-
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if (resultCode == RESULT_OK && requestCode == REQUEST_CREATE_NEW_ACCOUNT) {
@@ -132,6 +68,67 @@ LoginFragment.OnLoginListener {
 			}
 		}
 	}
+	
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		MenuInflater inflater = getMenuInflater();
+		// Note that override this method does not mean the actualy 
+		//  UI Menu is updated this is done manually
+		//  See basic_menu under res/menu for ids
+		inflater.inflate(R.menu.login_menu, menu);
+		return true;
+	}
 
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case R.id.option_forgot_password: 
+			// TODO Implement
+			// TODO Implement
+			DevelopTools.getUnimplementedDialog(this, null).show();
+		case R.id.option_create_new_account:
+			onCreateNewAccount();
+			break;
+		}
+		return true;
+	}
+	
+	// User interaction methods
+	
+	@Override
+	public void onLogin(String username, String password) {
+		// TODO Auto-generated method stub
+		
+	} 
+	
+	@Override
+	public void onLoginWithFacebook() {
+		// TODO Auto-generated method stub
+		DevelopTools.getUnimplementedDialog(this, null).show();
+	}
+
+	@Override
+	public void onLoginWithTwitter() {
+		// TODO Auto-generated method stub
+		DevelopTools.getUnimplementedDialog(this, null).show();
+	}
+
+
+	/**
+	 * Starts an activity for a result to allow the user to start a new account
+	 */
+	public void onCreateNewAccount() {
+		// TODO Auto-generated method stub
+		Intent creatAccountIntent = new Intent(this, CreateNewAccountActivity.class);
+		startActivityForResult(creatAccountIntent, REQUEST_CREATE_NEW_ACCOUNT);
+	}
+
+	
+	
+	private void startRestSelectionAct(){
+		Intent i = new Intent(this, RestaurantSelectionActivity.class);
+//		i.putExtra(RestaurantSelectionActivity.EXTRA_USER, loginCredentials);
+		startActivity(i);
+	}
 
 }

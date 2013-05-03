@@ -45,6 +45,11 @@ public class DineOnConstants {
 	 */
 	public static final String KEY_RESTAURANTINFO = "RESTAURANTINFO";
 	
+	/**
+	 * Reference KEY_RESTAURANT, but for Restaurant Info.
+	 */
+	public static final String KEY_USER = "USER";
+	
 	// Callback Key for braodcast receiver callbacks
 	public static final String OBJ_ID = "OBJ_ID";
 }
