@@ -14,6 +14,7 @@ import uw.cse.dineon.library.util.DineOnConstants;
 import uw.cse.dineon.library.util.DineOnReceiver;
 import uw.cse.dineon.library.util.ParseUtil;
 import uw.cse.dineon.restaurant.login.RestaurantLoginActivity;
+import uw.cse.dineon.restaurant.profile.ProfileActivity;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
@@ -124,6 +125,10 @@ public class DineOnRestaurantActivity extends FragmentActivity {
 		// TODO Adjust dynamic attributes of the menu
 		// Depending on the state of the current application
 		// Adjust what is presented to the user		
+		if (DineOnConstants.DEBUG) {
+			return true;
+		}
+		
 		if (!isLoggedIn()) {
 			setMenuToNonUser(menu);
 		}
@@ -141,7 +146,7 @@ public class DineOnRestaurantActivity extends FragmentActivity {
 			itemProfile.setEnabled(false);
 			itemProfile.setVisible(false);
 		}
-		MenuItem itemLogout = menu.findItem(R.id.item_restaurant_profile);
+		MenuItem itemLogout = menu.findItem(R.id.item_logout);
 		if (itemLogout != null) {
 			itemLogout.setEnabled(false);
 			itemLogout.setVisible(false);
@@ -182,19 +187,29 @@ public class DineOnRestaurantActivity extends FragmentActivity {
 		switch (item.getItemId()) {
 		case R.id.item_restaurant_profile:
 			// TODO Create Bundle with Restaurant inside
-			// TODO Launch profile activity
-
+			startProfileActivity(null);
 			break;
 		case R.id.item_logout:
 			// TODO Save the current restaurant
 			// TODO Log out via Parse
 			// TODO When we are done logging out of parse
-
+			
 			break;
 		default:
 
 		}
 		return true;
+	}
+	
+	/**
+	 * Starts profile activity
+	 */
+	public void startProfileActivity(Restaurant rest){
+		Intent i = new Intent(this, ProfileActivity.class);
+		if (rest != null) {
+			i.putExtra(DineOnConstants.KEY_RESTAURANT, rest);
+		}
+		startActivity(i);
 	}
 
 	@Override

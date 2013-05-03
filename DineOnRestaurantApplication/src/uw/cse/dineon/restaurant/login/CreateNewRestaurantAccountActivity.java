@@ -28,9 +28,9 @@ public class CreateNewRestaurantAccountActivity extends FragmentActivity
 implements CreateNewAccountListener {
 
 	private static final String TAG = CreateNewRestaurantAccountActivity.class.getSimpleName();
-	
+
 	private Restaurant mRestaurant;
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -57,6 +57,7 @@ implements CreateNewAccountListener {
 						// TODO Create a new Restaurant object and save it to Parse.
 						// Then return the Restaurant object to Login Activty for processing
 						
+						
 						if (DineOnConstants.DEBUG) {
 							returnResult(null);
 						}
@@ -73,7 +74,7 @@ implements CreateNewAccountListener {
 			showFailAlertDialog(completeRes.getMessage());
 		}
 	}
-	
+
 	/**
 	 * Finish this activity and return to login.
 	 * @param success
@@ -82,13 +83,15 @@ implements CreateNewAccountListener {
 		mRestaurant = restaurant;
 		this.finish();
 	}
-	
+
 	@Override
 	public void finish(){
 		// Send restaurant instance back
-		Intent retIntent = new Intent();
-		retIntent.putExtra(DineOnConstants.KEY_RESTAURANT, mRestaurant);
-		setResult(RESULT_OK, retIntent);
+		if (!DineOnConstants.DEBUG) {
+			Intent retIntent = new Intent();
+			retIntent.putExtra(DineOnConstants.KEY_RESTAURANT, mRestaurant);
+			setResult(RESULT_OK, retIntent);
+		}
 		super.finish();
 	}
 
@@ -106,7 +109,7 @@ implements CreateNewAccountListener {
 		});
 		builder.create().show();
 	}
-	
+
 	@Override
 	public void onBackPressed() {
 		Log.d(TAG, "Check In Activity back pressed");

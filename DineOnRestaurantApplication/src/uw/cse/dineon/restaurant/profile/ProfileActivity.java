@@ -3,6 +3,7 @@ package uw.cse.dineon.restaurant.profile;
 import uw.cse.dineon.library.MenuItem;
 import uw.cse.dineon.library.Restaurant;
 import uw.cse.dineon.library.RestaurantInfo;
+import uw.cse.dineon.library.util.DineOnConstants;
 import uw.cse.dineon.restaurant.DineOnRestaurantActivity;
 import uw.cse.dineon.restaurant.NotLoggedInFragment;
 import uw.cse.dineon.restaurant.R;
@@ -42,7 +43,7 @@ MenuItemsFragment.MenuItemListener {
 		mLastTabPosition = 0; // Let the tab be either the 0 or 1
 
 		Fragment frag;
-		if (isLoggedIn()) { // If logged in fill views appropriately
+		if (isLoggedIn() || DineOnConstants.DEBUG) { // If logged in fill views appropriately
 			// Set the actiobar with associated tabs
 			final ActionBar actionBar = getActionBar();
 			if (actionBar != null) { // Support older builds

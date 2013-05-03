@@ -50,6 +50,7 @@ implements LoginFragment.OnLoginListener {
 		// If debug go straight to the activity
 		if (DineOnConstants.DEBUG) {
 			startActivity(i);
+			return;
 		}
 		
 		// Real process we must assert there is a restaurant to use
@@ -169,7 +170,7 @@ implements LoginFragment.OnLoginListener {
 			public void onClick(DialogInterface dialog, int which) {
 				dialog.cancel();
 			}
-		});
+		}).show();
 	}
 
 }

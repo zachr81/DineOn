@@ -18,30 +18,30 @@ import android.widget.EditText;
 public class CreateNewAccountFragment extends Fragment implements OnClickListener {
 
 	private CreateNewAccountListener mListener;
-	
+
 	/**
 	 * Input for all the values.
 	 */
 	private EditText mUsername, mEmail, mPassword, mPasswordRepeat; 
-	
+
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.fragment_create_new_account,
 				container, false);
-		
+
 		mUsername = (EditText) view.findViewById(R.id.input_createnewaccount_username);
 		mEmail = (EditText) view.findViewById(R.id.input_createnewaccount_email);
 		mPassword = (EditText) view.findViewById(R.id.input_createnewaccount_password);
 		mPasswordRepeat = (EditText) view.findViewById(
 				R.id.input_createnewaccount_repeat_password);
-		
+
 		Button submit = (Button) view.findViewById(R.id.button_create_account);
 		submit.setOnClickListener(this);
-		
+
 		return view;
 	}
-	
+
 	@Override
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
@@ -54,8 +54,8 @@ public class CreateNewAccountFragment extends Fragment implements OnClickListene
 					+ ".CreateNewAccountListener");
 		}
 	}
-	
-	
+
+
 	/**
 	 * Handles the main click.
 	 */
@@ -77,7 +77,7 @@ public class CreateNewAccountFragment extends Fragment implements OnClickListene
 	 * @author mhotan
 	 */
 	public interface CreateNewAccountListener {
-		
+
 		/**
 		 * user wants to use credentials to create account.
 		 * @param username username wanted to use
@@ -87,7 +87,7 @@ public class CreateNewAccountFragment extends Fragment implements OnClickListene
 		 */
 		void submitNewAccount(
 				String username, String email, String pw, String pwRepeat);
-		
+
 	}
-	
+
 }

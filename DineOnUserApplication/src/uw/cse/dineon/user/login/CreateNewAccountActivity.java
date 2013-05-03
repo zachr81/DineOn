@@ -29,20 +29,20 @@ implements CreateNewAccountFragment.onCreateNewAccountListener {
 	public static final String TAG = CreateNewAccountActivity.class.getSimpleName();
 
 	private User mUser;
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_create_new_account);
 	}
-	
+
 	@Override
 	public void onCreateNewAccount(String username, String email,
 			String password, String passwordRepeat) {
 		// Handle the validation
 		Resolution completeRes = CredentialValidator.validateAll(username, 
 				email, password, passwordRepeat);
-		
+
 		if (completeRes.isValid()) {
 			ParseUser user = new ParseUser();
 			user.setUsername(username);
@@ -57,7 +57,7 @@ implements CreateNewAccountFragment.onCreateNewAccountListener {
 						// TODO Create a new User object and save it to the
 						// cloud and associate it with the actual user
 						// possibly by user name
-						
+
 						if (DineOnConstants.DEBUG) {
 							returnResult(null);
 						}
@@ -84,13 +84,15 @@ implements CreateNewAccountFragment.onCreateNewAccountListener {
 		mUser = u;
 		this.finish();
 	}
-	
+
 	@Override
 	public void finish(){
 		// Send restaurant instance back
-		Intent retIntent = new Intent();
-		retIntent.putExtra(DineOnConstants.KEY_USER, mUser);
-		setResult(RESULT_OK, retIntent);
+		if (!DineOnConstants.DEBUG) {
+			Intent retIntent = new Intent();
+			retIntent.putExtra(DineOnConstants.KEY_USER, mUser);
+			setResult(RESULT_OK, retIntent);
+		}
 		super.finish();
 	}
 
@@ -105,7 +107,7 @@ implements CreateNewAccountFragment.onCreateNewAccountListener {
 		// TODO Later phase
 		DevelopTools.getUnimplementedDialog(this, null);		
 	}
-	
+
 	/**
 	 * Just shows general failure dialog with this message
 	 * @param error
