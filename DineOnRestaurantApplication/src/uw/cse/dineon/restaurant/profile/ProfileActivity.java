@@ -1,7 +1,6 @@
 package uw.cse.dineon.restaurant.profile;
 
 import uw.cse.dineon.library.MenuItem;
-import uw.cse.dineon.library.Restaurant;
 import uw.cse.dineon.library.RestaurantInfo;
 import uw.cse.dineon.library.util.DineOnConstants;
 import uw.cse.dineon.restaurant.DineOnRestaurantActivity;
