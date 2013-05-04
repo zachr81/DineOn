@@ -48,7 +48,8 @@ public class DineOnUserActivity extends FragmentActivity {
 	private static final String TAG = DineOnUserActivity.class.getSimpleName();
 	private static final String CHANNEL = "uw_cse_dineon_" + ParseUser.getCurrentUser().getUsername();
 	private static final String ACTION = "uw.cse.dineon.user.CONFIRM_DINING_SESSION"; 
-	protected static User mUser;
+	
+	protected User mUser;
 
 	private DineOnReceiver rec;
 
