@@ -19,13 +19,14 @@ public class User extends Storable implements Parcelable {
 	public static final String RESERVES = "reserves";
 	public static final String FB_TOKEN = "fbToken";
 	public static final String FRIEND_LIST = "friendList";
-	
+
 	private List<RestaurantInfo> favs;
 	private UserInfo userInfo;
 	private List<Reservation> reserves;
 	private int fbToken;
 	private List<UserInfo> friendList;
-
+	private DiningSession diningSession;
+	
 	/**
 	 *
 	 */
@@ -33,17 +34,17 @@ public class User extends Storable implements Parcelable {
 		super();
 		// TODO
 	}
-	
+
 	/**
-	* Creates a User object from the given Parcel.
-	* 
-	* @param source Parcel of information in:
-	* 		RestaurantInfos, UserInfo, Reservations, int, Strings, String.
-	*/
+	 * Creates a User object from the given Parcel.
+	 * 
+	 * @param source Parcel of information in:
+	 * 		RestaurantInfos, UserInfo, Reservations, int, Strings, String.
+	 */
 	public User(Parcel source) {
-	readFromParcel(source);
+		readFromParcel(source);
 	}
-	
+
 	/**
 	 *
 	 * @param restInfo RestaurantInfo
@@ -152,6 +153,22 @@ public class User extends Storable implements Parcelable {
 		this.friendList = friends;
 	}
 
+	/**
+	 *
+	 * @return dining session
+	 */
+	public DiningSession getDiningSession() {
+		return diningSession;
+	}
+
+	/**
+	 *
+	 * @param diningSession The specified dining session
+	 */
+	public void setDiningSession(DiningSession diningSession) {
+		this.diningSession = diningSession;
+	}
+
 
 	@Override
 	public ParseObject packObject() {
@@ -163,7 +180,7 @@ public class User extends Storable implements Parcelable {
 		pobj.add(User.RESERVES, this.reserves);
 		//in case this storable is going to be used after the pack.
 		this.setObjId(pobj.getObjectId());
-				
+
 		return pobj;
 	}
 
@@ -199,9 +216,9 @@ public class User extends Storable implements Parcelable {
 		dest.writeInt(fbToken);
 		dest.writeTypedList(friendList);
 		dest.writeString(this.getObjId());
-						
+
 	}
-	
+
 	/**
 	 * Parcelable creator object of a User.
 	 * Can create a User from a Parcel.
@@ -209,15 +226,15 @@ public class User extends Storable implements Parcelable {
 	public static final Parcelable.Creator<User> CREATOR = 
 			new Parcelable.Creator<User>() {
 
-				@Override
-				public User createFromParcel(Parcel source) {
-					return new User(source);
-				}
+		@Override
+		public User createFromParcel(Parcel source) {
+			return new User(source);
+		}
 
-				@Override
-				public User[] newArray(int size) {
-					return new User[size];
-				}
+		@Override
+		public User[] newArray(int size) {
+			return new User[size];
+		}
 	};
 
 
