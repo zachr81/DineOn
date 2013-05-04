@@ -90,7 +90,7 @@ LoginFragment.OnLoginListener {
 			onCreateNewAccount();
 			break;
 		default:
-			break;
+			Log.w(TAG, "Unknown Options Item pressed");
 		}
 		return true;
 	}
