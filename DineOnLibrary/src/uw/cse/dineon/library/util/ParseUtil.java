@@ -225,7 +225,7 @@ public class ParseUtil {
 	 * format of attributes.
 	 */
 	public static void notifyApplication(String action, Map<String, String> attr, String channel) {
-		try{
+		try {
 			JSONObject data = new JSONObject();
 	        data.put("action", action);
 	        Set<String> kSet = attr.keySet();

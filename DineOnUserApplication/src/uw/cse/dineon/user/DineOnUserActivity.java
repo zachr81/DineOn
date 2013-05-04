@@ -59,8 +59,6 @@ public class DineOnUserActivity extends FragmentActivity {
 			Log.d(TAG, "Error: " + e.getMessage());
 		}
 	}
-	
-	
 
 	@Override
 	protected void onResume() {
@@ -200,7 +198,6 @@ public class DineOnUserActivity extends FragmentActivity {
 		} catch (NoSuchMethodException e) {
 			Log.e(TAG, "Failed to invocate method onDiningSessionRecievedCallback()");
 		}
-
 	}
 
 	/**

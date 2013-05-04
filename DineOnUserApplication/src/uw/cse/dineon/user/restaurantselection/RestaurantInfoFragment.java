@@ -10,7 +10,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 /**
- * Fragment that presents the information about a particular restaurant
+ * Fragment that presents the information about a particular restaurant.
  * @author mhotan
  */
 public class RestaurantInfoFragment extends Fragment {
@@ -47,14 +47,24 @@ public class RestaurantInfoFragment extends Fragment {
 		}
 	}
 	
+	/**
+	 * Interface for Activity callbacks.
+	 * @author mhotan
+	 */
 	public interface RestaurantInfoListener {
 		
-		public void onMakeReservation(String reservation);
+		/**
+		 * Notifies activity that user request to make a reservation.
+		 * @param reservation Reservation the user.
+		 */
+		void onMakeReservation(String reservation);
 		
 		/**
+		 * Returns the current Restaurant to be displayed.
 		 * TODO change to Restaurant datatype
+		 * @return null if no restaurant available, other wise the resaurant.
 		 */
-		public String getCurrentRestaurant();
+		String getCurrentRestaurant();
 		
 	}
 }
