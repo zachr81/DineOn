@@ -16,7 +16,7 @@ import android.widget.EditText;
 public class LoginFragment extends android.support.v4.app.Fragment {
 
 	/**
-	 * TODO
+	 * Activity that reacts to user interactions
 	 */
 	private OnLoginListener mListener;
 
@@ -64,7 +64,8 @@ public class LoginFragment extends android.support.v4.app.Fragment {
 		super.onAttach(activity);
 		if (activity instanceof OnLoginListener) {
 			mListener = (OnLoginListener) activity;
-		} else {
+		} 
+		else {
 			throw new ClassCastException(activity.toString()
 					+ " must implemenet LoginFragment.OnLoginListener");
 		}
@@ -97,13 +98,21 @@ public class LoginFragment extends android.support.v4.app.Fragment {
 	 */
 	public interface OnLoginListener {
 
-		// This is how login listener communicates back to the activity
-		
-		// TODO Perhaps create a login credential class and pass that back to the activity
+		/**
+		 * User attempts to Login via email and password.
+		 * @param username username requested 
+		 * @param password password to use
+		 */
 		void onLogin(String username, String password);
 		
+		/**
+		 * User request to login with facebook.
+		 */
 		void onLoginWithFacebook();
 		
+		/**
+		 * User request to login with twitter.
+		 */
 		void onLoginWithTwitter();
 	}
 

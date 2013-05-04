@@ -14,13 +14,14 @@ import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.widget.Toast;
 
 import com.parse.LogInCallback;
 import com.parse.ParseException;
+import com.parse.ParseFacebookUtils;
 import com.parse.ParseUser;
 
 /**
@@ -39,16 +40,7 @@ LoginFragment.OnLoginListener {
 
 	// Request code to create a new account
 	private static final int REQUEST_CREATE_NEW_ACCOUNT = 0x1;
-
-	/**
-	 * Return code for  
-	 */
-	public static final String RETURN_CODE_LOGIN_CREDENTIALS = TAG + ":LOGIN_NEW_CREDENTIALS";
-
-	/**
-	 * 
-	 */
-	public static final String RETURN_CODE_LOGIN_3RDPARTY = TAG + ":LOGIN_3RD_PARTY";
+	private static final int REQUEST_LOGIN_FACEBOOK = 0x2;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -57,18 +49,23 @@ LoginFragment.OnLoginListener {
 	}
 
 	@Override
-	protected void onResume(){
-		super.onResume();	
-	}
-
-	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		if (resultCode == RESULT_OK && requestCode == REQUEST_CREATE_NEW_ACCOUNT) {
+		super.onActivityResult(requestCode, resultCode, data);
+		if (resultCode != RESULT_OK) {
+			return;
+		}
+
+		// Valid return type
+		if (requestCode == REQUEST_CREATE_NEW_ACCOUNT) {
 
 			User user;
 			if ((user = data.getParcelableExtra(DineOnConstants.KEY_USER)) != null) {
 				startRestSelectionAct(user);
+				return;
 			}
+		}
+		else if (requestCode == REQUEST_LOGIN_FACEBOOK) {
+			ParseFacebookUtils.finishAuthentication(requestCode, resultCode, data);
 		}
 	}
 
@@ -91,6 +88,8 @@ LoginFragment.OnLoginListener {
 			DevelopTools.getUnimplementedDialog(this, null).show();
 		case R.id.option_create_new_account:
 			onCreateNewAccount();
+			break;
+		default:
 			break;
 		}
 		return true;
@@ -129,7 +128,8 @@ LoginFragment.OnLoginListener {
 					// TODO Download the current restaurant associated
 					// with this user from Parse.
 					// when complete call goToRestaurantMain(Restaurant) 
-				} else {
+				} 
+				else {
 					// Signup failed. Look at the ParseException to see what happened.
 					showAlertBadInput(e.getMessage());
 				}
@@ -139,12 +139,43 @@ LoginFragment.OnLoginListener {
 
 	@Override
 	public void onLoginWithFacebook() {
-		// TODO Auto-generated method stub
-		DevelopTools.getUnimplementedDialog(this, null).show();
+		// TODO Disable all the buttons so user does not
+		// Monkey it
+		
+		// Replace actionbar with menu
+		
+		// Process the face book application
+		ParseFacebookUtils.logIn(this, REQUEST_LOGIN_FACEBOOK, new LogInCallback() {
+			@Override
+			public void done(ParseUser user, ParseException e) {
+				if (user == null) {
+					Log.d(TAG, "Uh oh. The user cancelled the Facebook login.");
+					
+					// TODO Re enable the screen
+					// TODO Stop any progress bar					
+					// TODO Toast the user that login was cancelled
+					
+				} 
+				else if (user.isNew()) {
+					Log.d(TAG, "User signed up and logged in through Facebook!");
+					
+					// TODO Create a new ParseObject and send to next activity
+					
+				} 
+				else {
+					Log.d(TAG, "User logged in through Facebook!");
+					
+					// TODO Extract the user's User ParseObject and send to next activity
+				}
+			}
+		});
+
+//		DevelopTools.getUnimplementedDialog(this, null).show();
 	}
 
 	@Override
 	public void onLoginWithTwitter() {
+
 		// TODO Auto-generated method stub
 		DevelopTools.getUnimplementedDialog(this, null).show();
 	}
@@ -160,7 +191,8 @@ LoginFragment.OnLoginListener {
 	}
 
 	/**
-	 * 
+	 * Starts Restaurant selection activity with current
+	 * TODO send a user instance through this bundle
 	 * @param user
 	 */
 	private void startRestSelectionAct(User user){
