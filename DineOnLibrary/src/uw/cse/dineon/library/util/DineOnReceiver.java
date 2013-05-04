@@ -41,13 +41,9 @@ public class DineOnReceiver extends BroadcastReceiver {
 	 * notifications
 	 * @return Constructed DineOnReceiver given arguments
 	 */
-	public static DineOnReceiver createDineOnRecevier(
-			Method h, Context ctx, Class<? extends FragmentActivity> act, String action, String channel) {
+	public static DineOnReceiver createDineOnRecevier(Method h) {
 		
 		DineOnReceiver rec = new DineOnReceiver(h);
-		IntentFilter iff = new IntentFilter(action);
-		PushService.subscribe(ctx, channel, act);
-		ctx.registerReceiver(rec, iff);
 		
 		rec.handler = h;
 		
