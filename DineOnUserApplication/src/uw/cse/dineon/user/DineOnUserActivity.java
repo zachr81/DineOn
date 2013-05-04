@@ -123,7 +123,6 @@ public class DineOnUserActivity extends FragmentActivity {
 		//Mock empty user to get the app to compile
 		if(DineOnConstants.DEBUG) {
 			mUser = new User();
-			mUser.setDiningSession(new DiningSession());
 		}
 		
 		if(mUser.getDiningSession() != null) {
