@@ -49,13 +49,14 @@ public class LoginFragment extends android.support.v4.app.Fragment {
 				mListener.onLoginWithFacebook();
 			}
 		});
-		Button twitterLoginButton = (Button) view.findViewById(R.id.button_twitter_login);
-		twitterLoginButton.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				mListener.onLoginWithTwitter();
-			}
-		});
+		//TODO Save for later
+//		Button twitterLoginButton = (Button) view.findViewById(R.id.button_twitter_login);
+//		twitterLoginButton.setOnClickListener(new View.OnClickListener() {
+//			@Override
+//			public void onClick(View v) {
+//				mListener.onLoginWithTwitter();
+//			}
+//		});
 		return view;
 	}
 
