@@ -67,7 +67,37 @@ public class DineOnUserActivity extends FragmentActivity {
 			// print out error msg
 			Log.d(TAG, "Error: " + e.getMessage());
 		}
-		mikeReceiver = new MikeDiningSessionReceiver(ParseUser.getCurrentUser());
+		mikeReceiver = new MikeDiningSessionReceiver(ParseUser.getCurrentUser());	
+	}
+	
+	/**
+	 * Saves the instance of the current DiningSession. Information can
+	 * be recovered by using onRestoreInstanceState.
+	 *
+	 * @param savedInstanceState Bundle to store the current
+	 * 		activity's data to.
+	 */
+	@Override
+	public void onSaveInstanceState(Bundle savedInstanceState) {
+		// bundle mDiningSession w/ our bundle method
+		//		Bundle diningBundle = mDiningSession.bundle();
+
+		// save entire bundle w/ key value, retrieve using this string
+		//		savedInstanceState.putBundle("diningSession", diningBundle);
+		super.onSaveInstanceState(savedInstanceState);
+	}
+
+	/**
+	 * Restores an instance of a DiningSession from the given Bundle
+	 * parameter.
+	 *
+	 * @param savedInstanceState Bundle that holds session information
+	 * 		to be restored.
+	 */
+	@Override
+	public void onRestoreInstanceState(Bundle savedInstanceState) {
+		super.onRestoreInstanceState(savedInstanceState);
+		//		mDiningSession.unbundle(savedInstanceState.getBundle("diningSession"));
 	}
 
 	@Override
@@ -234,35 +264,7 @@ public class DineOnUserActivity extends FragmentActivity {
 		// Start RestaurantMainActivity with bundle
 	}
 
-	/**
-	 * Saves the instance of the current DiningSession. Information can
-	 * be recovered by using onRestoreInstanceState.
-	 *
-	 * @param savedInstanceState Bundle to store the current
-	 * 		activity's data to.
-	 */
-	@Override
-	public void onSaveInstanceState(Bundle savedInstanceState) {
-		// bundle mDiningSession w/ our bundle method
-		//		Bundle diningBundle = mDiningSession.bundle();
 
-		// save entire bundle w/ key value, retrieve using this string
-		//		savedInstanceState.putBundle("diningSession", diningBundle);
-		super.onSaveInstanceState(savedInstanceState);
-	}
-
-	/**
-	 * Restores an instance of a DiningSession from the given Bundle
-	 * parameter.
-	 *
-	 * @param savedInstanceState Bundle that holds session information
-	 * 		to be restored.
-	 */
-	@Override
-	public void onRestoreInstanceState(Bundle savedInstanceState) {
-		super.onRestoreInstanceState(savedInstanceState);
-		//		mDiningSession.unbundle(savedInstanceState.getBundle("diningSession"));
-	}
 	
 	/**
 	 * Handles the result of requesting a Dining session
