@@ -63,9 +63,14 @@ public class DineOnUserActivity extends FragmentActivity {
 			// print out error msg
 			Log.d(TAG, "Error: " + e.getMessage());
 		}
+<<<<<<< HEAD
 	}
 
 
+=======
+		mikeReceiver = new MikeDiningSessionReceiver(ParseUser.getCurrentUser());
+	}
+>>>>>>> parent of 7b47e83... Moved some stuff around DineOnUserActivity
 
 	@Override
 	protected void onResume() {
@@ -301,12 +306,34 @@ public class DineOnUserActivity extends FragmentActivity {
 	public void onSaveInstanceState(Bundle savedInstanceState) {
 		// bundle mDiningSession w/ our bundle method
 		//		Bundle diningBundle = mDiningSession.bundle();
+<<<<<<< HEAD
 
 		// save entire bundle w/ key value, retrieve using this string
 		//		savedInstanceState.putBundle("diningSession", diningBundle);
 		super.onSaveInstanceState(savedInstanceState);
 	}
 
+=======
+
+		// save entire bundle w/ key value, retrieve using this string
+		//		savedInstanceState.putBundle("diningSession", diningBundle);
+		super.onSaveInstanceState(savedInstanceState);
+	}
+
+	/**
+	 * Restores an instance of a DiningSession from the given Bundle
+	 * parameter.
+	 *
+	 * @param savedInstanceState Bundle that holds session information
+	 * 		to be restored.
+	 */
+	@Override
+	public void onRestoreInstanceState(Bundle savedInstanceState) {
+		super.onRestoreInstanceState(savedInstanceState);
+		//		mDiningSession.unbundle(savedInstanceState.getBundle("diningSession"));
+	}
+	
+>>>>>>> parent of 7b47e83... Moved some stuff around DineOnUserActivity
 	/**
 	 * Restores an instance of a DiningSession from the given Bundle
 	 * parameter.
