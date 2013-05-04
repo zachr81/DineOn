@@ -19,6 +19,7 @@ public class User extends Storable implements Parcelable {
 	public static final String RESERVES = "reserves";
 	public static final String FB_TOKEN = "fbToken";
 	public static final String FRIEND_LIST = "friendList";
+	public static final String DINING_SESSION = "diningSession";
 
 	private List<RestaurantInfo> favs;
 	private UserInfo userInfo;
@@ -26,7 +27,7 @@ public class User extends Storable implements Parcelable {
 	private int fbToken;
 	private List<UserInfo> friendList;
 	private DiningSession diningSession;
-	
+
 	/**
 	 *
 	 */
@@ -178,6 +179,7 @@ public class User extends Storable implements Parcelable {
 		pobj.add(User.USER_INFO, this.userInfo);
 		pobj.add(User.FRIEND_LIST, this.friendList);
 		pobj.add(User.RESERVES, this.reserves);
+		pobj.add(User.DINING_SESSION, this.diningSession);
 		//in case this storable is going to be used after the pack.
 		this.setObjId(pobj.getObjectId());
 
@@ -192,6 +194,7 @@ public class User extends Storable implements Parcelable {
 		this.setReserves((List<Reservation>) pobj.get(User.RESERVES));
 		this.setUserInfo((UserInfo) pobj.get(User.USER_INFO));
 		this.setFriendList((List<UserInfo>) pobj.get(User.FRIEND_LIST));
+		this.setDiningSession((DiningSession) pobj.get(User.DINING_SESSION));
 	}
 
 
@@ -246,5 +249,7 @@ public class User extends Storable implements Parcelable {
 		this.setFbToken(source.readInt());
 		source.readTypedList(friendList, UserInfo.CREATOR);
 		this.setObjId(source.readString());
+		this.setDiningSession((DiningSession)source.
+				readParcelable(DiningSession.class.getClassLoader()));
 	}
 }
