@@ -3,10 +3,13 @@ package uw.cse.dineon.restaurant.active;
 import java.util.ArrayList;
 import java.util.List;
 
+import uw.cse.dineon.library.DiningSession;
+import uw.cse.dineon.library.UserInfo;
 import uw.cse.dineon.restaurant.R;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.v4.app.ListFragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -45,16 +48,16 @@ public class CustomerListFragment extends ListFragment {
 	 * @param customers TODO Change to user class
 	 * @return New CustomerListFragment
 	 */
-	public static CustomerListFragment newInstance(List<String> customers) {
+	public static CustomerListFragment newInstance(List<DiningSession> customers) {
 		CustomerListFragment frag = new CustomerListFragment();
-		ArrayList<String> mList = new ArrayList<String>();
+		ArrayList<DiningSession> mList = new ArrayList<DiningSession>();
 		if (customers != null) {
 			mList.addAll(customers);
 		}
 
 		//Store list in arguments for future retrieval
 		Bundle args = new Bundle();
-		args.putStringArrayList(KEY_LIST, mList);
+		args.putParcelableArrayList(KEY_LIST, mList);
 		frag.setArguments(args);
 		return frag;
 	}
@@ -63,7 +66,8 @@ public class CustomerListFragment extends ListFragment {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		//Retrieve customer list from stored arguments if available
-		List<String> mCustomers = getArguments() != null ? getArguments().getStringArrayList(KEY_LIST) : null;
+		@SuppressWarnings("rawtypes") //XXX SO UNSAFE
+		List mCustomers = getArguments() != null ? getArguments().getParcelableArrayList(KEY_LIST) : null;
 		if (mCustomers == null){
 			if (mListener != null)
 				mCustomers = mListener.getCurrentUsers();
@@ -89,7 +93,7 @@ public class CustomerListFragment extends ListFragment {
 	/**
 	 * @param customer
 	 */
-	public void addCustomer(String customer) {
+	public void addCustomer(DiningSession customer) {
 		if (mAdapter != null) {
 			mAdapter.add(customer);
 		} 
@@ -98,7 +102,7 @@ public class CustomerListFragment extends ListFragment {
 		
 	}
 
-	public void removeCustomer(String customer){
+	public void removeCustomer(DiningSession customer){
 		if (mAdapter != null) {
 			mAdapter.remove(customer);
 		} else
@@ -116,7 +120,7 @@ public class CustomerListFragment extends ListFragment {
 		 * TODO Change to type User
 		 * @return
 		 */
-		public List<String> getCurrentUsers();
+		public List<DiningSession> getCurrentUsers();
 
 		/**
 		 * TODO Add more methods here as needed
@@ -130,7 +134,7 @@ public class CustomerListFragment extends ListFragment {
 	
 	private class UserListAdapter extends BaseAdapter {
 		
-		private List<String> users;
+		private List<DiningSession> users;
 		private int expanded = -1;
 		private Context mContext;
 		
@@ -140,7 +144,7 @@ public class CustomerListFragment extends ListFragment {
 		 * @param context The current context
 		 * @param userlist The list of users to display
 		 */
-		public UserListAdapter(Context context, List<String> userlist){
+		public UserListAdapter(Context context, List<DiningSession> userlist){
 			mContext = context;
 			users = userlist;
 		}
@@ -178,13 +182,13 @@ public class CustomerListFragment extends ListFragment {
 			notifyDataSetChanged();
 		}
 		
-		public void add(String customer) {
+		public void add(DiningSession customer) {
 			users.add(customer);
 			Log.v(TAG, "Added customer " + customer);
 			notifyDataSetChanged();
 		}
 		
-		public void remove(String customer) {
+		public void remove(DiningSession customer) {
 			users.remove(customer);
 			Log.v(TAG, "Removed customer " + customer);
 			notifyDataSetChanged();
@@ -233,7 +237,18 @@ public class CustomerListFragment extends ListFragment {
 			
 			//TODO Pull actual info from a User object
 			TextView cust_name = (TextView) vw_top.findViewById(R.id.label_user_name);
-			cust_name.setText(users.get(position));
+			
+			String name;
+			
+			List<UserInfo> infolist = users.get(position).getUsers();
+			if(infolist != null && infolist.size() > 0 && infolist.get(0) != null){
+				name = infolist.get(0).getName();
+			} else {
+				Log.w(TAG, "Could not retrieve name for position: " + position);
+				name = "No Customer!";
+			}
+	
+			cust_name.setText(name);
 			
 			TextView infotext = (TextView) vw_bot.findViewById(R.id.label_user_info);
 			infotext.setText("This text was modified!");
