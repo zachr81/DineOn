@@ -4,6 +4,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.parse.ParseObject;
+import com.parse.ParseUser;
 
 /**
  * @author Espeo196
@@ -15,7 +16,7 @@ public class UserInfo extends Storable implements Parcelable {
 	public static final String EMAIL = "email";
 	
 	private String name;
-	private int phone;
+	private String phone;
 	private String email;
 
 	/**
@@ -33,6 +34,13 @@ public class UserInfo extends Storable implements Parcelable {
 	 */
 	public UserInfo(Parcel source) {
 		readFromParcel(source);
+	}
+	
+	public UserInfo(ParseUser pu){
+		setEmail(pu.getEmail());
+		setName(pu.getUsername());
+		setPhone(""); // TODO
+		setObjId(pu.getObjectId());
 	}
 	
 	
@@ -56,7 +64,7 @@ public class UserInfo extends Storable implements Parcelable {
 	 *
 	 * @return int
 	 */
-	public int getPhone() {
+	public String getPhone() {
 		return phone;
 	}
 
@@ -64,7 +72,7 @@ public class UserInfo extends Storable implements Parcelable {
 	 *
 	 * @param number int Phone number
 	 */
-	public void setPhone(int number) {
+	public void setPhone(String number) {
 		this.phone = number;
 	}
 
@@ -102,7 +110,7 @@ public class UserInfo extends Storable implements Parcelable {
 		this.setObjId(pobj.getObjectId());
 		this.setName(pobj.getString(UserInfo.NAME));
 		this.setEmail(pobj.getString(UserInfo.EMAIL));
-		this.setPhone(pobj.getInt(UserInfo.PHONE));
+		this.setPhone(pobj.getString(UserInfo.PHONE));
 	}
 	
 	/**
@@ -123,7 +131,7 @@ public class UserInfo extends Storable implements Parcelable {
 	@Override
 	public void writeToParcel(Parcel dest, int flags) {
 		dest.writeString(name);
-		dest.writeInt(phone);
+		dest.writeString(phone);
 		dest.writeString(email);
 		dest.writeString(this.getObjId());
 	}
@@ -154,7 +162,7 @@ public class UserInfo extends Storable implements Parcelable {
 	//read an object back out of parcel
 	private void readFromParcel(Parcel source) {
 		this.setName(source.readString());
-		this.setPhone(source.readInt());
+		this.setPhone(source.readString());
 		this.setEmail(source.readString());
 		this.setObjId(source.readString());
 	}
