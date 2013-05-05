@@ -40,12 +40,11 @@ public class CustomerListFragment extends ListFragment {
 	//String for storing list in arguments
 	private static final String KEY_LIST = "MY LIST";
 
-	//TODO change string to User
 	private UserListAdapter mAdapter;
 
 	/**
 	 * Creates a new customer list fragment.
-	 * @param customers TODO Change to user class
+	 * @param customers
 	 * @return New CustomerListFragment
 	 */
 	public static CustomerListFragment newInstance(List<DiningSession> customers) {
@@ -62,6 +61,7 @@ public class CustomerListFragment extends ListFragment {
 		return frag;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -98,7 +98,7 @@ public class CustomerListFragment extends ListFragment {
 			mAdapter.add(customer);
 		} 
 		else
-			Log.d(TAG, "Attempted to add customer to nonexistant list!");
+			Log.d(TAG, "Attempted to add customer to nonexistent list!");
 		
 	}
 
@@ -106,7 +106,7 @@ public class CustomerListFragment extends ListFragment {
 		if (mAdapter != null) {
 			mAdapter.remove(customer);
 		} else
-			Log.d(TAG, "Attempted to remove customer from nonexistant list!");
+			Log.d(TAG, "Attempted to remove customer from nonexistent list!");
 	}
 
 	/**
@@ -116,8 +116,8 @@ public class CustomerListFragment extends ListFragment {
 	public interface CustomerListener {
 
 		/**
-		 * Retrieves the current user 
-		 * TODO Change to type User
+		 * Retrieves the current diningsessions 
+		 * 
 		 * @return
 		 */
 		public List<DiningSession> getCurrentUsers();
@@ -208,6 +208,7 @@ public class CustomerListFragment extends ListFragment {
 				vw = new LinearLayout(mContext);
 				vw.setOrientation(LinearLayout.VERTICAL);
 				
+				//inflate views from xml and add to parent view
 				LayoutInflater inflater = (LayoutInflater)mContext.getSystemService (Context.LAYOUT_INFLATER_SERVICE);
 				vw_top = inflater.inflate(R.layout.listitem_restaurant_user_top, null, true);
 				vw_bot = inflater.inflate(R.layout.listitem_restaurant_user_bot, null, true);
@@ -235,23 +236,27 @@ public class CustomerListFragment extends ListFragment {
 			else
 				vw_bot.setVisibility(View.VISIBLE);
 			
-			//TODO Pull actual info from a User object
+			//TODO Pull actual info from a UserInfo object
 			TextView cust_name = (TextView) vw_top.findViewById(R.id.label_user_name);
 			
 			String name;
+			String phone;
 			
 			List<UserInfo> infolist = users.get(position).getUsers();
 			if(infolist != null && infolist.size() > 0 && infolist.get(0) != null){
-				name = infolist.get(0).getName();
+				UserInfo ui = infolist.get(0);
+				name = ui.getName();
+				phone = ui.getPhone();
 			} else {
 				Log.w(TAG, "Could not retrieve name for position: " + position);
 				name = "No Customer!";
+				phone = "No phone?";
 			}
 	
 			cust_name.setText(name);
 			
 			TextView infotext = (TextView) vw_bot.findViewById(R.id.label_user_info);
-			infotext.setText("This text was modified!");
+			infotext.setText(phone);
 			
 			
 			return vw;

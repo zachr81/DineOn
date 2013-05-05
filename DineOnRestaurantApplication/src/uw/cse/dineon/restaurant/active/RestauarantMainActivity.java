@@ -184,6 +184,9 @@ CustomerListFragment.CustomerListener
 	}
 
 	/**
+	 * Wrapper to convert a string (user's name) into a
+	 * DiningSession. Debug purposes only, should not
+	 * use in production.
 	 * 
 	 * @param name Name of fake user to create inside session
 	 * @return A dining session with one user
