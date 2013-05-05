@@ -63,7 +63,9 @@ public class ParseUtil {
 				if(e == null){
 					Boolean params = true;
 					try {
-						m.invoke(null, params);
+						if (m != null) {
+							m.invoke(null, params); 
+						}
 					}catch(NullPointerException e1){
 						Log.d(TAG, "Error: " + e1.getMessage());
 					} catch (IllegalArgumentException e1) {
