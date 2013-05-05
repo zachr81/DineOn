@@ -289,11 +289,16 @@ public class DineOnRestaurantActivity extends FragmentActivity {
 	}
 
 	/**
-	 * 
-	 * @param dSess acquired DiningSession
+	 * A new dining sessin has been acquired.
+	 * The restaurant must then update its state. 
+	 * @param dSess Dining session to update our state with
 	 */
 	protected static void diningSessionAcquired(DiningSession dSess) {
-		// Use in the UI.
+		// TODO How to 
+		// TODO Null check, Log error if null.
+		// TODO Update our state
+		// TODO Update UI
+		
 	}
 
 	/**

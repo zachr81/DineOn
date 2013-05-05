@@ -2,6 +2,7 @@ package uw.cse.dineon.user.login;
 
 import uw.cse.dineon.user.R;
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,12 +17,14 @@ import android.widget.EditText;
 public class LoginFragment extends android.support.v4.app.Fragment {
 
 	/**
-	 * TODO
+	 * Activity that reacts to user interactions
 	 */
 	private OnLoginListener mListener;
 
 	private EditText email_input, password_input;
-
+	
+	private static ProgressDialog mProgressDialog;
+	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
@@ -49,24 +52,28 @@ public class LoginFragment extends android.support.v4.app.Fragment {
 				mListener.onLoginWithFacebook();
 			}
 		});
-		Button twitterLoginButton = (Button) view.findViewById(R.id.button_twitter_login);
-		twitterLoginButton.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				mListener.onLoginWithTwitter();
-			}
-		});
+		//TODO Save for later
+//		Button twitterLoginButton = (Button) view.findViewById(R.id.button_twitter_login);
+//		twitterLoginButton.setOnClickListener(new View.OnClickListener() {
+//			@Override
+//			public void onClick(View v) {
+//				mListener.onLoginWithTwitter();
+//			}
+//		});
 		return view;
 	}
 
+
+	
 	@Override
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
 		if (activity instanceof OnLoginListener) {
 			mListener = (OnLoginListener) activity;
-		} else {
+		} 
+		else {
 			throw new ClassCastException(activity.toString()
-					+ " must implemenet LoginFragment.OnLoginListener");
+					+ " must implement LoginFragment.OnLoginListener");
 		}
 	}
 	
@@ -97,13 +104,21 @@ public class LoginFragment extends android.support.v4.app.Fragment {
 	 */
 	public interface OnLoginListener {
 
-		// This is how login listener communicates back to the activity
-		
-		// TODO Perhaps create a login credential class and pass that back to the activity
+		/**
+		 * User attempts to Login via email and password.
+		 * @param username username requested 
+		 * @param password password to use
+		 */
 		void onLogin(String username, String password);
 		
+		/**
+		 * User request to login with facebook.
+		 */
 		void onLoginWithFacebook();
 		
+		/**
+		 * User request to login with twitter.
+		 */
 		void onLoginWithTwitter();
 	}
 

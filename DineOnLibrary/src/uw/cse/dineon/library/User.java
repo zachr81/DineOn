@@ -1,8 +1,10 @@
 package uw.cse.dineon.library;
 
+import java.util.ArrayList;
 import java.util.List;
 
-import android.os.Bundle;
+import uw.cse.dineon.library.util.ParseUtil;
+
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -24,7 +26,7 @@ public class User extends Storable implements Parcelable {
 	private List<RestaurantInfo> favs;
 	private UserInfo userInfo;
 	private List<Reservation> reserves;
-	private int fbToken;
+	private int fbToken; //TODO Delete
 	private List<UserInfo> friendList;
 	private DiningSession diningSession;
 
@@ -34,6 +36,9 @@ public class User extends Storable implements Parcelable {
 	public User() {
 		super();
 		// TODO
+		favs = new ArrayList<RestaurantInfo>();
+		reserves = new ArrayList<Reservation>();
+		friendList = new ArrayList<UserInfo>();
 	}
 
 	/**
@@ -43,6 +48,7 @@ public class User extends Storable implements Parcelable {
 	 * 		RestaurantInfos, UserInfo, Reservations, int, Strings, String.
 	 */
 	public User(Parcel source) {
+		this();
 		readFromParcel(source);
 	}
 
@@ -174,11 +180,11 @@ public class User extends Storable implements Parcelable {
 	@Override
 	public ParseObject packObject() {
 		ParseObject pobj = new ParseObject(this.getClass().getSimpleName());
-		pobj.add(User.FAVS, this.favs);
+		pobj.add(User.FAVS, ParseUtil.packListOfStorables(favs));
 		pobj.add(User.FB_TOKEN, this.fbToken);
 		pobj.add(User.USER_INFO, this.userInfo);
-		pobj.add(User.FRIEND_LIST, this.friendList);
-		pobj.add(User.RESERVES, this.reserves);
+		pobj.add(User.FRIEND_LIST, ParseUtil.packListOfStorables(friendList));
+		pobj.add(User.RESERVES, ParseUtil.packListOfStorables(reserves));
 		pobj.add(User.DINING_SESSION, this.diningSession);
 		//in case this storable is going to be used after the pack.
 		this.setObjId(pobj.getObjectId());
@@ -189,11 +195,11 @@ public class User extends Storable implements Parcelable {
 	@Override
 	public void unpackObject(ParseObject pobj) {
 		this.setObjId(pobj.getObjectId());
-		this.setFavs((List<RestaurantInfo>) pobj.get(User.FAVS));
+//		this.setFavs(ParseUtil.unpackListOfStorables(pobj.getParseObject(User.FAVS)));
 		this.setFbToken(pobj.getInt(User.FB_TOKEN));
-		this.setReserves((List<Reservation>) pobj.get(User.RESERVES));
+//		this.setReserves((List<Reservation>) pobj.get(User.RESERVES));
 		this.setUserInfo((UserInfo) pobj.get(User.USER_INFO));
-		this.setFriendList((List<UserInfo>) pobj.get(User.FRIEND_LIST));
+//		this.setFriendList((List<UserInfo>) pobj.get(User.FRIEND_LIST));
 		this.setDiningSession((DiningSession) pobj.get(User.DINING_SESSION));
 	}
 
@@ -206,19 +212,33 @@ public class User extends Storable implements Parcelable {
 		// TODO Auto-generated method stub
 		return 0;
 	}
-
+//
+//	private List<RestaurantInfo> favs;
+//	private UserInfo userInfo;
+//	private List<Reservation> reserves;
+//	private int fbToken; //TODO Delete
+//	private List<UserInfo> friendList;
+//	private DiningSession diningSession;
+	
 	/**
 	 * Write the object to a parcel object
 	 * @param the Parcel to write to and any set flags
 	 */
 	@Override
 	public void writeToParcel(Parcel dest, int flags) {
-		dest.writeTypedList(favs);
-		dest.writeParcelable(userInfo, flags);
-		dest.writeTypedList(reserves);
-		dest.writeInt(fbToken);
-		dest.writeTypedList(friendList);
 		dest.writeString(this.getObjId());
+		dest.writeParcelable(userInfo, flags);
+		dest.writeTypedList(favs);
+		dest.writeTypedList(reserves);
+		dest.writeTypedList(friendList);
+		dest.writeParcelable(diningSession, flags);
+		// TODO Make sure order consistency
+		//		dest.writeTypedList(favs);
+//		dest.writeParcelable(userInfo, flags);
+//		dest.writeTypedList(reserves);
+//		dest.writeInt(fbToken);
+//		dest.writeTypedList(friendList);
+//		dest.writeString(this.getObjId());
 
 	}
 
@@ -243,13 +263,20 @@ public class User extends Storable implements Parcelable {
 
 	//read an object back out of parcel
 	private void readFromParcel(Parcel source) {
-		source.readTypedList(favs, RestaurantInfo.CREATOR);
-		this.setUserInfo((UserInfo)source.readParcelable(UserInfo.class.getClassLoader()));
-		source.readTypedList(reserves, Reservation.CREATOR);
-		this.setFbToken(source.readInt());
-		source.readTypedList(friendList, UserInfo.CREATOR);
 		this.setObjId(source.readString());
-		this.setDiningSession((DiningSession)source.
-				readParcelable(DiningSession.class.getClassLoader()));
+		this.setUserInfo((UserInfo)source.readParcelable(UserInfo.class.getClassLoader()));
+		source.readTypedList(favs, RestaurantInfo.CREATOR);
+		source.readTypedList(reserves, Reservation.CREATOR);
+		source.readTypedList(friendList, UserInfo.CREATOR);
+		this.setDiningSession((DiningSession)source.readParcelable(DiningSession.class.getClassLoader()));
+		//TODO make sure consistent
+//		source.readTypedList(favs, RestaurantInfo.CREATOR);
+//		this.setUserInfo((UserInfo)source.readParcelable(UserInfo.class.getClassLoader()));
+//		source.readTypedList(reserves, Reservation.CREATOR);
+//		this.setFbToken(source.readInt());
+//		source.readTypedList(friendList, UserInfo.CREATOR);
+//		this.setObjId(source.readString());
+//		this.setDiningSession((DiningSession)source.
+//				readParcelable(DiningSession.class.getClassLoader()));
 	}
 }
