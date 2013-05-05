@@ -1,10 +1,12 @@
 package uw.cse.dineon.user.login;
 
 import uw.cse.dineon.library.User;
+import uw.cse.dineon.library.UserInfo;
 import uw.cse.dineon.library.util.CredentialValidator;
 import uw.cse.dineon.library.util.CredentialValidator.Resolution;
 import uw.cse.dineon.library.util.DevelopTools;
 import uw.cse.dineon.library.util.DineOnConstants;
+import uw.cse.dineon.library.util.ParseUtil;
 import uw.cse.dineon.user.R;
 import uw.cse.dineon.user.restaurantselection.RestaurantSelectionActivity;
 import android.app.AlertDialog;
@@ -123,6 +125,7 @@ LoginFragment.OnLoginListener {
 					// Successfuly logged in
 					if (DineOnConstants.DEBUG) {
 						// TODO Change to asyncronous call to get the User instance
+						// Change null to valid User object
 						startRestSelectionAct(null);
 					}
 					// TODO Download the current restaurant associated
@@ -151,20 +154,25 @@ LoginFragment.OnLoginListener {
 				if (user == null) {
 					Log.d(TAG, "Uh oh. The user cancelled the Facebook login.");
 					
+					
 					// TODO Re enable the screen
 					// TODO Stop any progress bar					
 					// TODO Toast the user that login was cancelled
-					
 				} 
 				else if (user.isNew()) {
 					Log.d(TAG, "User signed up and logged in through Facebook!");
 					
-					// TODO Create a new ParseObject and send to next activity
+					// Now we just need a user object
+					User duser = CreateNewAccountActivity.createNewUser(user);
 					
+					// TODO Create a new User ParseObject and send to next activity
+					// Associate that user to the cloud
+					startRestSelectionAct(null);// Change null to valid User object
 				} 
 				else {
 					Log.d(TAG, "User logged in through Facebook!");
 					
+					startRestSelectionAct(null);// Change null to valid User object
 					// TODO Extract the user's User ParseObject and send to next activity
 				}
 			}
@@ -172,6 +180,7 @@ LoginFragment.OnLoginListener {
 
 //		DevelopTools.getUnimplementedDialog(this, null).show();
 	}
+	
 
 	@Override
 	public void onLoginWithTwitter() {
