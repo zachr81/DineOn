@@ -9,11 +9,10 @@ import java.util.Map;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import uw.cse.dineon.library.DineOnUser;
 import uw.cse.dineon.library.DiningSession;
 import uw.cse.dineon.library.Storable;
-import uw.cse.dineon.library.User;
 import uw.cse.dineon.library.util.DineOnConstants;
-import uw.cse.dineon.library.util.DineOnReceiver;
 import uw.cse.dineon.library.util.ParseUtil;
 import uw.cse.dineon.user.bill.CurrentOrderActivity;
 import uw.cse.dineon.user.checkin.IntentIntegrator;
@@ -36,6 +35,10 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Toast;
 
+import com.parse.GetCallback;
+import com.parse.ParseException;
+import com.parse.ParseObject;
+import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.parse.PushService;
 
@@ -50,24 +53,71 @@ import com.parse.PushService;
 public class DineOnUserActivity extends FragmentActivity {
 
 	private static final String TAG = DineOnUserActivity.class.getSimpleName();
-	 
+
 	/**
 	 * The associated user 
 	 */
-	protected User mUser;	
+	protected DineOnUser mUser;	
 	private DiningSessionResponseReceiver mDSResponseReceiver;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		mDSResponseReceiver = new DiningSessionResponseReceiver(ParseUser.getCurrentUser());
-		
+
 		// Check two cases
 		// 1. This activity is being created for the first time
 		// 2. This activity is being restored
-		
-		// 1.
-		
+
+		// 1. 
+		Bundle extras = getIntent() == null ? null: getIntent().getExtras();
+		String userId;
+		if (extras != null) {
+			userId = extras.getString(DineOnConstants.KEY_USER);
+		} // 2.  
+		else if (savedInstanceState.containsKey(DineOnConstants.KEY_USER)) {
+			userId = savedInstanceState.getString(DineOnConstants.KEY_USER);
+		} else {
+			Log.e(TAG, "Unable to retrieve user isntance");
+			return;
+		}
+
+		// Get the latest copy of this user instance
+		ParseQuery query = new ParseQuery(DineOnUser.class.getSimpleName());
+		query.setCachePolicy(ParseQuery.CachePolicy.CACHE_ELSE_NETWORK);
+		query.getInBackground(userId, new InitializeCallback(this));
+	}
+
+	/**
+	 * This automates the addition of the User Intent.
+	 * Should never be called when mUser is null.
+	 */
+	@Override
+	public void startActivity (Intent intent) {
+		if (DineOnConstants.DEBUG && mUser == null) {
+			// TODO change to Dialog box
+			Toast.makeText(this, "Need to create or download a User", Toast.LENGTH_SHORT).show();
+			return;
+		}
+		// Adds the USer object id
+		if (mUser != null) {
+			intent.putExtra(DineOnConstants.KEY_USER, mUser.getObjId());
+		}
+		super.startActivity(intent);
+	}
+
+	/**
+	 * A valid user found this allows the ability for the Userinterface to initialize
+	 * Any subclasses of this activity can use this as a sign that the user has been identified
+	 */
+	protected void intializeUI(){
+
+		// Lets invalidate the options menu so it shows the correct 
+		// buttons
+		invalidateOptionsMenu();
+
+		// TODO  Initialize the UI based on the state of the application
+		// ...
 	}
 
 	@Override
@@ -86,6 +136,11 @@ public class DineOnUserActivity extends FragmentActivity {
 	protected void onPause(){
 		super.onPause();
 		mDSResponseReceiver.unRegister(this);
+	}
+
+	@Override
+	public void onActivityResult(int requestCode, int resultCode, Intent intent) {
+		QRCheckin.QRResult(requestCode, resultCode, intent);
 	}
 
 	@Override
@@ -114,13 +169,46 @@ public class DineOnUserActivity extends FragmentActivity {
 	}
 
 	/**
+	 * Sends the user back to the login page.
+	 */
+	public void startLoginActivity() {
+		Intent i = new Intent(this, UserLoginActivity.class);
+
+		// Remove this activity from the back stack
+		i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+
+		// Making this null makes sure there is no 
+		// data leakage to the login page
+		mUser = null;
+		startActivity(i);
+	}
+
+	/**
+	 * Creates the onClick listeners for the specified menu items.
+	 * 
+	 * @param m the parent menu
+	 * @param items the list of MenuItems to create listeners for
+	 */
+	private void setOnClick(final Menu m, List<MenuItem> items) {
+		for (final MenuItem item : items) {
+			item.getActionView().setOnClickListener(new OnClickListener() {
+
+				@Override
+				public void onClick(View v) {   
+					m.performIdentifierAction(item.getItemId(), 0);
+				}
+			});
+		}
+	}
+
+	/**
 	 * Dynamically prepares the options menu.
 	 * @param menu the specified menu to prepare
 	 * @return true if the options menu is successfully prepared
 	 */
 	@Override
 	public boolean onPrepareOptionsMenu(Menu menu) {
-		
+
 		// This is for the case where nothing is updated yet
 		// There is no User class
 		if (mUser == null) {
@@ -128,7 +216,7 @@ public class DineOnUserActivity extends FragmentActivity {
 			disableMenuItem(menu, R.id.option_bill);
 			return true;
 		}
-		
+
 		if(mUser.getDiningSession() != null) {
 			disableMenuItem(menu, R.id.option_check_in);
 			enableMenuItem(menu, R.id.option_bill);
@@ -137,8 +225,7 @@ public class DineOnUserActivity extends FragmentActivity {
 			enableMenuItem(menu, R.id.option_check_in);
 			disableMenuItem(menu, R.id.option_bill);
 		}
-		
-		
+
 		return true;
 	}
 
@@ -170,33 +257,6 @@ public class DineOnUserActivity extends FragmentActivity {
 		}
 		item.setEnabled(true);
 		item.setVisible(true);
-	}
-
-	/**
-	 * Sends the user back to the login page.
-	 */
-	public void startLoginActivity() {
-		Intent i = new Intent(this, UserLoginActivity.class);
-		i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-		startActivity(i);
-	}
-
-	/**
-	 * Creates the onClick listeners for the specified menu items.
-	 * 
-	 * @param m the parent menu
-	 * @param items the list of MenuItems to create listeners for
-	 */
-	private void setOnClick(final Menu m, List<MenuItem> items) {
-		for (final MenuItem item : items) {
-			item.getActionView().setOnClickListener(new OnClickListener() {
-
-				@Override
-				public void onClick(View v) {   
-					m.performIdentifierAction(item.getItemId(), 0);
-				}
-			});
-		}
 	}
 
 	@Override
@@ -231,9 +291,46 @@ public class DineOnUserActivity extends FragmentActivity {
 		return true;
 	}
 
-	@Override
-	public void onActivityResult(int requestCode, int resultCode, Intent intent) {
-		QRCheckin.QRResult(requestCode, resultCode, intent);
+	/**
+	 * Callback for retrieving the User object from the cache
+	 * or the network.  After this succeeds we will then continue to 
+	 * Intialize to UI
+	 * @author mhotan
+	 */
+	private class InitializeCallback extends GetCallback {
+
+		private final Context mContext;
+
+		/**
+		 * Creates a callback to handle queries.
+		 * Specically handle downloading a UserObject
+		 * @param ctx
+		 */
+		public InitializeCallback(Context ctx) {
+			mContext = ctx;
+		}
+
+		@Override
+		public void done(ParseObject object, ParseException e) {
+			if (e == null) {
+				// We have found the correct object
+				try {
+					mUser = new DineOnUser(object);
+				} catch (Exception e1) {
+					Log.e(TAG, "Exception on Fetch:" + e1);
+				}
+				Toast.makeText(mContext, "User found time to initialize", 
+						Toast.LENGTH_SHORT).show();
+
+				// User was found update the UI
+				intializeUI();
+				
+			} else {
+				Toast.makeText(mContext, "FAIL: Unable to find user", 
+						Toast.LENGTH_SHORT).show();
+			}
+		}
+
 	}
 
 	/**
@@ -250,12 +347,12 @@ public class DineOnUserActivity extends FragmentActivity {
 			if (jobj == null || !jobj.has(DineOnConstants.OBJ_ID)) {
 				Log.d(TAG, "The receiver did not return a valid response for checkin.");
 				// TODO Update the UI
-				Toast.makeText(this, "No DiningSession returned", Toast.LENGTH_SHORT);
+				Toast.makeText(this, "No DiningSession returned", Toast.LENGTH_SHORT).show();
 			}
 			String objId = jobj.getString(DineOnConstants.OBJ_ID);
 			Map<String, String> attr = new HashMap<String, String>();
 			attr.put(DineOnConstants.OBJ_ID, objId);
-			
+
 			// Then Bundle the Dining Session Instance into		
 			Method m = DineOnUserActivity.class.getMethod("onDiningSessionRecievedCallback",
 					List.class);
@@ -283,14 +380,14 @@ public class DineOnUserActivity extends FragmentActivity {
 		DiningSession mDiningSession = (DiningSession) list.get(0);
 
 		Toast.makeText(this, "Dining Session Started", Toast.LENGTH_SHORT).show();
-		
+
 		// DEBUG:
 		Log.d("GOT_DINING_SESSION_FROM_CLOUD", mDiningSession.getTableID() + "");
 
 		mUser.setDiningSession(mDiningSession);
-		
+
 		invalidateOptionsMenu();
-		
+
 		// TODO Extract channel for push
 		//Shouldn't we already have the channel and be registered at this point via onCreate/onResume?
 		// TODO Register for the channel and start listening for updates
@@ -301,7 +398,7 @@ public class DineOnUserActivity extends FragmentActivity {
 		Intent i = new Intent(this, RestaurantHomeActivity.class);
 		ArrayList<Storable> mDSList = new ArrayList<Storable>();
 		mDSList.add(mDiningSession);
-		i.putParcelableArrayListExtra(DineOnConstants.DINING_SESSION, mDSList);
+		//		i.putParcelableArrayListExtra(DineOnConstants.DINING_SESSION, mDSList);
 		startActivity(i);
 	}
 
@@ -314,11 +411,10 @@ public class DineOnUserActivity extends FragmentActivity {
 	 */
 	@Override
 	public void onSaveInstanceState(Bundle savedInstanceState) {
-		// bundle mDiningSession w/ our bundle method
-		//		Bundle diningBundle = mDiningSession.bundle();
-
-		// save entire bundle w/ key value, retrieve using this string
-		//		savedInstanceState.putBundle("diningSession", diningBundle);
+		// Save the ID if the user is not null
+		if (mUser != null) {
+			savedInstanceState.putString(DineOnConstants.KEY_USER, mUser.getObjId());
+		}
 		super.onSaveInstanceState(savedInstanceState);
 	}
 
@@ -334,9 +430,9 @@ public class DineOnUserActivity extends FragmentActivity {
 		super.onRestoreInstanceState(savedInstanceState);
 		//		mDiningSession.unbundle(savedInstanceState.getBundle("diningSession"));
 	}
-	
+
 	private static final String ACTION = "uw.cse.dineon.user.CONFIRM_DINING_SESSION";
-	
+
 	/**
 	 * Handles the result of requesting a Dining session
 	 * @author mhotan
@@ -348,23 +444,24 @@ public class DineOnUserActivity extends FragmentActivity {
 		private final IntentFilter mIF;
 		private final String mUserChannel;
 		private DineOnUserActivity mCurrentActivity;
-		
+
 		private String mRestaurantSessionChannel;
-		
+
 		public DiningSessionResponseReceiver(ParseUser user) {
 			mIF = new IntentFilter(ACTION);
+			// TODO Add dining sessions
 			mParseUser = user;
 			mUserChannel = "uw_cse_dineon_" + mParseUser.getUsername();
 			mRestaurantSessionChannel = null;
-			
+
 		}
-		
+
 		public void register(DineOnUserActivity dineOnUserActivity){
 			mCurrentActivity = dineOnUserActivity;
 			dineOnUserActivity.registerReceiver(this, mIF);
 			PushService.subscribe(dineOnUserActivity, mUserChannel, dineOnUserActivity.getClass());
 		}
-		
+
 		/**
 		 * Invalidates this receiver.
 		 */
@@ -373,34 +470,34 @@ public class DineOnUserActivity extends FragmentActivity {
 			PushService.unsubscribe(dineOnUserActivity, mUserChannel);
 			mCurrentActivity = null;
 		}
-		
+
 		@Override
 		public void onReceive(Context context, Intent intent) {
-			
+
 			String theirChannel = intent.getExtras() == null ? null :  
 				intent.getExtras().getString("com.parse.Channel");
-			
+
 			if (theirChannel == null || mCurrentActivity == null) {
 				return;
 			}
-			
+
 			if (theirChannel.equals(mUserChannel)) {
 				try {
 					JSONObject jobj = new JSONObject(intent.getExtras().getString("com.parse.Data"));
 					mCurrentActivity.onCheckInCallback(jobj);
-				
+
 				} 
 				catch (JSONException e) {
-				      Log.d(TAG, "JSONException: " + e.getMessage());
-			    } 
-				
+					Log.d(TAG, "JSONException: " + e.getMessage());
+				} 
+
 			} 
 			else if (mRestaurantSessionChannel != null && mRestaurantSessionChannel.equals(theirChannel)) {
 				// TODO Do something here that updates the state of the current Dining Session 
-				
+
 			}
 		}
-		
-		
+
+
 	}
 }

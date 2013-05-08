@@ -14,7 +14,7 @@ public class UserInfo extends Storable {
 	public static final String PARSEUSER = "PARSEUSER";
 	public static final String IMAGE_ID = "IMAGE_ID";
 	public static final String PROFILE_DESCRIPTION = "PROFILE_DESCRIPTION";
-	public static final String PHONE = "phone";
+	public static final String PHONE = "PHONE";
 	
 	private static final String UNDETERMINED = "Undetermined";
 	
@@ -52,7 +52,7 @@ public class UserInfo extends Storable {
 		po.put(PARSEUSER, mUser);
 		po.put(IMAGE_ID, mImageID);
 		po.put(PROFILE_DESCRIPTION, mProfileDescription);
-		po.put(PHONE, mProfileDescription);
+		po.put(PHONE, mPhone);
 		return po;
 	}
 	

@@ -9,6 +9,7 @@ import uw.cse.dineon.library.util.ParseUtil;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.parse.ParseException;
 import com.parse.ParseObject;
 
 
@@ -22,38 +23,39 @@ public class Menu extends Storable {
 	// ID used for easier parsing
 	public static final String ITEMS = "items";
 	public static final String NAME = "name";
-	
+
 	/**
-	 * Name of the menu,
+	 * Name of the menu.
 	 * IE "Dinner Menu", "Breakfast Menu", "Drinks"
 	 */
 	private final String mName;
-	
+
 	/**
-	 * This is all the items that it contains
+	 * This is all the items that it contains.
 	 */
 	private final List<MenuItem> mItems;	// list of items on the menu
-	
+
 	/**
 	 * Creates a new Menu object containing MenuItems.
 	 * 
 	 * @param name of menu
-	 * @param items list of MenuItems that populate a Menu.
 	 */
 	public Menu(String name) {
 		super(Menu.class);
 		this.mItems = new ArrayList<MenuItem>();
 		this.mName = name;
 	}
-	
+
 	/**
 	 * Generates a Menu from a ParseObject that was orginally created by a menu.
 	 * @param po parse object to extract menu
+	 * @throws ParseException 
 	 */
 	public Menu(ParseObject po) {
 		super(po);
 		this.mName = po.getString(NAME);
 		this.mItems = ParseUtil.toListOfStorables(MenuItem.class, po.getList(ITEMS));
+		
 	}
 
 	/**
@@ -80,7 +82,7 @@ public class Menu extends Storable {
 	public void addNewItem(MenuItem item) {
 		mItems.add(item);
 	}
-	
+
 	/**
 	 * Remove given MenuItem from the menu.
 	 * 
@@ -116,7 +118,7 @@ public class Menu extends Storable {
 //		super();
 //		readFromParcel(source);
 //	}	
-	
+
 //	/**
 //	 * Unpacks the given ParseObject into this Menu setting
 //	 * field values to the given data.

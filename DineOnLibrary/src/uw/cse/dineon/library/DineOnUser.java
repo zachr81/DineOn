@@ -5,6 +5,7 @@ import java.util.List;
 
 import uw.cse.dineon.library.util.ParseUtil;
 
+import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseUser;
 
@@ -13,7 +14,7 @@ import com.parse.ParseUser;
  * @author Espeo196
  *
  */
-public class User extends Storable {
+public class DineOnUser extends Storable {
 	public static final String FAVORITE_RESTAURANTS = "favs";
 	public static final String USER_INFO = "userInfo";
 	public static final String RESERVATIONS = "reserves";
@@ -49,8 +50,8 @@ public class User extends Storable {
 	/**
 	 * Default constructor.
 	 */
-	public User(ParseUser user) {
-		super(User.class); 
+	public DineOnUser(ParseUser user) {
+		super(DineOnUser.class); 
 		mUserInfo = new UserInfo(user);
 		mFavRestaurants = new ArrayList<RestaurantInfo>();
 		mReservations = new ArrayList<Reservation>();
@@ -59,10 +60,11 @@ public class User extends Storable {
 	}
 
 	/**
-	 * Creates a user from a parse object
-	 * @param parseObject 
+	 * Creates a user from a parse object.
+	 * @param po Parse Object to use to build
+	 * @throws ParseException  If there was an error fetching the required data
 	 */
-	public User(ParseObject po){
+	public DineOnUser(ParseObject po) {
 		super(po);
 		mUserInfo = new UserInfo(po.getParseObject(USER_INFO));
 		mFavRestaurants = ParseUtil.toListOfStorables(
@@ -75,9 +77,9 @@ public class User extends Storable {
 		ParseObject currDiningSession = po.getParseObject(DINING_SESSION);
 		if (currDiningSession != null) {
 			mDiningSession = new DiningSession(currDiningSession);
-		}
+		} 
 	}
-	
+
 	@Override
 	public ParseObject packObject() {
 		ParseObject pobj = super.packObject();
@@ -86,9 +88,7 @@ public class User extends Storable {
 		pobj.put(RESERVATIONS, ParseUtil.toListOfParseObjects(mReservations));
 		pobj.put(FRIEND_LIST, ParseUtil.toListOfParseObjects(mFriendsLists));
 		if (mDiningSession != null) {
-			pobj.put(User.DINING_SESSION, this.mDiningSession.packObject());
-		} else {
-			pobj.put(User.DINING_SESSION, null);
+			pobj.put(DineOnUser.DINING_SESSION, this.mDiningSession.packObject());
 		}
 		return pobj;
 	}
@@ -210,43 +210,43 @@ public class User extends Storable {
 	}
 
 
-	
 
-//	@Override
-//	public void unpackObject(ParseObject pobj) {
-//		this.setObjId(pobj.getObjectId());
-//		//		this.setFavs(ParseUtil.unpackListOfStorables(pobj.getParseObject(User.FAVS)));
-//		this.setFbToken(pobj.getInt(User.FB_TOKEN));
-//		//		this.setReserves((List<Reservation>) pobj.get(User.RESERVES));
-//		UserInfo info = new UserInfo();
-//		info.unpackObject((ParseObject) pobj.get(User.USER_INFO));
-//		this.setUserInfo(info);
-//
-//		// TODO FIX ME
-//		List<Storable> storable = 
-//				ParseUtil.unpackListOfStorables(pobj.getParseObject(User.FRIEND_LIST));
-//		List<UserInfo> friends = new ArrayList<UserInfo>(storable.size());
-//		for (Storable friend : storable) {
-//			friends.add((UserInfo) friend);
-//		}
-//		setFriendList(friends);
-//
-//		storable = ParseUtil.unpackListOfStorables(pobj.getParseObject(User.RESERVATIONS));
-//		List<Reservation> reservations = new ArrayList<Reservation>(storable.size());
-//		for (Storable reserve : storable) {
-//			reservations.add((Reservation) reserve);
-//		}
-//		setReserves(reservations);
-//
-//		Object ds = pobj.get(User.DINING_SESSION);
-//		this.setDiningSession((DiningSession)ds);
-//	}
-//
-//
-//	@Override
-//	public int describeContents() {
-//		return 0;
-//	}
+
+	//	@Override
+	//	public void unpackObject(ParseObject pobj) {
+	//		this.setObjId(pobj.getObjectId());
+	//		//		this.setFavs(ParseUtil.unpackListOfStorables(pobj.getParseObject(User.FAVS)));
+	//		this.setFbToken(pobj.getInt(User.FB_TOKEN));
+	//		//		this.setReserves((List<Reservation>) pobj.get(User.RESERVES));
+	//		UserInfo info = new UserInfo();
+	//		info.unpackObject((ParseObject) pobj.get(User.USER_INFO));
+	//		this.setUserInfo(info);
+	//
+	//		// TODO FIX ME
+	//		List<Storable> storable = 
+	//				ParseUtil.unpackListOfStorables(pobj.getParseObject(User.FRIEND_LIST));
+	//		List<UserInfo> friends = new ArrayList<UserInfo>(storable.size());
+	//		for (Storable friend : storable) {
+	//			friends.add((UserInfo) friend);
+	//		}
+	//		setFriendList(friends);
+	//
+	//		storable = ParseUtil.unpackListOfStorables(pobj.getParseObject(User.RESERVATIONS));
+	//		List<Reservation> reservations = new ArrayList<Reservation>(storable.size());
+	//		for (Storable reserve : storable) {
+	//			reservations.add((Reservation) reserve);
+	//		}
+	//		setReserves(reservations);
+	//
+	//		Object ds = pobj.get(User.DINING_SESSION);
+	//		this.setDiningSession((DiningSession)ds);
+	//	}
+	//
+	//
+	//	@Override
+	//	public int describeContents() {
+	//		return 0;
+	//	}
 
 	//	private List<RestaurantInfo> favs;
 	//	private UserInfo userInfo;

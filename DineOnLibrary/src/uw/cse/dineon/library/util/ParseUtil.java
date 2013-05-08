@@ -473,12 +473,13 @@ public class ParseUtil {
 	 * @param clazz Class definition of the particular instance
 	 * @param objects List of Objects that must have dynamic tyoes if ParseObjects
 	 * @return List of storables from ParesObjects
+	 * @throws ParseException 
 	 */
 	public static <T extends Storable> List<T> toListOfStorables(
 			Class<T> clazz, List<Object> objects) {
 		List<T> storables = new ArrayList<T>(objects.size());
 		for (Object o: objects) {
-			ParseObject p = (ParseObject) o; 
+			ParseObject p = (ParseObject) o;
 			T storable = (T) parseObjectToClass(clazz, p);
 			storables.add(storable);
 		}

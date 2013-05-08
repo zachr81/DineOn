@@ -6,6 +6,7 @@ import java.util.List;
 
 import uw.cse.dineon.library.util.ParseUtil;
 
+import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseUser;
 
@@ -49,6 +50,7 @@ public class RestaurantInfo extends Storable {
 	 * Creates a RestaurantInfo object from the given ParseObject.
 	 * 
 	 * @param po Parse object to build from
+	 * @throws ParseException 
 	 */
 	public RestaurantInfo(ParseObject po) {
 		super(po);

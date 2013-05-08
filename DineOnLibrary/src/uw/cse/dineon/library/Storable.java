@@ -1,12 +1,8 @@
 package uw.cse.dineon.library;
 
-import java.lang.reflect.Constructor;
-import java.util.ArrayList;
-import java.util.List;
-
-import uw.cse.dineon.library.util.ParseUtil;
 import uw.cse.dineon.library.util.RepresentationException;
 
+import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.SaveCallback;
 
@@ -46,6 +42,15 @@ public abstract class Storable {
 	public Storable(ParseObject parseObject) {
 		if (parseObject == null) {
 			throw new IllegalArgumentException("");
+		}
+		// Fetch the parse object 
+		try {
+			parseObject.fetchIfNeeded();
+		} catch (ParseException e) {
+			// TODO Throw exception up the chain
+			// this notifies the user that there is no Intenet
+			throw new RuntimeException("Fetching parse object: " + parseObject + " in "
+					+ " instance of class " + this.getClass().getSimpleName() + " FAILED!");
 		}
 		mCompleteObject = parseObject;
 		checkRep();
@@ -135,7 +140,7 @@ public abstract class Storable {
 	 * Checks representation invariant.
 	 */
 	protected void checkRep() {
-		if (mCompleteObject != null) {
+		if (mCompleteObject == null) {
 			throw new RepresentationException("Null parse object for this storable instance");
 		}
 	}

@@ -9,6 +9,7 @@ import uw.cse.dineon.library.util.ParseUtil;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.parse.ParseException;
 import com.parse.ParseObject;
 
 /**
@@ -22,11 +23,11 @@ public class Order extends TimeableStorable {
 	public static final String TABLE_ID = "tableID";
 	public static final String USER_INFO = "userInfo";
 	public static final String MENU_ITEMS = "menuItems";
-	
+
 	private final int mTableID;		// ID for table the order is from
 	private final UserInfo mUserInfo;			// Info of user who placed order
 	private final List<MenuItem> mMenuItems;	// list of items in this order
-	
+
 	/**
 	 * Creates a new Order object from the given parameters.
 	 * 
@@ -40,17 +41,19 @@ public class Order extends TimeableStorable {
 		this.mUserInfo = originator;
 		this.mMenuItems = new ArrayList<MenuItem>(menuItems);
 	}
-	
+
 	/**
 	 * Creates a new Order in from the given Parcel.
 	 * 
 	 * @param po Parse Object to use to build orders
+	 * @throws ParseException 
 	 */
 	public Order(ParseObject po) {
 		super(po);
 		mTableID = po.getInt(TABLE_ID);
 		mUserInfo = new UserInfo(po.getParseObject(USER_INFO));
 		mMenuItems = ParseUtil.toListOfStorables(MenuItem.class, po.getList(MENU_ITEMS));
+		
 	}
 
 	/**
@@ -59,14 +62,14 @@ public class Order extends TimeableStorable {
 	public int getTableID() {
 		return mTableID;
 	}
-	
-//	/**
-//	 * @param tableID the tableID to set
-//	 */
-//	public void setTableID(int tableID) {
-//		this.mTableID = tableID;
-//	}
-	
+
+	//	/**
+	//	 * @param tableID the tableID to set
+	//	 */
+	//	public void setTableID(int tableID) {
+	//		this.mTableID = tableID;
+	//	}
+
 	/**
 	 * @return the userID
 	 */
