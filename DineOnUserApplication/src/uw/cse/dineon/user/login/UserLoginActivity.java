@@ -62,7 +62,7 @@ LoginFragment.OnLoginListener {
 		setContentView(R.layout.activity_login);
 		
 		ParseUser user = ParseUser.getCurrentUser();
-		if (user != null) {
+		if (user != null && user.isAuthenticated() &&  user.getUsername() != null) {
 			// TODO Download the User Object
 			if (DineOnConstants.DEBUG) {
 				startRestSelectionAct(null);
@@ -70,7 +70,8 @@ LoginFragment.OnLoginListener {
 			else {
 				// Download User 
 			}
-			
+		} else if (user != null) {
+			ParseUser.logOut();
 		}
 		
 		mLoginCallback = new DineOnLoginCallback(this);
@@ -81,7 +82,7 @@ LoginFragment.OnLoginListener {
 		super.onActivityResult(requestCode, resultCode, data);
 		
 		// Destroy any current running progress bars
-		destroyProgressDialog();
+//		destroyProgressDialog();
 		
 		if (resultCode != RESULT_OK) {
 			return;

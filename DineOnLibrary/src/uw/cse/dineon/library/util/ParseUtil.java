@@ -4,8 +4,10 @@
 package uw.cse.dineon.library.util;
 
 
+import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -122,102 +124,102 @@ public class ParseUtil {
 
 		});
 	}
-	/**
-	 * Save obj into the cloud and store the acquired objID into obj.
-	 * 
-	 * @param obj the java object that will be saved to the cloud
-	 * @param m The static callback to execute on completion of the save.
-	 */
-	public static void saveDataToCloud(Storable obj, Method handler) {
-		final Method h = handler;
-
-		final ParseObject pObj = obj.packObject();
-		final Storable s = obj;
-		pObj.saveInBackground(new SaveCallback() {
-			@Override
-			public void done(ParseException e) {
-				if (e == null) {
-					// save was successful so send push
-					Log.d(TAG, "Successfully saved object.");
-					s.setObjId(pObj.getObjectId());
-				} else {
-					// Error occured
-					Log.d(TAG, "Error: " + e.getMessage());
-				}
-
-				try {
-					if (h != null) {
-						h.invoke(null, (e == null) ? Boolean.TRUE : Boolean.FALSE, 
-								pObj.getObjectId(), s);
-					}
-				} catch (IllegalArgumentException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				} catch (IllegalAccessException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				} catch (InvocationTargetException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-			}
-		});
-		// TODO
-		// Handle failure
-	}
-
-	/**
-	 * Save obj into the cloud and store the acquired objID into obj
-	 *   -For example, a call to this function may looks like this:
-	 * 		
-	 * 		Method m = MyActivity.class.getMethod("callback", 
-	 *                                            Boolean.class,
-	 *                                            String.class,
-	 *                                            Storable.class);
-	 * 		saveDataToCloud(this, DiningSession, m);
-	 * 
-	 * @param activity the activity this call originated from and
-	 * associated with handler.
-	 * @param obj the java object that will be saved to the cloud
-	 * @param handler an instance method of activity for callback.
-	 */
-	public static void saveDataToCloud(Activity activity,
-									   Storable obj,
-									   Method handler){
-		final Method h = handler;
-		final Activity act = activity;
-		final ParseObject pObj = obj.packObject();
-		final Storable s = obj;
-		pObj.saveInBackground( new SaveCallback() {
-			@Override
-			public void done(ParseException e) {
-				if (e == null) {
-					// save was successful so send push
-					Log.d(TAG, "Successfully saved object.");
-					s.setObjId(pObj.getObjectId());
-				} else {
-					// Error occured
-					Log.d(TAG, "Error: " + e.getMessage());
-				}
-
-				try {
-					if (h != null && act != null)
-						h.invoke(act, (e == null) ? Boolean.TRUE : Boolean.FALSE, pObj.getObjectId(), s);
-				} catch (IllegalArgumentException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				} catch (IllegalAccessException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				} catch (InvocationTargetException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-			}
-		});
-		// TODO
-		// Handle failure
-	}
+//	/**
+//	 * Save obj into the cloud and store the acquired objID into obj.
+//	 * 
+//	 * @param obj the java object that will be saved to the cloud
+//	 * @param m The static callback to execute on completion of the save.
+//	 */
+//	public static void saveDataToCloud(Storable obj, Method handler) {
+//		final Method h = handler;
+//
+//		final ParseObject pObj = obj.packObject();
+//		final Storable s = obj;
+//		pObj.saveInBackground(new SaveCallback() {
+//			@Override
+//			public void done(ParseException e) {
+//				if (e == null) {
+//					// save was successful so send push
+//					Log.d(TAG, "Successfully saved object.");
+//					s.setObjId(pObj.getObjectId());
+//				} else {
+//					// Error occured
+//					Log.d(TAG, "Error: " + e.getMessage());
+//				}
+//
+//				try {
+//					if (h != null) {
+//						h.invoke(null, (e == null) ? Boolean.TRUE : Boolean.FALSE, 
+//								pObj.getObjectId(), s);
+//					}
+//				} catch (IllegalArgumentException e1) {
+//					// TODO Auto-generated catch block
+//					e1.printStackTrace();
+//				} catch (IllegalAccessException e1) {
+//					// TODO Auto-generated catch block
+//					e1.printStackTrace();
+//				} catch (InvocationTargetException e1) {
+//					// TODO Auto-generated catch block
+//					e1.printStackTrace();
+//				}
+//			}
+//		});
+//		// TODO
+//		// Handle failure
+//	}
+//
+//	/**
+//	 * Save obj into the cloud and store the acquired objID into obj
+//	 *   -For example, a call to this function may looks like this:
+//	 * 		
+//	 * 		Method m = MyActivity.class.getMethod("callback", 
+//	 *                                            Boolean.class,
+//	 *                                            String.class,
+//	 *                                            Storable.class);
+//	 * 		saveDataToCloud(this, DiningSession, m);
+//	 * 
+//	 * @param activity the activity this call originated from and
+//	 * associated with handler.
+//	 * @param obj the java object that will be saved to the cloud
+//	 * @param handler an instance method of activity for callback.
+//	 */
+//	public static void saveDataToCloud(Activity activity,
+//									   Storable obj,
+//									   Method handler){
+//		final Method h = handler;
+//		final Activity act = activity;
+//		final ParseObject pObj = obj.packObject();
+//		final Storable s = obj;
+//		pObj.saveInBackground( new SaveCallback() {
+//			@Override
+//			public void done(ParseException e) {
+//				if (e == null) {
+//					// save was successful so send push
+//					Log.d(TAG, "Successfully saved object.");
+//					s.setObjId(pObj.getObjectId());
+//				} else {
+//					// Error occured
+//					Log.d(TAG, "Error: " + e.getMessage());
+//				}
+//
+//				try {
+//					if (h != null && act != null)
+//						h.invoke(act, (e == null) ? Boolean.TRUE : Boolean.FALSE, pObj.getObjectId(), s);
+//				} catch (IllegalArgumentException e1) {
+//					// TODO Auto-generated catch block
+//					e1.printStackTrace();
+//				} catch (IllegalAccessException e1) {
+//					// TODO Auto-generated catch block
+//					e1.printStackTrace();
+//				} catch (InvocationTargetException e1) {
+//					// TODO Auto-generated catch block
+//					e1.printStackTrace();
+//				}
+//			}
+//		});
+//		// TODO
+//		// Handle failure
+//	}
 
 	/**
 	 * Query for object in the cloud given a list of attributes. On return the
@@ -252,9 +254,15 @@ public class ParseUtil {
 						try {
 							Storable s;
 							for (ParseObject p : list) {
-								s = (Storable) Class.forName("uw.cse.dineon.library."+ className).newInstance();
-								s.unpackObject(p);
-								classList.add(s);
+								Class<?> clazz = 
+										Class.forName("uw.cse.dineon.library." + className);
+								Constructor<?> ctor = clazz.getConstructor(ParseObject.class);
+								Object object = ctor.newInstance(new Object[] {p});
+								classList.add((Storable) object);
+								
+//								s = (Storable) Class.forName("uw.cse.dineon.library."+ className).newInstance();
+//								s.unpackObject(p);
+//								classList.add(s);
 							}		   
 							h.invoke(null, classList);
 						} catch (Exception ex) {
@@ -312,9 +320,11 @@ public class ParseUtil {
 						try {
 							Storable s;
 							for (ParseObject p : list) {
-								s = (Storable) Class.forName("uw.cse.dineon.library."+ className).newInstance();
-								s.unpackObject(p);
-								classList.add(s);
+								Class<?> clazz = 
+										Class.forName("uw.cse.dineon.library." + className);
+								Constructor<?> ctor = clazz.getConstructor(ParseObject.class);
+								Object object = ctor.newInstance(new Object[] {p});
+								classList.add((Storable) object);
 							}
 							if (h != null && act != null)
 								h.invoke(act, classList);
@@ -379,30 +389,100 @@ public class ParseUtil {
 
 		return container;
 	}
-
+	
+//	/**
+//	 * 
+//	 * @param container ParseObject
+//	 * @return List<Storable>
+//	 */
+//	public static List<Storable> unpackListOfStorables(ParseObject container) {
+//		if (!container.getClassName().equals("Container")) {
+//			throw new IllegalArgumentException();
+//		}
+//
+//		List<Storable> list = new LinkedList<Storable>();
+//		try {
+//			for (String k : container.keySet()) {
+//				ParseObject p = container.getParseObject(k);
+//				Storable s = (Storable) Class.forName(p.getClassName()).newInstance();
+//				s.unpackObject(p);
+//				list.add(s);
+//			}
+//		} catch (Exception e) {
+//			Log.d(TAG, "Error: " + e.getMessage());
+//		}
+//
+//		return list;
+//	}
+	
 	/**
+	 * Given a storable class definition produce an instance of the Class based
+	 * off the ParseObject.
 	 * 
-	 * @param container ParseObject
-	 * @return List<Storable>
+	 * @param clazz Class to instantiate
+	 * @param po Parse object representation of the Class
+	 * @return null on failure, instance of T otherwise
 	 */
-	public static List<Storable> unpackListOfStorables(ParseObject container) {
-		if (!container.getClassName().equals("Container")) {
-			throw new IllegalArgumentException();
-		}
-
-		List<Storable> list = new LinkedList<Storable>();
+	public static <T extends Storable> T parseObjectToClass(Class<T> clazz, ParseObject po) {
+		Constructor<T> ctor = null;
+		Object object = null;
 		try {
-			for (String k : container.keySet()) {
-				ParseObject p = container.getParseObject(k);
-				Storable s = (Storable) Class.forName(p.getClassName()).newInstance();
-				s.unpackObject(p);
-				list.add(s);
-			}
-		} catch (Exception e) {
-			Log.d(TAG, "Error: " + e.getMessage());
+			ctor = clazz.getConstructor(ParseObject.class);
+			object = ctor.newInstance(new Object[] {po});	
+		} catch (NoSuchMethodException e) {
+			throw new RuntimeException("Constructor for: " + clazz.getSimpleName() 
+					+ " that takes one ParseObject not found!");
+		} catch (IllegalArgumentException e) {
+			throw e;
+		} catch (InstantiationException e) {
+			throw new RuntimeException("Instantiation Exception for: " + clazz.getSimpleName() 
+					+ " constructor that takes one ParseObject not found!");
+		} catch (IllegalAccessException e) {
+			throw new RuntimeException("Illegal Access Exception for: " + clazz.getSimpleName() 
+					+ " constructor that takes one ParseObject not found!");
+		} catch (InvocationTargetException e) {
+			throw new RuntimeException("Invocation Exception for: " + clazz.getSimpleName() 
+					+ " constructor that takes one ParseObject not found!");
 		}
-
-		return list;
+		if (object != null) {
+			return (T)object;
+		}
+		return null;
+	}
+	
+	/**
+	 * Retrieves a list of parse objects that represent storable list.
+	 * 
+	 * @requires storables not equal null
+	 * @param storables list of storable objects to obtain parse objects from
+	 * @return List of ParseObject that represents storables
+	 */
+	public static List<ParseObject> toListOfParseObjects(List<? extends Storable> storables) {
+		List<ParseObject> pObjects = new ArrayList<ParseObject>(storables.size());
+		for (Storable s: storables) {
+			pObjects.add(s.packObject());
+		}
+		return pObjects;
+	}
+	
+	/**
+	 * Retrieves a list of Class instances from a associated relation of the parseObjects
+	 * NOTE: All items in objects must have dynamic types of ParseObject or a class cast exception
+	 * will be thrown
+	 * 
+	 * @param clazz Class definition of the particular instance
+	 * @param objects List of Objects that must have dynamic tyoes if ParseObjects
+	 * @return List of storables from ParesObjects
+	 */
+	public static <T extends Storable> List<T> toListOfStorables(
+			Class<T> clazz, List<Object> objects) {
+		List<T> storables = new ArrayList<T>(objects.size());
+		for (Object o: objects) {
+			ParseObject p = (ParseObject) o; 
+			T storable = (T) parseObjectToClass(clazz, p);
+			storables.add(storable);
+		}
+		return storables;
 	}
 
 }

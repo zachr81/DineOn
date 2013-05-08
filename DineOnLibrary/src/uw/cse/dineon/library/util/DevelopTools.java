@@ -67,22 +67,22 @@ public class DevelopTools {
 	 * 
 	 * @return Restaurant to use for testing
 	 */
-	public static Restaurant getDefaultRestaurant(){
-		RestaurantInfo rInfo = new RestaurantInfo();
-		List<MenuItem> items = new ArrayList<MenuItem>();
-		for (int i = 0; i < MENUITEMS_V1.length; i++) {
-			items.add(new MenuItem(i + 1, (double)i + 1, MENUITEMS_V1[i]));
-		}
-		Menu m = new Menu("Marty's Main Menu",items);
-		List<Menu> menus = new ArrayList<Menu>();
-		menus.add(m);
-		rInfo.setAddr("1234 Happy St.");
-		rInfo.setMenu(m);
-		rInfo.setPhone(1234567890);
-		rInfo.setName("Marty's");
-
-		return new Restaurant(menus, new ArrayList<Reservation>(), rInfo, new ArrayList<Order>(),
-				new ArrayList<DiningSession>(), new ArrayList<CustomerRequest>());
-	}
+//	public static Restaurant getDefaultRestaurant(){
+//		RestaurantInfo rInfo = new RestaurantInfo("Marty's");
+//		List<MenuItem> items = new ArrayList<MenuItem>();
+//		for (int i = 0; i < MENUITEMS_V1.length; i++) {
+//			items.add(new MenuItem(i + 1, (double)i + 1, MENUITEMS_V1[i]));
+//		}
+//		Menu m = new Menu("Marty's Main Menu",items);
+//		List<Menu> menus = new ArrayList<Menu>();
+//		menus.add(m);
+//		rInfo.setAddr("1234 Happy St.");
+//		rInfo.setMenu(m);
+//		rInfo.setPhone(1234567890);
+//		rInfo.setName("Marty's");
+//
+//		return new Restaurant(menus, new ArrayList<Reservation>(), rInfo, new ArrayList<Order>(),
+//				new ArrayList<DiningSession>(), new ArrayList<CustomerRequest>());
+//	}
 
 }
