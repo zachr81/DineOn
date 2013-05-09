@@ -38,7 +38,7 @@ public class UserInfo extends Storable {
 	
 	/**
 	 * Creates a UserInfo instance from this parse object.
-	 * @param po ParseObject used to construct UserInfo
+	 * @param po PArseObject 
 	 */
 	public UserInfo(ParseObject po) {
 		super(po);

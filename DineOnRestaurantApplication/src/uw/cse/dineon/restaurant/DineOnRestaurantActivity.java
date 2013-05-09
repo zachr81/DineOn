@@ -10,7 +10,7 @@ import uw.cse.dineon.library.UserInfo;
 import uw.cse.dineon.library.util.DineOnConstants;
 import uw.cse.dineon.library.util.ParseUtil;
 import uw.cse.dineon.library.util.Utility;
-import uw.cse.dineon.restaurant.RestaurantSatelite.SateliteListener;
+import uw.cse.dineon.restaurant.RestaurantSatellite.SateliteListener;
 import uw.cse.dineon.restaurant.login.RestaurantLoginActivity;
 import uw.cse.dineon.restaurant.profile.ProfileActivity;
 import android.content.Intent;
@@ -28,6 +28,7 @@ import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.parse.ParseQuery.CachePolicy;
+import com.parse.ParseUser;
 
 /**
  * General Fragment Activity class that pertains to a specific Restaurant
@@ -49,7 +50,7 @@ public class DineOnRestaurantActivity extends FragmentActivity implements Sateli
 	 */
 	protected static final String TAG = DineOnRestaurantActivity.class.getSimpleName();
 
-	private RestaurantSatelite mDSRequestReceiver;	
+	private RestaurantSatellite mDSRequestReceiver;	
 	
 	/**
 	 * The underlying restaurant instance.
@@ -85,7 +86,7 @@ public class DineOnRestaurantActivity extends FragmentActivity implements Sateli
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		
-		mDSRequestReceiver = new RestaurantSatelite();
+		mDSRequestReceiver = new RestaurantSatellite();
 		
 		thisResActivity = this;
 		
