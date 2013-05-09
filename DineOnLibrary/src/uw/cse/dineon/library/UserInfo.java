@@ -11,7 +11,7 @@ import com.parse.ParseUser;
  * @author Espeo196, Michael Hotan
  */
 public class UserInfo extends Storable {
-	public static final String PARSEUSER = "PARSEUSER";
+	public static final String PARSEUSER = "user";
 	public static final String IMAGE_ID = "IMAGE_ID";
 	public static final String PROFILE_DESCRIPTION = "PROFILE_DESCRIPTION";
 	public static final String PHONE = "PHONE";

@@ -47,7 +47,7 @@ public class MenuItemsFragment extends ListFragment {
 		// for starting an activity with
 		MenuItemsFragment frag = new MenuItemsFragment();
 		Bundle args = new Bundle();
-		args.putParcelable(DineOnConstants.KEY_RESTAURANTINFO, info);
+//		args.putParcelable(DineOnConstants.KEY_RESTAURANTINFO, info);
 		frag.setArguments(args);
 		return frag;
 	}

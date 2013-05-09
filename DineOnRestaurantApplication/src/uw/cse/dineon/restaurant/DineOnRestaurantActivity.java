@@ -173,7 +173,7 @@ public class DineOnRestaurantActivity extends FragmentActivity {
 		switch (item.getItemId()) {
 		case R.id.item_restaurant_profile:
 			Bundle b = new Bundle();
-			b.putParcelable(DineOnConstants.KEY_RESTAURANT, mRestaurant);
+//			b.putParcelable(DineOnConstants.KEY_RESTAURANT, mRestaurant);
 			startProfileActivity(null);
 			break;
 		case R.id.item_logout:
@@ -193,9 +193,9 @@ public class DineOnRestaurantActivity extends FragmentActivity {
 	 */
 	public void startProfileActivity(Restaurant rest) {
 		Intent i = new Intent(this, ProfileActivity.class);
-		if (rest != null) {
-			i.putExtra(DineOnConstants.KEY_RESTAURANT, rest);
-		}
+//		if (rest != null) {
+//			i.putExtra(DineOnConstants.KEY_RESTAURANT, rest);
+//		}
 		startActivity(i);
 	}
 
@@ -204,7 +204,7 @@ public class DineOnRestaurantActivity extends FragmentActivity {
 		// TODO Save state of all the fields of this activity
 		// mRestaurant
 		// Save to Parse then reference later
-		savedInstanceState.putParcelable(DineOnConstants.KEY_RESTAURANT, mRestaurant);
+//		savedInstanceState.putParcelable(DineOnConstants.KEY_RESTAURANT, mRestaurant);
 		super.onSaveInstanceState(savedInstanceState);
 	}
 

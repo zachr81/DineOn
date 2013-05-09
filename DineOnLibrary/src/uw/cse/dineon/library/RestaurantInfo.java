@@ -16,7 +16,7 @@ import com.parse.ParseUser;
  *
  */
 public class RestaurantInfo extends Storable {
-	public static final String PARSEUSER = "name";
+	public static final String PARSEUSER = "user";
 	public static final String ADDR = "addr";
 	public static final String PHONE = "phone";
 	public static final String IMAGE_MAIN = "imageMain";

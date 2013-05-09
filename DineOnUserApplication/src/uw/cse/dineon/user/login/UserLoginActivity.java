@@ -1,10 +1,14 @@
 package uw.cse.dineon.user.login;
 
 import uw.cse.dineon.library.DineOnUser;
+import uw.cse.dineon.library.Restaurant;
+import uw.cse.dineon.library.RestaurantInfo;
+import uw.cse.dineon.library.UserInfo;
 import uw.cse.dineon.library.util.CredentialValidator;
 import uw.cse.dineon.library.util.CredentialValidator.Resolution;
 import uw.cse.dineon.library.util.DevelopTools;
 import uw.cse.dineon.library.util.DineOnConstants;
+import uw.cse.dineon.library.util.Utility;
 import uw.cse.dineon.user.R;
 import uw.cse.dineon.user.restaurantselection.RestaurantSelectionActivity;
 import android.app.AlertDialog;
@@ -25,6 +29,7 @@ import android.widget.Toast;
 import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseFacebookUtils;
+import com.parse.ParseInstallation;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
@@ -50,27 +55,49 @@ LoginFragment.OnLoginListener {
 
 	public static final String EXTRA_FACEBOOK = "Login with facebook";
 
+	private Context This;
+	
 	/**
 	 * Reference to User object that is created or downloaded.
 	 */
-	private DineOnUser mUser;
+	private String mUserID;
 
 	/**
 	 * Progress bar dialog for showing user progress.
 	 */
 	private ProgressDialog mProgressDialog;
+	
 	/**
-	 * Login to handle user attempts to login
+	 * Login to handle user attempts to login.
 	 */
 	private DineOnLoginCallback mLoginCallback;
+	
+	////////////////////////////////////////////////////////////////////////
+	/////  Activity specific 
+	////////////////////////////////////////////////////////////////////////
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_login);
 		mLoginCallback = new DineOnLoginCallback(this);
+		This = this;
 	}
-
+	
+	/**
+	 * This automates the addition of the User Intent.
+	 * Should never be called when mUser is null.
+	 */
+	@Override
+	public void startActivity (Intent intent) {
+		if (DineOnConstants.DEBUG && mUserID == null) {
+			Toast.makeText(this, "Need to create or download a User", Toast.LENGTH_SHORT).show();
+			return;
+		}
+		intent.putExtra(DineOnConstants.KEY_USER, mUserID);
+		super.startActivity(intent);
+	}
+	
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
@@ -79,25 +106,9 @@ LoginFragment.OnLoginListener {
 			return;
 		}
 
-		// This is the result of having to create an account
-		if (requestCode == REQUEST_CREATE_NEW_ACCOUNT) {	
-			// User decided to Log in with facebook instead 
-			if (data.getBooleanExtra(EXTRA_FACEBOOK, false)) {
-				onLoginWithFacebook();
-				return;
-			}
-
-			String userID;
-			if ((userID = data.getParcelableExtra(DineOnConstants.KEY_USER)) != null) {
-				ParseQuery query = new ParseQuery(DineOnUser.class.getSimpleName());
-				query.setCachePolicy(ParseQuery.CachePolicy.CACHE_ELSE_NETWORK);
-				query.getInBackground(userID, new UserDownloadCallback(this));
-				return;
-			}
-		}
 		// User attemtped to log in with facebook but did not have the 
 		// application on their phone.  This is the result of a Web call.
-		else if (requestCode == REQUEST_LOGIN_FACEBOOK) {
+		if (requestCode == REQUEST_LOGIN_FACEBOOK) {
 			ParseFacebookUtils.finishAuthentication(requestCode, resultCode, data);
 		}
 	}
@@ -127,8 +138,33 @@ LoginFragment.OnLoginListener {
 		return true;
 	}
 
-	// User interaction methods
-
+	////////////////////////////////////////////////////////////////////////
+	/////  Private Helper methods for starting new activities
+	////////////////////////////////////////////////////////////////////////
+	
+	/**
+	 * Starts Restaurant selection activity with current.
+	 * TODO send a user instance through this bundle
+	 */
+	private void startRestSelectionAct() {
+		// Destroy any running progress dialog
+		destroyProgressDialog();
+		Intent i = new Intent(this, RestaurantSelectionActivity.class);
+		startActivity(i);
+	}
+	
+	/**
+	 * Starts an activity for a result to allow the user to start a new account.
+	 */
+	private void onCreateNewAccount() {
+		Intent creatAccountIntent = new Intent(this, CreateNewAccountActivity.class);
+		startActivityForResult(creatAccountIntent, REQUEST_CREATE_NEW_ACCOUNT);
+	}
+	
+	////////////////////////////////////////////////////////////////////////
+	/////  Callbacks for the Fragment interface
+	////////////////////////////////////////////////////////////////////////
+	
 	// Logging in Via email
 	@Override
 	public void onLogin(String username, String password) {
@@ -148,7 +184,7 @@ LoginFragment.OnLoginListener {
 
 		if (buf.length() > 0) {
 			destroyProgressDialog();
-			showAlertBadInput(buf.toString());
+			showInvalidCredentialDialog(buf.toString());
 			return;
 		}
 
@@ -175,49 +211,20 @@ LoginFragment.OnLoginListener {
 		// TODO Auto-generated method stub
 		DevelopTools.getUnimplementedDialog(this, null).show();
 	}
-
-	/**
-	 * Starts an activity for a result to allow the user to start a new account.
-	 */
-	public void onCreateNewAccount() {
-		Intent creatAccountIntent = new Intent(this, CreateNewAccountActivity.class);
-		startActivityForResult(creatAccountIntent, REQUEST_CREATE_NEW_ACCOUNT);
-	}
-
-	/**
-	 * Starts Restaurant selection activity with current
-	 * TODO send a user instance through this bundle
-	 */
-	private void startRestSelectionAct() {
-		// Destroy any running progress dialog
-		destroyProgressDialog();
-		Intent i = new Intent(this, RestaurantSelectionActivity.class);
-		startActivity(i);
-	}
-
-	/**
-	 * This automates the addition of the User Intent.
-	 * Should never be called when mUser is null.
-	 */
-	@Override
-	public void startActivity (Intent intent) {
-		if (DineOnConstants.DEBUG && mUser == null) {
-			Toast.makeText(this, "Need to create or download a User", Toast.LENGTH_SHORT).show();
-			return;
-		}
-		intent.putExtra(DineOnConstants.KEY_USER, mUser.getObjId());
-		super.startActivity(intent);
-	}
+	
+	////////////////////////////////////////////////////////////////////////
+	/////  UI Specific methods
+	////////////////////////////////////////////////////////////////////////
 
 	/**
 	 * Instantiates a new progress dialog and shows it on the screen.
 	 */
-	private void createProgressDialog() {
+	protected void createProgressDialog() {
 		if (mProgressDialog != null && mProgressDialog.isShowing()) {
 			return;
 		}
 		mProgressDialog = new ProgressDialog(this);
-		mProgressDialog.setTitle("DineOn Login");
+		mProgressDialog.setTitle("Getting you ready to DineOn!");
 		mProgressDialog.setMessage("Logging in...");       
 		mProgressDialog.setIndeterminate(true);
 		mProgressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
@@ -227,7 +234,7 @@ LoginFragment.OnLoginListener {
 	/**
 	 * Hides the progress dialog if there is one.
 	 */
-	private void destroyProgressDialog() {
+	protected void destroyProgressDialog() {
 		if(mProgressDialog != null && mProgressDialog.isShowing()){
 			mProgressDialog.dismiss();
 		}
@@ -237,7 +244,7 @@ LoginFragment.OnLoginListener {
 	 * Show bad input alert message for logging in.
 	 * @param message message to show
 	 */
-	public void showAlertBadInput(String message) {
+	protected void showInvalidCredentialDialog(String message) {
 		AlertDialog.Builder b = new Builder(this);
 		b.setTitle("Failed to login");
 		b.setMessage(message);
@@ -250,6 +257,10 @@ LoginFragment.OnLoginListener {
 			}
 		}).show();
 	}
+	
+	////////////////////////////////////////////////////////////////////////
+	/////  Callback for logging in, saving, and dowloading
+	////////////////////////////////////////////////////////////////////////
 
 	/**
 	 * Custom callback to handle login results 
@@ -275,75 +286,99 @@ LoginFragment.OnLoginListener {
 		@Override
 		public void done(ParseUser user, ParseException e) {
 
+			// Unable to login
 			if (user == null) {
-				Log.d(TAG, "Uh oh. The user cancelled the Facebook login.");					
-				// TODO Make Alert dialog notifying login failure
-				Toast.makeText(mContext, "Login failed", Toast.LENGTH_SHORT).show();
-				// Turn off progress bar
 				destroyProgressDialog();
+				Utility.getGeneralAlertDialog("Login Failed", 
+						"Invalid Login Credentials", This).show();
 				return;
 			} 
+			
+			if (e != null) {
+				destroyProgressDialog();
+				Utility.getGeneralAlertDialog("Login Failed", e.getMessage(), This).show();
+				return;
+			}
 
 			// This method at this point needs to produce a User Instance 
 			if (user.isNew()) {
-				Log.d(TAG, "User signed up and logged in through Facebook!");
-				mUser = new DineOnUser(user);
+				destroyProgressDialog();
+				final DineOnUser mUser = new DineOnUser(user);
 				mUser.saveInBackGround(new SaveCallback() {
 
 					/**
-					 * Start an activity
+					 * Start an activity Restaurant selection
+					 * activity once we know there is a User object created for us
 					 */
 					@Override
 					public void done(ParseException e) {
+						destroyProgressDialog();
 						if (e == null) { // Success
+							mUserID = mUser.getObjId();
 							startRestSelectionAct();
 						} else {
-							Toast.makeText(mContext, "Unable to save User Exception: " + e.getMessage(), 
-									Toast.LENGTH_SHORT).show();
+							Utility.getGeneralAlertDialog("Login Failed", 
+									e.getMessage(), This).show();
 						}
 					}
 				});
 			} 
 			else {
+				// Make sure there is an instance for us
 				Log.d(TAG, "User logged in through Facebook!");
-				// User is returning so download the correct User instance
-				ParseQuery query = new ParseQuery(DineOnUser.class.getSimpleName());
-				query.setCachePolicy(ParseQuery.CachePolicy.CACHE_ELSE_NETWORK);
-				query.getInBackground(user.getObjectId(), new UserDownloadCallback(mContext));
+				UserFinder finder = new UserFinder(user);
+				finder.findUser();
 			}
 
 		}
 	}
 
 	/**
-	 * Callback For downloads of User.
+	 * Callback For downloads of User.  Once the user is completed downloading 
+	 * the restaurant selection activity will start.
 	 * @author mhotan
 	 */
-	private class UserDownloadCallback extends GetCallback {
+	private class UserFinder extends GetCallback {
 
-		private Context mCtx;
-
+		private final ParseUser mUserToFind;
+		
 		/**
-		 * Create a UserDownload Callback.
-		 * @param ctx
+		 * Creates a finder for extracting a User that contains this ParseUser.
+		 * @param user user to find
 		 */
-		public UserDownloadCallback(Context ctx) {
-			mCtx = ctx;
+		public UserFinder(ParseUser user) {
+			mUserToFind = user;
 		}
-
+		
+		/**
+		 * Attempts to find the User associated with this Finder
+		 * @param user
+		 */
+		public void findUser() {
+			// TODO use inner queries to find the right UserInfo
+			// TODO Validate if it works
+			ParseQuery inner = new ParseQuery(UserInfo.class.getSimpleName());
+			inner.whereEqualTo(UserInfo.PARSEUSER, mUserToFind);
+			ParseQuery query = new ParseQuery(DineOnUser.class.getSimpleName());
+			query.whereMatchesQuery(DineOnUser.USER_INFO, inner);
+			query.getFirstInBackground(this);
+		}
+		
 		@Override
 		public void done(ParseObject object, ParseException e) {
+			destroyProgressDialog();
+			
 			if (e == null) {
 				// We have found the correct object
 				try {
-					mUser = new DineOnUser(object);
+					mUserID = object.getObjectId();
 					startRestSelectionAct();
 				} catch (Exception e1) { // Unable to fetch UserInfo
 					Log.e(TAG, "unable to extract user info: " + e1);
 				}
 			} else {
-				Toast.makeText(mCtx, "FAIL: Failed to download User", 
-						Toast.LENGTH_SHORT).show();
+				Utility.getGeneralAlertDialog("Server Failure", 
+						"Failed to get your information", This).show();
 			}
 		}
 	} 
