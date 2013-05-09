@@ -18,6 +18,7 @@ import android.util.Log;
 import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
+import com.parse.ParsePush;
 import com.parse.ParseQuery;
 import com.parse.ParseQuery.CachePolicy;
 import com.parse.PushService;
@@ -30,9 +31,9 @@ import com.parse.PushService;
  * 
  * @author mhotan
  */
-public class RestaurantSatelite extends BroadcastReceiver {
+public class RestaurantSatellite extends BroadcastReceiver {
 
-	private static final String TAG = RestaurantSatelite.class.getSimpleName();
+	private static final String TAG = RestaurantSatellite.class.getSimpleName();
 
 	/**
 	 * Restaurant this station is associated to.
@@ -63,7 +64,7 @@ public class RestaurantSatelite extends BroadcastReceiver {
 	 * Creates and prepares a receiver for listening to
 	 * actions.
 	 */
-	public RestaurantSatelite() {
+	public RestaurantSatellite() {
 		mIF = new IntentFilter();
 		mIF.addAction(DineOnConstants.ACTION_REQUEST_DINING_SESSION);
 		mIF.addAction(DineOnConstants.ACTION_ORDER_PLACED);
@@ -111,7 +112,7 @@ public class RestaurantSatelite extends BroadcastReceiver {
 	}
 
 	/**
-	 * Turns off this receiver
+	 * Turns off this receiver.
 	 */
 	public void unRegister() {
 		if (mCurrentActivity == null) {
@@ -128,22 +129,41 @@ public class RestaurantSatelite extends BroadcastReceiver {
 	 * This notifies the customer that a Dining Session has been
 	 * started and they are free to download it at the given pointer
 	 * @param ds DiningSession instance to return
-	 * @param info User to return to
-	 * @throws JSONException 
+	 * @param user User to return to
 	 */
-	public void confirmDiningSession(DiningSession ds, UserInfo info) throws JSONException{
-		JSONObject jo = new JSONObject();
-		jo.put(DineOnConstants.OBJ_ID, ds.getObjId());
-		//TODO
+	public void confirmDiningSession(DiningSession ds, UserInfo user) {
+		try {
+			JSONObject jo = new JSONObject();
+			jo.put(DineOnConstants.OBJ_ID, ds.getObjId());
+			ParsePush push = new ParsePush();
+			push.setChannel(ParseUtil.getChannel(user));
+			push.setData(jo);
+			push.sendInBackground();
+		} catch (JSONException e) {
+			mCurrentActivity.onFail("Failed notifying " 
+		+ user.getName() + " that there Dining Session has started");
+		}
 	}
 
 	/**
-	 * 
-	 * @param restaurant
-	 * @param user
+	 * Notifies User assocaited with UserInfo that our
+	 * Restaurant profile information has changed.  
+	 * Note this is intended to be called after the save of restaurant.
+	 * @param restaurant restaurant object to notify update
+	 * @param user User to notify
 	 */
 	public void notifyChangeRestaurantInfo(RestaurantInfo restaurant, UserInfo user) {
-		// TODO
+		try {
+			JSONObject jo = new JSONObject();
+			jo.put(DineOnConstants.OBJ_ID, restaurant.getObjId());
+			ParsePush push = new ParsePush();
+			push.setChannel(ParseUtil.getChannel(user));
+			push.setData(jo);
+			push.sendInBackground();
+		} catch (JSONException e) {
+			mCurrentActivity.onFail("Failed notifying " 
+		+ user.getName() + " that our internal state ");
+		}
 	}
 
 	@Override
@@ -176,15 +196,14 @@ public class RestaurantSatelite extends BroadcastReceiver {
 				// What does it mean when we fail like this?
 				return;
 			} 
-			
+
 			int tableNum = -1; //Default Value
 			try {
 				tableNum = jobj.getInt(DineOnConstants.TABLE_NUM);
 			} catch (JSONException e) {
 				// Leave it at -1
 			}
-			
-			
+
 			String action = intent.getAction();
 			ParseQuery uInfo = new ParseQuery(UserInfo.class.getSimpleName());
 			ParseQuery dsQuery = new ParseQuery(DiningSession.class.getSimpleName());
@@ -285,28 +304,28 @@ public class RestaurantSatelite extends BroadcastReceiver {
 		 * @param user User that attempted to CheckIn
 		 */
 		void onUserCheckedIn(UserInfo user, int tableID);
-		
+
 		/**
 		 * Notifies that the current usr changed its state
 		 * from what the restaurant previously knew about.
 		 * @param user User that changed it state
 		 */
 		void onUserChanged(UserInfo user);
-		
+
 		/**
 		 * Notifies that an order was placed from the User(s)
 		 * associated with the attached dining session.
 		 * @param session Dining session where order was placed
 		 */
 		void onOrderPlaced(DiningSession session);
-		
+
 		/**
 		 * Notifies that a customer request was placed from the User(s)
 		 * associated with the attached dining session.
 		 * @param session Dining session where customer request was placed
 		 */
 		void onCustomerRequest(DiningSession session);
-		
+
 		/**
 		 * Notifies Application the Users have checked out
 		 * for associated dining session.

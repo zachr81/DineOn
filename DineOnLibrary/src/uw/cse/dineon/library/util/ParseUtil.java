@@ -501,7 +501,7 @@ public class ParseUtil {
 	
 	/**
 	 * Returns the channel identifier for this Restaurant
-	 * @param rest Restaurant to find channel identifier for
+	 * @param user User to extract channel from
 	 * @return Channel as string
 	 */
 	public static String getChannel(UserInfo user){

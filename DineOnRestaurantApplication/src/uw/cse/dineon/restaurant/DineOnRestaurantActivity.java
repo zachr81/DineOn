@@ -1,30 +1,19 @@
 package uw.cse.dineon.restaurant;
 
-import java.lang.reflect.Method;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.Map;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import uw.cse.dineon.library.DiningSession;
-import uw.cse.dineon.library.Order;
 import uw.cse.dineon.library.Restaurant;
 import uw.cse.dineon.library.Storable;
 import uw.cse.dineon.library.UserInfo;
-import uw.cse.dineon.library.util.DevelopTools;
 import uw.cse.dineon.library.util.DineOnConstants;
-import uw.cse.dineon.library.util.DineOnReceiver;
 import uw.cse.dineon.library.util.ParseUtil;
 import uw.cse.dineon.library.util.Utility;
-import uw.cse.dineon.restaurant.RestaurantSatelite.SateliteListener;
+import uw.cse.dineon.restaurant.RestaurantSatellite.SateliteListener;
 import uw.cse.dineon.restaurant.login.RestaurantLoginActivity;
 import uw.cse.dineon.restaurant.profile.ProfileActivity;
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
@@ -37,9 +26,8 @@ import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
-import com.parse.ParseUser;
-import com.parse.PushService;
 import com.parse.ParseQuery.CachePolicy;
+import com.parse.ParseUser;
 
 /**
  * General Fragment Activity class that pertains to a specific Restaurant
@@ -60,7 +48,7 @@ public class DineOnRestaurantActivity extends FragmentActivity implements Sateli
 	 */
 	protected static final String TAG = DineOnRestaurantActivity.class.getSimpleName();
 
-	private RestaurantSatelite mDSRequestReceiver;	
+	private RestaurantSatellite mDSRequestReceiver;	
 	
 	/**
 	 * The underlying restaurant instance.
@@ -96,7 +84,7 @@ public class DineOnRestaurantActivity extends FragmentActivity implements Sateli
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		
-		mDSRequestReceiver = new RestaurantSatelite();
+		mDSRequestReceiver = new RestaurantSatellite();
 		
 		This = this;
 		

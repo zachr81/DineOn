@@ -1,10 +1,5 @@
 package uw.cse.dineon.library;
 
-import android.os.Parcel;
-import android.os.Parcelable;
-import android.provider.ContactsContract.CommonDataKinds.Email;
-
-import com.parse.GetCallback;
 import com.parse.ParseObject;
 import com.parse.ParseUser;
 
@@ -25,7 +20,8 @@ public class UserInfo extends Storable {
 	private String mProfileDescription;
 
 	/**
-	 * Default constructor.
+	 * Creates a UserInfo for the very first time.
+	 * @param user user to create UserInfo from
 	 */
 	public UserInfo(ParseUser user) {
 		super(UserInfo.class);
@@ -36,8 +32,8 @@ public class UserInfo extends Storable {
 	}
 	
 	/**
-	 * Creates a UserInfo instance from this parse object
-	 * @param po
+	 * Creates a UserInfo instance from this parse object.
+	 * @param po PArseObject 
 	 */
 	public UserInfo(ParseObject po) {
 		super(po);
