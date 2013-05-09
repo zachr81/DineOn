@@ -128,102 +128,104 @@ public class ParseUtil {
 
 		});
 	}
-//	/**
-//	 * Save obj into the cloud and store the acquired objID into obj.
-//	 * 
-//	 * @param obj the java object that will be saved to the cloud
-//	 * @param m The static callback to execute on completion of the save.
-//	 */
-//	public static void saveDataToCloud(Storable obj, Method handler) {
-//		final Method h = handler;
-//
-//		final ParseObject pObj = obj.packObject();
-//		final Storable s = obj;
-//		pObj.saveInBackground(new SaveCallback() {
-//			@Override
-//			public void done(ParseException e) {
-//				if (e == null) {
-//					// save was successful so send push
-//					Log.d(TAG, "Successfully saved object.");
+	/**
+	 * Save obj into the cloud and store the acquired objID into obj.
+	 * 
+	 * @param obj the java object that will be saved to the cloud
+	 * @param m The static callback to execute on completion of the save.
+	 */
+	public static void saveDataToCloud(Storable obj, Method handler) {
+		final Method h = handler;
+
+		final ParseObject pObj = obj.packObject();
+		final Storable s = obj;
+		pObj.saveInBackground(new SaveCallback() {
+			@Override
+			public void done(ParseException e) {
+				if (e == null) {
+					// save was successful so send push
+					Log.d(TAG, "Successfully saved object.");
+					// TODO
 //					s.setObjId(pObj.getObjectId());
-//				} else {
-//					// Error occured
-//					Log.d(TAG, "Error: " + e.getMessage());
-//				}
-//
-//				try {
-//					if (h != null) {
-//						h.invoke(null, (e == null) ? Boolean.TRUE : Boolean.FALSE, 
-//								pObj.getObjectId(), s);
-//					}
-//				} catch (IllegalArgumentException e1) {
-//					// TODO Auto-generated catch block
-//					e1.printStackTrace();
-//				} catch (IllegalAccessException e1) {
-//					// TODO Auto-generated catch block
-//					e1.printStackTrace();
-//				} catch (InvocationTargetException e1) {
-//					// TODO Auto-generated catch block
-//					e1.printStackTrace();
-//				}
-//			}
-//		});
-//		// TODO
-//		// Handle failure
-//	}
-//
-//	/**
-//	 * Save obj into the cloud and store the acquired objID into obj
-//	 *   -For example, a call to this function may looks like this:
-//	 * 		
-//	 * 		Method m = MyActivity.class.getMethod("callback", 
-//	 *                                            Boolean.class,
-//	 *                                            String.class,
-//	 *                                            Storable.class);
-//	 * 		saveDataToCloud(this, DiningSession, m);
-//	 * 
-//	 * @param activity the activity this call originated from and
-//	 * associated with handler.
-//	 * @param obj the java object that will be saved to the cloud
-//	 * @param handler an instance method of activity for callback.
-//	 */
-//	public static void saveDataToCloud(Activity activity,
-//									   Storable obj,
-//									   Method handler){
-//		final Method h = handler;
-//		final Activity act = activity;
-//		final ParseObject pObj = obj.packObject();
-//		final Storable s = obj;
-//		pObj.saveInBackground( new SaveCallback() {
-//			@Override
-//			public void done(ParseException e) {
-//				if (e == null) {
-//					// save was successful so send push
-//					Log.d(TAG, "Successfully saved object.");
+					// Notifify Success
+				} else {
+					// Error occured
+					Log.d(TAG, "Error: " + e.getMessage());
+				}
+
+				try {
+					if (h != null) {
+						h.invoke(null, (e == null) ? Boolean.TRUE : Boolean.FALSE, 
+								pObj.getObjectId(), s);
+					}
+				} catch (IllegalArgumentException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} catch (IllegalAccessException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} catch (InvocationTargetException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+			}
+		});
+		// TODO
+		// Handle failure
+	}
+
+	/**
+	 * Save obj into the cloud and store the acquired objID into obj
+	 *   -For example, a call to this function may looks like this:
+	 * 		
+	 * 		Method m = MyActivity.class.getMethod("callback", 
+	 *                                            Boolean.class,
+	 *                                            String.class,
+	 *                                            Storable.class);
+	 * 		saveDataToCloud(this, DiningSession, m);
+	 * 
+	 * @param activity the activity this call originated from and
+	 * associated with handler.
+	 * @param obj the java object that will be saved to the cloud
+	 * @param handler an instance method of activity for callback.
+	 */
+	public static void saveDataToCloud(Activity activity,
+									   Storable obj,
+									   Method handler){
+		final Method h = handler;
+		final Activity act = activity;
+		final ParseObject pObj = obj.packObject();
+		final Storable s = obj;
+		pObj.saveInBackground( new SaveCallback() {
+			@Override
+			public void done(ParseException e) {
+				if (e == null) {
+					// save was successful so send push
+					Log.d(TAG, "Successfully saved object.");
 //					s.setObjId(pObj.getObjectId());
-//				} else {
-//					// Error occured
-//					Log.d(TAG, "Error: " + e.getMessage());
-//				}
-//
-//				try {
-//					if (h != null && act != null)
-//						h.invoke(act, (e == null) ? Boolean.TRUE : Boolean.FALSE, pObj.getObjectId(), s);
-//				} catch (IllegalArgumentException e1) {
-//					// TODO Auto-generated catch block
-//					e1.printStackTrace();
-//				} catch (IllegalAccessException e1) {
-//					// TODO Auto-generated catch block
-//					e1.printStackTrace();
-//				} catch (InvocationTargetException e1) {
-//					// TODO Auto-generated catch block
-//					e1.printStackTrace();
-//				}
-//			}
-//		});
-//		// TODO
-//		// Handle failure
-//	}
+				} else {
+					// Error occured
+					Log.d(TAG, "Error: " + e.getMessage());
+				}
+
+				try {
+					if (h != null && act != null)
+						h.invoke(act, (e == null) ? Boolean.TRUE : Boolean.FALSE, pObj.getObjectId(), s);
+				} catch (IllegalArgumentException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} catch (IllegalAccessException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} catch (InvocationTargetException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+			}
+		});
+		// TODO
+		// Handle failure
+	}
 
 	/**
 	 * Query for object in the cloud given a list of attributes. On return the

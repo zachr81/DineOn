@@ -43,7 +43,9 @@ public abstract class Storable {
 		if (parseObject == null) {
 			throw new IllegalArgumentException("");
 		}
-		// Fetch the parse object 
+		// Initially Parse Provides a pointer to value a value in the cloud
+		// 		for nested classes.
+		// We have to explicitly fetch the object if we need it.
 		try {
 			parseObject.fetchIfNeeded();
 		} catch (ParseException e) {
