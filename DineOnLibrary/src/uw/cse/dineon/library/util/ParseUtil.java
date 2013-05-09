@@ -15,6 +15,7 @@ import java.util.Set;
 
 import org.json.JSONObject;
 
+import uw.cse.dineon.library.Restaurant;
 import uw.cse.dineon.library.Storable;
 import android.app.Activity;
 import android.util.Log;
@@ -484,6 +485,15 @@ public class ParseUtil {
 			storables.add(storable);
 		}
 		return storables;
+	}
+	
+	/**
+	 * Returns the channel identifier for this Restaurant
+	 * @param rest Restaurant to find channel identifier for
+	 * @return Channel as string
+	 */
+	public static String getChannel(Restaurant rest){
+		return DineOnConstants.CHANNEL_PREFIX + rest.getName();
 	}
 
 }

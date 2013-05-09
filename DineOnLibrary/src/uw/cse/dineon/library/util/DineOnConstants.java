@@ -56,4 +56,29 @@ public class DineOnConstants {
 	
 	// Callback Key for braodcast receiver callbacks
 	public static final String OBJ_ID = "objectId";
+	
+	// Actions for broadcast resceivers
+	private static final String ACTION_PREFIX = "uw.cse.dineon.user.";
+	
+	// For Restaurant
+	public static final String ACTION_REQUEST_DINING_SESSION = ACTION_PREFIX + "REQUEST_DINING_SESSION";
+	public static final String ACTION_ORDER_PLACED = ACTION_PREFIX + "ORDER_PLACED";
+	public static final String ACTION_CHECK_OUT = ACTION_PREFIX + "CHECK_OUT";
+	public static final String ACTION_CHANGE_USER_INFO = ACTION_PREFIX + "CHANGE_USER_INFO";
+
+	// For Customer
+	public static final String ACTION_CONFIRM_DINING_SESSION = ACTION_PREFIX + "CONFIRM_DINING_SESSION";
+	public static final String ACTION_CHANGE_RESTAURANT_INFO = ACTION_PREFIX + "CHANGE_RESTAURANT_INFO";
+
+//	/**
+//	 * This the key for keeping track of the current channel
+//	 */
+//	public static final String KEY_CHANNEL = "_CHANNEL";
+	
+	/**
+	 * This is a channel prefix for Push Channels
+	 * IE channel for receiving a broadcast from a particular restaurant would be 
+	 * 
+	 */
+	final static String CHANNEL_PREFIX = "uw_cse_dineon_";
 }

@@ -360,7 +360,6 @@ public class DineOnRestaurantActivity extends FragmentActivity {
 			mRestaurantChannel = CHANNEL_PREFIX 
 					+ mParseRestaurant.getUsername();
 			mRestaurantSessionChannel = null;
-
 		}
 
 		public void register(DineOnRestaurantActivity dineOnRestaurantActivity){

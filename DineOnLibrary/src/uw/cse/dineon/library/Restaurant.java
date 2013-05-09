@@ -72,6 +72,14 @@ public class Restaurant extends Storable {
 	}
 
 	/**
+	 * Returns the name of this restaurant
+	 * @return Name
+	 */
+	public String getName(){
+		return mRestInfo.getName();
+	}
+	
+	/**
 	 * @return the customerRequests
 	 */
 	public List<CustomerRequest> getCustomerRequests() {
