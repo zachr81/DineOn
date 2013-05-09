@@ -26,6 +26,7 @@ public class UserInfo extends Storable {
 
 	/**
 	 * Default constructor.
+	 * @param user ParseUser
 	 */
 	public UserInfo(ParseUser user) {
 		super(UserInfo.class);
@@ -36,8 +37,8 @@ public class UserInfo extends Storable {
 	}
 	
 	/**
-	 * Creates a UserInfo instance from this parse object
-	 * @param po
+	 * Creates a UserInfo instance from this parse object.
+	 * @param po ParseObject used to construct UserInfo
 	 */
 	public UserInfo(ParseObject po) {
 		super(po);
@@ -86,7 +87,7 @@ public class UserInfo extends Storable {
 	}
 
 	/**
-	 * @param e String email
+	 * @param email String
 	 */
 	public void setEmail(String email) {
 		mUser.setEmail(email);

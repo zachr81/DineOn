@@ -80,7 +80,7 @@ public class RestaurantSatelite extends BroadcastReceiver {
 	 * @param dineOnRestaurantActivity Activity that will be registered
 	 */
 	public void register(Restaurant restaurant, 
-			DineOnRestaurantActivity dineOnRestaurantActivity){
+			DineOnRestaurantActivity dineOnRestaurantActivity) {
 
 		// Check for null values
 		if (restaurant == null) {
@@ -111,7 +111,7 @@ public class RestaurantSatelite extends BroadcastReceiver {
 	}
 
 	/**
-	 * Turns off this receiver
+	 * Turns off this receiver.
 	 */
 	public void unRegister() {
 		if (mCurrentActivity == null) {
@@ -131,7 +131,7 @@ public class RestaurantSatelite extends BroadcastReceiver {
 	 * @param info User to return to
 	 * @throws JSONException 
 	 */
-	public void confirmDiningSession(DiningSession ds, UserInfo info) throws JSONException{
+	public void confirmDiningSession(DiningSession ds, UserInfo info) throws JSONException {
 		JSONObject jo = new JSONObject();
 		jo.put(DineOnConstants.OBJ_ID, ds.getObjId());
 		//TODO
@@ -139,8 +139,8 @@ public class RestaurantSatelite extends BroadcastReceiver {
 
 	/**
 	 * 
-	 * @param restaurant
-	 * @param user
+	 * @param restaurant to notify
+	 * @param user UserInfo
 	 */
 	public void notifyChangeRestaurantInfo(RestaurantInfo restaurant, UserInfo user) {
 		// TODO
@@ -149,8 +149,8 @@ public class RestaurantSatelite extends BroadcastReceiver {
 	@Override
 	public void onReceive(Context context, Intent intent) {
 		// Extract the channel they were sending to
-		String theirChannel = intent.getExtras() == null ? null :  
-			intent.getExtras().getString(DineOnConstants.PARSE_CHANNEL);
+		String theirChannel = intent.getExtras() == null ? null 
+				: intent.getExtras().getString(DineOnConstants.PARSE_CHANNEL);
 
 		// IF they don't have a channel are our activity died
 		// Then exit this method
@@ -194,12 +194,12 @@ public class RestaurantSatelite extends BroadcastReceiver {
 			if (DineOnConstants.ACTION_REQUEST_DINING_SESSION.equals(action)) {
 				// TODO Download UserInfo
 				// Get the table ID
-				final int tNum = tableNum;
+				final int T_NUM = tableNum;
 				uInfo.getInBackground(id, new GetCallback() {
 					public void done(ParseObject object, ParseException e) {
 						if (e == null) {
 							// Return updated user info
-							mCurrentActivity.onUserCheckedIn(new UserInfo(object), tNum);
+							mCurrentActivity.onUserCheckedIn(new UserInfo(object), T_NUM);
 						} else {
 							mCurrentActivity.onFail(e.getMessage());
 						}
@@ -257,9 +257,8 @@ public class RestaurantSatelite extends BroadcastReceiver {
 				Log.w(TAG, "Unknown action received: " + action);
 			}
 
-		} 
-		else if (mRestaurantSessionChannel != null && 
-				mRestaurantSessionChannel.equals(theirChannel)) {
+		} else if (mRestaurantSessionChannel != null 
+				&& mRestaurantSessionChannel.equals(theirChannel)) {
 			// TODO Do something here that updates the state of the current Dining Session 
 
 		}
@@ -276,6 +275,7 @@ public class RestaurantSatelite extends BroadcastReceiver {
 		/**
 		 * Notifies that a error occured.
 		 * Most likely it was a network error
+		 * @param message String
 		 */
 		void onFail(String message);
 
@@ -283,6 +283,7 @@ public class RestaurantSatelite extends BroadcastReceiver {
 		 * User attempted to check in to restaurant 
 		 * identified and register time.
 		 * @param user User that attempted to CheckIn
+		 * @param tableID user checks into
 		 */
 		void onUserCheckedIn(UserInfo user, int tableID);
 		

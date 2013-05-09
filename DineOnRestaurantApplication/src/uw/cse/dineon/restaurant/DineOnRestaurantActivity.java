@@ -1,30 +1,19 @@
 package uw.cse.dineon.restaurant;
 
-import java.lang.reflect.Method;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.Map;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import uw.cse.dineon.library.DiningSession;
-import uw.cse.dineon.library.Order;
 import uw.cse.dineon.library.Restaurant;
 import uw.cse.dineon.library.Storable;
 import uw.cse.dineon.library.UserInfo;
-import uw.cse.dineon.library.util.DevelopTools;
 import uw.cse.dineon.library.util.DineOnConstants;
-import uw.cse.dineon.library.util.DineOnReceiver;
 import uw.cse.dineon.library.util.ParseUtil;
 import uw.cse.dineon.library.util.Utility;
 import uw.cse.dineon.restaurant.RestaurantSatelite.SateliteListener;
 import uw.cse.dineon.restaurant.login.RestaurantLoginActivity;
 import uw.cse.dineon.restaurant.profile.ProfileActivity;
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
@@ -38,7 +27,6 @@ import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
-import com.parse.PushService;
 import com.parse.ParseQuery.CachePolicy;
 
 /**
@@ -56,7 +44,8 @@ public class DineOnRestaurantActivity extends FragmentActivity implements Sateli
 	 * authenticating and creating an account.
 	 * 
 	 * Abstract Function
-	 * 		mRestaurant != null if and only if this user is logged in with a proper Restaurant account
+	 * 		mRestaurant != null if and only if this user is logged in 
+	 * 		with a proper Restaurant account
 	 */
 	protected static final String TAG = DineOnRestaurantActivity.class.getSimpleName();
 
@@ -68,14 +57,14 @@ public class DineOnRestaurantActivity extends FragmentActivity implements Sateli
 	private Restaurant mRestaurant;
 	
 	/**
-	 * Just a variable for creation
+	 * Just a variable for creation.
 	 */
 	private String mRestaurantId;
 	
-	private DineOnRestaurantActivity This;
+	private DineOnRestaurantActivity thisResActivity;
 	
 	/**
-	 * Updates the UI based on the state of this activity
+	 * Updates the UI based on the state of this activity.
 	 */
 	protected void updateUI() {
 
@@ -98,7 +87,7 @@ public class DineOnRestaurantActivity extends FragmentActivity implements Sateli
 		
 		mDSRequestReceiver = new RestaurantSatelite();
 		
-		This = this;
+		thisResActivity = this;
 		
 		// Grab reference to the extras
 		Bundle extras = getIntent().getExtras();
@@ -139,7 +128,7 @@ public class DineOnRestaurantActivity extends FragmentActivity implements Sateli
 			@Override
 			public void done(ParseObject object, ParseException e) {
 				mRestaurant = new Restaurant(object);
-				mDSRequestReceiver.register(mRestaurant, This);
+				mDSRequestReceiver.register(mRestaurant, thisResActivity);
 			}
 		});
 	}
@@ -164,7 +153,7 @@ public class DineOnRestaurantActivity extends FragmentActivity implements Sateli
 		// TODO Adjust dynamic attributes of the menu
 		// Depending on the state of the current application
 		// Adjust what is presented to the user		
-		if (!isLoggedIn()){
+		if (!isLoggedIn()) {
 			setMenuToNonUser(menu);
 		}
 		return true;
@@ -263,7 +252,7 @@ public class DineOnRestaurantActivity extends FragmentActivity implements Sateli
 	 * 
 	 * @return restaurant associated with this
 	 */
-	protected Restaurant getRestaurant(){
+	protected Restaurant getRestaurant() {
 		return mRestaurant;
 	}
 
@@ -323,7 +312,8 @@ public class DineOnRestaurantActivity extends FragmentActivity implements Sateli
 //			info.unpackObject(user);
 //			newDS.addUser(info);
 //			// save to cloud
-//			Method m = DineOnRestaurantActivity.class.getMethod("onSavedDiningSession", Boolean.class, String.class, Storable.class); 
+//			Method m = DineOnRestaurantActivity.class.getMethod("onSavedDiningSession", 
+//					Boolean.class, String.class, Storable.class); 
 //			ParseUtil.saveDataToCloud(this, newDS, m);
 //
 //		} catch (NoSuchMethodException e) {
@@ -350,18 +340,17 @@ public class DineOnRestaurantActivity extends FragmentActivity implements Sateli
 				DiningSession session = (DiningSession) obj;
 				Map<String, String> attr = new HashMap<String, String>();
 				attr.put(DineOnConstants.OBJ_ID, objID);
-				if(session.getUsers() != null && 
-						!session.getUsers().isEmpty()){
+				if(session.getUsers() != null 
+						&& !session.getUsers().isEmpty()) {
 					ParseUtil.notifyApplication(
 							"uw.cse.dineon.user.CONFIRM_DINING_SESSION", 
 							attr, 
 							"uw_cse_dineon_" + session.getUsers().get(0).getName());
 
 					diningSessionAcquired(session);
-				}
-				else{
-					Log.d(TAG, "Error[invalid state]: " + 
-							"A dining session saved, but no user associated.");
+				} else {
+					Log.d(TAG, "Error[invalid state]: " 
+							+ "A dining session saved, but no user associated.");
 				}
 			} else {
 				Log.d(TAG, "Error: A dining session couldn't be saved.");
