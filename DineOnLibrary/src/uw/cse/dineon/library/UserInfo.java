@@ -4,6 +4,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.provider.ContactsContract.CommonDataKinds.Email;
 
+import com.parse.GetCallback;
 import com.parse.ParseObject;
 import com.parse.ParseUser;
 

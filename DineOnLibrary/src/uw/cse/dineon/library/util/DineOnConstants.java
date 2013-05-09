@@ -56,6 +56,7 @@ public class DineOnConstants {
 	
 	// Callback Key for braodcast receiver callbacks
 	public static final String OBJ_ID = "objectId";
+	public static final String TABLE_NUM = "TABLE_NUM";
 	
 	// Actions for broadcast resceivers
 	private static final String ACTION_PREFIX = "uw.cse.dineon.user.";
@@ -65,15 +66,21 @@ public class DineOnConstants {
 	public static final String ACTION_ORDER_PLACED = ACTION_PREFIX + "ORDER_PLACED";
 	public static final String ACTION_CHECK_OUT = ACTION_PREFIX + "CHECK_OUT";
 	public static final String ACTION_CHANGE_USER_INFO = ACTION_PREFIX + "CHANGE_USER_INFO";
+	public static final String ACTION_CUSTOMER_REQUEST = ACTION_PREFIX + "CUSTOMER_REQUEST";
 
 	// For Customer
 	public static final String ACTION_CONFIRM_DINING_SESSION = ACTION_PREFIX + "CONFIRM_DINING_SESSION";
 	public static final String ACTION_CHANGE_RESTAURANT_INFO = ACTION_PREFIX + "CHANGE_RESTAURANT_INFO";
 
-//	/**
-//	 * This the key for keeping track of the current channel
-//	 */
-//	public static final String KEY_CHANNEL = "_CHANNEL";
+	/**
+	 * Constant key for Parse extracting channel.
+	 */
+	public static final String PARSE_CHANNEL = "com.parse.Channel";
+	
+	/**
+	 * Constant key for data of push notification.
+	 */
+	public static final String PARSE_DATA = "com.parse.Data";
 	
 	/**
 	 * This is a channel prefix for Push Channels

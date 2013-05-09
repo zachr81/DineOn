@@ -209,6 +209,10 @@ public class DineOnUser extends Storable {
 		this.mDiningSession = diningSession;
 	}
 
+	public String getName() {
+		return mUserInfo.getName();
+	}
+
 
 
 
