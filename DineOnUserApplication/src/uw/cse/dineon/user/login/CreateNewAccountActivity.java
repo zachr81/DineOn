@@ -37,25 +37,21 @@ implements CreateNewAccountFragment.onCreateNewAccountListener {
 	private Context This;
 
 	private String mUserID;
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_create_new_account);
-		
+
 		This = this;
 	}
-	
+
 	/**
 	 * This automates the addition of the User Intent.
 	 * Should never be called when mUser is null.
 	 */
 	@Override
 	public void startActivity (Intent intent) {
-		if (DineOnConstants.DEBUG && mUserID == null) {
-			Toast.makeText(this, "Need to create or download a User", Toast.LENGTH_SHORT).show();
-			return;
-		}
 		intent.putExtra(DineOnConstants.KEY_USER, mUserID);
 		super.startActivity(intent);
 	}
@@ -68,117 +64,79 @@ implements CreateNewAccountFragment.onCreateNewAccountListener {
 				email, password, passwordRepeat);
 
 		if (completeRes.isValid()) {
-<<<<<<< HEAD
 			final ParseUser P_USER = new ParseUser();
 			P_USER.setUsername(username);
 			P_USER.setPassword(password);
 			P_USER.setEmail(email);
 			P_USER.signUpInBackground(new SignUpCallback() {
-=======
-			ParseUser user = new ParseUser();
-			user.setUsername(username);
-			user.setPassword(password);
-			user.setEmail(email);
-			user.signUpInBackground(new SignUpCallback() {
->>>>>>> 1c381787c1b7d1eb8c83985b10f49a9549421774
+
+					@Override
+					public void done(ParseException e) {
+						if (e == null) {
+							// Hooray! Let them use the app now.
+							// TODO Create a new User object and save it to the
+							// cloud and associate it with the actual user
+							// possibly by user name
+							final DineOnUser USER = new DineOnUser(ParseUser.getCurrentUser());
+							USER.saveInBackGround(new SaveCallback() {
+
+								@Override
+								public void done(ParseException e) {
+									if (e == null) {
+										// Success
+										mUserID = USER.getObjId();
+										Intent intent = 
+												new Intent(This, RestaurantSelectionActivity.class);
+										startActivity(intent);
+									} else {
+										showFailAlertDialog(e.getMessage());
+									}
+								}
+							});
+						} 
+						else {
+							// Sign up didn't succeed. Look at the ParseException
+							// to figure out what went wrong
+							showFailAlertDialog(e.getMessage());
+						}
+					}
+				});
+			}
+			else {
+				showFailAlertDialog(completeRes.getMessage());
+			}
+		}
+
+		@Override
+		public void onLoginWithFacebook() {
+			// TODO Later phase
+			mLoginWithFacebook = true;
+			finish();
+		}
+
+		@Override
+		public void onLoginWithTwitter() {
+			// TODO Later phase
+			DevelopTools.getUnimplementedDialog(this, null);		
+		}
+
+		/**
+		 * Just shows general failure dialog with this message.
+		 * @param error String to display
+		 */
+		private void showFailAlertDialog(String error) {
+			AlertDialog.Builder builder = new Builder(this);
+			builder.setTitle("Failed to create account");
+			builder.setMessage(error);
+			builder.setCancelable(true);
+			builder.setPositiveButton("Try Again", new OnClickListener() {
 
 				@Override
-				public void done(ParseException e) {
-					if (e == null) {
-						// Hooray! Let them use the app now.
-						// TODO Create a new User object and save it to the
-						// cloud and associate it with the actual user
-						// possibly by user name
-						final DineOnUser USER = new DineOnUser(ParseUser.getCurrentUser());
-						USER.saveInBackGround(new SaveCallback() {
-							
-							@Override
-							public void done(ParseException e) {
-								if (e == null) {
-									// Success
-									mUserID = USER.getObjId();
-									Intent intent = 
-											new Intent(This, RestaurantSelectionActivity.class);
-									startActivity(intent);
-								} else {
-									showFailAlertDialog(e.getMessage());
-								}
-							}
-						});
-					} 
-					else {
-						// Sign up didn't succeed. Look at the ParseException
-						// to figure out what went wrong
-						showFailAlertDialog(e.getMessage());
-					}
+				public void onClick(DialogInterface dialog, int which) {
+					dialog.cancel();
 				}
 			});
+			builder.create().show();
 		}
-		else {
-			showFailAlertDialog(completeRes.getMessage());
-		}
+
 	}
-
-<<<<<<< HEAD
-	@Override
-	public void finish() {
-		Intent retIntent = new Intent();
-		// Specify the user of facebook
-		retIntent.putExtra(UserLoginActivity.EXTRA_FACEBOOK, mLoginWithFacebook);
-
-		// Send restaurant instance back
-		if (mUser != null) {
-			retIntent.putExtra(DineOnConstants.KEY_USER, mUser.getObjId());
-		}
-		setResult(RESULT_OK, retIntent);
-		super.finish();
-	}
-=======
-//	@Override
-//	public void finish(){
-//		Intent retIntent = new Intent();
-//		// Specify the user of facebook
-//		retIntent.putExtra(UserLoginActivity.EXTRA_FACEBOOK, mLoginWithFacebook);
-//
-//		// Send restaurant instance back
-//		if (mUser != null) {
-//			retIntent.putExtra(DineOnConstants.KEY_USER, mUser.getObjId());
-//		}
-//		setResult(RESULT_OK, retIntent);
-//		super.finish();
-//	}
->>>>>>> 1c381787c1b7d1eb8c83985b10f49a9549421774
-
-	@Override
-	public void onLoginWithFacebook() {
-		// TODO Later phase
-		mLoginWithFacebook = true;
-		finish();
-	}
-
-	@Override
-	public void onLoginWithTwitter() {
-		// TODO Later phase
-		DevelopTools.getUnimplementedDialog(this, null);		
-	}
-
-	/**
-	 * Just shows general failure dialog with this message.
-	 * @param error String to display
-	 */
-	private void showFailAlertDialog(String error) {
-		AlertDialog.Builder builder = new Builder(this);
-		builder.setTitle("Failed to create account");
-		builder.setMessage(error);
-		builder.setCancelable(true);
-		builder.setPositiveButton("Try Again", new OnClickListener() {
-
-			@Override
-			public void onClick(DialogInterface dialog, int which) {
-				dialog.cancel();
-			}
-		});
-		builder.create().show();
-	}
-
-}

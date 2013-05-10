@@ -284,24 +284,24 @@ LoginFragment.OnLoginListener {
 		@Override
 		public void done(ParseUser user, ParseException e) {
 
+			destroyProgressDialog();
+			
 			// Unable to login
 			if (user == null) {
-				destroyProgressDialog();
 				Utility.getGeneralAlertDialog("Login Failed", 
 						"Invalid Login Credentials", thisCxt).show();
 				return;
 			} 
 			
 			if (e != null) {
-				destroyProgressDialog();
 				Utility.getGeneralAlertDialog("Login Failed", e.getMessage(), thisCxt).show();
 				return;
 			}
 
 			// This method at this point needs to produce a User Instance 
 			if (user.isNew()) {
-				destroyProgressDialog();
 				final DineOnUser M_USER = new DineOnUser(user);
+				createProgressDialog();
 				M_USER.saveInBackGround(new SaveCallback() {
 
 					/**
