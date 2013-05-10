@@ -1,6 +1,7 @@
 package uw.cse.dineon.user;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.json.JSONException;
@@ -18,6 +19,10 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.util.Log;
 
+import com.parse.FindCallback;
+import com.parse.GetCallback;
+import com.parse.ParseException;
+import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.PushService;
 import com.parse.ParseQuery.CachePolicy;
@@ -238,12 +243,12 @@ public class UserSatellite extends BroadcastReceiver {
 					+ " Our activity: " + mCurrentActivity);
 			return;
 		}
-		
+
 		// They are sending to the wrong channel
 		if (!theirChannel.equals(mChannel)) {
 			return;
 		}
-		
+
 		String id = null;
 		JSONObject jo;
 		try {
@@ -257,40 +262,64 @@ public class UserSatellite extends BroadcastReceiver {
 			// What does it mean when we fail like this?
 			return;
 		}
-		
+
 		String action = intent.getAction();
 		ParseQuery restInfo = new ParseQuery(RestaurantInfo.class.getSimpleName());
 		ParseQuery dsQuery = new ParseQuery(DiningSession.class.getSimpleName());
 		restInfo.setCachePolicy(CachePolicy.NETWORK_ONLY);
 		dsQuery.setCachePolicy(CachePolicy.NETWORK_ONLY);
-		
+
 		if (DineOnConstants.ACTION_CONFIRM_DINING_SESSION.equals(action)) {
-			
+			// WE received a dining session
+			ParseQuery query = new ParseQuery(DiningSession.class.getSimpleName());
+			query.getInBackground(id, new GetCallback() {
+				@Override
+				public void done(ParseObject object, ParseException e) {
+					if (e == null) {
+						mCurrentActivity.onInitialDiningSessionReceived(
+								new DiningSession(object));
+					} else {
+						mCurrentActivity.onFail(e.getMessage());
+					}
+				}
+			});
 		} else if (DineOnConstants.ACTION_CHANGE_RESTAURANT_INFO.equals(action)) {
-			
+			// WE received a dining session
+			ParseQuery query = new ParseQuery(DiningSession.class.getSimpleName());
+			query.getInBackground(id, new GetCallback() {
+				@Override
+				public void done(ParseObject object, ParseException e) {
+					if (e == null) {
+						mCurrentActivity.onRestaurantInfoChanged(
+								new RestaurantInfo(object));
+					} else {
+						mCurrentActivity.onFail(e.getMessage());
+					}
+				}
+			});
 		}
 	}
-	
+
 	/**
 	 * Listener for network callback from the Satellite.
 	 * @author mhotan
 	 */
 	public interface SatelliteListener {
-	
+
 		/**
 		 * Notifies that a error occured.
 		 * Most likely it was a network error
 		 * @param message Failure message that generally describes problem.
 		 */
 		void onFail(String message);
-		
+
 		/**
 		 * Notifies Customer user that a Dining session has been established
 		 * and returns it via this callback.
 		 * @param session Session created for user and now can user and update
 		 */
 		void onInitialDiningSessionReceived(DiningSession session);
-		
+
 		/**
 		 * Notifies the user that the restaurant has changed its state.
 		 * @param restaurant Restaurant that has recently changed
