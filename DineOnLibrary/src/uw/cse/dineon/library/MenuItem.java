@@ -10,7 +10,7 @@ import com.parse.ParseObject;
 public class MenuItem extends Storable {
 
 	// ID's used for easier parsing
-	private static final String PRODUCT_ID = "productID";
+	private static final String PRODUCT_ID = "productId";
 	private static final String PRICE = "price";
 	private static final String DESCRIPTION = "description";
 	private static final String TITLE = "title";

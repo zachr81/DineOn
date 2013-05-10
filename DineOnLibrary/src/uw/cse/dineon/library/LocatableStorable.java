@@ -24,7 +24,7 @@ public abstract class LocatableStorable extends Storable {
 	private static final String CLASS_NAME = LocatableStorable.class.getSimpleName();
 
 	// Key value helpers
-	private static final String LOCATION = "LOCATION";
+	private static final String LOCATION = "location";
 
 	/**
 	 * Location of this storable entity.

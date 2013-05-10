@@ -22,10 +22,10 @@ public class DiningSession extends TimeableStorable {
 
 	// ID's used for easier parsing
 	public static final String USERS = "users";
-	public static final String PENDING_ORDERS = "pending orders";
-	public static final String COMPLETED_ORDERS = "completed orders";
-	public static final String TABLE_ID = "tableID";
-	public static final String REQUESTS = "Requests";
+	public static final String PENDING_ORDERS = "pendingOrders";
+	public static final String COMPLETED_ORDERS = "completedOrders";
+	public static final String TABLE_ID = "tableId";
+	public static final String REQUESTS = "requests";
 
 	// list of users involved in this session
 	private final List<UserInfo> mUsers;	
