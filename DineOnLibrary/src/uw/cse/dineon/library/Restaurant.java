@@ -2,6 +2,7 @@ package uw.cse.dineon.library;
 
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
@@ -18,19 +19,36 @@ import com.parse.ParseUser;
  */
 public class Restaurant extends LocatableStorable {
 
+	// Parse used Keys
 	public static final String RESERVATION_LIST = "reservationList";
 	public static final String INFO = "info";
 	public static final String PAST_ORDERS = "pastOrders";
+	public static final String PAST_USERS = "pastUsers";
 	public static final String SESSIONS = "sessions";
 	public static final String CUSTOMER_REQUESTS = "customerRequests";
 
 	/**
-	 * 
+	 * Restaurant information.
 	 */
 	private final RestaurantInfo mRestInfo;
-	private final List<Reservation> mReservations;
+	
+	/**
+	 * Past Orders placed at this restaurant.
+	 */
 	private final List<Order> mPastOrders;
+	
+	/**
+	 * Past users that have visited the restaurant.
+	 */
+	private final List<UserInfo> mPastUsers;
+	
+	// Currently pending reservations
+	private final List<Reservation> mReservations;
+	
+	// Currently Active Dining sessions
 	private final List<DiningSession> mSessions;
+	
+	// Customer request that is not associated with the restaurant.
 	private final List<CustomerRequest> mCustomerRequests;
 
 	/**
@@ -41,8 +59,11 @@ public class Restaurant extends LocatableStorable {
 	public Restaurant(ParseUser user) {
 		super(Restaurant.class);
 		mRestInfo = new RestaurantInfo(user);
-		mReservations = new ArrayList<Reservation>();
+		
 		mPastOrders = new ArrayList<Order>();
+		mPastUsers = new ArrayList<UserInfo>();
+		
+		mReservations = new ArrayList<Reservation>();
 		mSessions = new ArrayList<DiningSession>();
 		mCustomerRequests = new ArrayList<CustomerRequest>();
 	}
@@ -55,9 +76,12 @@ public class Restaurant extends LocatableStorable {
 	public Restaurant(ParseObject po) {
 		super(po);
 		mRestInfo = new RestaurantInfo(po.getParseObject(INFO));
+		
+		mPastOrders = ParseUtil.toListOfStorables(Order.class, po.getList(PAST_ORDERS));
+		mPastUsers = ParseUtil.toListOfStorables(UserInfo.class, po.getList(PAST_USERS));
+		
 		mReservations = ParseUtil.toListOfStorables(
 				Reservation.class, po.getList(RESERVATION_LIST)); 
-		mPastOrders = ParseUtil.toListOfStorables(Order.class, po.getList(PAST_ORDERS));
 		mSessions = ParseUtil.toListOfStorables(DiningSession.class, po.getList(SESSIONS));
 		mCustomerRequests = ParseUtil.toListOfStorables(
 				CustomerRequest.class, po.getList(CUSTOMER_REQUESTS));
@@ -67,8 +91,13 @@ public class Restaurant extends LocatableStorable {
 	public ParseObject packObject() {
 		ParseObject po = super.packObject();
 		po.put(INFO, mRestInfo.packObject());
-		po.put(RESERVATION_LIST, ParseUtil.toListOfParseObjects(mReservations));
+		
+		// Pack up old stuff
 		po.put(PAST_ORDERS, ParseUtil.toListOfParseObjects(mPastOrders));
+		po.put(PAST_USERS, ParseUtil.toListOfParseObjects(mPastUsers));
+		
+		// 
+		po.put(RESERVATION_LIST, ParseUtil.toListOfParseObjects(mReservations));
 		po.put(SESSIONS, ParseUtil.toListOfParseObjects(mSessions));
 		po.put(CUSTOMER_REQUESTS, ParseUtil.toListOfParseObjects(mCustomerRequests));	
 		return po;
@@ -113,16 +142,17 @@ public class Restaurant extends LocatableStorable {
 	}
 
 	/**
-	 * Returns the current 
-	 * @return List<Order>
+	 * Returns the current list of past orders placed at the restaurant.
+	 * @return List<Order> of past orders placed at the restaurant.
 	 */
-	public List<Order> getOrders() {
+	public List<Order> getPastOrders() {
 		List<Order> copy = new ArrayList<Order>(mPastOrders.size());
 		Collections.copy(copy, mPastOrders);
 		return copy;
 	}
 
 	/**
+	 * List of current running dining sessions.
 	 * @return List<DiningSession>
 	 */
 	public List<DiningSession> getSessions() {
@@ -142,6 +172,30 @@ public class Restaurant extends LocatableStorable {
 	public void addCustomerRequest(CustomerRequest newReq) {
 		mCustomerRequests.add(newReq);
 	}
+	
+	/**
+	 * Adds the given reservation to the reservation list.
+	 * @param newReservation to add
+	 */
+	public void addReservation(Reservation newReservation) {
+		mReservations.add(newReservation);
+	}
+	
+	/**
+	 * Adds all the orders in to past orders. 
+	 * @param orders Completed orders
+	 */
+	public void addToPastOrders(Collection<Order> orders) {
+		mPastOrders.addAll(orders);
+	}
+	
+	/**
+	 * Adds given DiningSession to sessions.
+	 * @param session to add
+	 */
+	public void addDiningSession(DiningSession session) {
+		mSessions.add(session);
+	}
 
 	/**
 	 * Remove the specified CustomerRequest.
@@ -153,53 +207,34 @@ public class Restaurant extends LocatableStorable {
 	}
 
 	/**
-	 * Adds the given reservation to the reservation list.
-	 * @param newReservation to add
-	 */
-	public void addReservation(Reservation newReservation) {
-		mReservations.add(newReservation);
-	}
-
-	/**
 	 * Remove the specified reservation.
 	 * @param removeReservation from restaurant
 	 */
 	public void removeReservation(Reservation removeReservation) {
 		mReservations.remove(removeReservation);
-		// TODO Delete the customer request if it existed
+		// TODO Delete the reservation from parse
 	}
 
 	/**
-	 * Adds given order to orders.
-	 * @param order to add
+	 * Clears all the past orders from this restaurant.
 	 */
-	public void addOrder(Order order) {
-		mPastOrders.add(order);
+	public void clearPastOrders() {
+		// TODO For each of the Orders delete
+		// from parse
+		
+		mPastOrders.clear();
 	}
 
 	/**
-	 * Remove given order from orders.
-	 * @param order to remove
-	 */
-	public void removeOrder(Order order) {
-		mPastOrders.remove(order);
-	}
-
-	/**
-	 * Adds given DiningSession to sessions.
-	 * @param session to add
-	 */
-	public void addDiningSession(DiningSession session) {
-		mSessions.add(session);
-	}
-
-	/**
-	 * Removes given DiningSession from sessions.
+	 * Permanently deletes the dining session of this.
 	 * @param session to remove
 	 */
-	public void removeDiningSession(DiningSession session) {
+	public void delete(DiningSession session) {
 		mSessions.remove(session);
+		session.deleteFromCloud();
 	}
+	
+	
 
 	//	@Override
 	//	public void unpackObject(ParseObject pobj) {
