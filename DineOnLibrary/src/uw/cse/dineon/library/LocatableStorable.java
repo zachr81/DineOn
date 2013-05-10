@@ -108,9 +108,10 @@ public abstract class LocatableStorable extends Storable {
 		mCompleteObject.saveEventually();
 	}
 
-	@Override
+	/**
+	 * Representation Checker.
+	 */
 	protected void checkRep() {
-		super.checkRep();
 		if (mLocation == null) {
 			throw new RepresentationException("Null Geo Point!");
 		}

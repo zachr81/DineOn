@@ -7,6 +7,7 @@ import java.util.Collections;
 import java.util.List;
 
 import uw.cse.dineon.library.util.ParseUtil;
+import uw.cse.dineon.library.util.RepresentationException;
 
 import com.parse.ParseObject;
 import com.parse.ParseUser;
@@ -238,7 +239,6 @@ public class Restaurant extends LocatableStorable {
 		mSessions.remove(session);
 		session.deleteFromCloud();
 	}
-	
 	
 
 	//	@Override

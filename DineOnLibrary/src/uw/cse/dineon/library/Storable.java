@@ -128,7 +128,7 @@ public abstract class Storable {
 	/**
 	 * Checks representation invariant.
 	 */
-	protected void checkRep() {
+	private void checkRep() {
 		if (mCompleteObject == null) {
 			throw new RepresentationException("Null parse object for this storable instance");
 		}
