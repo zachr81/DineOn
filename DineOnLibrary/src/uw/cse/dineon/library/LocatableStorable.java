@@ -1,5 +1,6 @@
 package uw.cse.dineon.library;
 
+import uw.cse.dineon.library.util.RepresentationException;
 import android.location.Location;
 
 import com.parse.ParseGeoPoint;
@@ -24,7 +25,7 @@ public abstract class LocatableStorable extends Storable {
 	private static final String CLASS_NAME = LocatableStorable.class.getSimpleName();
 
 	// Key value helpers
-	private static final String LOCATION = "location";
+	private static final String LOCATION = "dineOnLocation";
 
 	/**
 	 * Location of this storable entity.
@@ -50,6 +51,8 @@ public abstract class LocatableStorable extends Storable {
 	 */
 	public LocatableStorable(Class<?> clazz) {
 		this(clazz, null);
+		// Set location to 0.0
+		mLocation = new ParseGeoPoint();
 	}
 
 	/**
@@ -105,4 +108,13 @@ public abstract class LocatableStorable extends Storable {
 		mCompleteObject.saveEventually();
 	}
 
+	@Override
+	protected void checkRep() {
+		super.checkRep();
+		if (mLocation == null) {
+			throw new RepresentationException("Null Geo Point!");
+		}
+	}
+	
+	
 }

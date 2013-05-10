@@ -115,9 +115,6 @@ implements CreateNewAccountListener {
 						// to figure out what went wrong
 						Utility.getFailedToCreateAccountDialog(e.getMessage(), thisCxt).show();
 					}
-
-					// Stop the alert dialog
-
 				}
 			});
 		} 

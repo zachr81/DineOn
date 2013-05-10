@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.DialogInterface.OnClickListener;
 import android.content.res.Configuration;
 import android.net.ConnectivityManager;
@@ -89,19 +90,27 @@ public final class Utility {
 	}
 	
 	/**
-	 * Creates an alert dialog
-	 * @param context
-	 * @param logicClass
-	 * @return
+	 * Creates an alert dialog that pushes user back to login page.
+	 * @param context Context to show Alert Dialog
+	 * @param loginClass Class of the Login to launch. 
+	 * @return The alert dialog.
 	 */
 	public static AlertDialog getBackToLoginAlertDialog(
-			Context context, Class<?> logicClass) {
+			final Context context, final Class<?> loginClass) {
 		AlertDialog.Builder b = new Builder(context);
 		b.setTitle("Failed to get you information");
 		b.setMessage("We have misplaced your information at this time.  " +
 				"Would you like to login again");
 		b.setCancelable(true);
 		b.setPositiveButton("Login", new OnClickListener() {
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				Intent i = new Intent(context, loginClass);
+				context.startActivity(i);
+			}
+		});
+		b.setNegativeButton("Cancel", new OnClickListener() {
+			
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
 				dialog.cancel();
