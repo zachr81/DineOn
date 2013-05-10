@@ -401,30 +401,30 @@ public final class ParseUtil {
 		return container;
 	}
 	
-//	/**
-//	 * 
-//	 * @param container ParseObject
-//	 * @return List<Storable>
-//	 */
-//	public static List<Storable> unpackListOfStorables(ParseObject container) {
-//		if (!container.getClassName().equals("Container")) {
-//			throw new IllegalArgumentException();
-//		}
-//
-//		List<Storable> list = new LinkedList<Storable>();
-//		try {
-//			for (String k : container.keySet()) {
-//				ParseObject p = container.getParseObject(k);
-//				Storable s = (Storable) Class.forName(p.getClassName()).newInstance();
+	/**
+	 * 
+	 * @param container ParseObject
+	 * @return List<Storable>
+	 */
+	public static List<Storable> unpackListOfStorables(ParseObject container) {
+		if (!container.getClassName().equals("Container")) {
+			throw new IllegalArgumentException();
+		}
+
+		List<Storable> list = new LinkedList<Storable>();
+		try {
+			for (String k : container.keySet()) {
+				ParseObject p = container.getParseObject(k);
+				Storable s = (Storable) Class.forName(p.getClassName()).newInstance();
 //				s.unpackObject(p);
-//				list.add(s);
-//			}
-//		} catch (Exception e) {
-//			Log.d(TAG, "Error: " + e.getMessage());
-//		}
-//
-//		return list;
-//	}
+				list.add(s);
+			}
+		} catch (Exception e) {
+			Log.d(TAG, "Error: " + e.getMessage());
+		}
+
+		return list;
+	}
 	
 	/**
 	 * Given a storable class definition produce an instance of the Class based

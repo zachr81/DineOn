@@ -50,7 +50,7 @@ public abstract class Storable {
 			parseObject.fetchIfNeeded();
 		} catch (ParseException e) {
 			// TODO Throw exception up the chain
-			// this notifies the user that there is no Intenet
+			// this notifies the user that there is no Intenet!
 			throw new RuntimeException("Fetching parse object: " + parseObject + " in "
 					+ " instance of class " + this.getClass().getSimpleName() + " FAILED!");
 		}
@@ -98,7 +98,7 @@ public abstract class Storable {
 			po.saveInBackground();
 		}
 	}
-	
+
 	/**
 	 * Save this Storable object in the background eventually.
 	 * Does not have resource preference
@@ -114,8 +114,16 @@ public abstract class Storable {
 			po.saveEventually();
 		}
 	}
-	
-	
+
+	/**
+	 * Saves on current thread.
+	 * NOTE Make sure you are in background thread
+	 * @throws ParseException Could not download
+	 */
+	public void saveOnCurrentThread() throws ParseException{
+		ParseObject po = this.packObject();
+		po.save();
+	}
 
 	//	/**
 	//	 *
@@ -130,10 +138,10 @@ public abstract class Storable {
 	//		dest.writeString(this.getObjId());
 	//	}
 	//	
-//	/**
-//	 * Fills this instance with the values found in this parcel
-//	 * @param source
-//	 */
+	//	/**
+	//	 * Fills this instance with the values found in this parcel
+	//	 * @param source
+	//	 */
 	//	protected void readFromParcel(Parcel source) {
 	//		this.setObjId(source.readString());
 	//	} 
@@ -145,5 +153,9 @@ public abstract class Storable {
 		if (mCompleteObject == null) {
 			throw new RepresentationException("Null parse object for this storable instance");
 		}
+	}
+	
+	public String toString(){
+		return mCompleteObject.toString();
 	}
 }

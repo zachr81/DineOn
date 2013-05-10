@@ -12,10 +12,10 @@ import com.parse.ParseUser;
  * @author Espeo196, Michael Hotan
  */
 public class UserInfo extends Storable {
-	public static final String PARSEUSER = "user";
-	public static final String IMAGE_ID = "image_id";
-	public static final String PROFILE_DESCRIPTION = "profile_description";
-	public static final String PHONE = "phone";
+	public static final String PARSEUSER = "parseUser";
+	public static final String IMAGE_ID = "imageId";
+	public static final String PROFILE_DESCRIPTION = "profileDescription";
+	public static final String PHONE = "userPhone";
 	
 	private static final String UNDETERMINED = "Undetermined";
 	
@@ -51,10 +51,10 @@ public class UserInfo extends Storable {
 	@Override
 	public ParseObject packObject() {
 		ParseObject po = super.packObject();
-		po.put(PARSEUSER, mUser);
-		po.put(IMAGE_ID, mImageID);
-		po.put(PROFILE_DESCRIPTION, mProfileDescription);
-		po.put(PHONE, mPhone);
+		po.put(PARSEUSER, (ParseUser)mUser);
+		po.put(IMAGE_ID, (String)mImageID);
+		po.put(PROFILE_DESCRIPTION, (String)mProfileDescription);
+		po.put(PHONE, (String)mPhone);
 		return po;
 	}
 	

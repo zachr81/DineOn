@@ -1,5 +1,8 @@
 package uw.cse.dineon.restaurant;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -18,14 +21,13 @@ import android.util.Log;
 import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
-import com.parse.ParsePush;
 import com.parse.ParseQuery;
 import com.parse.ParseQuery.CachePolicy;
 import com.parse.PushService;
 
 /**
  * This class manages the communication between the Restaurant
- * and the Customer.
+ * and all the restaurants current customers.
  * 
  * This Receiver manages all the actions that are required by contract
  * 
@@ -41,14 +43,14 @@ public class RestaurantSatellite extends BroadcastReceiver {
 	private Restaurant mParseRestaurant;
 
 	/**
-	 * Intent filter to control which actions to hold.
+	 * Intent filter to control which actions to listen for.
 	 */
 	private final IntentFilter mIF;
 
 	/**
-	 * The Channel associated with THIS Satelite.
+	 * The Channel associated with THIS Satellite.
 	 */
-	private String mThisChannel;
+	private String mChannel;
 
 	/**
 	 * The activity that the broadcast receiver is registers with.
@@ -78,37 +80,37 @@ public class RestaurantSatellite extends BroadcastReceiver {
 	 * Registers this activity and registers a channel for the inputed restaurant.
 	 * After this notification (if any) may arise
 	 * @param restaurant Restaurant to associate channel to
-	 * @param dineOnRestaurantActivity Activity that will be registered
+	 * @param activity Activity that will be registered
 	 */
 	public void register(Restaurant restaurant, 
-			DineOnRestaurantActivity dineOnRestaurantActivity){
+			DineOnRestaurantActivity activity){
 
 		// Check for null values
 		if (restaurant == null) {
 			throw new IllegalArgumentException(
 					"Null restaurant when registering broadcast receiver");
 		}
-		if (dineOnRestaurantActivity == null) {
+		if (activity == null) {
 			Log.w(TAG, "RestaurantSatelite attempted to register null activity");
 			return;
 		}
 
 		// Establish the activity 
-		mCurrentActivity = dineOnRestaurantActivity;
+		mCurrentActivity = activity;
 
 		// Establish a reference to the restaurant
 		mParseRestaurant = restaurant;
 
 		// Establish the channel to make 
-		mThisChannel = ParseUtil.getChannel(mParseRestaurant.getInfo());
+		mChannel = ParseUtil.getChannel(mParseRestaurant.getInfo());
 
 		// Registers this activity to this receiver
 		mCurrentActivity.registerReceiver(this, mIF);
 
 		// Subscribe to my channel so I can hear incoming messages
-		PushService.subscribe(dineOnRestaurantActivity, 
-				mThisChannel, 
-				dineOnRestaurantActivity.getClass());
+		PushService.subscribe(activity, 
+				mChannel, 
+				activity.getClass());
 	}
 
 	/**
@@ -120,7 +122,7 @@ public class RestaurantSatellite extends BroadcastReceiver {
 		}
 
 		mCurrentActivity.unregisterReceiver(this);
-		PushService.unsubscribe(mCurrentActivity, mThisChannel);
+		PushService.unsubscribe(mCurrentActivity, mChannel);
 		mCurrentActivity = null;
 	}
 
@@ -128,42 +130,34 @@ public class RestaurantSatellite extends BroadcastReceiver {
 	 * Sends a push notification to the customer.
 	 * This notifies the customer that a Dining Session has been
 	 * started and they are free to download it at the given pointer
+	 * Note: This does not save the dining sessin it just simply assumes
+	 * that its state is appropiate for a push.
 	 * @param ds DiningSession instance to return
 	 * @param user User to return to
 	 */
 	public void confirmDiningSession(DiningSession ds, UserInfo user) {
-		try {
-			JSONObject jo = new JSONObject();
-			jo.put(DineOnConstants.OBJ_ID, ds.getObjId());
-			ParsePush push = new ParsePush();
-			push.setChannel(ParseUtil.getChannel(user));
-			push.setData(jo);
-			push.sendInBackground();
-		} catch (JSONException e) {
-			mCurrentActivity.onFail("Failed notifying " 
-		+ user.getName() + " that there Dining Session has started");
-		}
+		Map<String, String> attr = new HashMap<String, String>();
+		attr.put(DineOnConstants.OBJ_ID, ds.getObjId());
+		ParseUtil.notifyApplication(
+				DineOnConstants.ACTION_CONFIRM_DINING_SESSION,
+				attr,
+				ParseUtil.getChannel(user));
 	}
 
 	/**
-	 * Notifies User assocaited with UserInfo that our
+	 * Notifies User associated with UserInfo that our
 	 * Restaurant profile information has changed.  
-	 * Note this is intended to be called after the save of restaurant.
+	 * Note: this is intended to be called after the save of restaurant.
 	 * @param restaurant restaurant object to notify update
 	 * @param user User to notify
 	 */
 	public void notifyChangeRestaurantInfo(RestaurantInfo restaurant, UserInfo user) {
-		try {
-			JSONObject jo = new JSONObject();
-			jo.put(DineOnConstants.OBJ_ID, restaurant.getObjId());
-			ParsePush push = new ParsePush();
-			push.setChannel(ParseUtil.getChannel(user));
-			push.setData(jo);
-			push.sendInBackground();
-		} catch (JSONException e) {
-			mCurrentActivity.onFail("Failed notifying " 
-		+ user.getName() + " that our internal state ");
-		}
+		Map<String, String> attr = new HashMap<String, String>();
+		attr.put(DineOnConstants.OBJ_ID, restaurant.getObjId());
+		ParseUtil.notifyApplication(
+				DineOnConstants.ACTION_CHANGE_RESTAURANT_INFO,
+				attr,
+				ParseUtil.getChannel(user));
 	}
 
 	@Override
@@ -181,110 +175,111 @@ public class RestaurantSatellite extends BroadcastReceiver {
 		}
 
 		// As an assurance we assert their channel is equal to ours
-		if (theirChannel.equals(mThisChannel)) {
-			// Extract the 
-			String id = null;
-			JSONObject jobj;
-			try {
-				jobj = new JSONObject(
-						intent.getExtras().getString(DineOnConstants.PARSE_DATA));
-				id = jobj.getString(DineOnConstants.OBJ_ID);
-			} 
-			catch (JSONException e) {
-				Log.d(TAG, "Customer sent fail case: " + e.getMessage());
-				// TODO handle failure to extract id
-				// What does it mean when we fail like this?
-				return;
-			} 
-
-			int tableNum = -1; //Default Value
-			try {
-				tableNum = jobj.getInt(DineOnConstants.TABLE_NUM);
-			} catch (JSONException e) {
-				// Leave it at -1
-			}
-
-			String action = intent.getAction();
-			ParseQuery uInfo = new ParseQuery(UserInfo.class.getSimpleName());
-			ParseQuery dsQuery = new ParseQuery(DiningSession.class.getSimpleName());
-			uInfo.setCachePolicy(CachePolicy.NETWORK_ONLY);
-			dsQuery.setCachePolicy(CachePolicy.NETWORK_ONLY);
-
-			if (DineOnConstants.ACTION_REQUEST_DINING_SESSION.equals(action)) {
-				// TODO Download UserInfo
-				// Get the table ID
-				final int tNum = tableNum;
-				uInfo.getInBackground(id, new GetCallback() {
-					public void done(ParseObject object, ParseException e) {
-						if (e == null) {
-							// Return updated user info
-							mCurrentActivity.onUserCheckedIn(new UserInfo(object), tNum);
-						} else {
-							mCurrentActivity.onFail(e.getMessage());
-						}
-					}
-				});
-			} else if (DineOnConstants.ACTION_ORDER_PLACED.equals(action)) {
-				// TODO Download Dining Session
-				dsQuery.getInBackground(id, new GetCallback() {
-					public void done(ParseObject object, ParseException e) {
-						if (e == null) {
-							// object will be your game score
-							mCurrentActivity.onOrderPlaced(new DiningSession(object));
-						} else {
-							mCurrentActivity.onFail(e.getMessage());
-						}
-					}
-				});
-			} else if (DineOnConstants.ACTION_CUSTOMER_REQUEST.equals(action)) {
-				// TODO Download Dining Session
-				dsQuery.getInBackground(id, new GetCallback() {
-					public void done(ParseObject object, ParseException e) {
-						if (e == null) {
-							// object will be your game score
-							mCurrentActivity.onCustomerRequest(new DiningSession(object));
-						} else {
-							mCurrentActivity.onFail(e.getMessage());
-						}
-					}
-				});
-			} else if (DineOnConstants.ACTION_CHECK_OUT.equals(action)) {
-				// TODO Download Dining Session
-				dsQuery.getInBackground(id, new GetCallback() {
-					public void done(ParseObject object, ParseException e) {
-						if (e == null) {
-							// object will be your game score
-							mCurrentActivity.onCheckedOut(new DiningSession(object));
-						} else {
-							mCurrentActivity.onFail(e.getMessage());
-						}
-					}
-				});
-			} else if (DineOnConstants.ACTION_CHANGE_USER_INFO.equals(action)) {
-				// TODO Download UserInfo
-				uInfo.getInBackground(id, new GetCallback() {
-					public void done(ParseObject object, ParseException e) {
-						if (e == null) {
-							// object will be your game score
-							mCurrentActivity.onUserChanged(new UserInfo(object));
-						} else {
-							mCurrentActivity.onFail(e.getMessage());
-						}
-					}
-				});
-			} else {
-				Log.w(TAG, "Unknown action received: " + action);
-			}
-
-		} 
-		else if (mRestaurantSessionChannel != null && 
-				mRestaurantSessionChannel.equals(theirChannel)) {
-			// TODO Do something here that updates the state of the current Dining Session 
-
+		if (!theirChannel.equals(mChannel)) { 
+			return;
 		}
+		// Extract the 
+		String id = null;
+		JSONObject jobj;
+		try {
+			jobj = new JSONObject(
+					intent.getExtras().getString(DineOnConstants.PARSE_DATA));
+			id = jobj.getString(DineOnConstants.OBJ_ID);
+		} 
+		catch (JSONException e) {
+			Log.d(TAG, "Customer sent fail case: " + e.getMessage());
+			mCurrentActivity.onFail(e.getMessage());
+			// TODO handle failure to extract id
+			// What does it mean when we fail like this?
+			return;
+		} 
+
+		int tableNum = -1; //Default Value
+		try {
+			tableNum = jobj.getInt(DineOnConstants.TABLE_NUM);
+		} catch (JSONException e) {
+			// Leave it at -1
+		}
+
+		String action = intent.getAction();
+		ParseQuery uInfo = new ParseQuery(UserInfo.class.getSimpleName());
+		ParseQuery dsQuery = new ParseQuery(DiningSession.class.getSimpleName());
+		uInfo.setCachePolicy(CachePolicy.NETWORK_ONLY);
+		dsQuery.setCachePolicy(CachePolicy.NETWORK_ONLY);
+
+		if (DineOnConstants.ACTION_REQUEST_DINING_SESSION.equals(action)) {
+			// TODO Download UserInfo
+			// Get the table ID
+			final int tNum = tableNum;
+			uInfo.getInBackground(id, new GetCallback() {
+				public void done(ParseObject object, ParseException e) {
+					if (e == null) {
+						// Return updated user info
+						mCurrentActivity.onUserCheckedIn(new UserInfo(object), tNum);
+					} else {
+						mCurrentActivity.onFail(e.getMessage());
+					}
+				}
+			});
+		} else if (DineOnConstants.ACTION_ORDER_PLACED.equals(action)) {
+			// TODO Download Dining Session
+			dsQuery.getInBackground(id, new GetCallback() {
+				public void done(ParseObject object, ParseException e) {
+					if (e == null) {
+						// object will be your game score
+						mCurrentActivity.onOrderPlaced(new DiningSession(object));
+					} else {
+						mCurrentActivity.onFail(e.getMessage());
+					}
+				}
+			});
+		} else if (DineOnConstants.ACTION_CUSTOMER_REQUEST.equals(action)) {
+			// TODO Download Dining Session
+			dsQuery.getInBackground(id, new GetCallback() {
+				public void done(ParseObject object, ParseException e) {
+					if (e == null) {
+						// object will be your game score
+						mCurrentActivity.onCustomerRequest(new DiningSession(object));
+					} else {
+						mCurrentActivity.onFail(e.getMessage());
+					}
+				}
+			});
+		} else if (DineOnConstants.ACTION_CHECK_OUT.equals(action)) {
+			// TODO Download Dining Session
+			dsQuery.getInBackground(id, new GetCallback() {
+				public void done(ParseObject object, ParseException e) {
+					if (e == null) {
+						// object will be your game score
+						mCurrentActivity.onCheckedOut(new DiningSession(object));
+					} else {
+						mCurrentActivity.onFail(e.getMessage());
+					}
+				}
+			});
+		} else if (DineOnConstants.ACTION_CHANGE_USER_INFO.equals(action)) {
+			// TODO Download UserInfo
+			uInfo.getInBackground(id, new GetCallback() {
+				public void done(ParseObject object, ParseException e) {
+					if (e == null) {
+						// object will be your game score
+						mCurrentActivity.onUserChanged(new UserInfo(object));
+					} else {
+						mCurrentActivity.onFail(e.getMessage());
+					}
+				}
+			});
+		} else {
+			Log.w(TAG, "Unknown action received: " + action);
+		}
+
+		// TODO What was this?
+//		else if (mRestaurantSessionChannel != null && 
+//				mRestaurantSessionChannel.equals(theirChannel)) {
+//			// TODO Do something here that updates the state of the current Dining Session 
+//
+//		}
 	}
-
-
 
 	/**
 	 * Listener for Activities to implement to receive action.
@@ -295,6 +290,7 @@ public class RestaurantSatellite extends BroadcastReceiver {
 		/**
 		 * Notifies that a error occured.
 		 * Most likely it was a network error
+		 * @param message Failure message that generally describes problem.
 		 */
 		void onFail(String message);
 
@@ -302,6 +298,7 @@ public class RestaurantSatellite extends BroadcastReceiver {
 		 * User attempted to check in to restaurant 
 		 * identified and register time.
 		 * @param user User that attempted to CheckIn
+		 * @param tableID Table ID that the user has checked in at.
 		 */
 		void onUserCheckedIn(UserInfo user, int tableID);
 
