@@ -11,9 +11,11 @@ import org.json.JSONObject;
 
 import uw.cse.dineon.library.DineOnUser;
 import uw.cse.dineon.library.DiningSession;
+import uw.cse.dineon.library.RestaurantInfo;
 import uw.cse.dineon.library.Storable;
 import uw.cse.dineon.library.util.DineOnConstants;
 import uw.cse.dineon.library.util.ParseUtil;
+import uw.cse.dineon.user.UserSatellite.SatelliteListener;
 import uw.cse.dineon.user.bill.CurrentOrderActivity;
 import uw.cse.dineon.user.checkin.IntentIntegrator;
 import uw.cse.dineon.user.checkin.QRCheckin;
@@ -50,7 +52,7 @@ import com.parse.PushService;
  * In Particular their user specific preferences
  * @author mhotan
  */
-public class DineOnUserActivity extends FragmentActivity {
+public class DineOnUserActivity extends FragmentActivity implements SatelliteListener {
 
 	private static final String TAG = DineOnUserActivity.class.getSimpleName();
 
@@ -499,5 +501,23 @@ public class DineOnUserActivity extends FragmentActivity {
 		}
 
 
+	}
+
+	@Override
+	public void onFail(String message) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onInitialDiningSessionReceived(DiningSession session) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onRestaurantInfoChanged(RestaurantInfo restaurant) {
+		// TODO Auto-generated method stub
+		
 	}
 }

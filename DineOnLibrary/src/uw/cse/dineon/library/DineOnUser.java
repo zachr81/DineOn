@@ -83,13 +83,14 @@ public class DineOnUser extends Storable {
 	@Override
 	public ParseObject packObject() {
 		ParseObject pobj = super.packObject();
-		pobj.put(USER_INFO, mUserInfo.packObject());
+		pobj.put(USER_INFO, (ParseObject)mUserInfo.packObject());
 		pobj.put(FAVORITE_RESTAURANTS, ParseUtil.toListOfParseObjects(mFavRestaurants));
 		pobj.put(RESERVATIONS, ParseUtil.toListOfParseObjects(mReservations));
 		pobj.put(FRIEND_LIST, ParseUtil.toListOfParseObjects(mFriendsLists));
 		if (mDiningSession != null) {
 			pobj.put(DineOnUser.DINING_SESSION, this.mDiningSession.packObject());
 		}
+
 		return pobj;
 	}
 
