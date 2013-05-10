@@ -42,13 +42,19 @@ public class Restaurant extends LocatableStorable {
 	 */
 	private final List<UserInfo> mPastUsers;
 	
-	// Currently pending reservations
+	/**
+	 * Currently pending reservations.
+	 */
 	private final List<Reservation> mReservations;
 	
-	// Currently Active Dining sessions
+	/**
+	 *  Currently Active Dining sessions.
+	 */
 	private final List<DiningSession> mSessions;
 	
-	// Customer request that is not associated with the restaurant.
+	/**
+	 * Customer request that is not associated with the restaurant.
+	 */
 	private final List<CustomerRequest> mCustomerRequests;
 
 	/**
@@ -96,7 +102,7 @@ public class Restaurant extends LocatableStorable {
 		po.put(PAST_ORDERS, ParseUtil.toListOfParseObjects(mPastOrders));
 		po.put(PAST_USERS, ParseUtil.toListOfParseObjects(mPastUsers));
 		
-		// 
+		// Pack current stuff
 		po.put(RESERVATION_LIST, ParseUtil.toListOfParseObjects(mReservations));
 		po.put(SESSIONS, ParseUtil.toListOfParseObjects(mSessions));
 		po.put(CUSTOMER_REQUESTS, ParseUtil.toListOfParseObjects(mCustomerRequests));	
@@ -219,8 +225,7 @@ public class Restaurant extends LocatableStorable {
 	 * Clears all the past orders from this restaurant.
 	 */
 	public void clearPastOrders() {
-		// TODO For each of the Orders delete
-		// from parse
+		// TODO For each of the Orders delete from parse
 		
 		mPastOrders.clear();
 	}

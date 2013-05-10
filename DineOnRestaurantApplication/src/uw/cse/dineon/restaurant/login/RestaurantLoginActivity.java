@@ -77,11 +77,6 @@ LoginFragment.OnLoginListener {
 	 */
 	@Override
 	public void startActivity(Intent intent) {
-		if (DineOnConstants.DEBUG && mRestaurantID == null) {
-			Toast.makeText(this, "Need to create or download a User",
-					Toast.LENGTH_SHORT).show();
-			return;
-		}
 		intent.putExtra(DineOnConstants.KEY_RESTAURANT, mRestaurantID);
 		super.startActivity(intent);
 	}

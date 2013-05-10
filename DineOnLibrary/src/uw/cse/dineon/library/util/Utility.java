@@ -88,5 +88,27 @@ public final class Utility {
 		return b.create();
 	}
 	
+	/**
+	 * Creates an alert dialog
+	 * @param context
+	 * @param logicClass
+	 * @return
+	 */
+	public static AlertDialog getBackToLoginAlertDialog(
+			Context context, Class<?> logicClass) {
+		AlertDialog.Builder b = new Builder(context);
+		b.setTitle("Failed to get you information");
+		b.setMessage("We have misplaced your information at this time.  " +
+				"Would you like to login again");
+		b.setCancelable(true);
+		b.setPositiveButton("Login", new OnClickListener() {
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				dialog.cancel();
+			}
+		});
+		return b.create();
+	
+	}
 
 }
