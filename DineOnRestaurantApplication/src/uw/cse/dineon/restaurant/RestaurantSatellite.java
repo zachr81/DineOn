@@ -194,9 +194,11 @@ public class RestaurantSatellite extends BroadcastReceiver {
 			return;
 		} 
 
-		int tableNum = -1; //Default Value
+		String tableNumStr = "" + -1; //Default Value
+		int tableNum = -1;
 		try {
-			tableNum = jobj.getInt(DineOnConstants.TABLE_NUM);
+			tableNumStr = jobj.getString(DineOnConstants.TABLE_NUM);
+			tableNum = Integer.valueOf(tableNumStr);
 		} catch (JSONException e) {
 			// Leave it at -1
 		}
@@ -221,6 +223,8 @@ public class RestaurantSatellite extends BroadcastReceiver {
 					}
 				}
 			});
+			
+			Log.v(TAG, "Dingin Session received!");
 		} else if (DineOnConstants.ACTION_ORDER_PLACED.equals(action)) {
 			// TODO Download Dining Session
 			dsQuery.getInBackground(id, new GetCallback() {
