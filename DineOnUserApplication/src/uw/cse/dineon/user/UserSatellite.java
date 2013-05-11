@@ -303,13 +303,8 @@ public class UserSatellite extends BroadcastReceiver {
 				@Override
 				public void done(ParseObject object, ParseException e) {
 					if (e == null) {
-						try {
-							mCurrentActivity.onRestaurantInfoChanged(
-									new RestaurantInfo(object));
-						} catch (ParseException e1) {
-							// TODO Auto-generated catch block
-							e1.printStackTrace();
-						}
+						mCurrentActivity.onRestaurantInfoChanged(
+								new RestaurantInfo(object));
 					} else {
 						mCurrentActivity.onFail(e.getMessage());
 					}
