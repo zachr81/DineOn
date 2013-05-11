@@ -286,8 +286,12 @@ public class UserSatellite extends BroadcastReceiver {
 				@Override
 				public void done(ParseObject object, ParseException e) {
 					if (e == null) {
-						mCurrentActivity.onInitialDiningSessionReceived(
-								new DiningSession(object));
+						try {
+							mCurrentActivity.onInitialDiningSessionReceived(
+									new DiningSession(object));
+						} catch (ParseException e1) {
+							mCurrentActivity.onFail(e1.getMessage());
+						}
 					} else {
 						// Some error possibly internet
 						mCurrentActivity.onFail(e.getMessage());
@@ -303,8 +307,12 @@ public class UserSatellite extends BroadcastReceiver {
 				@Override
 				public void done(ParseObject object, ParseException e) {
 					if (e == null) {
-						mCurrentActivity.onRestaurantInfoChanged(
-								new RestaurantInfo(object));
+						try {
+							mCurrentActivity.onRestaurantInfoChanged(
+									new RestaurantInfo(object));
+						} catch (ParseException e1) {
+							mCurrentActivity.onFail(e1.getMessage());
+						}
 					} else {
 						mCurrentActivity.onFail(e.getMessage());
 					}
