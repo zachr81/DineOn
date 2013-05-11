@@ -311,8 +311,7 @@ public class UserSatellite extends BroadcastReceiver {
 							mCurrentActivity.onRestaurantInfoChanged(
 									new RestaurantInfo(object));
 						} catch (ParseException e1) {
-							// TODO Auto-generated catch block
-							e1.printStackTrace();
+							mCurrentActivity.onFail(e1.getMessage());
 						}
 					} else {
 						mCurrentActivity.onFail(e.getMessage());
