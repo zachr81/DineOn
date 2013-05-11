@@ -201,6 +201,7 @@ public class RestaurantSatellite extends BroadcastReceiver {
 			tableNum = Integer.valueOf(tableNumStr);
 		} catch (JSONException e) {
 			// Leave it at -1
+			Log.e(TAG, "JSON Exception occured on push request.");
 		}
 
 		String action = intent.getAction();
@@ -212,12 +213,16 @@ public class RestaurantSatellite extends BroadcastReceiver {
 		if (DineOnConstants.ACTION_REQUEST_DINING_SESSION.equals(action)) {
 			// TODO Download UserInfo
 			// Get the table ID
-			final int tNum = tableNum;
+			final int TNUM = tableNum;
 			uInfo.getInBackground(id, new GetCallback() {
 				public void done(ParseObject object, ParseException e) {
 					if (e == null) {
 						// Return updated user info
-						mCurrentActivity.onUserCheckedIn(new UserInfo(object), tNum);
+						try {
+							mCurrentActivity.onUserCheckedIn(new UserInfo(object), TNUM);
+						} catch (ParseException e1) {
+							mCurrentActivity.onFail(e1.getMessage());
+						}
 					} else {
 						mCurrentActivity.onFail(e.getMessage());
 					}
@@ -231,7 +236,11 @@ public class RestaurantSatellite extends BroadcastReceiver {
 				public void done(ParseObject object, ParseException e) {
 					if (e == null) {
 						// object will be your game score
-						mCurrentActivity.onOrderPlaced(new DiningSession(object));
+						try {
+							mCurrentActivity.onOrderPlaced(new DiningSession(object));
+						} catch (ParseException e1) {
+							mCurrentActivity.onFail(e1.getMessage());
+						}
 					} else {
 						mCurrentActivity.onFail(e.getMessage());
 					}
@@ -243,7 +252,11 @@ public class RestaurantSatellite extends BroadcastReceiver {
 				public void done(ParseObject object, ParseException e) {
 					if (e == null) {
 						// object will be your game score
-						mCurrentActivity.onCustomerRequest(new DiningSession(object));
+						try {
+							mCurrentActivity.onCustomerRequest(new DiningSession(object));
+						} catch (ParseException e1) {
+							mCurrentActivity.onFail(e1.getMessage());						
+						}
 					} else {
 						mCurrentActivity.onFail(e.getMessage());
 					}
@@ -255,7 +268,11 @@ public class RestaurantSatellite extends BroadcastReceiver {
 				public void done(ParseObject object, ParseException e) {
 					if (e == null) {
 						// object will be your game score
-						mCurrentActivity.onCheckedOut(new DiningSession(object));
+						try {
+							mCurrentActivity.onCheckedOut(new DiningSession(object));
+						} catch (ParseException e1) {
+							mCurrentActivity.onFail(e1.getMessage());
+						}
 					} else {
 						mCurrentActivity.onFail(e.getMessage());
 					}
@@ -267,7 +284,11 @@ public class RestaurantSatellite extends BroadcastReceiver {
 				public void done(ParseObject object, ParseException e) {
 					if (e == null) {
 						// object will be your game score
-						mCurrentActivity.onUserChanged(new UserInfo(object));
+						try {
+							mCurrentActivity.onUserChanged(new UserInfo(object));
+						} catch (ParseException e1) {
+							mCurrentActivity.onFail(e1.getMessage());
+						}
 					} else {
 						mCurrentActivity.onFail(e.getMessage());
 					}
