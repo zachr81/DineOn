@@ -88,7 +88,7 @@
     -->
     <!-- version-tag: custom -->
     <import file="${sdk.dir}/tools/ant/build.xml" />
-    <target name="unittests" depends="debug,install" >
+	<target name="unittests" depends="debug,install" >
         <property name="unittestlog.file" value="unit_tests_log.txt" />
         <record name="${unittestlog.file}" action="start" />
         <antcall target="test" />
@@ -102,5 +102,5 @@
         </fail>
         <echo>Unit tests passed!</echo>
     </target>
-
+	
 </project>
