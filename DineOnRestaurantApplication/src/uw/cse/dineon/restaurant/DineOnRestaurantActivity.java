@@ -364,21 +364,6 @@ implements SateliteListener {
 
 	}
 
-	//
-	//	/**
-	//	 * Helper to save/update Restaurant associated with this activity.
-	//	 */
-	//	private void saveRestaurant() {
-	//		try {
-	//			ParseUtil.saveDataToCloud(mRestaurant, 
-	//					Restaurant.class.getMethod("onSaveInstanceState", 
-	//							new Class[]{Bundle.class}));
-	//		} catch (NoSuchMethodException e) {
-	//			// TODO Auto-generated catch block
-	//			e.printStackTrace();
-	//		}
-	//	}
-
 	/*
 //	 * Brodcast receiver callback specific methods 
 //	 ************************************************************************/
