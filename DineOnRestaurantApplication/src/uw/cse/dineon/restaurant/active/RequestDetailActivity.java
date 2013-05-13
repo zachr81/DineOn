@@ -1,5 +1,6 @@
 package uw.cse.dineon.restaurant.active;
 
+import uw.cse.dineon.library.util.DineOnConstants;
 import uw.cse.dineon.restaurant.DineOnRestaurantActivity;
 import uw.cse.dineon.restaurant.R;
 import android.os.Bundle;
@@ -31,7 +32,7 @@ public static final String EXTRA_REQUEST = "request";
 			RequestDetailFragment frag = (RequestDetailFragment) getSupportFragmentManager().
 					findFragmentById(R.id.fragment1);
 			if (frag != null && frag.isInLayout()) {
-				frag.setRequest(request);
+				frag.setRequest(request, null);
 			}
 		}
 	}
