@@ -11,7 +11,10 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -22,13 +25,13 @@ import android.widget.TextView;
 
 /**
  * Fragment that presents a editable list of menu items of this restaurant.
+ * 
  * @author mhotan
  */
 public class MenuItemsFragment extends ListFragment {
 
 	/**
-	 * Adapter for restaurant menu Item adapter.
-	 * Use this to add new Menuitems
+	 * Adapter for restaurant menu Item adapter. Use this to add new Menuitems
 	 */
 	private RestaurantMenuItemAdapter mAdapter;
 
@@ -39,15 +42,19 @@ public class MenuItemsFragment extends ListFragment {
 
 	/**
 	 * Creates a MenuItemsFragment that is ready to build and view.
-	 * @param info Restaurant that contains a group of menus that each contain menu items
-	 * @return A MenuItemsFragment that is ready to display all the items of the restaurant
+	 * 
+	 * @param info
+	 *            Restaurant that contains a group of menus that each contain
+	 *            menu items
+	 * @return A MenuItemsFragment that is ready to display all the items of the
+	 *         restaurant
 	 */
 	public static MenuItemsFragment newInstance(RestaurantInfo info) {
 		// Prepare a Bundle argument
 		// for starting an activity with
 		MenuItemsFragment frag = new MenuItemsFragment();
 		Bundle args = new Bundle();
-//		args.putParcelable(DineOnConstants.KEY_RESTAURANTINFO, info);
+		// args.putParcelable(DineOnConstants.KEY_RESTAURANTINFO, info);
 		frag.setArguments(args);
 		return frag;
 	}
@@ -55,29 +62,46 @@ public class MenuItemsFragment extends ListFragment {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		setHasOptionsMenu(true);
 
-		// IF there are arguments 
+		// IF there are arguments
 		// then check if there is a restaurant info instance
 		// info can be null
-		RestaurantInfo info = getArguments() != null ? (RestaurantInfo)
-				getArguments().getParcelable(DineOnConstants.KEY_RESTAURANTINFO) : null;
+		RestaurantInfo info = getArguments() != null ? (RestaurantInfo) getArguments()
+				.getParcelable(DineOnConstants.KEY_RESTAURANTINFO) : null;
 
-				// If arguments existed and it invluded a Restaurant Info
-				// Proceed 
-				if (!isValid(info)) {
-					List<String> defList = new ArrayList<String>();
-					defList.add("Illegal Restaurant Info State");
-					ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), 
-							android.R.layout.simple_list_item_1, defList);
-					setListAdapter(adapter);
-				} 
-				else {
-					//					List<Menu> menus = info.getMenus
-					// TODO Populate the screen with 
-					List<MenuItem> menuitems = new ArrayList<MenuItem>();
-					mAdapter = new RestaurantMenuItemAdapter(getActivity(), menuitems);
-					setListAdapter(mAdapter);
-				}
+		// If arguments existed and it invluded a Restaurant Info
+		// Proceed
+		if (!isValid(info)) {
+			List<String> defList = new ArrayList<String>();
+			defList.add("Illegal Restaurant Info State");
+			ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(),
+					android.R.layout.simple_list_item_1, defList);
+			setListAdapter(adapter);
+		} else {
+			// List<Menu> menus = info.getMenus
+			// TODO Populate the screen with
+			List<MenuItem> menuitems = new ArrayList<MenuItem>();
+			mAdapter = new RestaurantMenuItemAdapter(getActivity(), menuitems);
+			setListAdapter(mAdapter);
+		}
+	}
+	
+	@Override
+	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+	    // TODO Add your menu entries here
+	    super.onCreateOptionsMenu(menu, inflater);
+	}
+	
+	@Override
+	public boolean onOptionsItemSelected(android.view.MenuItem item){
+		if(item.getItemId() == R.id.menu_add_menu_item){
+				//Add new blank item
+				
+				return true;
+		}
+		
+		return super.onOptionsItemSelected(item);
 	}
 
 	@Override
@@ -85,24 +109,25 @@ public class MenuItemsFragment extends ListFragment {
 		super.onAttach(activity);
 		if (activity instanceof MenuItemListener) {
 			mListener = (MenuItemListener) activity;
-		} 
-		else {
+		} else {
 			throw new ClassCastException(activity.toString()
 					+ " must implemenet MenuItemsFragment.MenuItemListener");
 		}
 	}
-	
+
 	/**
-	 * Checks whether the current restaurant info is a valid.
-	 * restaurant info instance
-	 * @param info info to be analyzed
+	 * Checks whether the current restaurant info is a valid. restaurant info
+	 * instance
+	 * 
+	 * @param info
+	 *            info to be analyzed
 	 * @return true if it is valid
 	 */
 	private boolean isValid(RestaurantInfo info) {
 		if (info == null) {
 			return false;
 		}
-		
+
 		if (DineOnConstants.DEBUG) {
 			// TODO Implement
 		}
@@ -110,33 +135,40 @@ public class MenuItemsFragment extends ListFragment {
 		return true;
 	}
 
-	//////////////////////////////////////////////////////
-	//// Following is the interface in which activities
-	//// that wish to attach this Fragment must implement
-	//// Intended to use for user input
-	//////////////////////////////////////////////////////
+	// ////////////////////////////////////////////////////
+	// // Following is the interface in which activities
+	// // that wish to attach this Fragment must implement
+	// // Intended to use for user input
+	// ////////////////////////////////////////////////////
 
 	/**
 	 * Interface for all owning activities to implement.
+	 * 
 	 * @author mhotan
 	 */
 	public interface MenuItemListener {
 
 		/**
 		 * Notifies that the user chooses to delete the current menu item.
-		 * @param item menu item to delete
+		 * 
+		 * @param item
+		 *            menu item to delete
 		 */
 		void onMenuItemDeleted(MenuItem item);
 
 		/**
 		 * Notifies that the user chose to add the current menu item.
-		 * @param item menu item to add
+		 * 
+		 * @param item
+		 *            menu item to add
 		 */
 		void onMenuItemAdded(MenuItem item);
 
 		/**
 		 * Notifies that the user chose to modify the current item.
-		 * @param item menu item to modify
+		 * 
+		 * @param item
+		 *            menu item to modify
 		 */
 		void onMenuItemModified(MenuItem item);
 
@@ -144,6 +176,7 @@ public class MenuItemsFragment extends ListFragment {
 
 	/**
 	 * Adapter to handle the modification of menu items.
+	 * 
 	 * @author mhotan
 	 */
 	private class RestaurantMenuItemAdapter extends ArrayAdapter<MenuItem> {
@@ -158,11 +191,14 @@ public class MenuItemsFragment extends ListFragment {
 		 */
 		private final List<MenuItem> mItems;
 
-
 		/**
-		 * Creates a menu item adapter for displaying, modifying, and deleting menu items.
-		 * @param ctx Context to use adapter
-		 * @param items items to add to this adapter
+		 * Creates a menu item adapter for displaying, modifying, and deleting
+		 * menu items.
+		 * 
+		 * @param ctx
+		 *            Context to use adapter
+		 * @param items
+		 *            items to add to this adapter
 		 */
 		public RestaurantMenuItemAdapter(Context ctx, List<MenuItem> items) {
 			super(ctx, R.layout.listitem_menuitem_editable, items);
@@ -174,17 +210,26 @@ public class MenuItemsFragment extends ListFragment {
 		public View getView(int position, View convertView, ViewGroup parent) {
 			LayoutInflater inflater = (LayoutInflater) mContext
 					.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-			View view = inflater.inflate(R.layout.listitem_menuitem_editable, parent, false);
+			View view;
+			if (convertView != null) {
+				view = convertView;
+			} else {
+				view = inflater.inflate(R.layout.listitem_menuitem_editable, parent, false);
+			}
 
 			// Obtain the view used for this menu item
 			ImageView image = (ImageView) view.findViewById(R.id.image_thumbnail_menuitem);
 			TextView title = (TextView) view.findViewById(R.id.label_menuitem_editable);
 			ImageButton delete = (ImageButton) view.findViewById(R.id.button_discard_item);
 			EditText description = (EditText) view.findViewById(R.id.edittext_description);
+			EditText price = (EditText) view.findViewById(R.id.edittext_price);
 			ImageButton save = (ImageButton) view.findViewById(R.id.button_save_menuitem);
 
 			MenuItem item = mItems.get(position);
-			ItemListener listener = new ItemListener(item, image, title, delete, save, description);
+			title.setText(item.getTitle());
+			description.setText(item.getDescription());
+
+			ItemListener listener = new ItemListener(item, image, title, delete, save, description, price);
 
 			return view;
 		}
@@ -193,7 +238,7 @@ public class MenuItemsFragment extends ListFragment {
 	/**
 	 * 
 	 * @author mhotan
-	 *
+	 * 
 	 */
 	private class ItemListener implements View.OnClickListener {
 
@@ -202,24 +247,34 @@ public class MenuItemsFragment extends ListFragment {
 		private final TextView mTitle;
 		private final ImageButton mDelete, mSave;
 		private final EditText mDescription;
+		private final EditText mPrice;
 
 		/**
 		 * Implicitly adds listeners.
-		 * @param item MenuItem
-		 * @param image ImageView
-		 * @param title TextView
-		 * @param delete ImageButton
-		 * @param save ImageButton
-		 * @param description EditText
+		 * 
+		 * @param item
+		 *            MenuItem
+		 * @param image
+		 *            ImageView
+		 * @param title
+		 *            TextView
+		 * @param delete
+		 *            ImageButton
+		 * @param save
+		 *            ImageButton
+		 * @param description
+		 *            EditText
+		 * @param price 
 		 */
 		public ItemListener(MenuItem item, ImageView image, TextView title, ImageButton delete,
-				ImageButton save, EditText description) {
+				ImageButton save, EditText description, EditText price) {
 			mItem = item;
 			mImage = image;
 			mTitle = title;
 			mDelete = delete;
 			mSave = save;
 			mDescription = description;
+			mPrice = price;
 
 			mImage.setOnClickListener(this);
 			mDelete.setOnClickListener(this);
@@ -237,17 +292,20 @@ public class MenuItemsFragment extends ListFragment {
 				// TODO User listener to delete this menu item
 				// use alert dialog
 				// delete mItem
+				mListener.onMenuItemDeleted(mItem);
 
 			} else if (v == mSave) {
 				// TODO User listener to save this menu item
 				// use alert dialog
 				// save mItem
+				String newTitle = mTitle.getText().toString();
 				String newDescription = mDescription.getText().toString();
+				double price = Double.valueOf(mPrice.getText().toString());
+				
 //				mItem.setDescription(newDescription);
 				// TODO Add more modifications here
 
 			}
 		}
-
 	}
 }

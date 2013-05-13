@@ -61,7 +61,7 @@ public class RestaurantInfoFragment extends Fragment {
 		final RestaurantInfo info = getArguments() != null ? (RestaurantInfo)
 				getArguments().getParcelable(DineOnConstants.KEY_RESTAURANTINFO) : null;
 
-		// Check the view and its state and intialize appropiately
+		// Check the view and its state and initialize appropriately
 		View view;
 		if (isValid(info)) {
 			view = inflater.inflate(R.layout.fragment_restaurant_info,
@@ -106,16 +106,9 @@ public class RestaurantInfoFragment extends Fragment {
 					info.setAddr(mAddressInput.getText().toString());
 					info.setPhone(mPhoneInput.getText().toString());
 					
+					mListener.onRestaurantInfoUpdate(info);
 					
 					
-					info.saveInBackGround(new SaveCallback(){
-
-						@Override
-						public void done(ParseException arg0) {
-							Toast.makeText(getActivity(), "Restaurant Info Updated!", Toast.LENGTH_SHORT).show();
-						}
-						
-					});
 					// TODO Auto-generated method stub
 					
 				}

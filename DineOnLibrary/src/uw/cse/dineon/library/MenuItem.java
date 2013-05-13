@@ -17,10 +17,10 @@ public class MenuItem extends Storable {
 	private static final String TITLE = "title";
 	
 	// We dont want 
-	private final int mProductID;		// ID of this product
-	private final double mPrice;
-	private final String mTitle; // price of this product
-	private final String mDescription;	// description of this product
+	private int mProductID;		// ID of this product
+	private double mPrice;
+	private String mTitle; // price of this product
+	private String mDescription;	// description of this product
 	// TODO Image id;
 	
 	/**
@@ -62,12 +62,19 @@ public class MenuItem extends Storable {
 		return mProductID;
 	}
 	
-//	/**
-//	 * @param productID the productID to set
-//	 */
-//	public void setProductID(int productID) {
-//		this.mProductID = productID;
-//	}
+	/**
+	 * @return The Name of the Menu Item
+	 */
+	public String getTitle(){
+		return mTitle;
+	}
+	
+	/**
+	 * @return The Name of the Menu Item
+	 */
+	public void setTitle(String title){
+		mTitle = title;
+	}
 
 	/**
 	 * @return the price
@@ -76,12 +83,12 @@ public class MenuItem extends Storable {
 		return mPrice;
 	}
 
-//	/**
-//	 * @param price the price to set
-//	 */
-//	public void setPrice(double price) {
-//		this.mPrice = price;
-//	}
+	/**
+	 * @param price the price to set
+	 */
+	public void setPrice(double price) {
+		this.mPrice = price;
+	}
 
 	/**
 	 * @return the description
@@ -90,12 +97,12 @@ public class MenuItem extends Storable {
 		return mDescription;
 	}
 
-//	/**
-//	 * @param description the description to set
-//	 */
-//	public void setDescription(String description) {
-//		this.mDescription = description;
-//	}
+	/**
+	 * @param description the description to set
+	 */
+	public void setDescription(String description) {
+		this.mDescription = description;
+	}
 
 	/**
 	 * Packs this MenuItem into a ParseObject to be stored.
