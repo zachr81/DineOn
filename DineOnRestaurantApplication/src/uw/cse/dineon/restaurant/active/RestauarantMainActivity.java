@@ -11,9 +11,6 @@ import uw.cse.dineon.restaurant.DineOnRestaurantActivity;
 import uw.cse.dineon.restaurant.LoadingFrament;
 import uw.cse.dineon.restaurant.R;
 import uw.cse.dineon.restaurant.active.DiningSessionListFragment.DiningSessionListListener;
-import android.app.AlertDialog;
-import android.app.AlertDialog.Builder;
-import android.app.DownloadManager.Request;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -74,74 +71,44 @@ DiningSessionListListener {
 		
 		// Tells adapter to refresh.
 		mPagerAdapter.notifyDataSetChanged();
-		
 	}
 	
 	@Override
 	protected void addDiningSession(DiningSession session) {
 		super.addDiningSession(session);
 		
-		// Our stuff
+		// Update our UI for the current dining session
+		Fragment f = mPagerAdapter.getCurrentFragment();
+		if (f != null && f instanceof DiningSessionListFragment) {
+			DiningSessionListFragment frag = (DiningSessionListFragment) f;
+			frag.addDiningSession(session);
+		}
+	}
+	
+	@Override
+	protected void addOrder(Order order) {
+		super.addOrder(order);
+		
+		// Update our UI for the current added Order 
+		Fragment f = mPagerAdapter.getCurrentFragment();
+		if (f != null && f instanceof OrderListFragment) {
+			OrderListFragment frag = (OrderListFragment) f;
+			frag.addOrder(order);
+		}
+	}
+	
+	@Override 
+	protected void addCustomerRequest(CustomerRequest request) {
+		super.addCustomerRequest(request);
+		
+		// Update our UI for the current added Request
+		Fragment f = mPagerAdapter.getCurrentFragment();
+		if (f != null && f instanceof RequestListFragment) {
+			RequestListFragment frag = (RequestListFragment) f;
+			frag.addRequest(request);
+		}	
 	}
 
-//	/**
-//	 * Updates the current fragment if it is in focus.
-//	 * 
-//	 * @param customer String
-//	 */
-//	//TODO Make this take a diningsession
-//	@SuppressWarnings({ "unused" })
-//	private void addDiningSession(DiningSession customer) {
-//		Fragment f = mPagerAdapter.getCurrentFragment();
-//		if (f != null && f instanceof DiningSessionListFragment) {
-//			DiningSessionListFragment frag = (DiningSessionListFragment) f;
-////			frag.addCustomer(makeDummySession(customer)); 
-//		}
-//	}
-//	
-//	/**
-//	 * Updates the current fragment if it is in focus.
-//	 * @param order String
-//	 */
-//	private void addOrder(Order order) {
-//		Fragment f = mPagerAdapter.getCurrentFragment();
-//		if (f != null && f instanceof OrderListFragment) {
-//			OrderListFragment frag = (OrderListFragment) f;
-//			frag.addOrder(order);
-//		}
-////		mOrders.add(order);
-//	}
-//	
-//	/**
-//	 * Updates the current fragment if it is in focus.
-//	 * @param request String
-//	 */
-//	private void addRequest(CustomerRequest request) {
-//		Fragment f = mPagerAdapter.getCurrentFragment();
-//		if (f != null && f instanceof RequestListFragment) {
-//			RequestListFragment frag = (RequestListFragment) f;
-//			frag.addRequest(request);
-//		}
-//		mRequests.add(request);
-//	}
-
-	/**
-	 * Wrapper to convert a string (user's name) into a
-	 * DiningSession. Debug purposes only, should not
-	 * use in production.
-	 * 
-	 * @param name Name of fake user to create inside session
-	 * @return A dining session with one user
-	 */
-//	private DiningSession makeDummySession(String name){
-//		DiningSession d = new DiningSession();
-//		UserInfo ui = new UserInfo();
-//		ui.setName(name);
-//		ui.setEmail("user@example.com");
-//		ui.setPhone("(123) 555-5050");
-//		d.addUser(ui);
-//		return d;
-//	}
 
 	//////////////////////////////////////////////////////////////////////
 	////	Listener for OrderDetailFragment.OrderDetailListener
