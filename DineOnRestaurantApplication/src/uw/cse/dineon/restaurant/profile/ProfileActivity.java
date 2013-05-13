@@ -25,9 +25,8 @@ import android.widget.Toast;
  * 
  * @author mhotan
  */
-public class ProfileActivity extends DineOnRestaurantActivity implements
-		TabListener, RestaurantInfoFragment.InfoChangeListener,
-		MenuItemsFragment.MenuItemListener {
+public class ProfileActivity extends DineOnRestaurantActivity implements TabListener,
+		RestaurantInfoFragment.InfoChangeListener, MenuItemsFragment.MenuItemListener {
 
 	private static final String TAG = ProfileActivity.class.getSimpleName();
 
@@ -47,17 +46,15 @@ public class ProfileActivity extends DineOnRestaurantActivity implements
 		mLastTabPosition = 0; // Let the tab be either the 0 or 1
 
 		Fragment frag;
-		if (isLoggedIn() || DineOnConstants.DEBUG) { 
+		if (isLoggedIn() || DineOnConstants.DEBUG) {
 			// If logged in fill views appropriately
 			// Set the actionbar with associated tabs
 			final ActionBar ACTION_BAR = getActionBar();
 			if (ACTION_BAR != null) { // Support older builds
 				ACTION_BAR.addTab(ACTION_BAR.newTab()
-						.setText(R.string.tab_actionbar_restaurant_profile)
-						.setTabListener(this));
+						.setText(R.string.tab_actionbar_restaurant_profile).setTabListener(this));
 				ACTION_BAR.addTab(ACTION_BAR.newTab()
-						.setText(R.string.tab_actionbar_restaurant_menuitems)
-						.setTabListener(this));
+						.setText(R.string.tab_actionbar_restaurant_menuitems).setTabListener(this));
 			}
 
 			// Obtain the most recently used Restaurant via intent or call
@@ -73,15 +70,14 @@ public class ProfileActivity extends DineOnRestaurantActivity implements
 		ft.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out);
 		// ft.add(R.id.container_profile_fragment, frag);
 		ft.commit();
-		
+
 	}
 
 	@Override
 	public boolean onPrepareOptionsMenu(Menu menu) {
 		super.onPrepareOptionsMenu(menu);
 
-		android.view.MenuItem itemProfile = menu
-				.findItem(R.id.item_restaurant_profile);
+		android.view.MenuItem itemProfile = menu.findItem(R.id.item_restaurant_profile);
 		// Already at profile page so remove the button
 		if (itemProfile != null) { // If exists
 			itemProfile.setEnabled(false);
@@ -117,8 +113,7 @@ public class ProfileActivity extends DineOnRestaurantActivity implements
 
 			// Assign the animation where the fragment slides
 			// in from the right
-			supFT.setCustomAnimations(android.R.anim.slide_in_left,
-					android.R.anim.slide_out_right);
+			supFT.setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
 		} else if (diff > 0) { // move the tab relatively rights
 			// TODO Correctly obtain the Restaurant
 
@@ -126,8 +121,7 @@ public class ProfileActivity extends DineOnRestaurantActivity implements
 
 			// Assign the animation where the fragment slides
 			// in from the
-			supFT.setCustomAnimations(R.anim.slide_in_right,
-					R.anim.slide_out_left);
+			supFT.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left);
 		}
 
 		// Update the position
@@ -148,11 +142,11 @@ public class ProfileActivity extends DineOnRestaurantActivity implements
 	public void onTabUnselected(Tab tab, FragmentTransaction ft) {
 		// As of May 1st cant think of anything to add here
 	}
-	
+
 	@Override
-	protected void updateUI(){
+	protected void updateUI() {
 		super.updateUI();
-		
+
 	}
 
 	// ////////////////////////////////////////////////////
@@ -161,34 +155,49 @@ public class ProfileActivity extends DineOnRestaurantActivity implements
 
 	@Override
 	public void onMenuItemDeleted(MenuItem item) {
-		// TODO Auto-generated method stub
+		Toast.makeText(this, "Delete not available yet", Toast.LENGTH_SHORT).show();
 	}
 
 	@Override
 	public void onMenuItemAdded(MenuItem item) {
-		// TODO Auto-generated method stub
-
+		item.saveInBackGround(new SaveCallback() {
+			@Override
+			public void done(ParseException e) {
+				if (e == null) {
+					notifyAllUsersOfRestaurantChange();
+					Toast.makeText(getApplicationContext(), "Menu Item Added!", Toast.LENGTH_SHORT)
+							.show();
+				}
+			}
+		});
 	}
 
 	@Override
 	public void onMenuItemModified(MenuItem item) {
 		// TODO Auto-generated method stub
-
+		item.saveInBackGround(new SaveCallback() {
+			@Override
+			public void done(ParseException e) {
+				if (e == null) {
+					notifyAllUsersOfRestaurantChange();
+					Toast.makeText(getApplicationContext(), "Menu Item Updated!",
+							Toast.LENGTH_SHORT).show();
+				}
+			}
+		});
 	}
 
 	@Override
 	public void onRestaurantInfoUpdate(RestaurantInfo rest) {
 		// TODO Auto-generated method stub
 		rest.saveInBackGround(new SaveCallback() {
-
 			@Override
 			public void done(ParseException e) {
-				if (e == null){
+				if (e == null) {
 					notifyAllUsersOfRestaurantChange();
-					Toast.makeText(getApplicationContext(),
-							"Restaurant Info Updated!", Toast.LENGTH_SHORT)
-							.show();
-					
+					Toast.makeText(getApplicationContext(), "Restaurant Info Updated!",
+							Toast.LENGTH_SHORT).show();
+
 				}
 			}
 

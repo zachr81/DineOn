@@ -22,6 +22,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 /**
  * Fragment that presents a editable list of menu items of this restaurant.
@@ -86,21 +87,20 @@ public class MenuItemsFragment extends ListFragment {
 			setListAdapter(mAdapter);
 		}
 	}
-	
+
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-	    // TODO Add your menu entries here
-	    super.onCreateOptionsMenu(menu, inflater);
+		// TODO Add your menu entries here
+		super.onCreateOptionsMenu(menu, inflater);
 	}
-	
+
 	@Override
-	public boolean onOptionsItemSelected(android.view.MenuItem item){
-		if(item.getItemId() == R.id.menu_add_menu_item){
-				//Add new blank item
-				
-				return true;
+	public boolean onOptionsItemSelected(android.view.MenuItem item) {
+		if (item.getItemId() == R.id.menu_add_menu_item) {
+			// Add new blank item
+			mAdapter.add(new MenuItem(mAdapter.getCount() + 1, 0.0, "", ""));
+			return true;
 		}
-		
 		return super.onOptionsItemSelected(item);
 	}
 
@@ -163,6 +163,7 @@ public class MenuItemsFragment extends ListFragment {
 		 *            menu item to add
 		 */
 		void onMenuItemAdded(MenuItem item);
+		//XXX Seems like this might be redundant right now
 
 		/**
 		 * Notifies that the user chose to modify the current item.
@@ -229,7 +230,8 @@ public class MenuItemsFragment extends ListFragment {
 			title.setText(item.getTitle());
 			description.setText(item.getDescription());
 
-			ItemListener listener = new ItemListener(item, image, title, delete, save, description, price);
+			ItemListener listener = new ItemListener(item, image, title, delete, save, description,
+					price);
 
 			return view;
 		}
@@ -264,7 +266,7 @@ public class MenuItemsFragment extends ListFragment {
 		 *            ImageButton
 		 * @param description
 		 *            EditText
-		 * @param price 
+		 * @param price
 		 */
 		public ItemListener(MenuItem item, ImageView image, TextView title, ImageButton delete,
 				ImageButton save, EditText description, EditText price) {
@@ -289,7 +291,6 @@ public class MenuItemsFragment extends ListFragment {
 				// delete mItem
 
 			} else if (v == mDelete) {
-				// TODO User listener to delete this menu item
 				// use alert dialog
 				// delete mItem
 				mListener.onMenuItemDeleted(mItem);
@@ -298,11 +299,21 @@ public class MenuItemsFragment extends ListFragment {
 				// TODO User listener to save this menu item
 				// use alert dialog
 				// save mItem
-				String newTitle = mTitle.getText().toString();
-				String newDescription = mDescription.getText().toString();
-				double price = Double.valueOf(mPrice.getText().toString());
-				
-//				mItem.setDescription(newDescription);
+				String newTitle = mTitle.getText().toString().trim();
+				String newDesc = mDescription.getText().toString().trim();
+				double newPrice = Double.valueOf(mPrice.getText().toString());
+
+				if (newTitle == "" || newDesc == null){
+					Toast.makeText(getActivity(), "Please fill in the Title and Description!",
+							Toast.LENGTH_SHORT).show();
+					return;
+				}
+				mItem.setDescription(newDesc);
+				mItem.setTitle(newTitle);
+				mItem.setPrice(newPrice);
+				mListener.onMenuItemModified(mItem);
+
+				// mItem.setDescription(newDescription);
 				// TODO Add more modifications here
 
 			}
