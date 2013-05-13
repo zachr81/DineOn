@@ -1,5 +1,8 @@
 package uw.cse.dineon.library.util;
 
+import java.text.DateFormat;
+import java.util.Locale;
+
 /**
  * Generalized wrapper class to hold constants that pertain to multiple modules 
  * with the applications.
@@ -65,6 +68,7 @@ public final class DineOnConstants {
 	
 	// Callback Key for braodcast receiver callbacks
 	public static final String OBJ_ID = "objectId";
+	public static final String OBJ_ID_2 = "objectIdTwo";
 	public static final String TABLE_NUM = "TABLE_NUM";
 	
 	// Actions for broadcast resceivers
@@ -73,14 +77,26 @@ public final class DineOnConstants {
 	// For Restaurant
 	public static final String ACTION_REQUEST_DINING_SESSION = 
 			ACTION_PREFIX + "REQUEST_DINING_SESSION";
-	public static final String ACTION_ORDER_PLACED = ACTION_PREFIX + "ORDER_PLACED";
-	public static final String ACTION_CHECK_OUT = ACTION_PREFIX + "CHECK_OUT";
-	public static final String ACTION_CHANGE_USER_INFO = ACTION_PREFIX + "CHANGE_USER_INFO";
-	public static final String ACTION_CUSTOMER_REQUEST = ACTION_PREFIX + "CUSTOMER_REQUEST";
+	public static final String ACTION_REQUEST_ORDER = 
+			ACTION_PREFIX + "REQUEST_ORDER";
+	public static final String ACTION_REQUEST_CUSTOMER_REQUEST = 
+			ACTION_PREFIX + "REQUEST_CUSTOMER_REQUEST";
+	public static final String ACTION_REQUEST_RESERVATION = 
+			ACTION_PREFIX + "REQUEST_RESERVATION";
+	public static final String ACTION_REQUEST_CHECK_OUT = 
+			ACTION_PREFIX + "REQUEST_CHECK_OUT";
+	public static final String ACTION_CHANGE_USER_INFO = 
+			ACTION_PREFIX + "CHANGE_USER_INFO";
 
 	// For Customer
 	public static final String ACTION_CONFIRM_DINING_SESSION = 
 			ACTION_PREFIX + "CONFIRM_DINING_SESSION";
+	public static final String ACTION_CONFIRM_ORDER = 
+			ACTION_PREFIX + "CONFIRM_ORDER";
+	public static final String ACTION_CONFIRM_CUSTOMER_REQUEST = 
+			ACTION_PREFIX + "CONFIRM_CUSTOMER_REQUEST";
+	public static final String ACTION_CONFIRM_RESERVATION = 
+			ACTION_PREFIX + "CONFIRM_RESERVATION";
 	public static final String ACTION_CHANGE_RESTAURANT_INFO = 
 			ACTION_PREFIX + "CHANGE_RESTAURANT_INFO";
 
@@ -100,4 +116,14 @@ public final class DineOnConstants {
 	 * 
 	 */
 	static final String CHANNEL_PREFIX = "uw_cse_dineon_";
+	
+	/**
+	 * This date formatter is used for storing and sending dates
+	 * in parse objects.  This same date formatter is used to 
+	 * write dates to string and turn those strings
+	 * back into Dates
+	 */
+	public static final DateFormat MDATEFORMAT = 
+			DateFormat.getDateTimeInstance(DateFormat.FULL, DateFormat.FULL, Locale.getDefault()); 
+	
 }
