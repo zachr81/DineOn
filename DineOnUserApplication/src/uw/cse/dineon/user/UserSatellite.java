@@ -66,7 +66,7 @@ public class UserSatellite extends BroadcastReceiver {
 	private DineOnUserActivity mCurrentActivity;
 
 	/**
-	 * Enum classes that control the type of objects to download
+	 * Enum classes that control the type of objects to download.
 	 * @author mhotan
 	 */
 	private enum ACTION_OPTION {
@@ -84,8 +84,10 @@ public class UserSatellite extends BroadcastReceiver {
 	public UserSatellite() {
 		mIF = new IntentFilter();
 		mIF.addAction(DineOnConstants.ACTION_CONFIRM_DINING_SESSION);
+		mIF.addAction(DineOnConstants.ACTION_CONFIRM_CUSTOMER_REQUEST);
+		mIF.addAction(DineOnConstants.ACTION_CONFIRM_ORDER);
+		mIF.addAction(DineOnConstants.ACTION_CONFIRM_RESERVATION);
 		mIF.addAction(DineOnConstants.ACTION_CHANGE_RESTAURANT_INFO);
-		// TODO Add more actions for change in protocol
 	}
 
 	/**
