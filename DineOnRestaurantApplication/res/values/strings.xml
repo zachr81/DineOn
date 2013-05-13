@@ -38,4 +38,7 @@
     <string name="hint_email_address">Email Address</string>
     <string name="hint_password_repeat">Repeat Password</string>
     <string name="hint_restaurant_name">Your Restaurant Name</string>
+    <string name="dialog_title_loggin_in">Logging in...</string>
+    <string name="dialog_message_logging_in">Get you ready to work!</string>
+    <string name="dialog_title_loading">Loading...</string>
 </resources>
