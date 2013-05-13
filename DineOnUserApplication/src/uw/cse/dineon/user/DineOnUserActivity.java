@@ -58,13 +58,13 @@ public class DineOnUserActivity extends FragmentActivity implements SatelliteLis
 	private String mUserId;
 	private UserSatellite mSat;
 
-	private DineOnUserActivity This;
+	private DineOnUserActivity thisActivity;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		This = this;
+		thisActivity = this;
 
 		mSat = new UserSatellite();
 
@@ -136,12 +136,12 @@ public class DineOnUserActivity extends FragmentActivity implements SatelliteLis
 					try {
 						// Success
 						mUser = new DineOnUser(object);
-						mSat.register(mUser, This);
-					} catch(Exception e1) {
+						mSat.register(mUser, thisActivity);
+					} catch (Exception e1) {
 						Log.d(TAG, e1.getMessage());
 					}
 				} else { 
-					Utility.getBackToLoginAlertDialog(This, UserLoginActivity.class).show();
+					Utility.getBackToLoginAlertDialog(thisActivity, UserLoginActivity.class).show();
 				}
 				intializeUI();
 			}
@@ -369,7 +369,7 @@ public class DineOnUserActivity extends FragmentActivity implements SatelliteLis
 	@Override
 	public void onFail(String message) {
 		// TODO Auto-generated method stub
-
+		Toast.makeText(this, "onFail: " + message, Toast.LENGTH_SHORT).show();
 	}
 
 	@Override
@@ -400,24 +400,24 @@ public class DineOnUserActivity extends FragmentActivity implements SatelliteLis
 	@Override
 	public void onRestaurantInfoChanged(RestaurantInfo restaurant) {
 		// TODO Auto-generated method stub
-
+		Toast.makeText(this, "onRestaurantInfoChanged", Toast.LENGTH_SHORT).show();
 	}
 
 	@Override
 	public void onConfirmReservation(Reservation res, Date reservationDate) {
 		// TODO Auto-generated method stub
-		
+		Toast.makeText(this, "onConfirmReservation", Toast.LENGTH_SHORT).show();
 	}
 
 	@Override
 	public void onConfirmOrder(DiningSession ds, String orderId) {
 		// TODO Auto-generated method stub
-		
+		Toast.makeText(this, "onConfirmOrder", Toast.LENGTH_SHORT).show();
 	}
 
 	@Override
 	public void onConfirmCustomerRequest(DiningSession ds, String requestID) {
 		// TODO Auto-generated method stub
-		
+		Toast.makeText(this, "onConfirmCustomerRequest", Toast.LENGTH_SHORT).show();
 	}
 }

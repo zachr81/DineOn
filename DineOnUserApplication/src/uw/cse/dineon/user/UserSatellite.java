@@ -83,11 +83,9 @@ public class UserSatellite extends BroadcastReceiver {
 	 */
 	public UserSatellite() {
 		mIF = new IntentFilter();
-		mIF.addAction(DineOnConstants.ACTION_CONFIRM_DINING_SESSION);
-		mIF.addAction(DineOnConstants.ACTION_CONFIRM_CUSTOMER_REQUEST);
-		mIF.addAction(DineOnConstants.ACTION_CONFIRM_ORDER);
-		mIF.addAction(DineOnConstants.ACTION_CONFIRM_RESERVATION);
-		mIF.addAction(DineOnConstants.ACTION_CHANGE_RESTAURANT_INFO);
+		for (String action: DineOnConstants.CUSTOMER_ACTIONS) {
+			mIF.addAction(action);
+		}
 	}
 
 	/**
@@ -155,7 +153,7 @@ public class UserSatellite extends BroadcastReceiver {
 	 */
 	public void requestCheckIn(UserInfo user, int tableNum,  String rest) {
 		Map<String, String> attr = new HashMap<String, String>();
-		attr.put(DineOnConstants.TABLE_NUM, "" + tableNum);
+		attr.put(DineOnConstants.OBJ_ID_2, "" + tableNum);
 		attr.put(DineOnConstants.OBJ_ID, user.getObjId());
 		notifyByAction(DineOnConstants.ACTION_REQUEST_DINING_SESSION, attr, rest);
 	} 
@@ -165,14 +163,15 @@ public class UserSatellite extends BroadcastReceiver {
 	 * NOTE: This method does not do any saving. That is if you want to update the
 	 * restaurant you must save your argument before you call this method
 	 * @param session Dining Session that was updated
+	 * @param order Order to request
 	 * @param rest Restaurant to place order at
 	 */
 	public void requestOrder(DiningSession session, 
 			Order order, 
 			RestaurantInfo rest) {
 		notifyByAction(DineOnConstants.ACTION_REQUEST_ORDER, 
-				session.getObjId(),
-				order.getObjId(),
+				order.getObjId(), // Make sure they download the Order Object
+				session.getObjId(), // Reference the Session ID
 				rest.getName());
 	}
 
@@ -182,14 +181,15 @@ public class UserSatellite extends BroadcastReceiver {
 	 * NOTE: This method does not do any saving. That is if you want to update the
 	 * restaurant you must save your argument before you call this method
 	 * @param session Saved DiningSession that has a new Customer Request
+	 * @param request Customer Request to request
 	 * @param rest Restaurant to send notification to.
 	 */
 	public void requestCustomerRequest(DiningSession session, 
 			CustomerRequest request,
 			RestaurantInfo rest) {
 		notifyByAction(DineOnConstants.ACTION_REQUEST_CUSTOMER_REQUEST,
+				request.getObjId(), // Make sure they download the Request Object
 				session.getObjId(),
-				request.getObjId(),
 				rest.getName()); 
 	}
 
@@ -198,7 +198,7 @@ public class UserSatellite extends BroadcastReceiver {
 	 * dining session.
 	 * NOTE: This method does not do any saving. That is if you want to update the
 	 * restaurant you must save your argument before you call this method
-	 * @param session Saved DiningSession that has a new Customer Request
+	 * @param reservation Saved DiningSession that has a new Customer Request
 	 * @param rest Restaurant to send notification to.
 	 */
 	public void requestReservation(Date reservation,
@@ -368,6 +368,7 @@ public class UserSatellite extends BroadcastReceiver {
 		if (DineOnConstants.ACTION_CONFIRM_DINING_SESSION.equals(action)) {
 			// Received the intial Dining Session
 			query = new ParseQuery(DiningSession.class.getSimpleName());
+			query.setCachePolicy(CachePolicy.NETWORK_ONLY);
 			callback.setOption(ACTION_OPTION.INTIAL_DS_RECEIVED);
 			query.getInBackground(id, callback);
 		} 
@@ -375,24 +376,28 @@ public class UserSatellite extends BroadcastReceiver {
 		else if (DineOnConstants.ACTION_CHANGE_RESTAURANT_INFO.equals(action)) {
 			// WE received a updated Restaurant Info 
 			query = new ParseQuery(RestaurantInfo.class.getSimpleName());
+			query.setCachePolicy(CachePolicy.NETWORK_ONLY);
 			callback.setOption(ACTION_OPTION.RESTAURANT_INFO_CHANGE);
 			query.getInBackground(id, callback);
 		}
 		else if (DineOnConstants.ACTION_CONFIRM_ORDER.equals(action)) {
 			// Attempt to get the Dining Session that was updated.
 			query = new ParseQuery(DiningSession.class.getSimpleName());
+			query.setCachePolicy(CachePolicy.NETWORK_ONLY);
 			callback.setOption(ACTION_OPTION.CONFIRM_ORDER);
 			query.getInBackground(id, callback);
 		}
 		else if (DineOnConstants.ACTION_CONFIRM_RESERVATION.equals(action)) {
 			// Attempt to get the Reservation that was updated.
 			query = new ParseQuery(Reservation.class.getSimpleName());
+			query.setCachePolicy(CachePolicy.NETWORK_ONLY);
 			callback.setOption(ACTION_OPTION.CONFIRM_RESERVATION);
 			query.getInBackground(id, callback);
 		}
 		else if (DineOnConstants.ACTION_CONFIRM_CUSTOMER_REQUEST.equals(action)) {
 			// Attempt to get the Dining Session that was updated.
 			query = new ParseQuery(DiningSession.class.getSimpleName());
+			query.setCachePolicy(CachePolicy.NETWORK_ONLY);
 			callback.setOption(ACTION_OPTION.CONFIRM_CUSTOMER_REQUEST);
 			query.getInBackground(id, callback);
 		}
@@ -420,12 +425,17 @@ public class UserSatellite extends BroadcastReceiver {
 		 * @param listener Listener for which method to call
 		 * @param secondArgument Second string that contain object ID or formatted dates
 		 */
-		public SatelliteGetCallback(SatelliteListener listener, String secondArgument){
+		public SatelliteGetCallback(SatelliteListener listener, 
+				String secondArgument) {
 			mListener = listener;
 			mOption = ACTION_OPTION.NA;
 			mSecondArg = secondArgument;
 		}
 
+		/**
+		 * Sets the appropriate action for reacting a restaurant response.
+		 * @param option Option to set
+		 */
 		public void setOption(ACTION_OPTION option) {
 			mOption = option;
 		}
@@ -452,9 +462,13 @@ public class UserSatellite extends BroadcastReceiver {
 						mListener.onFail("Restaurant failed to get make a reservation");
 						return;
 					}
-					mListener.onConfirmReservation(
-							new Reservation(object), 
-							DineOnConstants.MDATEFORMAT.parse(mSecondArg));
+					try {
+						mListener.onConfirmReservation(
+								new Reservation(object), 
+								DineOnConstants.MDATEFORMAT.parse(mSecondArg));
+					} catch (java.text.ParseException e1) {
+						mListener.onFail(e1.getMessage());
+					}
 					break;
 				case CONFIRM_ORDER:
 					if (mSecondArg == null) {
@@ -477,7 +491,7 @@ public class UserSatellite extends BroadcastReceiver {
 						mListener.onFail("Unknown Request Recieved!");
 					}
 				}
-			} catch (Exception e1) {
+			} catch (ParseException e1) {
 				mListener.onFail(e1.getMessage());
 			}
 		}
@@ -512,14 +526,15 @@ public class UserSatellite extends BroadcastReceiver {
 		void onRestaurantInfoChanged(RestaurantInfo restaurant);
 
 		/**
-		 * Notifies the user that the reservation requested was accepted
-		 * @param res
+		 * Notifies the user that the reservation requested was accepted.
+		 * @param res Reservation object
+		 * @param reservationDate Date of reservation confirmed
 		 */
 		void onConfirmReservation(Reservation res, Date reservationDate);
 
 		/**
 		 * Notifies the customer that there previous request 
-		 * to update the Dining Session has gone through
+		 * to update the Dining Session has gone through.
 		 * 
 		 * @param ds Dining session that has been changed
 		 * @param orderId ID of the Order that was updated
@@ -528,7 +543,7 @@ public class UserSatellite extends BroadcastReceiver {
 
 		/**
 		 * Notifies the customer that there previous request 
-		 * to update the Dining Session has gone through
+		 * to update the Dining Session has gone through.
 		 * 
 		 * @param ds Dining session that has been changed
 		 * @param requestID ID of the Customer Request that was updated
