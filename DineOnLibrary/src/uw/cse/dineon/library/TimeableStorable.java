@@ -19,7 +19,7 @@ public abstract class TimeableStorable extends Storable {
 	
 	private static final String TAG = TimeableStorable.class.getSimpleName();
 	
-	private static final String DATE = "date";
+	private static final String DATE = "dineonDate";
 	
 	/**
 	 * Start Date for this instance.
@@ -87,7 +87,7 @@ public abstract class TimeableStorable extends Storable {
 	@Override
 	public ParseObject packObject() {
 		ParseObject po = super.packObject();
-		po.add(DATE, DineOnConstants.MDATEFORMAT.format(mDate));
+		po.put(DATE, DineOnConstants.MDATEFORMAT.format(mDate));
 		return po;
 	}
 	
