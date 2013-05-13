@@ -16,7 +16,6 @@ public class MenuItem extends Storable {
 	private static final String DESCRIPTION = "description";
 	private static final String TITLE = "title";
 	
-	// We dont want 
 	private int mProductID;		// ID of this product
 	private double mPrice;
 	private String mTitle; // price of this product

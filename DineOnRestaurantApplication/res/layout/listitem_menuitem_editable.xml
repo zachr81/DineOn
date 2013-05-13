@@ -21,7 +21,10 @@
         android:layout_toRightOf="@+id/image_thumbnail_menuitem"
         android:gravity="center"
         android:hint="@string/hint_menuitem_title"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
+        android:textAppearance="?android:attr/textAppearanceMedium" >
+
+        <requestFocus />
+    </EditText>
 
     <EditText
         android:id="@+id/edittext_description"
@@ -42,8 +45,8 @@
         android:layout_alignBottom="@+id/edittext_description"
         android:layout_alignParentRight="true"
         android:layout_alignTop="@+id/edittext_description"
-         android:background="@android:color/transparent"
         android:layout_toRightOf="@+id/edittext_description"
+        android:background="@android:color/transparent"
         android:src="@drawable/content_save" />
 
     <EditText
@@ -53,11 +56,9 @@
         android:layout_alignParentLeft="true"
         android:layout_alignRight="@+id/edittext_description"
         android:layout_below="@+id/edittext_description"
-        android:hint="@string/hint_price"
         android:ems="10"
+        android:hint="@string/hint_price"
         android:inputType="numberDecimal" >
-
-        <requestFocus />
     </EditText>
 
     <ImageButton
