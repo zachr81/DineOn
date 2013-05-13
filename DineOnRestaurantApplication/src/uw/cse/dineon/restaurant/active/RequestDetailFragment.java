@@ -158,19 +158,18 @@ implements OnCheckedChangeListener, OnClickListener {
 	public interface RequestDetailListener {
 
 		/**
-		 * TODO Replace all of the argument data types appropiately.
 		 * @param request Request to reference
 		 * @param staff staff to assign to
 		 * @param urgency Urgency to accomplish task
 		 */
-		public void onSendTaskToStaff(String request, String staff, String urgency);
+		public void onSendTaskToStaff(CustomerRequest request, String staff, String urgency);
 
 		/**
 		 * Send a message to the customer about their request.
 		 * @param request request to send
 		 * @param message message
 		 */
-		public void onSendMessage(String request, String message);
+		public void onSendMessage(CustomerRequest request, String message);
 
 	}
 
@@ -185,11 +184,11 @@ implements OnCheckedChangeListener, OnClickListener {
 	public void onClick(View v) {
 		switch (v.getId()) {
 		case R.id.button_send_message:
-			mListener.onSendMessage(mRequest.getDescription(), mMessageBlock.getText().toString());
+			mListener.onSendMessage(mRequest, mMessageBlock.getText().toString());
 			break;
 		case R.id.button_send_to_staff:
 			String staffMember = mStaffList.getSelectedItem().toString();
-			mListener.onSendTaskToStaff(mRequest.getDescription(), staffMember, mUrgency);
+			mListener.onSendTaskToStaff(mRequest, staffMember, mUrgency);
 		default:
 
 		}

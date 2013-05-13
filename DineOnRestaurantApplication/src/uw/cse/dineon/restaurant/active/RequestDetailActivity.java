@@ -1,6 +1,6 @@
 package uw.cse.dineon.restaurant.active;
 
-import uw.cse.dineon.library.util.DineOnConstants;
+import uw.cse.dineon.library.CustomerRequest;
 import uw.cse.dineon.restaurant.DineOnRestaurantActivity;
 import uw.cse.dineon.restaurant.R;
 import android.os.Bundle;
@@ -38,13 +38,13 @@ public static final String EXTRA_REQUEST = "request";
 	}
 
 	@Override
-	public void onSendTaskToStaff(String request, String staff, String urgency) {
+	public void onSendTaskToStaff(CustomerRequest request, String staff, String urgency) {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public void onSendMessage(String request, String message) {
+	public void onSendMessage(CustomerRequest request, String message) {
 		// TODO Auto-generated method stub
 		
 	}
