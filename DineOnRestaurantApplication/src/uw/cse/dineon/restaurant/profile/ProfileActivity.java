@@ -4,6 +4,7 @@ import com.parse.ParseException;
 import com.parse.SaveCallback;
 
 import uw.cse.dineon.library.MenuItem;
+import uw.cse.dineon.library.Restaurant;
 import uw.cse.dineon.library.RestaurantInfo;
 import uw.cse.dineon.library.util.DineOnConstants;
 import uw.cse.dineon.restaurant.DineOnRestaurantActivity;
@@ -12,11 +13,15 @@ import uw.cse.dineon.restaurant.R;
 import android.app.ActionBar;
 import android.app.ActionBar.Tab;
 import android.app.ActionBar.TabListener;
+import android.app.Activity;
 import android.app.FragmentTransaction;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.AttributeSet;
 import android.util.Log;
 import android.view.Menu;
+import android.view.View;
 import android.widget.Toast;
 
 /**
@@ -40,7 +45,7 @@ public class ProfileActivity extends DineOnRestaurantActivity implements TabList
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		setContentView(R.layout.activity_restaurant_profile);
+		//setContentView(R.layout.activity_restaurant_profile);
 
 		// TODO Grab which action bar is selected
 		mLastTabPosition = 0; // Let the tab be either the 0 or 1
@@ -49,11 +54,13 @@ public class ProfileActivity extends DineOnRestaurantActivity implements TabList
 		if (isLoggedIn() || DineOnConstants.DEBUG) {
 			// If logged in fill views appropriately
 			// Set the actionbar with associated tabs
-			final ActionBar ACTION_BAR = getActionBar();
-			if (ACTION_BAR != null) { // Support older builds
-				ACTION_BAR.addTab(ACTION_BAR.newTab()
+			ActionBar ab = getActionBar();
+			ab.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+			ab.setDisplayShowTitleEnabled(false);
+			if (ab != null) { // Support older builds
+				ab.addTab(ab.newTab()
 						.setText(R.string.tab_actionbar_restaurant_profile).setTabListener(this));
-				ACTION_BAR.addTab(ACTION_BAR.newTab()
+				ab.addTab(ab.newTab()
 						.setText(R.string.tab_actionbar_restaurant_menuitems).setTabListener(this));
 			}
 
@@ -64,14 +71,31 @@ public class ProfileActivity extends DineOnRestaurantActivity implements TabList
 			Log.w(TAG, "User not logged in cant show profile");
 			frag = new NotLoggedInFragment();
 		}
-
-		android.support.v4.app.FragmentTransaction ft = getSupportFragmentManager()
-				.beginTransaction();
+		/*
+		android.support.v4.app.FragmentTransaction ft = 
+				getSupportFragmentManager().beginTransaction();
 		ft.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out);
-		// ft.add(R.id.container_profile_fragment, frag);
+		//ft.add(R.id.container_profile_fragment, frag);
 		ft.commit();
+		*/
 
 	}
+	
+
+	@Override
+	public void updateUI(){
+		super.updateUI();
+		/*
+		Fragment frag;
+		android.support.v4.app.FragmentTransaction ft = getSupportFragmentManager()
+				.beginTransaction();
+		//ft.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out);
+		frag = MenuItemsFragment.newInstance(getRestaurant().getInfo());
+		ft.replace(android.R.id.content, frag);
+		ft.commit();
+		*/
+	}
+	
 
 	@Override
 	public boolean onPrepareOptionsMenu(Menu menu) {
@@ -86,6 +110,8 @@ public class ProfileActivity extends DineOnRestaurantActivity implements TabList
 
 		return true;
 	}
+	
+	
 
 	/*
 	 * Tab Listener to bring up the correct fragment
@@ -94,6 +120,7 @@ public class ProfileActivity extends DineOnRestaurantActivity implements TabList
 	@Override
 	public void onTabSelected(Tab tab, FragmentTransaction ft) {
 		// Obtain a reference on which tab is being selected
+		Log.v(TAG, "Tab selected!");
 		int pos = tab.getPosition();
 		int diff = pos - mLastTabPosition;
 
@@ -103,7 +130,8 @@ public class ProfileActivity extends DineOnRestaurantActivity implements TabList
 		android.support.v4.app.FragmentTransaction supFT = getSupportFragmentManager()
 				.beginTransaction();
 
-		RestaurantInfo info = getRestaurant().getInfo();
+		Restaurant rest = getRestaurant();
+		RestaurantInfo info = rest.getInfo();
 		assert (info != null);
 
 		Fragment frag = null;
@@ -114,7 +142,7 @@ public class ProfileActivity extends DineOnRestaurantActivity implements TabList
 			// Assign the animation where the fragment slides
 			// in from the right
 			supFT.setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
-		} else if (diff > 0) { // move the tab relatively rights
+		} else { // move the tab relatively rights
 			// TODO Correctly obtain the Restaurant
 
 			frag = MenuItemsFragment.newInstance(info);
@@ -128,7 +156,7 @@ public class ProfileActivity extends DineOnRestaurantActivity implements TabList
 		mLastTabPosition = pos;
 
 		if (frag != null) {
-			supFT.replace(R.id.container_profile_fragment, frag);
+			supFT.replace(android.R.id.content, frag);
 			supFT.commit();
 		}
 	}
@@ -143,11 +171,6 @@ public class ProfileActivity extends DineOnRestaurantActivity implements TabList
 		// As of May 1st cant think of anything to add here
 	}
 
-	@Override
-	protected void updateUI() {
-		super.updateUI();
-
-	}
 
 	// ////////////////////////////////////////////////////
 	// // Following are fragment call backs that signify user interaction
@@ -204,4 +227,68 @@ public class ProfileActivity extends DineOnRestaurantActivity implements TabList
 		});
 
 	}
+
+	public class TabListener<T extends Fragment> implements ActionBar.TabListener {
+		private Fragment mFragment;
+		private final Activity mActivity;
+		private final String mTag;
+		private final Class<T> mClass;
+
+		/**
+		 * Constructor used each time a new tab is created.
+		 * 
+		 * @param activity
+		 *            The host Activity, used to instantiate the fragment
+		 * @param tag
+		 *            The identifier tag for the fragment
+		 * @param clz
+		 *            The fragment's Class, used to instantiate the fragment
+		 */
+		public TabListener(Activity activity, String tag, Class<T> clz) {
+			mActivity = activity;
+			mTag = tag;
+			mClass = clz;
+		}
+
+		/* The following are each of the ActionBar.TabListener callbacks */
+
+		public void onTabSelected(Tab tab, FragmentTransaction ft) {
+
+			android.support.v4.app.FragmentTransaction supFT = getSupportFragmentManager()
+					.beginTransaction();
+
+			RestaurantInfo info = getRestaurant().getInfo();
+			assert (info != null);
+
+			Fragment frag;
+
+			frag = RestaurantInfoFragment.newInstance(info);
+
+			// Check if the fragment is already initialized
+			if (mFragment == null) {
+				// If not, instantiate and add it to the activity
+				mFragment = Fragment.instantiate(mActivity, mClass.getName());
+				supFT.add(android.R.id.content, mFragment, mTag);
+			} else {
+				// If it exists, simply attach it in order to show it
+				supFT.attach(mFragment);
+			}
+			supFT.commit();
+		}
+
+		public void onTabUnselected(Tab tab, FragmentTransaction ft) {
+			if (mFragment != null) {
+				// Detach the fragment, because another one is being attached
+				android.support.v4.app.FragmentTransaction supFT = getSupportFragmentManager()
+						.beginTransaction();
+				supFT.detach(mFragment);
+				supFT.commit();
+			}
+		}
+
+		public void onTabReselected(Tab tab, FragmentTransaction ft) {
+			// User selected the already selected tab. Usually do nothing.
+		}
+	}
+
 }

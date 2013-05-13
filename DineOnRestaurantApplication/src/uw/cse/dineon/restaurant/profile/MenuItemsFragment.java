@@ -73,7 +73,7 @@ public class MenuItemsFragment extends ListFragment {
 
 		// If arguments existed and it invluded a Restaurant Info
 		// Proceed
-		if (!isValid(info)) {
+		if (!isValid(info) && false) {
 			List<String> defList = new ArrayList<String>();
 			defList.add("Illegal Restaurant Info State");
 			ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(),
