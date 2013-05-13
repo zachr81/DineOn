@@ -157,8 +157,8 @@ implements CreateNewAccountListener, RestaurantDownLoaderCallback {
 			return;
 		}
 		mProgressDialog = new ProgressDialog(this);
-		mProgressDialog.setTitle("Getting you ready to DineOn!");
-		mProgressDialog.setMessage("Logging in...");
+		mProgressDialog.setTitle("Logging in...");
+		mProgressDialog.setMessage("Getting you your own restaurant");
 		mProgressDialog.setIndeterminate(true);
 		mProgressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
 		mProgressDialog.show();
