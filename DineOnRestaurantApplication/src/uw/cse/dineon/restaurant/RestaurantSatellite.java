@@ -1,13 +1,15 @@
 package uw.cse.dineon.restaurant;
 
-import java.util.HashMap;
+import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import uw.cse.dineon.library.CustomerRequest;
 import uw.cse.dineon.library.DiningSession;
+import uw.cse.dineon.library.Order;
+import uw.cse.dineon.library.Reservation;
 import uw.cse.dineon.library.Restaurant;
 import uw.cse.dineon.library.RestaurantInfo;
 import uw.cse.dineon.library.UserInfo;
@@ -59,9 +61,18 @@ public class RestaurantSatellite extends BroadcastReceiver {
 	private DineOnRestaurantActivity mCurrentActivity;
 
 	/**
-	 * TODO What is this for ???
+	 * Enum for handling specific actions.
+	 * @author mhotan
 	 */
-//	private String mRestaurantSessionChannel;
+	private enum ACTION_OPTION {
+		REQUEST_DINING_SESSION,
+		REQUEST_ORDER,
+		REQUEST_CUSTOMER_REQUEST,
+		REQUEST_CHECK_OUT,
+		REQUEST_RESERVATION,
+		CHANGE_USER_INFO,
+		NA
+	}
 
 	/**
 	 * Creates and prepares a receiver for listening to
@@ -69,12 +80,9 @@ public class RestaurantSatellite extends BroadcastReceiver {
 	 */
 	public RestaurantSatellite() {
 		mIF = new IntentFilter();
-		mIF.addAction(DineOnConstants.ACTION_REQUEST_DINING_SESSION);
-		mIF.addAction(DineOnConstants.ACTION_ORDER_PLACED);
-		mIF.addAction(DineOnConstants.ACTION_CHECK_OUT);
-		mIF.addAction(DineOnConstants.ACTION_CHANGE_USER_INFO);
-		mIF.addAction(DineOnConstants.ACTION_CUSTOMER_REQUEST);
-//		mRestaurantSessionChannel = null;
+		for (String action: DineOnConstants.RESTAURANT_ACTIONS) {
+			mIF.addAction(action);
+		}
 	}
 
 	/**
@@ -143,7 +151,7 @@ public class RestaurantSatellite extends BroadcastReceiver {
 			throw new IllegalArgumentException("Forgot to save dining session.");
 		}
 		JSONObject jobj = new JSONObject();
-		
+
 		try {
 			jobj.put(DineOnConstants.OBJ_ID, ds.getObjId());
 			jobj.put(DineOnConstants.KEY_ACTION, DineOnConstants.ACTION_CONFIRM_DINING_SESSION);
@@ -151,13 +159,86 @@ public class RestaurantSatellite extends BroadcastReceiver {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+
 		List<UserInfo> users = ds.getUsers();
 		for (UserInfo u : users) {
+			ParseUtil.notifyApplication(
+					jobj,
+					ParseUtil.getChannel(u));
+		}
+	}
+
+	/**
+	 * Notify all the users of the dining session that the order was 
+	 * placed correctly.
+	 * @param ds Dining Session that was updated.
+	 * @param order Order for reference.
+	 */
+	public void confirmOrder(DiningSession ds, Order order) {
+		JSONObject jobj = new JSONObject();
+
+		try {
+			jobj.put(DineOnConstants.OBJ_ID, ds.getObjId());
+			jobj.put(DineOnConstants.OBJ_ID_2, order.getObjId());
+			jobj.put(DineOnConstants.KEY_ACTION, DineOnConstants.ACTION_CONFIRM_ORDER);
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		List<UserInfo> users = ds.getUsers();
+		for (UserInfo u : users) {
+			ParseUtil.notifyApplication(
+					jobj,
+					ParseUtil.getChannel(u));
+		}
+	}
+
+	/**
+	 * Notify all the users of the dining session that the customer request
+	 * was seen.
+	 * @param ds Dining session in which customer request occured.
+	 * @param request request to notify was accepted
+	 */
+	public void confirmCustomerRequest(DiningSession ds, CustomerRequest request) {
+		JSONObject jobj = new JSONObject();
+
+		try {
+			jobj.put(DineOnConstants.OBJ_ID, ds.getObjId());
+			jobj.put(DineOnConstants.OBJ_ID_2, request.getObjId());
+			jobj.put(DineOnConstants.KEY_ACTION, DineOnConstants.ACTION_CONFIRM_ORDER);
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		List<UserInfo> users = ds.getUsers();
+		for (UserInfo u : users) {
+			ParseUtil.notifyApplication(
+					jobj,
+					ParseUtil.getChannel(u));
+		}
+	}
+
+	/**
+	 * Notifies user of reservation confirmation.
+	 * @param user user to notify
+	 * @param res Reservation to confirm
+	 */
+	public void confirmReservation(UserInfo user, Reservation res) {
+		JSONObject jobj = new JSONObject();
+
+		try {
+			jobj.put(DineOnConstants.OBJ_ID, res.getObjId());
+			jobj.put(DineOnConstants.KEY_ACTION, DineOnConstants.ACTION_CONFIRM_ORDER);
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
 		ParseUtil.notifyApplication(
 				jobj,
-				ParseUtil.getChannel(u));
-		}
+				ParseUtil.getChannel(user));
 	}
 
 	/**
@@ -169,7 +250,7 @@ public class RestaurantSatellite extends BroadcastReceiver {
 	 */
 	public void notifyChangeRestaurantInfo(RestaurantInfo restaurant, UserInfo user) {
 		JSONObject jobj = new JSONObject();
-		
+
 		try {
 			jobj.put(DineOnConstants.OBJ_ID, restaurant.getObjId());
 			jobj.put(DineOnConstants.KEY_ACTION, DineOnConstants.ACTION_CHANGE_RESTAURANT_INFO);
@@ -177,7 +258,7 @@ public class RestaurantSatellite extends BroadcastReceiver {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+
 		ParseUtil.notifyApplication(
 				jobj,
 				ParseUtil.getChannel(user));
@@ -201,6 +282,10 @@ public class RestaurantSatellite extends BroadcastReceiver {
 		if (!theirChannel.equals(mChannel)) { 
 			return;
 		}
+
+		// Get associated action
+		String action = intent.getAction();
+
 		// Extract the 
 		String id = null;
 		JSONObject jobj;
@@ -217,123 +302,154 @@ public class RestaurantSatellite extends BroadcastReceiver {
 			return;
 		} 
 
-		String tableNumStr = "" + -1; //Default Value
-		int tableNum = -1;
+		// Get the second Argument
+		String arg2 = null;
 		try {
-			tableNumStr = jobj.getString(DineOnConstants.TABLE_NUM);
-			tableNum = Integer.valueOf(tableNumStr);
+			arg2 = jobj.getString(DineOnConstants.OBJ_ID_2);
 		} catch (JSONException e) {
 			// Leave it at -1
 			Log.e(TAG, "JSON Exception occured on push request.");
 		}
 
-		String action = intent.getAction();
 		ParseQuery uInfo = new ParseQuery(UserInfo.class.getSimpleName());
 		ParseQuery dsQuery = new ParseQuery(DiningSession.class.getSimpleName());
 		uInfo.setCachePolicy(CachePolicy.NETWORK_ONLY);
 		dsQuery.setCachePolicy(CachePolicy.NETWORK_ONLY);
 
+		ParseQuery query;
+		// Create the callback
+		SatelliteGetCallback callback = new SatelliteGetCallback(
+				mCurrentActivity, arg2);
+
 		if (DineOnConstants.ACTION_REQUEST_DINING_SESSION.equals(action)) {
-			// TODO Download UserInfo
-			// Get the table ID
-			final int TNUM = tableNum;
-			uInfo.getInBackground(id, new GetCallback() {
-				public void done(ParseObject object, ParseException e) {
-					if (e == null) {
-						// Return updated user info
-						try {
-							mCurrentActivity.onUserCheckedIn(new UserInfo(object), TNUM);
-						} catch (ParseException e1) {
-							mCurrentActivity.onFail(e1.getMessage());
-						}
-					} else {
-						mCurrentActivity.onFail(e.getMessage());
-					}
-				}
-			});
-			
-			Log.v(TAG, "Dining Session received!");
-		} else if (DineOnConstants.ACTION_ORDER_PLACED.equals(action)) {
-			// TODO Download Dining Session
-			dsQuery.getInBackground(id, new GetCallback() {
-				public void done(ParseObject object, ParseException e) {
-					if (e == null) {
-						// object will be your game score
-						try {
-							mCurrentActivity.onOrderPlaced(new DiningSession(object));
-						} catch (ParseException e1) {
-							mCurrentActivity.onFail(e1.getMessage());
-						}
-					} else {
-						mCurrentActivity.onFail(e.getMessage());
-					}
-				}
-			});
-		} else if (DineOnConstants.ACTION_CUSTOMER_REQUEST.equals(action)) {
-			// TODO Download Dining Session
-			dsQuery.getInBackground(id, new GetCallback() {
-				public void done(ParseObject object, ParseException e) {
-					if (e == null) {
-						// object will be your game score
-						try {
-							mCurrentActivity.onCustomerRequest(new DiningSession(object));
-						} catch (ParseException e1) {
-							mCurrentActivity.onFail(e1.getMessage());						
-						}
-					} else {
-						mCurrentActivity.onFail(e.getMessage());
-					}
-				}
-			});
-		} else if (DineOnConstants.ACTION_CHECK_OUT.equals(action)) {
-			// TODO Download Dining Session
-			dsQuery.getInBackground(id, new GetCallback() {
-				public void done(ParseObject object, ParseException e) {
-					if (e == null) {
-						// object will be your game score
-						try {
-							mCurrentActivity.onCheckedOut(new DiningSession(object));
-						} catch (ParseException e1) {
-							mCurrentActivity.onFail(e1.getMessage());
-						}
-					} else {
-						mCurrentActivity.onFail(e.getMessage());
-					}
-				}
-			});
-		} else if (DineOnConstants.ACTION_CHANGE_USER_INFO.equals(action)) {
-			// TODO Download UserInfo
-			uInfo.getInBackground(id, new GetCallback() {
-				public void done(ParseObject object, ParseException e) {
-					if (e == null) {
-						// object will be your game score
-						try {
-							mCurrentActivity.onUserChanged(new UserInfo(object));
-						} catch (ParseException e1) {
-							mCurrentActivity.onFail(e1.getMessage());
-						}
-					} else {
-						mCurrentActivity.onFail(e.getMessage());
-					}
-				}
-			});
-		} else {
-			Log.w(TAG, "Unknown action received: " + action);
+			// Get the User Info data
+			query = new ParseQuery(UserInfo.class.getSimpleName());
+			query.setCachePolicy(CachePolicy.NETWORK_ONLY);
+			callback.setOption(ACTION_OPTION.REQUEST_DINING_SESSION);
+			query.getInBackground(id, callback);
+		} 
+		else if (DineOnConstants.ACTION_REQUEST_ORDER.equals(action)) {
+			// Get the Order Object
+			query = new ParseQuery(Order.class.getSimpleName());
+			query.setCachePolicy(CachePolicy.NETWORK_ONLY);
+			callback.setOption(ACTION_OPTION.REQUEST_ORDER);
+			query.getInBackground(id, callback);		
+		} 
+		else if (DineOnConstants.ACTION_REQUEST_CUSTOMER_REQUEST.equals(action)) {
+			// Get the Customer Request Object
+			query = new ParseQuery(CustomerRequest.class.getSimpleName());
+			query.setCachePolicy(CachePolicy.NETWORK_ONLY);
+			callback.setOption(ACTION_OPTION.REQUEST_CUSTOMER_REQUEST);
+			query.getInBackground(id, callback);
+
+		} 
+		else if (DineOnConstants.ACTION_REQUEST_RESERVATION.equals(action)) {
+			// Get the date in string format
+			query = new ParseQuery(Reservation.class.getSimpleName());
+			query.setCachePolicy(CachePolicy.NETWORK_ONLY);
+			callback.setOption(ACTION_OPTION.REQUEST_RESERVATION);
+			query.getInBackground(id, callback);
+		} 
+		else if (DineOnConstants.ACTION_REQUEST_CHECK_OUT.equals(action)) {
+			// Get the current Dining Session instance
+			query = new ParseQuery(DiningSession.class.getSimpleName());
+			query.setCachePolicy(CachePolicy.CACHE_ELSE_NETWORK);
+			callback.setOption(ACTION_OPTION.REQUEST_CHECK_OUT);
+			query.getInBackground(id, callback);
+		} 
+		else if (DineOnConstants.ACTION_CHANGE_USER_INFO.equals(action)) {
+			// Get the current user info instance
+			query = new ParseQuery(UserInfo.class.getSimpleName());
+			query.setCachePolicy(CachePolicy.NETWORK_ONLY);
+			callback.setOption(ACTION_OPTION.CHANGE_USER_INFO);
+			query.getInBackground(id, callback);
+		}
+	}
+
+	/**
+	 * Private GetCallback that encapsulates the processing of 
+	 * different types of Gets.
+	 * @author mhotan
+	 */
+	private class SatelliteGetCallback extends GetCallback {
+
+		private ACTION_OPTION mOption;
+
+		private final SateliteListener mListener;
+
+		private final String mSecondArg;
+
+		/**
+		 * Creates a callback that is able to respond to the user 
+		 * once a download is complete.  Secondary arguments is a helper
+		 * because some methods require a secondary ID.
+		 * @param listener Listener for which method to call
+		 * @param secondArgument Second string that contain object ID or formatted dates
+		 */
+		public SatelliteGetCallback(SateliteListener listener, String secondArgument){
+			mListener = listener;
+			mOption = ACTION_OPTION.NA;
+			mSecondArg = secondArgument;
 		}
 
-		// TODO What was this?
-//		else if (mRestaurantSessionChannel != null && 
-//				mRestaurantSessionChannel.equals(theirChannel)) {
-//			// TODO Do something here that updates the state of the current Dining Session 
-//
-//		}
+		/**
+		 * Set option that determines appropiate action in response
+		 * to user request.
+		 * @param option Option to set
+		 */
+		public void setOption(ACTION_OPTION option) {
+			mOption = option;
+		}
+
+		@Override
+		public void done(ParseObject object, ParseException e) {
+			if (e != null) {
+				mListener.onFail(e.getMessage());
+				return;
+			}
+			try {
+				switch (mOption) {
+				case CHANGE_USER_INFO:
+					mListener.onUserChanged(new UserInfo(object));
+					break;
+				case REQUEST_CHECK_OUT:
+					mListener.onCheckedOut(new DiningSession(object));
+					break;
+				case REQUEST_DINING_SESSION:
+					int tableNum;
+					try {
+						tableNum = Integer.parseInt(mSecondArg);
+					} catch (NumberFormatException e1) {
+						tableNum = -1; // Bad number input
+					}
+					mListener.onUserCheckedIn(new UserInfo(object), tableNum);
+					break;
+				case REQUEST_CUSTOMER_REQUEST:
+					mListener.onCustomerRequest(new CustomerRequest(object),
+							mSecondArg);
+					break;
+				case REQUEST_RESERVATION:
+					mListener.onReservationRequest(new Reservation(object));
+					break;
+				case REQUEST_ORDER:
+					mListener.onOrderRequest(new Order(object), mSecondArg);
+					break;
+				default:
+					if (DineOnConstants.DEBUG) {
+						mListener.onFail("Unknown Request Recieved!");
+					}
+				}
+			} catch (Exception e1) {
+				mListener.onFail(e1.getMessage());
+			}
+		}
 	}
 
 	/**
 	 * Listener for Activities to implement to receive action.
 	 * @author mhotan
 	 */
-	public interface SateliteListener {
+	interface SateliteListener { // Package level notification
 
 		/**
 		 * Notifies that a error occured.
@@ -341,6 +457,13 @@ public class RestaurantSatellite extends BroadcastReceiver {
 		 * @param message Failure message that generally describes problem.
 		 */
 		void onFail(String message);
+
+		/**
+		 * Notifies Application the Users have checked out
+		 * for associated dining session.
+		 * @param session checked out dining session
+		 */
+		void onCheckedOut(DiningSession session);
 
 		/**
 		 * User attempted to check in to restaurant 
@@ -360,23 +483,27 @@ public class RestaurantSatellite extends BroadcastReceiver {
 		/**
 		 * Notifies that an order was placed from the User(s)
 		 * associated with the attached dining session.
-		 * @param session Dining session where order was placed
+		 * @param order Order to be added
+		 * @param sessionID ID of the dining session to add to
 		 */
-		void onOrderPlaced(DiningSession session);
+		void onOrderRequest(Order order, String sessionID);
 
 		/**
 		 * Notifies that a customer request was placed from the User(s)
 		 * associated with the attached dining session.
-		 * @param session Dining session where customer request was placed
+		 * @param request Customer request to add
+		 * @param sessionID ID of the dining session to add to
 		 */
-		void onCustomerRequest(DiningSession session);
+		void onCustomerRequest(CustomerRequest request, String sessionID);
 
 		/**
-		 * Notifies Application the Users have checked out
-		 * for associated dining session.
-		 * @param session checked out dining session
+		 * Notifies that a customer request was placed from the User(s)
+		 * associated with the attached dining session.
+		 * @param reservation Date that user request.
 		 */
-		void onCheckedOut(DiningSession session);
+		void onReservationRequest(Reservation reservation);
+
+
 	}
 
 }

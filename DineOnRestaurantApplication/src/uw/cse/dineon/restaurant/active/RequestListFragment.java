@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import uw.cse.dineon.library.CustomerRequest;
 import uw.cse.dineon.restaurant.R;
 import android.app.Activity;
 import android.content.Context;
@@ -25,63 +26,51 @@ import android.widget.TextView;
  */
 public class RequestListFragment extends ListFragment {
 
-	private final String TAG = this.getClass().getSimpleName();
+	private static final String TAG = RequestListFragment.class.getSimpleName();
 
 	private RequestItemListener mListener;
-
-	//TODO change string to order
-	private ArrayAdapter<String> mAdapter;
-
-	private static final String KEY_LIST = "MY LIST";
 	
-	/**
-	 * Creates a new customer list fragment.
-	 * @param requests TODO Change to request class
-	 * @return new fragment
-	 */
-	public static RequestListFragment newInstance(List<String> requests) {
-		RequestListFragment frag = new RequestListFragment();
-		ArrayList<String> mList = new ArrayList<String>();
-		if (requests != null) {
-			mList.addAll(requests);
-		}
-
-		Bundle args = new Bundle();
-		args.putStringArrayList(KEY_LIST, mList);
-		frag.setArguments(args);
-		return frag;
-	}
+	private ArrayAdapter<CustomerRequest> mAdapter;
+	
+//	private static List<CustomerRequest> mRequests;
+	
+//	/**
+//	 * Creates a new customer list fragment.
+//	 * @param requests list of requests
+//	 * @return new fragment
+//	 */
+//	public static RequestListFragment newInstance(List<CustomerRequest> requests) {
+//		RequestListFragment frag = new RequestListFragment();
+//		ArrayList<CustomerRequest> mList = new ArrayList<CustomerRequest>();
+//		if (requests != null) {
+//			mList.addAll(requests);
+//		}
+//		
+//		Bundle b = new Bundle();
+//		
+//		if(requests != null) {
+//			mRequests.addAll(requests);			
+//		} else {
+//			mRequests = null;
+//		}
+//		
+//		frag.addAll(requests);
+//		frag.setArguments(b);
+//		return frag;
+//	}
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		List<String> mRequests = getArguments() != null 
-				? getArguments().getStringArrayList(KEY_LIST) : null;
-		if (mRequests == null) {
-			if (mListener != null) {
-				mRequests = mListener.getCurrentRequests();
-			} else {
-				mRequests = new ArrayList<String>(); // Empty
-			}
+
+		// Obtain the current Requests
+		List<CustomerRequest> requests = mListener.getCurrentRequests();
+		if (requests == null) {
+			requests = new ArrayList<CustomerRequest>();
 		}
 
-		//TODO Create custom adapter to handle custom layoutss
-		mAdapter = new RequestListAdapter(this.getActivity(), mRequests);
+		mAdapter = new RequestListAdapter(this.getActivity(), requests);
 		setListAdapter(mAdapter);	
-	}
-	
-	/**
-	 * Activity Created its on create.
-	 * @param savedInstanceState Bundle
-	 */
-	@Override
-	public void onActivityCreated(Bundle savedInstanceState) {
-		super.onActivityCreated(savedInstanceState);
-//		 TODO Check Functionality before deleting		
-//		List<String> requests = mListener.getCurrentRequests();
-//		
-//		mAdapter = new RequestListAdapter(this.getActivity(), requests);
-//		setListAdapter(mAdapter);
 	}
 
 	@Override
@@ -98,14 +87,14 @@ public class RequestListFragment extends ListFragment {
 	//////////////////////////////////////////////////////
 	//// Following are public setters.  That Activities can use
 	//// to set the values of what is showed to the user for this 
-	//// fragment TODO Change string to Order
+	//// fragment
 	//////////////////////////////////////////////////////
 
 	/**
 	 * Adds request to this view.
 	 * @param request String
 	 */
-	public void addRequest(String request) {
+	public void addRequest(CustomerRequest request) {
 		mAdapter.add(request);
 		mAdapter.notifyDataSetChanged();
 	}
@@ -114,8 +103,8 @@ public class RequestListFragment extends ListFragment {
 	 * Adds all the requests to this view.
 	 * @param request Collection of Strings
 	 */
-	public void addAll(Collection<String> request) {
-		for (String o: request) {
+	public void addAll(Collection<CustomerRequest> request) {
+		for (CustomerRequest o: request) {
 			mAdapter.add(o);
 		}
 		mAdapter.notifyDataSetChanged();
@@ -125,7 +114,7 @@ public class RequestListFragment extends ListFragment {
 	 * Deletes this request if it finds it.
 	 * @param request String
 	 */
-	public void deleteRequest(String request) {
+	public void deleteRequest(CustomerRequest request) {
 		mAdapter.remove(request);
 		mAdapter.notifyDataSetChanged();
 	}
@@ -155,34 +144,28 @@ public class RequestListFragment extends ListFragment {
 		 * about the specific request.
 		 * @param request request to get detail 
 		 */
-		public void onRequestRequestDetail(String request);
+		public void onRequestRequestDetail(CustomerRequest request);
 
 		/**
 		 * Assign the staffmember to handle the request.
 		 * @param request request to handle 
 		 * @param staff staff member to assign to request
 		 */
-		public void onAssignStaffToRequest(String request, String staff);
-
-		/**
-		 * Dismisses the request.  Doesn't mean issue was tended to
-		 * @param request request to dismiss
-		 */
-		public void onDismissRequest(String request);
+		public void onAssignStaffToRequest(CustomerRequest request, String staff);
 
 		/**
 		 * Removes a request. request is removed completely from this 
 		 * list.  This is a notification method 
 		 * @param request String
 		 */
-		public void onRemoveRequest(String request);
+		public void onRemoveRequest(CustomerRequest request);
 
 		/**
 		 * Used to get the most recent up to date list of items to show.
 		 * Cannot return null
 		 * @return List of requests to show
 		 */
-		public List<String> getCurrentRequests();
+		public List<CustomerRequest> getCurrentRequests();
 		
 	}
 
@@ -195,10 +178,10 @@ public class RequestListFragment extends ListFragment {
 	 * Adpater to handle request management and layout.
 	 * @author mhotan
 	 */
-	private class RequestListAdapter extends ArrayAdapter<String> {
+	private class RequestListAdapter extends ArrayAdapter<CustomerRequest> {
 
 		private final Context mContext;
-		private final List<String> mRequests;
+		private final List<CustomerRequest> mRequests;
 		private final ArrayList<String> mStaff;
 
 		/**
@@ -207,11 +190,12 @@ public class RequestListFragment extends ListFragment {
 		 * @param ctx Context
 		 * @param orders List of orders
 		 */
-		public RequestListAdapter(Context ctx, List<String> orders) {
+		public RequestListAdapter(Context ctx, List<CustomerRequest> orders) {
 			super(ctx, R.layout.listitem_restaurant_request, orders);
 			this.mContext = ctx;
 			this.mRequests = orders;
 			
+			// For debug purposes we will add fake staff members
 			mStaff = new ArrayList<String>();
 			mStaff.add("Bert");
 			mStaff.add("Ernie");
@@ -225,10 +209,10 @@ public class RequestListFragment extends ListFragment {
 					.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 			View view = inflater.inflate(R.layout.listitem_restaurant_request, parent, false);
 			
-			String request = mRequests.get(position);
+			CustomerRequest request = mRequests.get(position);
 			
 			TextView title = (TextView) view.findViewById(R.id.label_request_title);
-			title.setText(request);
+			title.setText(request.getDescription());
 			
 			ImageButton reqDetail = (ImageButton) view.findViewById(R.id.button_request_detail);
 			ImageButton sendToStaff = (ImageButton) view.findViewById(R.id.button_send_to_staff);
@@ -257,7 +241,7 @@ public class RequestListFragment extends ListFragment {
 		private class AllAroundListener implements 
 		View.OnClickListener, CompoundButton.OnCheckedChangeListener {
 
-			private final String mRequest; //TODO Change to Request class
+			private final CustomerRequest mRequest;
 			private final Spinner mStaff;
 			private final ImageButton mAssignToStaff, mDetailButton;
 			private final CheckBox mDismiss;
@@ -272,7 +256,7 @@ public class RequestListFragment extends ListFragment {
 			 * @param dismiss CheckBox
 			 */
 			public AllAroundListener(
-					String request,
+					CustomerRequest request,
 					Spinner staff,
 					ImageButton assignToStaff,
 					ImageButton detailButton,
@@ -300,7 +284,7 @@ public class RequestListFragment extends ListFragment {
 				mDelete = isChecked;
 				if (mDelete) {
 					mAssignToStaff.setImageResource(R.drawable.discard_content);
-					mListener.onDismissRequest(mRequest);
+//					mListener.onDismissRequest(mRequest);
 				} else {
 					mAssignToStaff.setImageResource(R.drawable.add_staffmember);
 				}
