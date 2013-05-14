@@ -12,6 +12,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -35,11 +36,15 @@ public class MenuItemsFragment extends ListFragment {
 	 * Adapter for restaurant menu Item adapter. Use this to add new Menuitems
 	 */
 	private RestaurantMenuItemAdapter mAdapter;
+	
+	private static final String TAG = "MenuItemsFragment";
 
 	/**
 	 * Activity listener.
 	 */
 	private MenuItemListener mListener;
+	
+	private uw.cse.dineon.library.Menu currentMenu;
 
 	/**
 	 * Creates a MenuItemsFragment that is ready to build and view.
@@ -68,29 +73,40 @@ public class MenuItemsFragment extends ListFragment {
 		// IF there are arguments
 		// then check if there is a restaurant info instance
 		// info can be null
-		RestaurantInfo info = getArguments() != null ? (RestaurantInfo) getArguments()
-				.getParcelable(DineOnConstants.KEY_RESTAURANTINFO) : null;
+		/*
+		 * RestaurantInfo info = getArguments() != null ? (RestaurantInfo)
+		 * getArguments() .getParcelable(DineOnConstants.KEY_RESTAURANTINFO) :
+		 * null;
+		 */
+		final RestaurantInfo info = mListener.getInfo();
 
 		// If arguments existed and it invluded a Restaurant Info
 		// Proceed
-		if (!isValid(info) && false) {
+		if (isValid(info)) {
+			
+			// TODO Handle multiple menus
+			if(info.getMenuList().size() < 1){
+				info.getMenuList().add(new uw.cse.dineon.library.Menu("Default"));
+				Log.d(TAG, "No menu exists, created a default menu!");
+			}
+			currentMenu = info.getMenuList().get(0);
+			
+			List<MenuItem> menuitems =  currentMenu.getItems();
+			mAdapter = new RestaurantMenuItemAdapter(getActivity(), menuitems);
+			setListAdapter(mAdapter);
+		} else {
 			List<String> defList = new ArrayList<String>();
 			defList.add("Illegal Restaurant Info State");
 			ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(),
 					android.R.layout.simple_list_item_1, defList);
 			setListAdapter(adapter);
-		} else {
-			// List<Menu> menus = info.getMenus
-			// TODO Populate the screen with
-			List<MenuItem> menuitems = new ArrayList<MenuItem>();
-			mAdapter = new RestaurantMenuItemAdapter(getActivity(), menuitems);
-			setListAdapter(mAdapter);
 		}
 	}
 
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 		// TODO Add your menu entries here
+		inflater.inflate(R.menu.menu_menu, menu);
 		super.onCreateOptionsMenu(menu, inflater);
 	}
 
@@ -163,7 +179,8 @@ public class MenuItemsFragment extends ListFragment {
 		 *            menu item to add
 		 */
 		void onMenuItemAdded(MenuItem item);
-		//XXX Seems like this might be redundant right now
+
+		// XXX Seems like this might be redundant right now
 
 		/**
 		 * Notifies that the user chose to modify the current item.
@@ -172,6 +189,8 @@ public class MenuItemsFragment extends ListFragment {
 		 *            menu item to modify
 		 */
 		void onMenuItemModified(MenuItem item);
+
+		RestaurantInfo getInfo();
 
 	}
 
@@ -303,7 +322,7 @@ public class MenuItemsFragment extends ListFragment {
 				String newDesc = mDescription.getText().toString().trim();
 				double newPrice = Double.valueOf(mPrice.getText().toString());
 
-				if (newTitle == "" || newDesc == null){
+				if (newTitle == "" || newDesc == null) {
 					Toast.makeText(getActivity(), "Please fill in the Title and Description!",
 							Toast.LENGTH_SHORT).show();
 					return;

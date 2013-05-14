@@ -48,8 +48,34 @@ public class ProfileActivity extends DineOnRestaurantActivity implements TabList
 		//setContentView(R.layout.activity_restaurant_profile);
 
 		// TODO Grab which action bar is selected
-		mLastTabPosition = 0; // Let the tab be either the 0 or 1
+		mLastTabPosition = 1; // Let the tab be either the 0 or 1
 
+		
+		/*
+		android.support.v4.app.FragmentTransaction ft = 
+				getSupportFragmentManager().beginTransaction();
+		ft.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out);
+		//ft.add(R.id.container_profile_fragment, frag);
+		ft.commit();
+		*/
+		
+	}
+	
+
+	@Override
+	public void updateUI(){
+		
+		super.updateUI();
+		/*
+		Fragment frag;
+		android.support.v4.app.FragmentTransaction ft = getSupportFragmentManager()
+				.beginTransaction();
+		//ft.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out);
+		frag = MenuItemsFragment.newInstance(getRestaurant().getInfo());
+		ft.replace(android.R.id.content, frag);
+		ft.commit();
+		*/
+		
 		Fragment frag;
 		if (isLoggedIn() || DineOnConstants.DEBUG) {
 			// If logged in fill views appropriately
@@ -71,29 +97,6 @@ public class ProfileActivity extends DineOnRestaurantActivity implements TabList
 			Log.w(TAG, "User not logged in cant show profile");
 			frag = new NotLoggedInFragment();
 		}
-		/*
-		android.support.v4.app.FragmentTransaction ft = 
-				getSupportFragmentManager().beginTransaction();
-		ft.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out);
-		//ft.add(R.id.container_profile_fragment, frag);
-		ft.commit();
-		*/
-
-	}
-	
-
-	@Override
-	public void updateUI(){
-		super.updateUI();
-		/*
-		Fragment frag;
-		android.support.v4.app.FragmentTransaction ft = getSupportFragmentManager()
-				.beginTransaction();
-		//ft.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out);
-		frag = MenuItemsFragment.newInstance(getRestaurant().getInfo());
-		ft.replace(android.R.id.content, frag);
-		ft.commit();
-		*/
 	}
 	
 
@@ -123,10 +126,10 @@ public class ProfileActivity extends DineOnRestaurantActivity implements TabList
 		Log.v(TAG, "Tab selected!");
 		int pos = tab.getPosition();
 		int diff = pos - mLastTabPosition;
-
+		
+		
+		
 		// Ignore ft because it is not support fragment transaction
-
-		// get the support fragment transactions
 		android.support.v4.app.FragmentTransaction supFT = getSupportFragmentManager()
 				.beginTransaction();
 
@@ -183,7 +186,7 @@ public class ProfileActivity extends DineOnRestaurantActivity implements TabList
 
 	@Override
 	public void onMenuItemAdded(MenuItem item) {
-		item.saveInBackGround(new SaveCallback() {
+		getRestaurant().getInfo().saveInBackGround(new SaveCallback() {
 			@Override
 			public void done(ParseException e) {
 				if (e == null) {
@@ -198,7 +201,7 @@ public class ProfileActivity extends DineOnRestaurantActivity implements TabList
 	@Override
 	public void onMenuItemModified(MenuItem item) {
 		// TODO Auto-generated method stub
-		item.saveInBackGround(new SaveCallback() {
+		getRestaurant().getInfo().saveInBackGround(new SaveCallback() {
 			@Override
 			public void done(ParseException e) {
 				if (e == null) {
@@ -289,6 +292,12 @@ public class ProfileActivity extends DineOnRestaurantActivity implements TabList
 		public void onTabReselected(Tab tab, FragmentTransaction ft) {
 			// User selected the already selected tab. Usually do nothing.
 		}
+	}
+
+	@Override
+	public RestaurantInfo getInfo() {
+		// TODO Auto-generated method stub
+		return getRestaurant().getInfo();
 	}
 
 }

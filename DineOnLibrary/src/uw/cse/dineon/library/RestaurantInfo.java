@@ -141,6 +141,10 @@ public class RestaurantInfo extends Storable {
 	public List<String> getImageList() {
 		return mImageList;
 	}
+	
+	public List<Menu> getMenuList() {
+		return mMenus;
+	}
 
 //	/**
 //	 * @param images list of Integers

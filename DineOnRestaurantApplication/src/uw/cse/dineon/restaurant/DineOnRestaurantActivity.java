@@ -498,7 +498,7 @@ implements SateliteListener {
 		switch (item.getItemId()) {
 		case R.id.item_restaurant_profile:
 			startProfileActivity();
-			break;
+			return true;
 		case R.id.item_logout:
 			if (mRestaurant != null) {
 				mRestaurant.saveEventually(null);
@@ -506,10 +506,10 @@ implements SateliteListener {
 			// TODO Notify Users that Restaurant is closing
 			ParseUser.logOut();
 			startLoginActivity();
-			break;
+			return true;
 		default:
 		}
-		return true;
+		return false;
 	}
 
 	@Override

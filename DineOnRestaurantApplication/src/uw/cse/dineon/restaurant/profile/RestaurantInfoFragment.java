@@ -61,12 +61,16 @@ public class RestaurantInfoFragment extends Fragment {
 		// IF there are arguments
 		// then check if there is a restaurant info instance
 		// info can be null
-		final RestaurantInfo info = getArguments() != null ? (RestaurantInfo) getArguments()
-				.getParcelable(DineOnConstants.KEY_RESTAURANTINFO) : null;
-
+		/*
+		 * final RestaurantInfo info = getArguments() != null ? (RestaurantInfo)
+		 * getArguments() .getParcelable(DineOnConstants.KEY_RESTAURANTINFO) :
+		 * null;
+		 */
+		
+		final RestaurantInfo info = mListener.getInfo();
 		// Check the view and its state and initialize appropriately
 		View view;
-		if (isValid(info) && true) {
+		if (isValid(info)) {
 			view = inflater.inflate(R.layout.fragment_restaurant_info, container, false);
 
 			// Reference the gallery to place images of this restaurant
@@ -75,9 +79,9 @@ public class RestaurantInfoFragment extends Fragment {
 			CheckBox mCheckBox = (CheckBox) view.findViewById(R.id.checkbox_is_default_image);
 			ImageButton mButtonAdd = (ImageButton) view.findViewById(R.id.button_add_new_image);
 			ImageButton mButtonDelt = (ImageButton) view.findViewById(R.id.button_delete_image);
-			final EditText mPhoneInput = (EditText) view
+			final TextView mPhoneInput = (TextView) view
 					.findViewById(R.id.edittext_restaurant_phone);
-			final EditText mAddressInput = (EditText) view
+			final TextView mAddressInput = (TextView) view
 					.findViewById(R.id.edittext_restaurant_address);
 			Button mSaveButton = (Button) view.findViewById(R.id.button_save_restaurant_info);
 			TextView restName = (TextView) view.findViewById(R.id.label_restaurant_name);
@@ -180,6 +184,8 @@ public class RestaurantInfoFragment extends Fragment {
 		 *            Updated Restuarant Info
 		 */
 		void onRestaurantInfoUpdate(RestaurantInfo rest);
+
+		RestaurantInfo getInfo();
 
 	}
 
