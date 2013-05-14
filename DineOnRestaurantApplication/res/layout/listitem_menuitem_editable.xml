@@ -23,7 +23,6 @@
         android:hint="@string/hint_menuitem_title"
         android:textAppearance="?android:attr/textAppearanceMedium" >
 
-        <requestFocus />
     </EditText>
 
     <EditText

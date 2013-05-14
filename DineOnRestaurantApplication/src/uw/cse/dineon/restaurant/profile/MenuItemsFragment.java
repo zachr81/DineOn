@@ -114,10 +114,15 @@ public class MenuItemsFragment extends ListFragment {
 	public boolean onOptionsItemSelected(android.view.MenuItem item) {
 		if (item.getItemId() == R.id.menu_add_menu_item) {
 			// Add new blank item
-			mAdapter.add(new MenuItem(mAdapter.getCount() + 1, 0.0, "", ""));
+			MenuItem mi = new MenuItem(mAdapter.getCount() + 1, 0.0, "", "");
+			currentMenu.addNewItem(mi);
+			mAdapter.add(mi);
+			mAdapter.notifyDataSetChanged();
+			Log.v(TAG, "Adding new menu item");
 			return true;
-		}
+		} else {		
 		return super.onOptionsItemSelected(item);
+		}
 	}
 
 	@Override
@@ -228,6 +233,8 @@ public class MenuItemsFragment extends ListFragment {
 
 		@Override
 		public View getView(int position, View convertView, ViewGroup parent) {
+			if(position >= this.getCount())
+				super.getView(position, convertView, parent);
 			LayoutInflater inflater = (LayoutInflater) mContext
 					.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 			View view;
@@ -245,7 +252,7 @@ public class MenuItemsFragment extends ListFragment {
 			EditText price = (EditText) view.findViewById(R.id.edittext_price);
 			ImageButton save = (ImageButton) view.findViewById(R.id.button_save_menuitem);
 
-			MenuItem item = mItems.get(position);
+			MenuItem item = super.getItem(position);
 			title.setText(item.getTitle());
 			description.setText(item.getDescription());
 
