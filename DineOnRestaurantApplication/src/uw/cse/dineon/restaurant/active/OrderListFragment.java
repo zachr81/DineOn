@@ -46,6 +46,7 @@ public class OrderListFragment extends ListFragment {
 			orders = new ArrayList<Order>();
 		}
 		mAdapter = new OrderListAdapter(this.getActivity(), orders);
+		setListAdapter(mAdapter);
 	}
 
 	@Override
@@ -212,11 +213,13 @@ public class OrderListFragment extends ListFragment {
 
 			final LinearLayout view;
 
+			LayoutInflater inflater = (LayoutInflater) mContext
+					.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+			
 			if(convertView == null) {
 				view = new LinearLayout(mContext);
 				view.setOrientation(LinearLayout.VERTICAL);
-				LayoutInflater inflater = (LayoutInflater) mContext
-						.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+				
 				vwTop = inflater.inflate(R.layout.listitem_restaurant_order_top, null, true);
 				vwBot = inflater.inflate(R.layout.listitem_restaurant_order_bot, null, true);
 				view.addView(vwTop);
