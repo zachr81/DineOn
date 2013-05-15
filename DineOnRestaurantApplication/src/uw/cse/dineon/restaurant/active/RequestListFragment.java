@@ -309,26 +309,6 @@ public class RequestListFragment extends ListFragment {
 			
 			spinner.setAdapter(new ArrayAdapter<String>(getActivity(), 
 					android.R.layout.simple_list_item_1, mStaff));
-//			staff.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-//
-//				@Override
-//				public void onItemSelected(AdapterView<?> parentView, 
-//						View selectedItemView, int position, long id) {
-//					String staffMem = staff.getSelectedItem().toString();
-//
-//					mListener.onAssignStaffToRequest(request, staffMem);
-//					mAdapter.notifyDataSetChanged();
-//
-//				}
-//
-//				@Override
-//				public void onNothingSelected(AdapterView<?> parentView) {
-//					// nothing
-//				}
-//
-//			});
-
-
 
 			// Add to mapping to reference later
 			mViewToCustomerRequest.put(remove, REQUEST);
