@@ -268,7 +268,7 @@ public class RequestListFragment extends ListFragment {
 			}
 
 			TextView title = (TextView) VIEW.findViewById(R.id.label_request_title);
-			title.setText(REQUEST.getDescription());
+			title.setText(REQUEST.getDescription() + " - " + REQUEST.getUserInfo().getName());
 
 			TextView time = (TextView) VIEW.findViewById(R.id.label_request_time);
 			time.setText(REQUEST.getOriginatingTime().toString());

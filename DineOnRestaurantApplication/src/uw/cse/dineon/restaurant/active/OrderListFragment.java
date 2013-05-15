@@ -233,8 +233,15 @@ public class OrderListFragment extends ListFragment {
 			Button buttonCompleteOrder = (Button) view.findViewById(R.id.button_completed_order);
 			TextView orderTitle = 
 					(TextView) view.findViewById(R.id.button_order_title);
-			orderTitle.setText("Table " + order.getTableID() 
-					+ " " + order.getOriginalUser().getName());
+			int table = order.getTableID();
+			
+			if(table == -1) { // No Table
+				orderTitle.setText(order.getOriginalUser().getName());
+			} else {
+				orderTitle.setText("Table " + order.getTableID() 
+						+ " - " + order.getOriginalUser().getName());
+			}
+			
 			SeekBar progressBar = (SeekBar) view.findViewById(R.id.seekbar_order_progress);
 			progressBar.setMax(100);
 			progressBar.setProgress(0);
