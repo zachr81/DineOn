@@ -1,0 +1,330 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<BugCollection version="2.0.2" sequence="0" timestamp="1368659155052" analysisTimestamp="1368659155089" release="">
+  <Project projectName="">
+    <Jar>/Users/Garrett/Documents/cse403/dineon/DineOnRestaurantApplication/bin</Jar>
+    <AuxClasspathEntry>/Users/Garrett/Documents/adt-bundle-mac-x86_64-20130219/sdk/platforms/android-17/android.jar</AuxClasspathEntry>
+  </Project>
+  <BugInstance type="SIC_INNER_SHOULD_BE_STATIC" priority="2" abbrev="SIC" category="PERFORMANCE">
+    <Class classname="uw.cse.dineon.restaurant.RestaurantSatellite$SatelliteGetCallback">
+      <SourceLine classname="uw.cse.dineon.restaurant.RestaurantSatellite$SatelliteGetCallback" start="374" end="445" sourcefile="RestaurantSatellite.java" sourcepath="uw/cse/dineon/restaurant/RestaurantSatellite.java"/>
+    </Class>
+  </BugInstance>
+  <BugInstance type="BC_UNCONFIRMED_CAST" priority="2" abbrev="BC" category="STYLE">
+    <Class classname="uw.cse.dineon.restaurant.active.DiningSessionListFragment$DiningSessionListAdapter">
+      <SourceLine classname="uw.cse.dineon.restaurant.active.DiningSessionListFragment$DiningSessionListAdapter" start="139" end="273" sourcefile="DiningSessionListFragment.java" sourcepath="uw/cse/dineon/restaurant/active/DiningSessionListFragment.java"/>
+    </Class>
+    <Method classname="uw.cse.dineon.restaurant.active.DiningSessionListFragment$DiningSessionListAdapter" name="getView" signature="(ILandroid/view/View;Landroid/view/ViewGroup;)Landroid/view/View;" isStatic="false">
+      <SourceLine classname="uw.cse.dineon.restaurant.active.DiningSessionListFragment$DiningSessionListAdapter" start="215" end="273" startBytecode="0" endBytecode="129" sourcefile="DiningSessionListFragment.java" sourcepath="uw/cse/dineon/restaurant/active/DiningSessionListFragment.java"/>
+    </Method>
+    <Type descriptor="Landroid/view/View;" role="TYPE_FOUND">
+      <SourceLine classname="android.view.View" start="95" end="687" sourcefile="View.java" sourcepath="android/view/View.java"/>
+    </Type>
+    <Type descriptor="Landroid/widget/LinearLayout;" role="TYPE_EXPECTED">
+      <SourceLine classname="android.widget.LinearLayout" start="2" end="52" sourcefile="LinearLayout.java" sourcepath="android/widget/LinearLayout.java"/>
+    </Type>
+    <LocalVariable name="convertView" register="2" pc="76" role="LOCAL_VARIABLE_VALUE_OF"/>
+    <SourceLine classname="uw.cse.dineon.restaurant.active.DiningSessionListFragment$DiningSessionListAdapter" start="229" end="229" startBytecode="77" endBytecode="77" sourcefile="DiningSessionListFragment.java" sourcepath="uw/cse/dineon/restaurant/active/DiningSessionListFragment.java"/>
+  </BugInstance>
+  <BugInstance type="SIC_INNER_SHOULD_BE_STATIC" priority="2" abbrev="SIC" category="PERFORMANCE">
+    <Class classname="uw.cse.dineon.restaurant.active.DiningSessionListFragment$DiningSessionListAdapter">
+      <SourceLine classname="uw.cse.dineon.restaurant.active.DiningSessionListFragment$DiningSessionListAdapter" start="139" end="273" sourcefile="DiningSessionListFragment.java" sourcepath="uw/cse/dineon/restaurant/active/DiningSessionListFragment.java"/>
+    </Class>
+  </BugInstance>
+  <BugInstance type="BC_UNCONFIRMED_CAST" priority="2" abbrev="BC" category="STYLE">
+    <Class classname="uw.cse.dineon.restaurant.active.OrderListFragment$OrderListAdapter">
+      <SourceLine classname="uw.cse.dineon.restaurant.active.OrderListFragment$OrderListAdapter" start="153" end="285" sourcefile="OrderListFragment.java" sourcepath="uw/cse/dineon/restaurant/active/OrderListFragment.java"/>
+    </Class>
+    <Method classname="uw.cse.dineon.restaurant.active.OrderListFragment$OrderListAdapter" name="getView" signature="(ILandroid/view/View;Landroid/view/ViewGroup;)Landroid/view/View;" isStatic="false">
+      <SourceLine classname="uw.cse.dineon.restaurant.active.OrderListFragment$OrderListAdapter" start="214" end="285" startBytecode="0" endBytecode="167" sourcefile="OrderListFragment.java" sourcepath="uw/cse/dineon/restaurant/active/OrderListFragment.java"/>
+    </Method>
+    <Type descriptor="Landroid/view/View;" role="TYPE_FOUND">
+      <SourceLine classname="android.view.View" start="95" end="687" sourcefile="View.java" sourcepath="android/view/View.java"/>
+    </Type>
+    <Type descriptor="Landroid/widget/LinearLayout;" role="TYPE_EXPECTED">
+      <SourceLine classname="android.widget.LinearLayout" start="2" end="52" sourcefile="LinearLayout.java" sourcepath="android/widget/LinearLayout.java"/>
+    </Type>
+    <LocalVariable name="convertView" register="2" pc="76" role="LOCAL_VARIABLE_VALUE_OF"/>
+    <SourceLine classname="uw.cse.dineon.restaurant.active.OrderListFragment$OrderListAdapter" start="225" end="225" startBytecode="77" endBytecode="77" sourcefile="OrderListFragment.java" sourcepath="uw/cse/dineon/restaurant/active/OrderListFragment.java"/>
+  </BugInstance>
+  <BugInstance type="BC_UNCONFIRMED_CAST" priority="2" abbrev="BC" category="STYLE">
+    <Class classname="uw.cse.dineon.restaurant.active.RequestListFragment$RequestListAdapter">
+      <SourceLine classname="uw.cse.dineon.restaurant.active.RequestListFragment$RequestListAdapter" start="187" end="320" sourcefile="RequestListFragment.java" sourcepath="uw/cse/dineon/restaurant/active/RequestListFragment.java"/>
+    </Class>
+    <Method classname="uw.cse.dineon.restaurant.active.RequestListFragment$RequestListAdapter" name="getView" signature="(ILandroid/view/View;Landroid/view/ViewGroup;)Landroid/view/View;" isStatic="false">
+      <SourceLine classname="uw.cse.dineon.restaurant.active.RequestListFragment$RequestListAdapter" start="252" end="320" startBytecode="0" endBytecode="170" sourcefile="RequestListFragment.java" sourcepath="uw/cse/dineon/restaurant/active/RequestListFragment.java"/>
+    </Method>
+    <Type descriptor="Landroid/view/View;" role="TYPE_FOUND">
+      <SourceLine classname="android.view.View" start="95" end="687" sourcefile="View.java" sourcepath="android/view/View.java"/>
+    </Type>
+    <Type descriptor="Landroid/widget/LinearLayout;" role="TYPE_EXPECTED">
+      <SourceLine classname="android.widget.LinearLayout" start="2" end="52" sourcefile="LinearLayout.java" sourcepath="android/widget/LinearLayout.java"/>
+    </Type>
+    <LocalVariable name="convertView" register="2" pc="91" role="LOCAL_VARIABLE_VALUE_OF"/>
+    <SourceLine classname="uw.cse.dineon.restaurant.active.RequestListFragment$RequestListAdapter" start="265" end="265" startBytecode="92" endBytecode="92" sourcefile="RequestListFragment.java" sourcepath="uw/cse/dineon/restaurant/active/RequestListFragment.java"/>
+  </BugInstance>
+  <BugInstance type="SIC_INNER_SHOULD_BE_STATIC" priority="2" abbrev="SIC" category="PERFORMANCE">
+    <Class classname="uw.cse.dineon.restaurant.active.RestauarantMainActivity$ScreenSlidePagerAdapter">
+      <SourceLine classname="uw.cse.dineon.restaurant.active.RestauarantMainActivity$ScreenSlidePagerAdapter" start="243" end="285" sourcefile="RestauarantMainActivity.java" sourcepath="uw/cse/dineon/restaurant/active/RestauarantMainActivity.java"/>
+    </Class>
+  </BugInstance>
+  <BugInstance type="URF_UNREAD_FIELD" priority="2" abbrev="UrF" category="PERFORMANCE">
+    <Class classname="uw.cse.dineon.restaurant.profile.MenuItemsFragment">
+      <SourceLine classname="uw.cse.dineon.restaurant.profile.MenuItemsFragment" start="27" end="110" sourcefile="MenuItemsFragment.java" sourcepath="uw/cse/dineon/restaurant/profile/MenuItemsFragment.java"/>
+    </Class>
+    <Field classname="uw.cse.dineon.restaurant.profile.MenuItemsFragment" name="mListener" signature="Luw/cse/dineon/restaurant/profile/MenuItemsFragment$MenuItemListener;" isStatic="false">
+      <SourceLine classname="uw.cse.dineon.restaurant.profile.MenuItemsFragment" sourcefile="MenuItemsFragment.java" sourcepath="uw/cse/dineon/restaurant/profile/MenuItemsFragment.java"/>
+    </Field>
+    <SourceLine classname="uw.cse.dineon.restaurant.profile.MenuItemsFragment" start="87" end="87" startBytecode="17" endBytecode="17" sourcefile="MenuItemsFragment.java" sourcepath="uw/cse/dineon/restaurant/profile/MenuItemsFragment.java"/>
+  </BugInstance>
+  <BugInstance type="SIC_INNER_SHOULD_BE_STATIC" priority="2" abbrev="SIC" category="PERFORMANCE">
+    <Class classname="uw.cse.dineon.restaurant.profile.MenuItemsFragment$ItemListener">
+      <SourceLine classname="uw.cse.dineon.restaurant.profile.MenuItemsFragment$ItemListener" start="215" end="250" sourcefile="MenuItemsFragment.java" sourcepath="uw/cse/dineon/restaurant/profile/MenuItemsFragment.java"/>
+    </Class>
+  </BugInstance>
+  <BugInstance type="DLS_DEAD_LOCAL_STORE" priority="1" abbrev="DLS" category="STYLE">
+    <Class classname="uw.cse.dineon.restaurant.profile.MenuItemsFragment$RestaurantMenuItemAdapter">
+      <SourceLine classname="uw.cse.dineon.restaurant.profile.MenuItemsFragment$RestaurantMenuItemAdapter" start="167" end="189" sourcefile="MenuItemsFragment.java" sourcepath="uw/cse/dineon/restaurant/profile/MenuItemsFragment.java"/>
+    </Class>
+    <Method classname="uw.cse.dineon.restaurant.profile.MenuItemsFragment$RestaurantMenuItemAdapter" name="getView" signature="(ILandroid/view/View;Landroid/view/ViewGroup;)Landroid/view/View;" isStatic="false">
+      <SourceLine classname="uw.cse.dineon.restaurant.profile.MenuItemsFragment$RestaurantMenuItemAdapter" start="175" end="189" startBytecode="0" endBytecode="56" sourcefile="MenuItemsFragment.java" sourcepath="uw/cse/dineon/restaurant/profile/MenuItemsFragment.java"/>
+    </Method>
+    <LocalVariable name="listener" register="12" pc="125" role="LOCAL_VARIABLE_NAMED"/>
+    <SourceLine classname="uw.cse.dineon.restaurant.profile.MenuItemsFragment$RestaurantMenuItemAdapter" start="187" end="187" startBytecode="123" endBytecode="123" sourcefile="MenuItemsFragment.java" sourcepath="uw/cse/dineon/restaurant/profile/MenuItemsFragment.java"/>
+    <Property name="edu.umd.cs.findbugs.detect.DeadLocalStoreProperty.METHOD_RESULT" value="true"/>
+    <Property name="edu.umd.cs.findbugs.detect.DeadLocalStoreProperty.DEAD_OBJECT_STORE" value="true"/>
+    <Property name="edu.umd.cs.findbugs.detect.DeadLocalStoreProperty.LOCAL_NAME" value="listener"/>
+  </BugInstance>
+  <BugInstance type="DLS_DEAD_LOCAL_STORE" priority="2" abbrev="DLS" category="STYLE">
+    <Class classname="uw.cse.dineon.restaurant.profile.RestaurantInfoFragment">
+      <SourceLine classname="uw.cse.dineon.restaurant.profile.RestaurantInfoFragment" start="33" end="240" sourcefile="RestaurantInfoFragment.java" sourcepath="uw/cse/dineon/restaurant/profile/RestaurantInfoFragment.java"/>
+    </Class>
+    <Method classname="uw.cse.dineon.restaurant.profile.RestaurantInfoFragment" name="onCreateView" signature="(Landroid/view/LayoutInflater;Landroid/view/ViewGroup;Landroid/os/Bundle;)Landroid/view/View;" isStatic="false">
+      <SourceLine classname="uw.cse.dineon.restaurant.profile.RestaurantInfoFragment" start="61" end="135" startBytecode="0" endBytecode="110" sourcefile="RestaurantInfoFragment.java" sourcepath="uw/cse/dineon/restaurant/profile/RestaurantInfoFragment.java"/>
+    </Method>
+    <LocalVariable name="mButtonAdd" register="8" pc="80" role="LOCAL_VARIABLE_NAMED"/>
+    <SourceLine classname="uw.cse.dineon.restaurant.profile.RestaurantInfoFragment" start="74" end="74" startBytecode="78" endBytecode="78" sourcefile="RestaurantInfoFragment.java" sourcepath="uw/cse/dineon/restaurant/profile/RestaurantInfoFragment.java"/>
+    <Property name="edu.umd.cs.findbugs.detect.DeadLocalStoreProperty.NO_LOADS" value="true"/>
+    <Property name="edu.umd.cs.findbugs.detect.DeadLocalStoreProperty.LOCAL_NAME" value="mButtonAdd"/>
+  </BugInstance>
+  <BugInstance type="DLS_DEAD_LOCAL_STORE" priority="2" abbrev="DLS" category="STYLE">
+    <Class classname="uw.cse.dineon.restaurant.profile.RestaurantInfoFragment">
+      <SourceLine classname="uw.cse.dineon.restaurant.profile.RestaurantInfoFragment" start="33" end="240" sourcefile="RestaurantInfoFragment.java" sourcepath="uw/cse/dineon/restaurant/profile/RestaurantInfoFragment.java"/>
+    </Class>
+    <Method classname="uw.cse.dineon.restaurant.profile.RestaurantInfoFragment" name="onCreateView" signature="(Landroid/view/LayoutInflater;Landroid/view/ViewGroup;Landroid/os/Bundle;)Landroid/view/View;" isStatic="false">
+      <SourceLine classname="uw.cse.dineon.restaurant.profile.RestaurantInfoFragment" start="61" end="135" startBytecode="0" endBytecode="110" sourcefile="RestaurantInfoFragment.java" sourcepath="uw/cse/dineon/restaurant/profile/RestaurantInfoFragment.java"/>
+    </Method>
+    <LocalVariable name="mButtonDelt" register="9" pc="92" role="LOCAL_VARIABLE_NAMED"/>
+    <SourceLine classname="uw.cse.dineon.restaurant.profile.RestaurantInfoFragment" start="75" end="75" startBytecode="90" endBytecode="90" sourcefile="RestaurantInfoFragment.java" sourcepath="uw/cse/dineon/restaurant/profile/RestaurantInfoFragment.java"/>
+    <Property name="edu.umd.cs.findbugs.detect.DeadLocalStoreProperty.NO_LOADS" value="true"/>
+    <Property name="edu.umd.cs.findbugs.detect.DeadLocalStoreProperty.LOCAL_NAME" value="mButtonDelt"/>
+  </BugInstance>
+  <BugInstance type="DLS_DEAD_LOCAL_STORE" priority="2" abbrev="DLS" category="STYLE">
+    <Class classname="uw.cse.dineon.restaurant.profile.RestaurantInfoFragment">
+      <SourceLine classname="uw.cse.dineon.restaurant.profile.RestaurantInfoFragment" start="33" end="240" sourcefile="RestaurantInfoFragment.java" sourcepath="uw/cse/dineon/restaurant/profile/RestaurantInfoFragment.java"/>
+    </Class>
+    <Method classname="uw.cse.dineon.restaurant.profile.RestaurantInfoFragment" name="onCreateView" signature="(Landroid/view/LayoutInflater;Landroid/view/ViewGroup;Landroid/os/Bundle;)Landroid/view/View;" isStatic="false">
+      <SourceLine classname="uw.cse.dineon.restaurant.profile.RestaurantInfoFragment" start="61" end="135" startBytecode="0" endBytecode="110" sourcefile="RestaurantInfoFragment.java" sourcepath="uw/cse/dineon/restaurant/profile/RestaurantInfoFragment.java"/>
+    </Method>
+    <LocalVariable name="mCheckBox" register="7" pc="68" role="LOCAL_VARIABLE_NAMED"/>
+    <SourceLine classname="uw.cse.dineon.restaurant.profile.RestaurantInfoFragment" start="73" end="73" startBytecode="66" endBytecode="66" sourcefile="RestaurantInfoFragment.java" sourcepath="uw/cse/dineon/restaurant/profile/RestaurantInfoFragment.java"/>
+    <Property name="edu.umd.cs.findbugs.detect.DeadLocalStoreProperty.NO_LOADS" value="true"/>
+    <Property name="edu.umd.cs.findbugs.detect.DeadLocalStoreProperty.LOCAL_NAME" value="mCheckBox"/>
+  </BugInstance>
+  <BugInstance type="DLS_DEAD_LOCAL_STORE" priority="2" abbrev="DLS" category="STYLE">
+    <Class classname="uw.cse.dineon.restaurant.profile.RestaurantInfoFragment">
+      <SourceLine classname="uw.cse.dineon.restaurant.profile.RestaurantInfoFragment" start="33" end="240" sourcefile="RestaurantInfoFragment.java" sourcepath="uw/cse/dineon/restaurant/profile/RestaurantInfoFragment.java"/>
+    </Class>
+    <Method classname="uw.cse.dineon.restaurant.profile.RestaurantInfoFragment" name="onCreateView" signature="(Landroid/view/LayoutInflater;Landroid/view/ViewGroup;Landroid/os/Bundle;)Landroid/view/View;" isStatic="false">
+      <SourceLine classname="uw.cse.dineon.restaurant.profile.RestaurantInfoFragment" start="61" end="135" startBytecode="0" endBytecode="110" sourcefile="RestaurantInfoFragment.java" sourcepath="uw/cse/dineon/restaurant/profile/RestaurantInfoFragment.java"/>
+    </Method>
+    <LocalVariable name="mGallery" register="6" pc="56" role="LOCAL_VARIABLE_NAMED"/>
+    <SourceLine classname="uw.cse.dineon.restaurant.profile.RestaurantInfoFragment" start="71" end="71" startBytecode="54" endBytecode="54" sourcefile="RestaurantInfoFragment.java" sourcepath="uw/cse/dineon/restaurant/profile/RestaurantInfoFragment.java"/>
+    <Property name="edu.umd.cs.findbugs.detect.DeadLocalStoreProperty.TWO_STORES_MULTIPLE_LOADS" value="true"/>
+    <Property name="edu.umd.cs.findbugs.detect.DeadLocalStoreProperty.LOCAL_NAME" value="mGallery"/>
+  </BugInstance>
+  <BugInstance type="URF_UNREAD_FIELD" priority="2" abbrev="UrF" category="PERFORMANCE">
+    <Class classname="uw.cse.dineon.restaurant.profile.RestaurantInfoFragment">
+      <SourceLine classname="uw.cse.dineon.restaurant.profile.RestaurantInfoFragment" start="33" end="240" sourcefile="RestaurantInfoFragment.java" sourcepath="uw/cse/dineon/restaurant/profile/RestaurantInfoFragment.java"/>
+    </Class>
+    <Field classname="uw.cse.dineon.restaurant.profile.RestaurantInfoFragment" name="imageViews" signature="Ljava/util/List;" isStatic="false">
+      <SourceLine classname="uw.cse.dineon.restaurant.profile.RestaurantInfoFragment" sourcefile="RestaurantInfoFragment.java" sourcepath="uw/cse/dineon/restaurant/profile/RestaurantInfoFragment.java"/>
+    </Field>
+    <SourceLine classname="uw.cse.dineon.restaurant.profile.RestaurantInfoFragment" start="81" end="81" startBytecode="148" endBytecode="148" sourcefile="RestaurantInfoFragment.java" sourcepath="uw/cse/dineon/restaurant/profile/RestaurantInfoFragment.java"/>
+  </BugInstance>
+  <BugInstance type="URF_UNREAD_FIELD" priority="2" abbrev="UrF" category="PERFORMANCE">
+    <Class classname="uw.cse.dineon.restaurant.profile.RestaurantInfoFragment">
+      <SourceLine classname="uw.cse.dineon.restaurant.profile.RestaurantInfoFragment" start="33" end="240" sourcefile="RestaurantInfoFragment.java" sourcepath="uw/cse/dineon/restaurant/profile/RestaurantInfoFragment.java"/>
+    </Class>
+    <Field classname="uw.cse.dineon.restaurant.profile.RestaurantInfoFragment" name="mListener" signature="Luw/cse/dineon/restaurant/profile/RestaurantInfoFragment$InfoChangeListener;" isStatic="false">
+      <SourceLine classname="uw.cse.dineon.restaurant.profile.RestaurantInfoFragment" sourcefile="RestaurantInfoFragment.java" sourcepath="uw/cse/dineon/restaurant/profile/RestaurantInfoFragment.java"/>
+    </Field>
+    <SourceLine classname="uw.cse.dineon.restaurant.profile.RestaurantInfoFragment" start="142" end="142" startBytecode="17" endBytecode="17" sourcefile="RestaurantInfoFragment.java" sourcepath="uw/cse/dineon/restaurant/profile/RestaurantInfoFragment.java"/>
+  </BugInstance>
+  <BugInstance type="SIC_INNER_SHOULD_BE_STATIC" priority="2" abbrev="SIC" category="PERFORMANCE">
+    <Class classname="uw.cse.dineon.restaurant.profile.RestaurantInfoFragment$ImageSelectListener">
+      <SourceLine classname="uw.cse.dineon.restaurant.profile.RestaurantInfoFragment$ImageSelectListener" start="194" end="214" sourcefile="RestaurantInfoFragment.java" sourcepath="uw/cse/dineon/restaurant/profile/RestaurantInfoFragment.java"/>
+    </Class>
+  </BugInstance>
+  <Errors errors="0" missingClasses="34">
+    <MissingClass>android.support.v4.app.Fragment</MissingClass>
+    <MissingClass>android.support.v4.app.FragmentActivity</MissingClass>
+    <MissingClass>android.support.v4.app.FragmentManager</MissingClass>
+    <MissingClass>android.support.v4.app.FragmentPagerAdapter</MissingClass>
+    <MissingClass>android.support.v4.app.FragmentTransaction</MissingClass>
+    <MissingClass>android.support.v4.app.ListFragment</MissingClass>
+    <MissingClass>android.support.v4.view.ViewPager</MissingClass>
+    <MissingClass>com.parse.GetCallback</MissingClass>
+    <MissingClass>com.parse.LogInCallback</MissingClass>
+    <MissingClass>com.parse.Parse</MissingClass>
+    <MissingClass>com.parse.ParseACL</MissingClass>
+    <MissingClass>com.parse.ParseException</MissingClass>
+    <MissingClass>com.parse.ParseInstallation</MissingClass>
+    <MissingClass>com.parse.ParseQuery</MissingClass>
+    <MissingClass>com.parse.ParseQuery$CachePolicy</MissingClass>
+    <MissingClass>com.parse.ParseUser</MissingClass>
+    <MissingClass>com.parse.PushService</MissingClass>
+    <MissingClass>com.parse.SaveCallback</MissingClass>
+    <MissingClass>com.parse.SignUpCallback</MissingClass>
+    <MissingClass>java.rmi.Remote</MissingClass>
+    <MissingClass>uw.cse.dineon.library.CustomerRequest</MissingClass>
+    <MissingClass>uw.cse.dineon.library.DiningSession</MissingClass>
+    <MissingClass>uw.cse.dineon.library.Order</MissingClass>
+    <MissingClass>uw.cse.dineon.library.Reservation</MissingClass>
+    <MissingClass>uw.cse.dineon.library.Restaurant</MissingClass>
+    <MissingClass>uw.cse.dineon.library.RestaurantInfo</MissingClass>
+    <MissingClass>uw.cse.dineon.library.UserInfo</MissingClass>
+    <MissingClass>uw.cse.dineon.library.util.CredentialValidator</MissingClass>
+    <MissingClass>uw.cse.dineon.library.util.CredentialValidator$Resolution</MissingClass>
+    <MissingClass>uw.cse.dineon.library.util.DevelopTools</MissingClass>
+    <MissingClass>uw.cse.dineon.library.util.DineOnConstants</MissingClass>
+    <MissingClass>uw.cse.dineon.library.util.FakeRestaurantInformation</MissingClass>
+    <MissingClass>uw.cse.dineon.library.util.ParseUtil</MissingClass>
+    <MissingClass>uw.cse.dineon.library.util.Utility</MissingClass>
+  </Errors>
+  <FindBugsSummary timestamp="Wed, 15 May 2013 16:05:55 -0700" total_classes="73" referenced_classes="239" total_bugs="16" total_size="2178" num_packages="5" vm_version="20.45-b01-451" cpu_seconds="41.23" clock_seconds="15.31" peak_mbytes="77.58" alloc_mbytes="123.94" gc_seconds="0.35" priority_2="15" priority_1="1">
+    <PackageStats package="uw.cse.dineon.library" total_bugs="0" total_types="4" total_size="28">
+      <ClassStats class="uw.cse.dineon.library.R" sourceFile="R.java" interface="false" size="3" bugs="0"/>
+      <ClassStats class="uw.cse.dineon.library.R$drawable" sourceFile="R.java" interface="false" size="16" bugs="0"/>
+      <ClassStats class="uw.cse.dineon.library.R$string" sourceFile="R.java" interface="false" size="4" bugs="0"/>
+      <ClassStats class="uw.cse.dineon.library.R$style" sourceFile="R.java" interface="false" size="5" bugs="0"/>
+    </PackageStats>
+    <PackageStats package="uw.cse.dineon.restaurant" total_bugs="1" total_types="26" total_size="853" priority_2="1">
+      <ClassStats class="uw.cse.dineon.restaurant.BuildConfig" sourceFile="BuildConfig.java" interface="false" size="4" bugs="0"/>
+      <ClassStats class="uw.cse.dineon.restaurant.DineOnRestaurantActivity" sourceFile="DineOnRestaurantActivity.java" interface="false" size="212" bugs="0"/>
+      <ClassStats class="uw.cse.dineon.restaurant.DineOnRestaurantActivity$1" sourceFile="DineOnRestaurantActivity.java" interface="false" size="17" bugs="0"/>
+      <ClassStats class="uw.cse.dineon.restaurant.DineOnRestaurantActivity$2" sourceFile="DineOnRestaurantActivity.java" interface="false" size="13" bugs="0"/>
+      <ClassStats class="uw.cse.dineon.restaurant.DineOnRestaurantActivity$3" sourceFile="DineOnRestaurantActivity.java" interface="false" size="14" bugs="0"/>
+      <ClassStats class="uw.cse.dineon.restaurant.DineOnRestaurantActivity$4" sourceFile="DineOnRestaurantActivity.java" interface="false" size="14" bugs="0"/>
+      <ClassStats class="uw.cse.dineon.restaurant.DineOnRestaurantActivity$5" sourceFile="DineOnRestaurantActivity.java" interface="false" size="8" bugs="0"/>
+      <ClassStats class="uw.cse.dineon.restaurant.DineOnRestaurantActivity$CustomRestaurantDownloader" sourceFile="DineOnRestaurantActivity.java" interface="false" size="14" bugs="0"/>
+      <ClassStats class="uw.cse.dineon.restaurant.DineOnRestaurantApplication" sourceFile="DineOnRestaurantApplication.java" interface="false" size="12" bugs="0"/>
+      <ClassStats class="uw.cse.dineon.restaurant.LoadingFrament" sourceFile="LoadingFrament.java" interface="false" size="7" bugs="0"/>
+      <ClassStats class="uw.cse.dineon.restaurant.NotLoggedInFragment" sourceFile="NotLoggedInFragment.java" interface="false" size="7" bugs="0"/>
+      <ClassStats class="uw.cse.dineon.restaurant.R" sourceFile="R.java" interface="false" size="3" bugs="0"/>
+      <ClassStats class="uw.cse.dineon.restaurant.R$anim" sourceFile="R.java" interface="false" size="5" bugs="0"/>
+      <ClassStats class="uw.cse.dineon.restaurant.R$attr" sourceFile="R.java" interface="false" size="3" bugs="0"/>
+      <ClassStats class="uw.cse.dineon.restaurant.R$drawable" sourceFile="R.java" interface="false" size="22" bugs="0"/>
+      <ClassStats class="uw.cse.dineon.restaurant.R$id" sourceFile="R.java" interface="false" size="94" bugs="0"/>
+      <ClassStats class="uw.cse.dineon.restaurant.R$layout" sourceFile="R.java" interface="false" size="27" bugs="0"/>
+      <ClassStats class="uw.cse.dineon.restaurant.R$menu" sourceFile="R.java" interface="false" size="5" bugs="0"/>
+      <ClassStats class="uw.cse.dineon.restaurant.R$string" sourceFile="R.java" interface="false" size="48" bugs="0"/>
+      <ClassStats class="uw.cse.dineon.restaurant.R$style" sourceFile="R.java" interface="false" size="5" bugs="0"/>
+      <ClassStats class="uw.cse.dineon.restaurant.RestaurantDownloader" sourceFile="RestaurantDownloader.java" interface="false" size="81" bugs="0"/>
+      <ClassStats class="uw.cse.dineon.restaurant.RestaurantDownloader$RestaurantDownLoaderCallback" sourceFile="RestaurantDownloader.java" interface="true" size="3" bugs="0"/>
+      <ClassStats class="uw.cse.dineon.restaurant.RestaurantSatellite" sourceFile="RestaurantSatellite.java" interface="false" size="163" bugs="0"/>
+      <ClassStats class="uw.cse.dineon.restaurant.RestaurantSatellite$ACTION_OPTION" sourceFile="RestaurantSatellite.java" interface="false" size="22" bugs="0"/>
+      <ClassStats class="uw.cse.dineon.restaurant.RestaurantSatellite$SateliteListener" sourceFile="RestaurantSatellite.java" interface="true" size="8" bugs="0"/>
+      <ClassStats class="uw.cse.dineon.restaurant.RestaurantSatellite$SatelliteGetCallback" sourceFile="RestaurantSatellite.java" interface="false" size="42" bugs="1" priority_2="1"/>
+    </PackageStats>
+    <PackageStats package="uw.cse.dineon.restaurant.active" total_bugs="5" total_types="23" total_size="778" priority_2="5">
+      <ClassStats class="uw.cse.dineon.restaurant.active.DiningSessionListFragment" sourceFile="DiningSessionListFragment.java" interface="false" size="37" bugs="0"/>
+      <ClassStats class="uw.cse.dineon.restaurant.active.DiningSessionListFragment$DiningSessionListAdapter" sourceFile="DiningSessionListFragment.java" interface="false" size="68" bugs="2" priority_2="2"/>
+      <ClassStats class="uw.cse.dineon.restaurant.active.DiningSessionListFragment$DiningSessionListAdapter$1" sourceFile="DiningSessionListFragment.java" interface="false" size="10" bugs="0"/>
+      <ClassStats class="uw.cse.dineon.restaurant.active.DiningSessionListFragment$DiningSessionListListener" sourceFile="DiningSessionListFragment.java" interface="true" size="2" bugs="0"/>
+      <ClassStats class="uw.cse.dineon.restaurant.active.OrderDetailActivity" sourceFile="OrderDetailActivity.java" interface="false" size="17" bugs="0"/>
+      <ClassStats class="uw.cse.dineon.restaurant.active.OrderDetailFragment" sourceFile="OrderDetailFragment.java" interface="false" size="61" bugs="0"/>
+      <ClassStats class="uw.cse.dineon.restaurant.active.OrderDetailFragment$OrderDetailListener" sourceFile="OrderDetailFragment.java" interface="true" size="2" bugs="0"/>
+      <ClassStats class="uw.cse.dineon.restaurant.active.OrderListFragment" sourceFile="OrderListFragment.java" interface="false" size="45" bugs="0"/>
+      <ClassStats class="uw.cse.dineon.restaurant.active.OrderListFragment$OrderItemListener" sourceFile="OrderListFragment.java" interface="true" size="5" bugs="0"/>
+      <ClassStats class="uw.cse.dineon.restaurant.active.OrderListFragment$OrderListAdapter" sourceFile="OrderListFragment.java" interface="false" size="82" bugs="1" priority_2="1"/>
+      <ClassStats class="uw.cse.dineon.restaurant.active.OrderListFragment$OrderListAdapter$1" sourceFile="OrderListFragment.java" interface="false" size="15" bugs="0"/>
+      <ClassStats class="uw.cse.dineon.restaurant.active.OrderListFragment$OrderListAdapter$OrderItemListener" sourceFile="OrderListFragment.java" interface="false" size="13" bugs="0"/>
+      <ClassStats class="uw.cse.dineon.restaurant.active.OrderListFragment$OrderListAdapter$OrderProgressListener" sourceFile="OrderListFragment.java" interface="false" size="17" bugs="0"/>
+      <ClassStats class="uw.cse.dineon.restaurant.active.RequestDetailActivity" sourceFile="RequestDetailActivity.java" interface="false" size="19" bugs="0"/>
+      <ClassStats class="uw.cse.dineon.restaurant.active.RequestDetailFragment" sourceFile="RequestDetailFragment.java" interface="false" size="92" bugs="0"/>
+      <ClassStats class="uw.cse.dineon.restaurant.active.RequestDetailFragment$RequestDetailListener" sourceFile="RequestDetailFragment.java" interface="true" size="3" bugs="0"/>
+      <ClassStats class="uw.cse.dineon.restaurant.active.RequestListFragment" sourceFile="RequestListFragment.java" interface="false" size="45" bugs="0"/>
+      <ClassStats class="uw.cse.dineon.restaurant.active.RequestListFragment$RequestItemListener" sourceFile="RequestListFragment.java" interface="true" size="5" bugs="0"/>
+      <ClassStats class="uw.cse.dineon.restaurant.active.RequestListFragment$RequestListAdapter" sourceFile="RequestListFragment.java" interface="false" size="81" bugs="1" priority_2="1"/>
+      <ClassStats class="uw.cse.dineon.restaurant.active.RequestListFragment$RequestListAdapter$1" sourceFile="RequestListFragment.java" interface="false" size="15" bugs="0"/>
+      <ClassStats class="uw.cse.dineon.restaurant.active.RequestListFragment$RequestListAdapter$AllAroundListener" sourceFile="RequestListFragment.java" interface="false" size="20" bugs="0"/>
+      <ClassStats class="uw.cse.dineon.restaurant.active.RestauarantMainActivity" sourceFile="RestauarantMainActivity.java" interface="false" size="100" bugs="0"/>
+      <ClassStats class="uw.cse.dineon.restaurant.active.RestauarantMainActivity$ScreenSlidePagerAdapter" sourceFile="RestauarantMainActivity.java" interface="false" size="24" bugs="1" priority_2="1"/>
+    </PackageStats>
+    <PackageStats package="uw.cse.dineon.restaurant.login" total_bugs="0" total_types="10" total_size="277">
+      <ClassStats class="uw.cse.dineon.restaurant.login.CreateNewAccountFragment" sourceFile="CreateNewAccountFragment.java" interface="false" size="39" bugs="0"/>
+      <ClassStats class="uw.cse.dineon.restaurant.login.CreateNewAccountFragment$CreateNewAccountListener" sourceFile="CreateNewAccountFragment.java" interface="true" size="2" bugs="0"/>
+      <ClassStats class="uw.cse.dineon.restaurant.login.CreateNewRestaurantAccountActivity" sourceFile="CreateNewRestaurantAccountActivity.java" interface="false" size="70" bugs="0"/>
+      <ClassStats class="uw.cse.dineon.restaurant.login.CreateNewRestaurantAccountActivity$1" sourceFile="CreateNewRestaurantAccountActivity.java" interface="false" size="11" bugs="0"/>
+      <ClassStats class="uw.cse.dineon.restaurant.login.CreateNewRestaurantAccountActivity$RestaurantSignUpCallback" sourceFile="CreateNewRestaurantAccountActivity.java" interface="false" size="16" bugs="0"/>
+      <ClassStats class="uw.cse.dineon.restaurant.login.LoginFragment" sourceFile="LoginFragment.java" interface="false" size="27" bugs="0"/>
+      <ClassStats class="uw.cse.dineon.restaurant.login.LoginFragment$OnLoginListener" sourceFile="LoginFragment.java" interface="true" size="2" bugs="0"/>
+      <ClassStats class="uw.cse.dineon.restaurant.login.RestaurantLoginActivity" sourceFile="RestaurantLoginActivity.java" interface="false" size="80" bugs="0"/>
+      <ClassStats class="uw.cse.dineon.restaurant.login.RestaurantLoginActivity$LoginRestaurantDownloader" sourceFile="RestaurantLoginActivity.java" interface="false" size="14" bugs="0"/>
+      <ClassStats class="uw.cse.dineon.restaurant.login.RestaurantLoginActivity$RestaurantLoginCallback" sourceFile="RestaurantLoginActivity.java" interface="false" size="16" bugs="0"/>
+    </PackageStats>
+    <PackageStats package="uw.cse.dineon.restaurant.profile" total_bugs="10" total_types="10" total_size="242" priority_2="9" priority_1="1">
+      <ClassStats class="uw.cse.dineon.restaurant.profile.MenuItemsFragment" sourceFile="MenuItemsFragment.java" interface="false" size="37" bugs="1" priority_2="1"/>
+      <ClassStats class="uw.cse.dineon.restaurant.profile.MenuItemsFragment$ItemListener" sourceFile="MenuItemsFragment.java" interface="false" size="27" bugs="1" priority_2="1"/>
+      <ClassStats class="uw.cse.dineon.restaurant.profile.MenuItemsFragment$MenuItemListener" sourceFile="MenuItemsFragment.java" interface="true" size="4" bugs="0"/>
+      <ClassStats class="uw.cse.dineon.restaurant.profile.MenuItemsFragment$RestaurantMenuItemAdapter" sourceFile="MenuItemsFragment.java" interface="false" size="22" bugs="1" priority_1="1"/>
+      <ClassStats class="uw.cse.dineon.restaurant.profile.ProfileActivity" sourceFile="ProfileActivity.java" interface="false" size="61" bugs="0"/>
+      <ClassStats class="uw.cse.dineon.restaurant.profile.RestaurantInfoFragment" sourceFile="RestaurantInfoFragment.java" interface="false" size="56" bugs="6" priority_2="6"/>
+      <ClassStats class="uw.cse.dineon.restaurant.profile.RestaurantInfoFragment$1" sourceFile="RestaurantInfoFragment.java" interface="false" size="14" bugs="0"/>
+      <ClassStats class="uw.cse.dineon.restaurant.profile.RestaurantInfoFragment$1$1" sourceFile="RestaurantInfoFragment.java" interface="false" size="8" bugs="0"/>
+      <ClassStats class="uw.cse.dineon.restaurant.profile.RestaurantInfoFragment$ImageSelectListener" sourceFile="RestaurantInfoFragment.java" interface="false" size="11" bugs="1" priority_2="1"/>
+      <ClassStats class="uw.cse.dineon.restaurant.profile.RestaurantInfoFragment$InfoChangeListener" sourceFile="RestaurantInfoFragment.java" interface="true" size="2" bugs="0"/>
+    </PackageStats>
+    <FindBugsProfile>
+      <ClassProfile name="edu.umd.cs.findbugs.ba.npe.NullDerefAndRedundantComparisonFinder" totalMilliseconds="952" invocations="290" avgMicrosecondsPerInvocation="3283" maxMicrosecondsPerInvocation="94222" standardDeviationMircosecondsPerInvocation="8097"/>
+      <ClassProfile name="edu.umd.cs.findbugs.classfile.engine.ClassInfoAnalysisEngine" totalMilliseconds="925" invocations="585" avgMicrosecondsPerInvocation="1581" maxMicrosecondsPerInvocation="47741" standardDeviationMircosecondsPerInvocation="3986"/>
+      <ClassProfile name="edu.umd.cs.findbugs.classfile.engine.bcel.IsNullValueDataflowFactory" totalMilliseconds="725" invocations="293" avgMicrosecondsPerInvocation="2476" maxMicrosecondsPerInvocation="38494" standardDeviationMircosecondsPerInvocation="4791"/>
+      <ClassProfile name="edu.umd.cs.findbugs.classfile.engine.bcel.UnconditionalValueDerefDataflowFactory" totalMilliseconds="695" invocations="293" avgMicrosecondsPerInvocation="2373" maxMicrosecondsPerInvocation="49078" standardDeviationMircosecondsPerInvocation="4462"/>
+      <ClassProfile name="edu.umd.cs.findbugs.classfile.engine.bcel.TypeDataflowFactory" totalMilliseconds="595" invocations="295" avgMicrosecondsPerInvocation="2019" maxMicrosecondsPerInvocation="36932" standardDeviationMircosecondsPerInvocation="4432"/>
+      <ClassProfile name="edu.umd.cs.findbugs.classfile.engine.bcel.ValueNumberDataflowFactory" totalMilliseconds="572" invocations="295" avgMicrosecondsPerInvocation="1941" maxMicrosecondsPerInvocation="25123" standardDeviationMircosecondsPerInvocation="3331"/>
+      <ClassProfile name="edu.umd.cs.findbugs.classfile.engine.bcel.CFGFactory" totalMilliseconds="487" invocations="293" avgMicrosecondsPerInvocation="1663" maxMicrosecondsPerInvocation="31094" standardDeviationMircosecondsPerInvocation="2862"/>
+      <ClassProfile name="edu.umd.cs.findbugs.detect.FindRefComparison$SpecialTypeAnalysis" totalMilliseconds="394" invocations="255" avgMicrosecondsPerInvocation="1546" maxMicrosecondsPerInvocation="30799" standardDeviationMircosecondsPerInvocation="2947"/>
+      <ClassProfile name="edu.umd.cs.findbugs.detect.BuildObligationPolicyDatabase" totalMilliseconds="312" invocations="239" avgMicrosecondsPerInvocation="1308" maxMicrosecondsPerInvocation="22019" standardDeviationMircosecondsPerInvocation="3006"/>
+      <ClassProfile name="edu.umd.cs.findbugs.detect.NoteDirectlyRelevantTypeQualifiers" totalMilliseconds="283" invocations="239" avgMicrosecondsPerInvocation="1186" maxMicrosecondsPerInvocation="26823" standardDeviationMircosecondsPerInvocation="3203"/>
+      <ClassProfile name="edu.umd.cs.findbugs.detect.OverridingEqualsNotSymmetrical" totalMilliseconds="240" invocations="239" avgMicrosecondsPerInvocation="1005" maxMicrosecondsPerInvocation="31369" standardDeviationMircosecondsPerInvocation="3275"/>
+      <ClassProfile name="edu.umd.cs.findbugs.classfile.engine.bcel.JavaClassAnalysisEngine" totalMilliseconds="238" invocations="303" avgMicrosecondsPerInvocation="787" maxMicrosecondsPerInvocation="26267" standardDeviationMircosecondsPerInvocation="2324"/>
+      <ClassProfile name="edu.umd.cs.findbugs.classfile.engine.bcel.ConstantDataflowFactory" totalMilliseconds="214" invocations="293" avgMicrosecondsPerInvocation="732" maxMicrosecondsPerInvocation="25174" standardDeviationMircosecondsPerInvocation="2063"/>
+      <ClassProfile name="edu.umd.cs.findbugs.detect.FunctionsThatMightBeMistakenForProcedures" totalMilliseconds="208" invocations="239" avgMicrosecondsPerInvocation="870" maxMicrosecondsPerInvocation="25031" standardDeviationMircosecondsPerInvocation="2512"/>
+      <ClassProfile name="edu.umd.cs.findbugs.detect.FindBadCast2" totalMilliseconds="189" invocations="73" avgMicrosecondsPerInvocation="2600" maxMicrosecondsPerInvocation="36124" standardDeviationMircosecondsPerInvocation="6809"/>
+      <ClassProfile name="edu.umd.cs.findbugs.classfile.engine.ClassDataAnalysisEngine" totalMilliseconds="181" invocations="597" avgMicrosecondsPerInvocation="303" maxMicrosecondsPerInvocation="2553" standardDeviationMircosecondsPerInvocation="178"/>
+      <ClassProfile name="edu.umd.cs.findbugs.classfile.engine.bcel.MethodGenFactory" totalMilliseconds="180" invocations="320" avgMicrosecondsPerInvocation="564" maxMicrosecondsPerInvocation="99468" standardDeviationMircosecondsPerInvocation="5567"/>
+      <ClassProfile name="edu.umd.cs.findbugs.detect.EqualsOperandShouldHaveClassCompatibleWithThis" totalMilliseconds="169" invocations="239" avgMicrosecondsPerInvocation="709" maxMicrosecondsPerInvocation="23136" standardDeviationMircosecondsPerInvocation="2210"/>
+      <ClassProfile name="edu.umd.cs.findbugs.detect.FieldItemSummary" totalMilliseconds="165" invocations="239" avgMicrosecondsPerInvocation="692" maxMicrosecondsPerInvocation="31781" standardDeviationMircosecondsPerInvocation="2720"/>
+      <ClassProfile name="edu.umd.cs.findbugs.detect.UnreadFields" totalMilliseconds="160" invocations="73" avgMicrosecondsPerInvocation="2199" maxMicrosecondsPerInvocation="39764" standardDeviationMircosecondsPerInvocation="5089"/>
+      <ClassProfile name="edu.umd.cs.findbugs.detect.RuntimeExceptionCapture" totalMilliseconds="147" invocations="73" avgMicrosecondsPerInvocation="2023" maxMicrosecondsPerInvocation="48873" standardDeviationMircosecondsPerInvocation="6217"/>
+      <ClassProfile name="edu.umd.cs.findbugs.classfile.engine.bcel.LiveLocalStoreDataflowFactory" totalMilliseconds="134" invocations="265" avgMicrosecondsPerInvocation="509" maxMicrosecondsPerInvocation="11282" standardDeviationMircosecondsPerInvocation="1261"/>
+      <ClassProfile name="edu.umd.cs.findbugs.detect.DefaultEncodingDetector" totalMilliseconds="134" invocations="73" avgMicrosecondsPerInvocation="1847" maxMicrosecondsPerInvocation="42218" standardDeviationMircosecondsPerInvocation="6786"/>
+      <ClassProfile name="edu.umd.cs.findbugs.detect.URLProblems" totalMilliseconds="125" invocations="73" avgMicrosecondsPerInvocation="1717" maxMicrosecondsPerInvocation="15328" standardDeviationMircosecondsPerInvocation="2974"/>
+      <ClassProfile name="edu.umd.cs.findbugs.detect.FindNullDeref$CheckCallSitesAndReturnInstructions" totalMilliseconds="122" invocations="290" avgMicrosecondsPerInvocation="423" maxMicrosecondsPerInvocation="15989" standardDeviationMircosecondsPerInvocation="1446"/>
+      <ClassProfile name="edu.umd.cs.findbugs.util.TopologicalSort" totalMilliseconds="121" invocations="486" avgMicrosecondsPerInvocation="249" maxMicrosecondsPerInvocation="7360" standardDeviationMircosecondsPerInvocation="566"/>
+      <ClassProfile name="edu.umd.cs.findbugs.detect.FindSelfComparison" totalMilliseconds="117" invocations="73" avgMicrosecondsPerInvocation="1615" maxMicrosecondsPerInvocation="37245" standardDeviationMircosecondsPerInvocation="4907"/>
+      <ClassProfile name="edu.umd.cs.findbugs.detect.LoadOfKnownNullValue" totalMilliseconds="116" invocations="73" avgMicrosecondsPerInvocation="1590" maxMicrosecondsPerInvocation="15766" standardDeviationMircosecondsPerInvocation="2694"/>
+      <ClassProfile name="edu.umd.cs.findbugs.detect.SwitchFallthrough" totalMilliseconds="112" invocations="73" avgMicrosecondsPerInvocation="1542" maxMicrosecondsPerInvocation="21557" standardDeviationMircosecondsPerInvocation="3342"/>
+      <ClassProfile name="edu.umd.cs.findbugs.OpcodeStack$JumpInfoFactory" totalMilliseconds="106" invocations="305" avgMicrosecondsPerInvocation="349" maxMicrosecondsPerInvocation="7081" standardDeviationMircosecondsPerInvocation="591"/>
+      <ClassProfile name="edu.umd.cs.findbugs.detect.DumbMethods" totalMilliseconds="104" invocations="73" avgMicrosecondsPerInvocation="1426" maxMicrosecondsPerInvocation="20207" standardDeviationMircosecondsPerInvocation="3102"/>
+      <ClassProfile name="edu.umd.cs.findbugs.detect.FindHEmismatch" totalMilliseconds="103" invocations="73" avgMicrosecondsPerInvocation="1421" maxMicrosecondsPerInvocation="18286" standardDeviationMircosecondsPerInvocation="3210"/>
+      <ClassProfile name="edu.umd.cs.findbugs.detect.FindFieldSelfAssignment" totalMilliseconds="103" invocations="73" avgMicrosecondsPerInvocation="1418" maxMicrosecondsPerInvocation="40980" standardDeviationMircosecondsPerInvocation="5209"/>
+      <ClassProfile name="edu.umd.cs.findbugs.detect.FindPuzzlers" totalMilliseconds="101" invocations="73" avgMicrosecondsPerInvocation="1390" maxMicrosecondsPerInvocation="34921" standardDeviationMircosecondsPerInvocation="4162"/>
+      <ClassProfile name="edu.umd.cs.findbugs.detect.CalledMethods" totalMilliseconds="97" invocations="239" avgMicrosecondsPerInvocation="409" maxMicrosecondsPerInvocation="20340" standardDeviationMircosecondsPerInvocation="1466"/>
+      <ClassProfile name="edu.umd.cs.findbugs.detect.SynchronizeOnClassLiteralNotGetClass" totalMilliseconds="91" invocations="73" avgMicrosecondsPerInvocation="1254" maxMicrosecondsPerInvocation="18013" standardDeviationMircosecondsPerInvocation="3301"/>
+    </FindBugsProfile>
+  </FindBugsSummary>
+  <ClassFeatures></ClassFeatures>
+  <History></History>
+</BugCollection>
