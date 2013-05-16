@@ -21,6 +21,11 @@ import uw.cse.dineon.library.Order;
 import uw.cse.dineon.library.UserInfo;
 import junit.framework.TestCase;
 
+/**
+ * 
+ * @author zach
+ *
+ */
 public class DiningSessionTest extends AndroidTestCase {
 
 	Activity activity;
