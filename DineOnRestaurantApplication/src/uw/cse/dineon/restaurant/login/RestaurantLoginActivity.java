@@ -195,6 +195,7 @@ LoginFragment.OnLoginListener, RestaurantDownLoaderCallback {
 		mProgressDialog.setTitle("Logging in...");
 		mProgressDialog.setMessage("Getting you ready to work!");
 		mProgressDialog.setIndeterminate(true);
+		mProgressDialog.setCancelable(false);
 		mProgressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
 		mProgressDialog.show();
 	}

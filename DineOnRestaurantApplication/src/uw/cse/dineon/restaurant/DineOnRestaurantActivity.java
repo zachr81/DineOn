@@ -468,7 +468,7 @@ implements SateliteListener {
 		@Override
 		protected void onPreExecute() {
 			super.onPreExecute();
-			createProgressDialog();
+			createProgressDialog(false);
 		}
 
 		@Override
@@ -594,7 +594,7 @@ implements SateliteListener {
 	/**
 	 * Instantiates a new progress dialog and shows it on the screen.
 	 */
-	protected void createProgressDialog() {
+	protected void createProgressDialog(boolean cancelable) {
 		if (mProgressDialog != null && mProgressDialog.isShowing()) {
 			return;
 		}
@@ -602,6 +602,7 @@ implements SateliteListener {
 		mProgressDialog.setTitle("Loading...");
 		mProgressDialog.setMessage("Getting you your restaurant");
 		mProgressDialog.setIndeterminate(true);
+		mProgressDialog.setCancelable(cancelable);
 		mProgressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
 		mProgressDialog.show();
 	}
