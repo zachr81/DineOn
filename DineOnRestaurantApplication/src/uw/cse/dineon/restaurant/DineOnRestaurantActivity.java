@@ -310,7 +310,7 @@ implements SateliteListener {
 
 	@Override
 	public void onUserCheckedIn(UserInfo user, int tableID) {
-		final DiningSession DS = new DiningSession(tableID, user);
+		final DiningSession DS = new DiningSession(tableID, user, mRestaurant.getInfo());
 		DS.saveInBackGround(new SaveCallback() {
 
 			@Override

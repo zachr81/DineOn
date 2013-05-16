@@ -5,17 +5,7 @@ import uw.cse.dineon.library.UserInfo;
 import com.parse.Parse;
 import com.parse.ParseUser;
 
-import android.app.Activity;
-import android.app.Application;
-import android.content.Context;
-import android.test.ActivityInstrumentationTestCase2;
 import android.test.AndroidTestCase;
-import android.util.Log;
-
-import com.parse.ParseException;
-import com.parse.ParseObject;
-
-import junit.framework.TestCase;
 
 /**
  * 
@@ -35,7 +25,6 @@ public class UserInfoTest extends AndroidTestCase {
 	protected void setUp() throws Exception {
 		super.setUp();
 		Parse.initialize(this.getContext(), "RUWTM02tSuenJPcHGyZ0foyemuL6fjyiIwlMO0Ul", "wvhUoFw5IudTuKIjpfqQoj8dADTT1vJcJHVFKWtK");
-		Log.e("Set up", "Made it to set up");
 		
 		testUser = new ParseUser();
 		testUser.setUsername("utester");

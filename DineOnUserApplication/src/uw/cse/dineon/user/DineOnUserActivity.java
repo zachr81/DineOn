@@ -7,6 +7,7 @@ import java.util.List;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import uw.cse.dineon.library.CustomerRequest;
 import uw.cse.dineon.library.DineOnUser;
 import uw.cse.dineon.library.DiningSession;
 import uw.cse.dineon.library.Reservation;
@@ -384,7 +385,7 @@ public class DineOnUserActivity extends FragmentActivity implements SatelliteLis
 
 		mUser.setDiningSession(session);
 		mUser.saveInBackGround(new SaveCallback() {
-
+			
 			@Override
 			public void done(ParseException e) {
 				// TODO Auto-generated method stub
@@ -413,7 +414,7 @@ public class DineOnUserActivity extends FragmentActivity implements SatelliteLis
 
 	@Override
 	public void onConfirmCustomerRequest(DiningSession ds, String requestID) {
-		// TODO Auto-generated method stub
+		// TODO implement
 		Toast.makeText(this, "onConfirmCustomerRequest", Toast.LENGTH_SHORT).show();
 	}
 
@@ -421,5 +422,15 @@ public class DineOnUserActivity extends FragmentActivity implements SatelliteLis
 	public void onConfirmReservation(Reservation res) {
 		// TODO Auto-generated method stub
 		Toast.makeText(this, "onConfirmReservation", Toast.LENGTH_SHORT).show();
+	}
+	
+	/**
+	 * 
+	 * @param cr CustomerRequest to place
+	 */
+	public void placeRequest(CustomerRequest cr) {
+		mSat.requestCustomerRequest(mUser.getDiningSession(), cr, 
+				mUser.getDiningSession().getRestaurantInfo());
+		Toast.makeText(this, "Made Request", 5000).show();
 	}
 }
