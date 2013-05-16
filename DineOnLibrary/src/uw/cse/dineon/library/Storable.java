@@ -192,8 +192,10 @@ public abstract class Storable {
 	}
 
 	/**
-	 * Constructor.
-	 * @param in Parcel
+	 * Constructs a Storable instance from a Parcel.
+	 * Has to refetch the instance of the object from parse.
+	 * It does this in the background.
+	 * @param in 
 	 */
 	protected Storable(Parcel in) {
 		String id = in.readString();
