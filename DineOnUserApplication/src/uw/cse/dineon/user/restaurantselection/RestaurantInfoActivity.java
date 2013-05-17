@@ -1,5 +1,6 @@
 package uw.cse.dineon.user.restaurantselection;
 
+import uw.cse.dineon.library.RestaurantInfo;
 import uw.cse.dineon.user.DineOnUserActivity;
 import uw.cse.dineon.user.R;
 import android.content.res.Configuration;
@@ -19,7 +20,7 @@ RestaurantInfoFragment.RestaurantInfoListener {
 	 */
 	public static final String EXTRA_RESTAURANT = "RESTAURANT";
 
-	private String mRestaurant;
+	private RestaurantInfo mRestaurant;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -35,7 +36,7 @@ RestaurantInfoFragment.RestaurantInfoListener {
 		Bundle extras = getIntent().getExtras();
 		if (extras != null) {
 			//mRestaurant = extras.getString(EXTRA_RESTAURANT);
-			mRestaurant = extras.getString(EXTRA_RESTAURANT);
+			mRestaurant = extras.getParcelable(EXTRA_RESTAURANT);
 			if (mRestaurant == null) { // Improper call of activity check
 				Log.e(TAG, "Null restaurant name found when extrating bundle");
 				return;
@@ -56,7 +57,7 @@ RestaurantInfoFragment.RestaurantInfoListener {
 	}
 
 	@Override
-	public String getCurrentRestaurant() {
+	public RestaurantInfo getCurrentRestaurant() {
 		// TODO Auto-generated method stub
 		return mRestaurant;
 	}

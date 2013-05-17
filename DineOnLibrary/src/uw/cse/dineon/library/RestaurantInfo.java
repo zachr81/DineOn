@@ -68,7 +68,7 @@ public class RestaurantInfo extends Storable {
 	public RestaurantInfo(ParseObject po) throws ParseException {
 		super(po);
 		mUser = po.getParseUser(PARSEUSER).fetchIfNeeded();
-		mName = po.getString(NAME);
+		mName = mUser.getUsername();
 		mAddress = po.getString(ADDR);
 		mPhone = po.getString(PHONE);
 		mMainImageIndex = po.getInt(IMAGE_MAIN);
@@ -174,6 +174,13 @@ public class RestaurantInfo extends Storable {
 		}
 		// Not found
 		return null;
+	}
+	
+	/**
+	 * @return The restaurant's list of menus
+	 */
+	public List<Menu> getMenuList(){
+		return this.mMenus;
 	}
 
 	/**
