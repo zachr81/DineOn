@@ -18,20 +18,12 @@ public class MenuItem extends Storable {
 	private static final String PRICE = "price";
 	private static final String DESCRIPTION = "description";
 	private static final String TITLE = "title";
-<<<<<<< HEAD
 	
 	private int mProductID;		// ID of this product
 	private double mPrice;
 	private String mTitle; // price of this product
 	private String mDescription;	// description of this product
-=======
 
-	// We dont want 
-	private final int mProductID;		// ID of this product
-	private final double mPrice;  // price of this product
-	private final String mTitle; 
-	private final String mDescription;	// description of this product
->>>>>>> master
 	// TODO Image id;
 
 	/**
@@ -72,7 +64,7 @@ public class MenuItem extends Storable {
 	public int getProductID() {
 		return mProductID;
 	}
-<<<<<<< HEAD
+
 	
 	/**
 	 * @return The Name of the Menu Item
@@ -87,15 +79,7 @@ public class MenuItem extends Storable {
 	public void setTitle(String title){
 		mTitle = title;
 	}
-=======
 
-	//	/**
-	//	 * @param productID the productID to set
-	//	 */
-	//	public void setProductID(int productID) {
-	//		this.mProductID = productID;
-	//	}
->>>>>>> master
 
 	/**
 	 * @return the price
@@ -105,26 +89,11 @@ public class MenuItem extends Storable {
 	}
 
 	/**
-<<<<<<< HEAD
 	 * @param price the price to set
 	 */
 	public void setPrice(double price) {
 		this.mPrice = price;
 	}
-=======
-	 * @return the title
-	 */
-	public String getTitle() {
-		return mTitle;
-	}
-
-	//	/**
-	//	 * @param price the price to set
-	//	 */
-	//	public void setPrice(double price) {
-	//		this.mPrice = price;
-	//	}
->>>>>>> master
 
 	/**
 	 * @return the description
@@ -133,21 +102,15 @@ public class MenuItem extends Storable {
 		return mDescription;
 	}
 
-<<<<<<< HEAD
+
 	/**
 	 * @param description the description to set
 	 */
 	public void setDescription(String description) {
 		this.mDescription = description;
 	}
-=======
-	//	/**
-	//	 * @param description the description to set
-	//	 */
-	//	public void setDescription(String description) {
-	//		this.mDescription = description;
-	//	}
->>>>>>> master
+
+
 
 	/**
 	 * Packs this MenuItem into a ParseObject to be stored.
