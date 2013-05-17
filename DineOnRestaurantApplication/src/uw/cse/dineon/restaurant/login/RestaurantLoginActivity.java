@@ -40,7 +40,7 @@ LoginFragment.OnLoginListener, RestaurantDownLoaderCallback {
 	 * This will hold the object ID to a Restaurant object associated to the
 	 * User that logs in to this application.
 	 */
-	private String mRestaurantID;
+	private Restaurant mRestaurant;
 	
 	/**
 	 * Reference to this Activity instance for anonymous inner classes.
@@ -79,7 +79,7 @@ LoginFragment.OnLoginListener, RestaurantDownLoaderCallback {
 	 */
 	@Override
 	public void startActivity(Intent intent) {
-		intent.putExtra(DineOnConstants.KEY_RESTAURANT, mRestaurantID);
+		intent.putExtra(DineOnConstants.KEY_RESTAURANT, mRestaurant);
 		super.startActivity(intent);
 	}
 
@@ -194,6 +194,7 @@ LoginFragment.OnLoginListener, RestaurantDownLoaderCallback {
 		mProgressDialog.setTitle("Logging in...");
 		mProgressDialog.setMessage("Getting you ready to work!");
 		mProgressDialog.setIndeterminate(true);
+		mProgressDialog.setCancelable(false);
 		mProgressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
 		mProgressDialog.show();
 	}
@@ -217,7 +218,7 @@ LoginFragment.OnLoginListener, RestaurantDownLoaderCallback {
 	@Override
 	public void onDownloadedRestaurant(Restaurant rest) {
 		if (rest != null) {
-			mRestaurantID = rest.getObjId();
+			mRestaurant = rest;
 			startMainActivity();
 		}
 	}
