@@ -105,7 +105,7 @@ public class DiningSession extends TimeableStorable {
 		po.put(USERS, ParseUtil.toListOfParseObjects(mUsers));
 		po.put(ORDERS, ParseUtil.toListOfParseObjects(mOrders));
 		po.put(REQUESTS, ParseUtil.toListOfParseObjects(mPendingRequests));
-		po.put(RESTAURANT_INFO, this.mRest);
+		po.put(RESTAURANT_INFO, this.mRest.packObject());
 		return po;
 	}
 
