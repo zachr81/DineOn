@@ -41,6 +41,7 @@ public class UserInfo extends Storable {
 		mImageID = UNDETERMINED;
 		mProfileDescription = UNDETERMINED;
 		mPhone = UNDETERMINED;
+		Log.e("Constructor called", mPhone);
 	}
 
 	/**

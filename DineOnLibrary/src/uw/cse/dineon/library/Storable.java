@@ -129,7 +129,7 @@ public abstract class Storable implements Parcelable {
 	 * NOTE Make sure you are in background thread
 	 * @throws ParseException Could not download
 	 */
-	public void saveOnCurrentThread() throws ParseException{
+	public void saveOnCurrentThread() throws ParseException {
 		ParseObject po = this.packObject();
 		po.save();
 	}
@@ -179,6 +179,20 @@ public abstract class Storable implements Parcelable {
 	}
 
 	/**
+	 * 
+	 * @author mhotan
+	 */
+	public interface StateChangeListener {
+
+		/**
+		 * 
+		 * @param s Storable who's state changed
+		 */
+		public void onStateChanged(Storable s);
+
+	}
+
+	/**
 	 * Constructs a Storable instance from a Parcel.
 	 * Has to refetch the instance of the object from parse.
 	 * It does this in the background.
@@ -219,17 +233,17 @@ public abstract class Storable implements Parcelable {
 		return 0;
 	}
 
-	//	public static final Parcelable.Creator<Storable> CREATOR =
-	//			new Creator<Storable>() {
-	//		
-	//		@Override
-	//		public Storable[] newArray(int size) {
-	//			return new Storable[size];
-	//		}
-	//		
-	//		@Override
-	//		public Storable createFromParcel(Parcel source) {
-	//			return new Storable(source);
-	//		}
-	//	};
+	//	@Override
+	//	public void writeToParcel(Parcel dest, int flags) {
+	//		dest.writeString(this.getObjId());
+	//	}
+	//	
+	//	/**
+	//	 * Fills this instance with the values found in this parcel
+	//	 * @param source
+	//	 */
+	//	protected void readFromParcel(Parcel source) {
+	//		this.setObjId(source.readString());
+	//	} 
+
 }

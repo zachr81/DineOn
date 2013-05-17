@@ -1,7 +1,6 @@
 package uw.cse.dineon.library;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import uw.cse.dineon.library.util.ParseUtil;
 import android.os.Parcel;
