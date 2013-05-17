@@ -1,12 +1,12 @@
 package uw.cse.dineon.user;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import uw.cse.dineon.library.CustomerRequest;
 import uw.cse.dineon.library.DineOnUser;
 import uw.cse.dineon.library.DiningSession;
 import uw.cse.dineon.library.Reservation;
@@ -55,9 +55,14 @@ public class DineOnUserActivity extends FragmentActivity implements SatelliteLis
 	 */
 	protected DineOnUser mUser;	
 
-	private String mUserId;
+	/**
+	 * Satellite for communication.
+	 */
 	private UserSatellite mSat;
 
+	/**
+	 * A self reference.
+	 */
 	private DineOnUserActivity thisActivity;
 
 	@Override
@@ -75,18 +80,21 @@ public class DineOnUserActivity extends FragmentActivity implements SatelliteLis
 		// 1. 
 		Bundle extras = getIntent() == null ? null : getIntent().getExtras();
 
-		if (extras != null) {
-			mUserId = extras.getString(DineOnConstants.KEY_USER);
+		if (extras != null && extras.containsKey(DineOnConstants.KEY_USER)) {
+			mUser = extras.getParcelable(DineOnConstants.KEY_USER);
 		} // 2.  
-		else if (savedInstanceState.containsKey(DineOnConstants.KEY_USER)) {
-			mUserId = savedInstanceState.getString(DineOnConstants.KEY_USER);
+		else if (savedInstanceState != null 
+				&& savedInstanceState.containsKey(DineOnConstants.KEY_USER)) {
+			mUser = savedInstanceState.getParcelable(DineOnConstants.KEY_USER);
 		} else {
 			Log.e(TAG, "Unable to retrieve user instance");
 			return;
 		}
-
-		// Get the latest copy of this user instance
-
+		
+		if (mUser == null) {
+			Utility.getBackToLoginAlertDialog(this, 
+					"Unable to find your information", UserLoginActivity.class).show();
+		}
 	}
 
 	/**
@@ -96,15 +104,14 @@ public class DineOnUserActivity extends FragmentActivity implements SatelliteLis
 	 */
 	@Override
 	public void startActivity(Intent intent) {
-		if (DineOnConstants.DEBUG && mUser == null) {
-			// TODO change to Dialog box
+		// Adds the User object id
+		if (mUser != null) {
+			intent.putExtra(DineOnConstants.KEY_USER, mUser);
+		} else if (DineOnConstants.DEBUG && mUser == null) {
 			Toast.makeText(this, "Need to create or download a User", Toast.LENGTH_SHORT).show();
 			return;
 		}
-		// Adds the USer object id
-		if (mUser != null) {
-			intent.putExtra(DineOnConstants.KEY_USER, mUser.getObjId());
-		}
+
 		super.startActivity(intent);
 	}
 
@@ -126,32 +133,14 @@ public class DineOnUserActivity extends FragmentActivity implements SatelliteLis
 	protected void onResume() {
 		super.onResume();
 
-		ParseQuery query = new ParseQuery(DineOnUser.class.getSimpleName());
-		query.setCachePolicy(ParseQuery.CachePolicy.CACHE_ELSE_NETWORK);
-		query.getInBackground(mUserId, new GetCallback() {
-
-			@Override
-			public void done(ParseObject object, ParseException e) {
-				if (e == null) {
-					try {
-						// Success
-						mUser = new DineOnUser(object);
-						mSat.register(mUser, thisActivity);
-					} catch (Exception e1) {
-						Log.d(TAG, e1.getMessage());
-					}
-				} else { 
-					Utility.getBackToLoginAlertDialog(thisActivity, UserLoginActivity.class).show();
-				}
-				intializeUI();
-			}
-		});
+		mSat.register(mUser, thisActivity);
+		intializeUI();
+		
 	}
 
 	@Override
 	protected void onStop() {
 		super.onStop();
-
 	}
 
 	@Override
@@ -183,8 +172,7 @@ public class DineOnUserActivity extends FragmentActivity implements SatelliteLis
 				}
 
 			} catch (JSONException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				Log.e(TAG, "JSONException: " + e.getMessage());
 			}
 			//Log.d("ZXing", data.toString());
 		}
@@ -301,6 +289,7 @@ public class DineOnUserActivity extends FragmentActivity implements SatelliteLis
 		if(item == null) {
 			menu.add(rID);
 		}
+		item = menu.findItem(rID);
 		item.setEnabled(true);
 		item.setVisible(true);
 	}
@@ -330,6 +319,7 @@ public class DineOnUserActivity extends FragmentActivity implements SatelliteLis
 			break;
 		default:
 			//Unknown
+			Log.e(TAG, "None of the specified action items were selected.");
 		}
 		if (i != null) {
 			startActivity(i);
@@ -382,15 +372,14 @@ public class DineOnUserActivity extends FragmentActivity implements SatelliteLis
 
 		mUser.setDiningSession(session);
 		mUser.saveInBackGround(new SaveCallback() {
-
+			
 			@Override
 			public void done(ParseException e) {
-				// TODO Auto-generated method stub
 				if (e == null) {
 					intializeUI();
 				} else {
 					Log.e(TAG, "unable to save the updated dineon user " 
-				+ "after new dining session received.");
+							+ "after new dining session received.");
 				}
 			}
 		});
@@ -411,7 +400,7 @@ public class DineOnUserActivity extends FragmentActivity implements SatelliteLis
 
 	@Override
 	public void onConfirmCustomerRequest(DiningSession ds, String requestID) {
-		// TODO Auto-generated method stub
+		// TODO implement
 		Toast.makeText(this, "onConfirmCustomerRequest", Toast.LENGTH_SHORT).show();
 	}
 
@@ -419,5 +408,15 @@ public class DineOnUserActivity extends FragmentActivity implements SatelliteLis
 	public void onConfirmReservation(Reservation res) {
 		// TODO Auto-generated method stub
 		Toast.makeText(this, "onConfirmReservation", Toast.LENGTH_SHORT).show();
+	}
+	
+	/**
+	 * 
+	 * @param cr CustomerRequest to place
+	 */
+	public void placeRequest(CustomerRequest cr) {
+		mSat.requestCustomerRequest(mUser.getDiningSession(), cr, 
+				mUser.getDiningSession().getRestaurantInfo());
+		Toast.makeText(this, "Made Request", Toast.LENGTH_LONG).show();
 	}
 }
