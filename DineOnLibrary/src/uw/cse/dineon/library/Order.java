@@ -2,7 +2,6 @@ package uw.cse.dineon.library;
 
 import java.util.List;
 import java.util.ArrayList;
-import java.util.Collections;
 
 import uw.cse.dineon.library.util.ParseUtil;
 
@@ -78,9 +77,7 @@ public class Order extends TimeableStorable {
 	 * @return the menuItems
 	 */
 	public List<MenuItem> getMenuItems() {
-		List<MenuItem> copy = new ArrayList<MenuItem>(mMenuItems.size());
-		Collections.copy(copy, mMenuItems);
-		return copy;
+		return new ArrayList<MenuItem>(mMenuItems);
 	}
 
 	/**

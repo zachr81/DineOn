@@ -5,22 +5,23 @@ import java.util.Date;
 import java.util.List;
 
 import android.app.Activity;
-import android.app.Application;
 import android.content.Context;
-import android.test.ActivityInstrumentationTestCase2;
 import android.test.AndroidTestCase;
 
 import com.parse.Parse;
 import com.parse.ParseException;
-import com.parse.ParseObject;
 import com.parse.ParseUser;
 
 import uw.cse.dineon.library.DiningSession;
 import uw.cse.dineon.library.MenuItem;
 import uw.cse.dineon.library.Order;
 import uw.cse.dineon.library.UserInfo;
-import junit.framework.TestCase;
 
+/**
+ * 
+ * @author zach
+ *
+ */
 public class DiningSessionTest extends AndroidTestCase {
 
 	Activity activity;
@@ -109,14 +110,14 @@ public class DiningSessionTest extends AndroidTestCase {
 		//TODO fail("Not yet implemented");
 	}
 
-	//also tests addpendingorders
-	public void testGetPendingOrders() {
+	//also tests addorders
+	public void testGetOrders() {
 
 		
 		testSession.addPendingOrder(testOrder);
 
 		
-		//TODO: Remove deep copy from DS assertEquals(orders, testSession.getPendingOrders());
+		assertEquals(orders, testSession.getOrders());
 	}
 
 	

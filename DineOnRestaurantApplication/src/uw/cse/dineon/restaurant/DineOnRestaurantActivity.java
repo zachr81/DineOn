@@ -310,7 +310,7 @@ implements SateliteListener {
 
 	@Override
 	public void onUserCheckedIn(UserInfo user, int tableID) {
-		final DiningSession DS = new DiningSession(tableID, user);
+		final DiningSession DS = new DiningSession(tableID, user, mRestaurant.getInfo());
 		DS.saveInBackGround(new SaveCallback() {
 
 			@Override
@@ -553,9 +553,12 @@ implements SateliteListener {
 
 	/**
 	 * Start log in activity. 
+	 * Clears the back stack so user can't push back to go to their last page.
 	 */
 	public void startLoginActivity() {
 		Intent i = new Intent(this, RestaurantLoginActivity.class);
+		i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+		mRestaurant = null;
 		startActivity(i);
 	}
 
