@@ -8,7 +8,10 @@ import uw.cse.dineon.library.RestaurantInfo;
 import uw.cse.dineon.library.util.DineOnConstants;
 import uw.cse.dineon.restaurant.R;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnClickListener;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.support.v4.app.Fragment;
@@ -36,14 +39,14 @@ public class MenuItemsFragment extends ListFragment {
 	 * Adapter for restaurant menu Item adapter. Use this to add new Menuitems
 	 */
 	private RestaurantMenuItemAdapter mAdapter;
-	
+
 	private static final String TAG = "MenuItemsFragment";
 
 	/**
 	 * Activity listener.
 	 */
 	private MenuItemListener mListener;
-	
+
 	private uw.cse.dineon.library.Menu currentMenu;
 
 	/**
@@ -83,15 +86,15 @@ public class MenuItemsFragment extends ListFragment {
 		// If arguments existed and it invluded a Restaurant Info
 		// Proceed
 		if (isValid(info)) {
-			
+
 			// TODO Handle multiple menus
-			if(info.getMenuList().size() < 1){
+			if (info.getMenuList().size() < 1) {
 				info.getMenuList().add(new uw.cse.dineon.library.Menu("Default"));
 				Log.d(TAG, "No menu exists, created a default menu!");
 			}
 			currentMenu = info.getMenuList().get(0);
-			
-			List<MenuItem> menuitems =  currentMenu.getItems();
+
+			List<MenuItem> menuitems = currentMenu.getItems();
 			mAdapter = new RestaurantMenuItemAdapter(getActivity(), menuitems);
 			setListAdapter(mAdapter);
 		} else {
@@ -113,16 +116,42 @@ public class MenuItemsFragment extends ListFragment {
 	@Override
 	public boolean onOptionsItemSelected(android.view.MenuItem item) {
 		if (item.getItemId() == R.id.menu_add_menu_item) {
-			// Add new blank item
-			MenuItem mi = new MenuItem(mAdapter.getCount() + 1, 0.0, "", "");
-			currentMenu.addNewItem(mi);
-			mAdapter.add(mi);
-			mAdapter.notifyDataSetChanged();
-			Log.v(TAG, "Adding new menu item");
+			makeNewMenuItem();
 			return true;
-		} else {		
-		return super.onOptionsItemSelected(item);
+		} else {
+			return super.onOptionsItemSelected(item);
 		}
+	}
+
+	private void makeNewMenuItem() {
+		AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
+		alert.setTitle("Add New Menu Item");
+		alert.setMessage("Input Menu Item Details");
+		final View alertView = getLayoutInflater(getArguments()).inflate(
+				R.layout.alert_new_menuitem, null);
+
+		alert.setView(alertView);
+		alert.setPositiveButton("Save", new OnClickListener() {
+
+			@Override
+			public void onClick(DialogInterface d, int arg1) {
+				String title = ((EditText) alertView.findViewById(R.id.input_menuitem_title))
+						.getText().toString();
+				String desc = ((EditText) alertView.findViewById(R.id.input_menuitem_desc))
+						.getText().toString();
+				double price = Double.parseDouble(((EditText) alertView
+						.findViewById(R.id.input_menuitem_price)).getText().toString());
+				MenuItem mi = new MenuItem(mAdapter.getCount() + 1, price, title, desc);
+
+				currentMenu.addNewItem(mi);
+				mAdapter.add(mi);
+				mAdapter.notifyDataSetChanged();
+
+				mListener.onMenuItemAdded(mi);
+				Log.v(TAG, "Adding new menu item");
+			}
+		});
+		alert.show();
 	}
 
 	@Override
@@ -233,7 +262,7 @@ public class MenuItemsFragment extends ListFragment {
 
 		@Override
 		public View getView(int position, View convertView, ViewGroup parent) {
-			if(position >= this.getCount())
+			if (position >= this.getCount())
 				super.getView(position, convertView, parent);
 			LayoutInflater inflater = (LayoutInflater) mContext
 					.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -246,18 +275,17 @@ public class MenuItemsFragment extends ListFragment {
 
 			// Obtain the view used for this menu item
 			ImageView image = (ImageView) view.findViewById(R.id.image_thumbnail_menuitem);
-			TextView title = (TextView) view.findViewById(R.id.label_menuitem_editable);
-			ImageButton delete = (ImageButton) view.findViewById(R.id.button_discard_item);
-			EditText description = (EditText) view.findViewById(R.id.edittext_description);
-			EditText price = (EditText) view.findViewById(R.id.edittext_price);
-			ImageButton save = (ImageButton) view.findViewById(R.id.button_save_menuitem);
+			TextView title = (TextView) view.findViewById(R.id.label_menuitem_title);
+			ImageButton delete = (ImageButton) view.findViewById(R.id.button_menuitem_delete);
+			TextView description = (TextView) view.findViewById(R.id.label_menuitem_desc);
+			TextView price = (TextView) view.findViewById(R.id.label_menuitem_price);
 
 			MenuItem item = super.getItem(position);
 			title.setText(item.getTitle());
 			description.setText(item.getDescription());
+			price.setText(Double.toString(item.getPrice()));
 
-			ItemListener listener = new ItemListener(item, image, title, delete, save, description,
-					price);
+			//ItemListener listener = new ItemListener(item, image, title, delete, description, price);
 
 			return view;
 		}
@@ -268,81 +296,74 @@ public class MenuItemsFragment extends ListFragment {
 	 * @author mhotan
 	 * 
 	 */
-	private class ItemListener implements View.OnClickListener {
-
-		private final MenuItem mItem;
-		private final ImageView mImage;
-		private final TextView mTitle;
-		private final ImageButton mDelete, mSave;
-		private final EditText mDescription;
-		private final EditText mPrice;
-
-		/**
-		 * Implicitly adds listeners.
-		 * 
-		 * @param item
-		 *            MenuItem
-		 * @param image
-		 *            ImageView
-		 * @param title
-		 *            TextView
-		 * @param delete
-		 *            ImageButton
-		 * @param save
-		 *            ImageButton
-		 * @param description
-		 *            EditText
-		 * @param price
-		 */
-		public ItemListener(MenuItem item, ImageView image, TextView title, ImageButton delete,
-				ImageButton save, EditText description, EditText price) {
-			mItem = item;
-			mImage = image;
-			mTitle = title;
-			mDelete = delete;
-			mSave = save;
-			mDescription = description;
-			mPrice = price;
-
-			mImage.setOnClickListener(this);
-			mDelete.setOnClickListener(this);
-			mSave.setOnClickListener(this);
-		}
-
-		@Override
-		public void onClick(View v) {
-			if (v == mImage) {
-				// TODO Use listener to change the image this menu item
-				// Use alert dialog
-				// delete mItem
-
-			} else if (v == mDelete) {
-				// use alert dialog
-				// delete mItem
-				mListener.onMenuItemDeleted(mItem);
-
-			} else if (v == mSave) {
-				// TODO User listener to save this menu item
-				// use alert dialog
-				// save mItem
-				String newTitle = mTitle.getText().toString().trim();
-				String newDesc = mDescription.getText().toString().trim();
-				double newPrice = Double.valueOf(mPrice.getText().toString());
-
-				if (newTitle == "" || newDesc == null) {
-					Toast.makeText(getActivity(), "Please fill in the Title and Description!",
-							Toast.LENGTH_SHORT).show();
-					return;
-				}
-				mItem.setDescription(newDesc);
-				mItem.setTitle(newTitle);
-				mItem.setPrice(newPrice);
-				mListener.onMenuItemModified(mItem);
-
-				// mItem.setDescription(newDescription);
-				// TODO Add more modifications here
-
-			}
-		}
-	}
+//	private class ItemListener implements View.OnClickListener {
+//
+//		private final MenuItem mItem;
+//		private final ImageView mImage;
+//		private final TextView mTitle;
+//		private final ImageButton mDelete;
+//		private final EditText mDescription;
+//		private final EditText mPrice;
+//
+//		/**
+//		 * Implicitly adds listeners.
+//		 * 
+//		 * @param item
+//		 *            MenuItem
+//		 * @param image
+//		 *            ImageView
+//		 * @param title
+//		 *            TextView
+//		 * @param delete
+//		 *            ImageButton
+//		 * @param description
+//		 *            EditText
+//		 * @param price
+//		 */
+//		public ItemListener(MenuItem item, ImageView image, TextView title, ImageButton delete,
+//				EditText description, EditText price) {
+//			mItem = item;
+//			mImage = image;
+//			mTitle = title;
+//			mDelete = delete;
+//			mDescription = description;
+//			mPrice = price;
+//		}
+//
+//		@Override
+//		public void onClick(View v) {
+//			if (v == mImage) {
+//				// TODO Use listener to change the image this menu item
+//				// Use alert dialog
+//				// delete mItem
+//
+//			} else if (v == mDelete) {
+//				// use alert dialog
+//				// delete mItem
+//				mListener.onMenuItemDeleted(mItem);
+//
+//			} else if (v == mSave) {
+//				// TODO User listener to save this menu item
+//				// use alert dialog
+//				// save mItem
+//				String newTitle = mTitle.getText().toString().trim();
+//				String newDesc = mDescription.getText().toString().trim();
+//				double newPrice = Double.valueOf(mPrice.getText().toString());
+//
+//				if (newTitle == "" || newDesc == null) {
+//					Toast.makeText(getActivity(), "Please fill in the Title and Description!",
+//							Toast.LENGTH_SHORT).show();
+//					return;
+//				}
+//				mItem.setDescription(newDesc);
+//				mItem.setTitle(newTitle);
+//				mItem.setPrice(newPrice);
+//				mListener.onMenuItemModified(mItem);
+//
+//				// mItem.setDescription(newDescription);
+//				// TODO Add more modifications here
+//
+//			}
+//		}
+//	}
 }

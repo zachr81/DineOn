@@ -186,13 +186,17 @@ public class ProfileActivity extends DineOnRestaurantActivity implements TabList
 
 	@Override
 	public void onMenuItemAdded(MenuItem item) {
-		getRestaurant().getInfo().saveInBackGround(new SaveCallback() {
+		//getRestaurant().saveInBackGround(new SaveCallback() {
+		item.saveInBackGround(new SaveCallback() {
 			@Override
 			public void done(ParseException e) {
 				if (e == null) {
 					notifyAllUsersOfRestaurantChange();
 					Toast.makeText(getApplicationContext(), "Menu Item Added!", Toast.LENGTH_SHORT)
 							.show();
+				} else {
+					Log.e(TAG, e.getMessage() + " #" + e.getCode());
+					Log.d(TAG, getRestaurant().packObject().toString());
 				}
 			}
 		});
@@ -201,13 +205,16 @@ public class ProfileActivity extends DineOnRestaurantActivity implements TabList
 	@Override
 	public void onMenuItemModified(MenuItem item) {
 		// TODO Auto-generated method stub
-		getRestaurant().getInfo().saveInBackGround(new SaveCallback() {
+		getRestaurant().saveInBackGround(new SaveCallback() {
 			@Override
 			public void done(ParseException e) {
 				if (e == null) {
 					notifyAllUsersOfRestaurantChange();
-					Toast.makeText(getApplicationContext(), "Menu Item Updated!",
-							Toast.LENGTH_SHORT).show();
+					Toast.makeText(getApplicationContext(), "Menu Item Updated!", Toast.LENGTH_SHORT)
+							.show();
+				} else {
+					Log.e(TAG, e.getMessage() + " #" + e.getCode());
+					Log.d(TAG, getRestaurant().packObject().toString());
 				}
 			}
 		});
@@ -221,12 +228,13 @@ public class ProfileActivity extends DineOnRestaurantActivity implements TabList
 			public void done(ParseException e) {
 				if (e == null) {
 					notifyAllUsersOfRestaurantChange();
-					Toast.makeText(getApplicationContext(), "Restaurant Info Updated!",
-							Toast.LENGTH_SHORT).show();
-
+					Toast.makeText(getApplicationContext(), "Restaurant Info Updated!", Toast.LENGTH_SHORT)
+							.show();
+				} else {
+					Log.e(TAG, e.getMessage() + " #" + e.getCode());
+					Log.d(TAG, getRestaurant().packObject().toString());
 				}
 			}
-
 		});
 
 	}
