@@ -80,7 +80,7 @@ RestaurantInfoFragment.RestaurantInfoListener {
 						}
 					}
 				} else { 
-					Log.d(TAG, "No restaurants where found in the cloud.");
+					Log.d(TAG, "No restaurants found: " + e.getMessage());
 				}
 			}
 			
