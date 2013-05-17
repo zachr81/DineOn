@@ -17,7 +17,7 @@ public class MenuItem extends Storable {
 	private static final String PRODUCT_ID = "productId";
 	private static final String PRICE = "price";
 	private static final String DESCRIPTION = "description";
-	private static final String TITLE = "title";
+	private static final String TITLE = "menuItemTitle";
 	
 	private int mProductID;		// ID of this product
 	private double mPrice;
