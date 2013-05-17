@@ -5,6 +5,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.Log;
 
+import com.parse.GetCallback;
 import com.parse.ParseACL;
 import com.parse.ParseException;
 import com.parse.ParseObject;
@@ -188,20 +189,20 @@ public abstract class Storable implements Parcelable {
 		mCompleteObject = new ParseObject(this.getClass().getSimpleName());
 		mCompleteObject.setObjectId(id);
 		// Download this object asynchronously
-		//		mCompleteObject.fetchIfNeededInBackground(new GetCallback() {
-		//
-		//			@Override
-		//			public void done(ParseObject object, ParseException e) {
-		//				if (e != null) {
-		//					Log.e(tag, "Unable to load object " + object + " because of " + e.getMessage());
-		//				} else {
-		//					// Successfully downloaded updates in the background
-		//					// Updated the state of this object with the latest ParseObject
-		//					// TODO Figure out a way to update the state of the current instance.
-		//					//				updateState(object);				
-		//				}
-		//			}
-		//		});
+		mCompleteObject.fetchInBackground(new GetCallback() {
+
+			@Override
+			public void done(ParseObject object, ParseException e) {
+				if (e != null) {
+					Log.e(tag, "Unable to load object " + object + " because of " + e.getMessage());
+				} else {
+					// Successfully downloaded updates in the background
+					// Updated the state of this object with the latest ParseObject
+					// TODO Figure out a way to update the state of the current instance.
+					//				updateState(object);				
+				}
+			}
+		});
 	}
 
 	@Override

@@ -357,6 +357,10 @@ public class Restaurant extends LocatableStorable {
 		session.deleteFromCloud();
 	}
 
+	/**
+	 * Creates a restaurant from a parcel.
+	 * @param source Source to build from
+	 */
 	public Restaurant(Parcel source) {
 		super(source);
 		mRestInfo = source.readParcelable(RestaurantInfo.class.getClassLoader());
@@ -368,7 +372,12 @@ public class Restaurant extends LocatableStorable {
 		mSessions = new ArrayList<DiningSession>();
 		mCustomerRequests = new ArrayList<CustomerRequest>();
 		
-		
+		source.readTypedList(mPastOrders, Order.CREATOR);
+		source.readTypedList(mPendingOrders, Order.CREATOR);
+		source.readTypedList(mPastUsers, UserInfo.CREATOR);
+		source.readTypedList(mReservations, Reservation.CREATOR);
+		source.readTypedList(mSessions, DiningSession.CREATOR);
+		source.readTypedList(mCustomerRequests, CustomerRequest.CREATOR);
 	}
 	
 	/**
@@ -405,21 +414,4 @@ public class Restaurant extends LocatableStorable {
 			return new Restaurant[size];
 		}
 	};
-	//			
-	//	/**
-	//	 * Helper method for updating Restaurant with the data from a Parcel.
-	//	 * @param source Parcel containing data in the order:
-	//	 * 		Menu, Reservation, RestaurantInfo, List<Order>, List<DiningSession, 
-	//	 * 		List<CustomerRequests>, String
-	//	 */
-	//	protected void readFromParcel(Parcel source) {
-	//		source.readTypedList(menus, Menu.CREATOR);
-	//		source.readTypedList(mReservations, Reservation.CREATOR);
-	//		this.setInfo((RestaurantInfo)source.readParcelable(
-	//				RestaurantInfo.class.getClassLoader()));
-	//		source.readTypedList(mOrders, Order.CREATOR);
-	//		source.readTypedList(mSessions, DiningSession.CREATOR);
-	//		source.readTypedList(mCustomerRequests, CustomerRequest.CREATOR);
-	//		this.setObjId(source.readString());
-	//	}
 }
