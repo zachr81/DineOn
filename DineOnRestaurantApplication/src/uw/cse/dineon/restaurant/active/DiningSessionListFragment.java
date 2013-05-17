@@ -2,7 +2,6 @@ package uw.cse.dineon.restaurant.active;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import uw.cse.dineon.library.DiningSession;
 import uw.cse.dineon.library.Order;
 import uw.cse.dineon.library.UserInfo;
@@ -197,7 +196,7 @@ public class DiningSessionListFragment extends ListFragment {
 				arrowButton.setImageResource(R.drawable.navigation_expand);
 			}
 		}
-
+		
 		/**
 		 * 
 		 * @param customer DiningSession
@@ -229,6 +228,7 @@ public class DiningSessionListFragment extends ListFragment {
 
 			View vwTop;
 			View vwBot;
+						
 			if (convertView == null) {
 				//Initialize and verticalize parent container viewgroup
 				vw = new LinearLayout(mContext);
@@ -239,14 +239,17 @@ public class DiningSessionListFragment extends ListFragment {
 						(LayoutInflater)mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 				vwTop = inflater.inflate(R.layout.listitem_restaurant_user_top, null, true);
 				vwBot = inflater.inflate(R.layout.listitem_restaurant_user_bot, null, true);
+				
 				vw.addView(vwTop);
 				vw.addView(vwBot);
+				
 			} else {
 				//Everything already created, just find them
 				vw = (LinearLayout) convertView;
 				vwTop = vw.findViewById(R.id.listitem_user_top);
 				vwBot = vw.findViewById(R.id.listitem_user_bot);
 			}
+			
 			//Set up expand button
 			ImageButton arrowButton = (ImageButton) vwTop.findViewById(R.id.button_expand_user);
 			setArrow(position, arrowButton);
@@ -261,25 +264,28 @@ public class DiningSessionListFragment extends ListFragment {
 				}
 			});
 
+			if(expanded != position) {
+				vwBot.setVisibility(View.GONE);
+			} else {
+				vwBot.setVisibility(View.VISIBLE);
+			}
+
 			//TODO Pull actual info from a UserInfo object
 			TextView custName = (TextView) vwTop.findViewById(R.id.label_user_name);
 
 			String name;
-			String phone;
 
 			List<UserInfo> infolist = users.get(position).getUsers();
 			if(infolist != null && infolist.size() > 0 && infolist.get(0) != null) {
 				UserInfo ui = infolist.get(0);
 				name = ui.getName();
-				phone = ui.getPhone();
 			} else {
 				Log.w(TAG, "Could not retrieve name for position: " + position);
 				name = "No Customer!";
-				phone = "No phone?";
 			}
 
 			custName.setText(name);
-
+			
 			//Displays Order information as a string
 			String orderString = "";
 
@@ -297,9 +303,5 @@ public class DiningSessionListFragment extends ListFragment {
 			
 			return vw;
 		}
-
-
-
 	}
-
 }
