@@ -12,6 +12,7 @@
         android:background="#14140E"
         android:paddingBottom="4dp"
         android:paddingTop="4dp"
+        android:gravity="center"
         android:text="@string/label_order_blank"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:textColor="#46C4F2" />
