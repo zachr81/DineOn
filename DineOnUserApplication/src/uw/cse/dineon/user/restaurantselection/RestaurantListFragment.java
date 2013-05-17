@@ -2,7 +2,6 @@ package uw.cse.dineon.user.restaurantselection;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 
 import uw.cse.dineon.library.RestaurantInfo;
@@ -19,11 +18,6 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.parse.FindCallback;
-import com.parse.ParseException;
-import com.parse.ParseObject;
-import com.parse.ParseQuery;
-
 /**
  * TODO finish.
  * @author mhotan
@@ -34,58 +28,20 @@ public class RestaurantListFragment extends ListFragment {
 
 	private RestaurantListListener mListener;
 	
-	private List<RestaurantInfo> restaurants;
-	private List<String> restaurantNames;
+	private RestaurantListAdapter mAdapter;
 
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
-
-		// TODO make Parse queries
-		// Or load from local data base
-		// TODO Change String to a new data type (Restaurant)
 		
-		restaurants = new LinkedList<RestaurantInfo>();
-		restaurantNames = new LinkedList<String>();
+		List<RestaurantInfo> mRestaurants = null;
 		
-		ParseQuery query = new ParseQuery(RestaurantInfo.class.getSimpleName());
-		query.setCachePolicy(ParseQuery.CachePolicy.CACHE_ELSE_NETWORK);
-		// TODO Limit will need to change later
-		query.setLimit(6); 
-		query.findInBackground(new FindCallback() {
-
-			@Override
-			public void done(List<ParseObject> objects, ParseException e) {
-				if (e == null) {
-					
-					for (int i = 0; i < objects.size(); i++) {
-						try {
-							ParseObject p = objects.get(i);
-							restaurants.add(new RestaurantInfo(p));
-							restaurantNames.add(p.getParseUser(
-									RestaurantInfo.PARSEUSER).fetchIfNeeded().getUsername());
-						} catch (ParseException e1) {
-							Log.d(TAG, e1.getMessage());
-						}
-					}
-					
-					onRestaurantsReceived();
-					
-				} else { 
-					Log.d(TAG, "No restaurants where found in the cloud.");
-				}
-			}
-			
-		});
-	}
-	
-	/**
-	 * After obtaining the restaurants in the cloud, populate restaurant list.
-	 */
-	public void onRestaurantsReceived() {
-		ArrayAdapter<String> adapter = 
-				new RestaurantListAdapter(this.getActivity(), restaurantNames);
-		setListAdapter(adapter);
+		if (mListener != null) {
+			mRestaurants = mListener.getRestaurants();
+		}
+		
+		mAdapter = new RestaurantListAdapter(this.getActivity(), mRestaurants);
+		setListAdapter(mAdapter);
 	}
 
 	@Override
@@ -97,6 +53,15 @@ public class RestaurantListFragment extends ListFragment {
 			throw new ClassCastException(activity.toString()
 					+ " must implemenet RestaurantListFragment.RestaurantListListener");
 		}
+	}
+	
+	/**
+	 * Add a restaurantInfo to the list.
+	 * 
+	 * @param info info to add.
+	 */
+	public void addRestaurantInfo(RestaurantInfo info) {
+		this.mAdapter.addRestaurantInfo(info);
 	}
 
 	/**
@@ -119,7 +84,13 @@ public class RestaurantListFragment extends ListFragment {
 		 * TODO finish.
 		 * @param restaurant String
 		 */
-		public void onRestaurantFocusedOn(String restaurant);
+		public void onRestaurantFocusedOn(RestaurantInfo restaurant);
+		
+		/**
+		 * Get the restaurant info object.
+		 * @return return the list of restaurant infos.
+		 */
+		public List<RestaurantInfo> getRestaurants();
 
 	}
 
@@ -128,10 +99,10 @@ public class RestaurantListFragment extends ListFragment {
 	 * TODO Change generic type from String to Restaurant
 	 * @author mhotan
 	 */
-	private class RestaurantListAdapter extends ArrayAdapter<String> {
+	private class RestaurantListAdapter extends ArrayAdapter<RestaurantInfo> {
 
 		private final Context mContext;
-		private final List<String> mValues;
+		private final List<RestaurantInfo> mValues;
 
 		/**
 		 * This is a runtime mapping between "More Info buttons"
@@ -139,7 +110,7 @@ public class RestaurantListFragment extends ListFragment {
 		 * TODO Change String to restaurant;
 		 * NOTE (MH): Not exactly sure if this works
 		 */
-		private final HashMap<View, String> mMapping;
+		private final HashMap<View, RestaurantInfo> mMapping;
 
 		private final View.OnClickListener mButtonListener, mItemSelectedListener;
 
@@ -148,11 +119,15 @@ public class RestaurantListFragment extends ListFragment {
 		 * @param context Context
 		 * @param values List of Strings
 		 */
-		public RestaurantListAdapter(Context context, List<String> values) {
+		public RestaurantListAdapter(Context context, List<RestaurantInfo> values) {
 			super(context, R.layout.listitem_restaurant, values); // Use our custom row layout
 			this.mContext = context;
-			this.mValues = new ArrayList<String>(values);
-			mMapping = new HashMap<View, String>();
+			if (values != null) {
+				this.mValues = new ArrayList<RestaurantInfo>(values);
+			} else {
+				this.mValues = new ArrayList<RestaurantInfo>();
+			}
+			mMapping = new HashMap<View, RestaurantInfo>();
 			mButtonListener = new View.OnClickListener() {
 
 				@Override
@@ -161,8 +136,8 @@ public class RestaurantListFragment extends ListFragment {
 					// Listener is not yet instantiated
 					if (mListener != null) {
 						// Make sure the mapping has the right value
-						String name = mMapping.get(v);
-						if (name == null) {
+						RestaurantInfo info = mMapping.get(v);
+						if (info == null) {
 							Log.w(TAG, "Unable to find restaurant " 
 									+ "that is attached to this view: " + v);
 							return; //FAIL
@@ -171,7 +146,7 @@ public class RestaurantListFragment extends ListFragment {
 						// Potentially change the attributes of the view
 						// To show focus on a particular restaurant
 						
-						mListener.onRestaurantFocusedOn(name);
+						mListener.onRestaurantFocusedOn(info);
 					}
 				}
 			};
@@ -188,6 +163,15 @@ public class RestaurantListFragment extends ListFragment {
 				}
 			};
 		}
+		
+		/**
+		 * Add a restaurantInfo to the list.
+		 * 
+		 * @param info info to add.
+		 */
+		public void addRestaurantInfo(RestaurantInfo info) {
+			this.mValues.add(info);
+		}
 
 		@Override
 		public View getView(int position, View covnertView, ViewGroup parent) {
@@ -203,14 +187,14 @@ public class RestaurantListFragment extends ListFragment {
 			restLabel.setOnClickListener(mItemSelectedListener);
 			
 			// Get the restaurant name by associating with the position
-			String name = mValues.get(position);
+			String name = mValues.get(position).getName();
 			restLabel.setText(name);	
 
 			// TODO Change the button to a more intuitive picture that describes "more info"
 			Button moreInfoButton = (Button) rowView.findViewById(R.id.button_restaurant_info);
 
 			// Add to the mapping so listeners can reference it later
-			mMapping.put(moreInfoButton, name);
+			mMapping.put(moreInfoButton, mValues.get(position));
 
 			moreInfoButton.setOnClickListener(mButtonListener);
 

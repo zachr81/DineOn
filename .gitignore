@@ -33,3 +33,6 @@ checkstyle-result.xml
 
 # unittest junk
 unit_tests_log.txt
+
+# facebook junk
+proguard-project.txt
