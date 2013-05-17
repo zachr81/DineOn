@@ -6,6 +6,8 @@ import java.util.List;
 
 import uw.cse.dineon.library.util.ParseUtil;
 
+import android.util.Log;
+
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseUser;
@@ -131,6 +133,7 @@ public class RestaurantInfo extends Storable {
 		pos = Math.min(Math.max(0, pos), mImageList.size() - 1);
 		if (pos == -1) {
 			//TODO Handle no images
+			Log.d(TAG, "No images set.");
 		}
 		this.mMainImageIndex = pos;
 	}
@@ -144,7 +147,7 @@ public class RestaurantInfo extends Storable {
 	}
 	
 	/**
-	 * Retrieves menu with associated name menuName
+	 * Retrieves menu with associated name menuName.
 	 * 
 	 * @param menuName MenuName to search for
 	 * @return Menu with argument name, null otherwise
@@ -185,7 +188,7 @@ public class RestaurantInfo extends Storable {
 	 * @return true if the menu did not exists already, 
 	 * false if the menu was not added because it already exists   
 	 */
-	public boolean addMenu(Menu newMenu){
+	public boolean addMenu(Menu newMenu) {
 		if (hasMenu(newMenu)) {
 			return mMenus.add(newMenu);
 		}

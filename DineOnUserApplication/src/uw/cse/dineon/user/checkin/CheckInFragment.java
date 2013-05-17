@@ -2,10 +2,8 @@ package uw.cse.dineon.user.checkin;
 
 import uw.cse.dineon.user.R;
 import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -99,7 +97,7 @@ public class CheckInFragment extends Fragment {
 		private String mRestaurant;
 		
 		/**
-		 * Defalut constructor.
+		 * Default constructor.
 		 */
 		public CheckInClickListener() {
 			mRestaurant = null;

@@ -1,6 +1,5 @@
 package uw.cse.dineon.user.restaurantselection;
 
-import uw.cse.dineon.library.RestaurantInfo;
 import uw.cse.dineon.user.R;
 import android.app.Activity;
 import android.os.Bundle;
@@ -28,7 +27,7 @@ public class RestaurantInfoFragment extends Fragment {
 
 	/**
 	 * Sets display features for this fragment to this argument.
-	 * @param restaurantName Restaurant to present
+	 * @param restaurant Restaurant to present
 	 */
 	public void setRestaurantForDisplay(/*TODO Change to Restaurant data type*/
 			String restaurant) {

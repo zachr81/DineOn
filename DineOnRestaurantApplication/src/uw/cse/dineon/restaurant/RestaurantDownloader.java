@@ -60,7 +60,7 @@ public class RestaurantDownloader extends AsyncTask<CachePolicy, ParseException,
 	 * @param user ParseUser to use to download the restaurant
 	 * @param callback Callback to listen for events
 	 */
-	public RestaurantDownloader(ParseUser user, RestaurantDownLoaderCallback callback){
+	public RestaurantDownloader(ParseUser user, RestaurantDownLoaderCallback callback) {
 		if (user == null) {
 			throw new NullPointerException(TAG + "Can't have null user");
 		}
@@ -76,7 +76,6 @@ public class RestaurantDownloader extends AsyncTask<CachePolicy, ParseException,
 	 * Creates a Restaurant Downloader that explicitly looks for a Restaurant
 	 * by object id.
 	 * @param id ParseUser to use to download the restaurant
-	 * @param policy Cache policy to user to download the restaurant. 
 	 * @param callback Callback to listen for events
 	 */
 	public RestaurantDownloader(String id, RestaurantDownLoaderCallback callback) {
@@ -197,7 +196,7 @@ public class RestaurantDownloader extends AsyncTask<CachePolicy, ParseException,
 	}
 
 	@Override
-	protected void onPostExecute (Restaurant result) {
+	protected void onPostExecute(Restaurant result) {
 		if (result == null) {
 			Log.e(TAG, "Unable to download restaurant.");
 			// No need to call on fail.
