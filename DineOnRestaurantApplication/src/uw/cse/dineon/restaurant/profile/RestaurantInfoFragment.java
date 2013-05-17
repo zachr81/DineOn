@@ -57,7 +57,8 @@ public class RestaurantInfoFragment extends Fragment {
 
 	@SuppressWarnings("unused")
 	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+	public View onCreateView(LayoutInflater inflater, ViewGroup container,
+			Bundle savedInstanceState) {
 		// IF there are arguments
 		// then check if there is a restaurant info instance
 		// info can be null
@@ -66,25 +67,31 @@ public class RestaurantInfoFragment extends Fragment {
 		 * getArguments() .getParcelable(DineOnConstants.KEY_RESTAURANTINFO) :
 		 * null;
 		 */
-		
+
 		final RestaurantInfo info = mListener.getInfo();
 		// Check the view and its state and initialize appropriately
 		View view;
 		if (isValid(info)) {
-			view = inflater.inflate(R.layout.fragment_restaurant_info, container, false);
+			view = inflater.inflate(R.layout.fragment_restaurant_info,
+					container, false);
 
 			// Reference the gallery to place images of this restaurant
 			LinearLayout mGallery = (LinearLayout) view
 					.findViewById(R.id.gallery_restaurant_images);
-			CheckBox mCheckBox = (CheckBox) view.findViewById(R.id.checkbox_is_default_image);
-			ImageButton mButtonAdd = (ImageButton) view.findViewById(R.id.button_add_new_image);
-			ImageButton mButtonDelt = (ImageButton) view.findViewById(R.id.button_delete_image);
+			CheckBox mCheckBox = (CheckBox) view
+					.findViewById(R.id.checkbox_is_default_image);
+			ImageButton mButtonAdd = (ImageButton) view
+					.findViewById(R.id.button_add_new_image);
+			ImageButton mButtonDelt = (ImageButton) view
+					.findViewById(R.id.button_delete_image);
 			final TextView mPhoneInput = (TextView) view
 					.findViewById(R.id.edittext_restaurant_phone);
 			final TextView mAddressInput = (TextView) view
 					.findViewById(R.id.edittext_restaurant_address);
-			Button mSaveButton = (Button) view.findViewById(R.id.button_save_restaurant_info);
-			TextView restName = (TextView) view.findViewById(R.id.label_restaurant_name);
+			Button mSaveButton = (Button) view
+					.findViewById(R.id.button_save_restaurant_info);
+			TextView restName = (TextView) view
+					.findViewById(R.id.label_restaurant_name);
 
 			imageViews = new ArrayList<View>();
 
@@ -129,7 +136,8 @@ public class RestaurantInfoFragment extends Fragment {
 
 			//
 			view = inflater.inflate(R.layout.fragment_empty, container, false);
-			TextView errorMessage = (TextView) view.findViewById(R.id.label_error);
+			TextView errorMessage = (TextView) view
+					.findViewById(R.id.label_error);
 			errorMessage.setText("Illegal Dining Session: " + info);
 
 			return view;
@@ -142,8 +150,9 @@ public class RestaurantInfoFragment extends Fragment {
 		if (activity instanceof InfoChangeListener) {
 			mListener = (InfoChangeListener) activity;
 		} else {
-			throw new ClassCastException(activity.toString()
-					+ " must implemenet RestaurantInfoFragment.InfoChangeListener");
+			throw new ClassCastException(
+					activity.toString()
+							+ " must implemenet RestaurantInfoFragment.InfoChangeListener");
 		}
 	}
 
