@@ -226,6 +226,7 @@ public class DiningSession extends TimeableStorable {
 		source.readTypedList(mOrders, Order.CREATOR);
 		source.readTypedList(mPendingRequests, CustomerRequest.CREATOR);
 		mTableID = source.readInt();
+		mRest = source.readParcelable(RestaurantInfo.class.getClassLoader());
 	}
 
 	/**
@@ -245,6 +246,7 @@ public class DiningSession extends TimeableStorable {
 		dest.writeTypedList(mOrders);
 		dest.writeTypedList(mPendingRequests);
 		dest.writeInt(mTableID);
+		dest.writeParcelable(mRest, flags);
 	}
 
 	/**

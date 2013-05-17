@@ -179,20 +179,6 @@ public abstract class Storable implements Parcelable {
 	}
 
 	/**
-	 * 
-	 * @author mhotan
-	 */
-	public interface StateChangeListener {
-
-		/**
-		 * 
-		 * @param s Storable who's state changed
-		 */
-		public void onStateChanged(Storable s);
-
-	}
-
-	/**
 	 * Constructs a Storable instance from a Parcel.
 	 * Has to refetch the instance of the object from parse.
 	 * It does this in the background.
