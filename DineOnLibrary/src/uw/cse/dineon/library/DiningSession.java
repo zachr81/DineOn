@@ -105,7 +105,7 @@ public class DiningSession extends TimeableStorable {
 		po.put(USERS, ParseUtil.toListOfParseObjects(mUsers));
 		po.put(ORDERS, ParseUtil.toListOfParseObjects(mOrders));
 		po.put(REQUESTS, ParseUtil.toListOfParseObjects(mPendingRequests));
-		po.put(RESTAURANT_INFO, this.mRest);
+		po.put(RESTAURANT_INFO, this.mRest.packObject());
 		return po;
 	}
 
@@ -160,8 +160,9 @@ public class DiningSession extends TimeableStorable {
 	 * @param newId to set to 
 	 */
 	public void resetTableID(int newId) {
-		//TODO validate table number
-		// Throw illegal argument exception if needed
+		if(newId < 0 || newId > 1000) {
+			throw new IllegalArgumentException("Invalid tableId");
+		}
 		mTableID = newId;
 	}
 

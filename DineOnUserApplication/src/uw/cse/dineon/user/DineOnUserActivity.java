@@ -1,7 +1,6 @@
 package uw.cse.dineon.user;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import org.json.JSONException;
@@ -184,8 +183,7 @@ public class DineOnUserActivity extends FragmentActivity implements SatelliteLis
 				}
 
 			} catch (JSONException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				Log.e(TAG, "JSONException: " + e.getMessage());
 			}
 			//Log.d("ZXing", data.toString());
 		}
@@ -388,7 +386,6 @@ public class DineOnUserActivity extends FragmentActivity implements SatelliteLis
 			
 			@Override
 			public void done(ParseException e) {
-				// TODO Auto-generated method stub
 				if (e == null) {
 					intializeUI();
 				} else {
@@ -431,6 +428,6 @@ public class DineOnUserActivity extends FragmentActivity implements SatelliteLis
 	public void placeRequest(CustomerRequest cr) {
 		mSat.requestCustomerRequest(mUser.getDiningSession(), cr, 
 				mUser.getDiningSession().getRestaurantInfo());
-		Toast.makeText(this, "Made Request", 5000).show();
+		Toast.makeText(this, "Made Request", Toast.LENGTH_LONG).show();
 	}
 }
