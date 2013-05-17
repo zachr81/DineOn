@@ -15,7 +15,6 @@ import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
-import android.widget.Toast;
 
 import com.parse.ParseException;
 import com.parse.ParseUser;
@@ -49,7 +48,11 @@ implements CreateNewAccountFragment.onCreateNewAccountListener {
 	/**
 	 * This automates the addition of the User Intent.
 	 * Should never be called when mUser is null.
+<<<<<<< HEAD
+	 * @param intent Intent to start activity with
+=======
 	 * @param intent Intent to startactivity with
+>>>>>>> refs/remotes/upstream/master
 	 */
 	@Override
 	public void startActivity(Intent intent) {

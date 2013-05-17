@@ -9,8 +9,6 @@ import uw.cse.dineon.library.UserInfo;
 import uw.cse.dineon.library.util.DineOnConstants;
 import uw.cse.dineon.user.DineOnUserActivity;
 import uw.cse.dineon.user.R;
-import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -76,9 +74,6 @@ CurrentOrderFragment.OrderUpdateListener {
 			intent.putExtra(CurrentBillActivity.EXTRA_DININGSESSION, 
 					"Dining session with accrued orders goes here");
 			startActivityForResult(intent, DineOnConstants.REQUEST_PAY_BILL);
-			break;
-		case R.id.button_request:
-			Toast.makeText(this, "Requested", 5000);
 			break;
 		default:
 			break;
