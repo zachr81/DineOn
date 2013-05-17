@@ -30,8 +30,9 @@ import android.widget.Toast;
  * 
  * @author mhotan
  */
-public class ProfileActivity extends DineOnRestaurantActivity implements TabListener,
-		RestaurantInfoFragment.InfoChangeListener, MenuItemsFragment.MenuItemListener {
+public class ProfileActivity extends DineOnRestaurantActivity implements
+		TabListener, RestaurantInfoFragment.InfoChangeListener,
+		MenuItemsFragment.MenuItemListener {
 
 	private static final String TAG = ProfileActivity.class.getSimpleName();
 
@@ -45,37 +46,34 @@ public class ProfileActivity extends DineOnRestaurantActivity implements TabList
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		//setContentView(R.layout.activity_restaurant_profile);
+		// setContentView(R.layout.activity_restaurant_profile);
 
 		// TODO Grab which action bar is selected
 		mLastTabPosition = 1; // Let the tab be either the 0 or 1
 
-		
 		/*
-		android.support.v4.app.FragmentTransaction ft = 
-				getSupportFragmentManager().beginTransaction();
-		ft.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out);
-		//ft.add(R.id.container_profile_fragment, frag);
-		ft.commit();
-		*/
-		
+		 * android.support.v4.app.FragmentTransaction ft =
+		 * getSupportFragmentManager().beginTransaction();
+		 * ft.setCustomAnimations(android.R.anim.fade_in,
+		 * android.R.anim.fade_out); //ft.add(R.id.container_profile_fragment,
+		 * frag); ft.commit();
+		 */
+
 	}
-	
 
 	@Override
-	public void updateUI(){
-		
+	public void updateUI() {
+
 		super.updateUI();
 		/*
-		Fragment frag;
-		android.support.v4.app.FragmentTransaction ft = getSupportFragmentManager()
-				.beginTransaction();
-		//ft.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out);
-		frag = MenuItemsFragment.newInstance(getRestaurant().getInfo());
-		ft.replace(android.R.id.content, frag);
-		ft.commit();
-		*/
-		
+		 * Fragment frag; android.support.v4.app.FragmentTransaction ft =
+		 * getSupportFragmentManager() .beginTransaction();
+		 * //ft.setCustomAnimations(android.R.anim.fade_in,
+		 * android.R.anim.fade_out); frag =
+		 * MenuItemsFragment.newInstance(getRestaurant().getInfo());
+		 * ft.replace(android.R.id.content, frag); ft.commit();
+		 */
+
 		Fragment frag;
 		if (isLoggedIn() || DineOnConstants.DEBUG) {
 			// If logged in fill views appropriately
@@ -85,9 +83,11 @@ public class ProfileActivity extends DineOnRestaurantActivity implements TabList
 			ab.setDisplayShowTitleEnabled(false);
 			if (ab != null) { // Support older builds
 				ab.addTab(ab.newTab()
-						.setText(R.string.tab_actionbar_restaurant_profile).setTabListener(this));
+						.setText(R.string.tab_actionbar_restaurant_profile)
+						.setTabListener(this));
 				ab.addTab(ab.newTab()
-						.setText(R.string.tab_actionbar_restaurant_menuitems).setTabListener(this));
+						.setText(R.string.tab_actionbar_restaurant_menuitems)
+						.setTabListener(this));
 			}
 
 			// Obtain the most recently used Restaurant via intent or call
@@ -98,13 +98,13 @@ public class ProfileActivity extends DineOnRestaurantActivity implements TabList
 			frag = new NotLoggedInFragment();
 		}
 	}
-	
 
 	@Override
 	public boolean onPrepareOptionsMenu(Menu menu) {
 		super.onPrepareOptionsMenu(menu);
 
-		android.view.MenuItem itemProfile = menu.findItem(R.id.item_restaurant_profile);
+		android.view.MenuItem itemProfile = menu
+				.findItem(R.id.item_restaurant_profile);
 		// Already at profile page so remove the button
 		if (itemProfile != null) { // If exists
 			itemProfile.setEnabled(false);
@@ -113,8 +113,6 @@ public class ProfileActivity extends DineOnRestaurantActivity implements TabList
 
 		return true;
 	}
-	
-	
 
 	/*
 	 * Tab Listener to bring up the correct fragment
@@ -126,9 +124,7 @@ public class ProfileActivity extends DineOnRestaurantActivity implements TabList
 		Log.v(TAG, "Tab selected!");
 		int pos = tab.getPosition();
 		int diff = pos - mLastTabPosition;
-		
-		
-		
+
 		// Ignore ft because it is not support fragment transaction
 		android.support.v4.app.FragmentTransaction supFT = getSupportFragmentManager()
 				.beginTransaction();
@@ -144,7 +140,8 @@ public class ProfileActivity extends DineOnRestaurantActivity implements TabList
 
 			// Assign the animation where the fragment slides
 			// in from the right
-			supFT.setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
+			supFT.setCustomAnimations(android.R.anim.slide_in_left,
+					android.R.anim.slide_out_right);
 		} else { // move the tab relatively rights
 			// TODO Correctly obtain the Restaurant
 
@@ -152,7 +149,8 @@ public class ProfileActivity extends DineOnRestaurantActivity implements TabList
 
 			// Assign the animation where the fragment slides
 			// in from the
-			supFT.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left);
+			supFT.setCustomAnimations(R.anim.slide_in_right,
+					R.anim.slide_out_left);
 		}
 
 		// Update the position
@@ -174,26 +172,35 @@ public class ProfileActivity extends DineOnRestaurantActivity implements TabList
 		// As of May 1st cant think of anything to add here
 	}
 
-
 	// ////////////////////////////////////////////////////
 	// // Following are fragment call backs that signify user interaction
 	// ////////////////////////////////////////////////////
 
 	@Override
 	public void onMenuItemDeleted(MenuItem item) {
-		Toast.makeText(this, "Delete not available yet", Toast.LENGTH_SHORT).show();
+		Toast.makeText(this, "Delete not available yet", Toast.LENGTH_SHORT)
+				.show();
 	}
 
 	@Override
 	public void onMenuItemAdded(MenuItem item) {
-		//getRestaurant().saveInBackGround(new SaveCallback() {
+		// getRestaurant().saveInBackGround(new SaveCallback() {
 		item.saveInBackGround(new SaveCallback() {
 			@Override
 			public void done(ParseException e) {
 				if (e == null) {
-					notifyAllUsersOfRestaurantChange();
-					Toast.makeText(getApplicationContext(), "Menu Item Added!", Toast.LENGTH_SHORT)
-							.show();
+
+					getRestaurant().saveInBackGround(new SaveCallback() {
+
+						@Override
+						public void done(ParseException e) {
+							notifyAllUsersOfRestaurantChange();
+							Toast.makeText(getApplicationContext(),
+									"Menu Item Added!", Toast.LENGTH_SHORT)
+									.show();
+						}
+
+					});
 				} else {
 					Log.e(TAG, e.getMessage() + " #" + e.getCode());
 					Log.d(TAG, getRestaurant().packObject().toString());
@@ -210,8 +217,8 @@ public class ProfileActivity extends DineOnRestaurantActivity implements TabList
 			public void done(ParseException e) {
 				if (e == null) {
 					notifyAllUsersOfRestaurantChange();
-					Toast.makeText(getApplicationContext(), "Menu Item Updated!", Toast.LENGTH_SHORT)
-							.show();
+					Toast.makeText(getApplicationContext(),
+							"Menu Item Updated!", Toast.LENGTH_SHORT).show();
 				} else {
 					Log.e(TAG, e.getMessage() + " #" + e.getCode());
 					Log.d(TAG, getRestaurant().packObject().toString());
@@ -228,7 +235,8 @@ public class ProfileActivity extends DineOnRestaurantActivity implements TabList
 			public void done(ParseException e) {
 				if (e == null) {
 					notifyAllUsersOfRestaurantChange();
-					Toast.makeText(getApplicationContext(), "Restaurant Info Updated!", Toast.LENGTH_SHORT)
+					Toast.makeText(getApplicationContext(),
+							"Restaurant Info Updated!", Toast.LENGTH_SHORT)
 							.show();
 				} else {
 					Log.e(TAG, e.getMessage() + " #" + e.getCode());
@@ -239,7 +247,8 @@ public class ProfileActivity extends DineOnRestaurantActivity implements TabList
 
 	}
 
-	public class TabListener<T extends Fragment> implements ActionBar.TabListener {
+	public class TabListener<T extends Fragment> implements
+			ActionBar.TabListener {
 		private Fragment mFragment;
 		private final Activity mActivity;
 		private final String mTag;
