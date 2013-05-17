@@ -11,6 +11,8 @@ import uw.cse.dineon.user.R;
 import android.app.ActionBar;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.support.v4.app.FragmentManager;
 import android.util.Log;
 import android.view.Menu;
@@ -146,10 +148,10 @@ RestaurantInfoFragment.RestaurantInfoListener {
 				(RestaurantInfoFragment) fm.findFragmentById(R.id.restaurantInfo);
 		// If the fragment already exists then just update its value
 		if (frag != null && frag.isInLayout()) {
-			frag.setRestaurantForDisplay(restaurant.getName());
+			frag.setRestaurantForDisplay(restaurant);
 		} else {
-			Intent i = new Intent(getApplicationContext(), RestaurantInfoActivity.class);	
-			i.putExtra(RestaurantInfoActivity.EXTRA_RESTAURANT, restaurant.getName());
+			Intent i = new Intent(getApplicationContext(), RestaurantInfoActivity.class);
+			i.putExtra(RestaurantInfoActivity.EXTRA_RESTAURANT, restaurant);
 			startActivity(i);
 		}
 	}
@@ -179,7 +181,7 @@ RestaurantInfoFragment.RestaurantInfoListener {
 	}
 
 	@Override
-	public String getCurrentRestaurant() {
+	public RestaurantInfo getCurrentRestaurant() {
 		// TODO Auto-generated method stub
 		return null;
 	}
