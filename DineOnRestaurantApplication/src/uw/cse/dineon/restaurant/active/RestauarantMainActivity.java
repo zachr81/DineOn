@@ -55,24 +55,14 @@ DiningSessionListListener {
 		setContentView(R.layout.activity_restaurant_main);
 
 		mPager = (ViewPager) findViewById(R.id.pager_restaurant_main);
-		// Tells adapter to refresh.
-		
+		// Reset the adapter
+		mPagerAdapter = new ScreenSlidePagerAdapter(getSupportFragmentManager());
+		mPager.setAdapter(mPagerAdapter);
 	}
 
 	@Override
 	protected void updateUI() {
 		super.updateUI();
-
-		if (getRestaurant() == null) {
-			Log.e(TAG, "Something messed up no restaurant available");
-			return;
-		}
-
-		// Reset the adapter
-		mPagerAdapter = new ScreenSlidePagerAdapter(getSupportFragmentManager());
-		mPager.setAdapter(mPagerAdapter);
-		
-		mPagerAdapter.notifyDataSetChanged();
 	}
 
 	@Override
@@ -80,9 +70,8 @@ DiningSessionListListener {
 		super.addDiningSession(session);
 
 		// Update our UI for the current dining session
-		Fragment f = mPagerAdapter.getCurrentFragment();
-		if (f != null && f instanceof DiningSessionListFragment) {
-			DiningSessionListFragment frag = (DiningSessionListFragment) f;
+		DiningSessionListFragment frag = mPagerAdapter.getCurrentDiningSessionListFragment();
+		if (frag != null) {
 			frag.addDiningSession(session);
 		}
 	}
@@ -90,9 +79,8 @@ DiningSessionListListener {
 	@Override
 	protected void removeDiningSession(DiningSession session) {
 		// Update our UI for the current dining session
-		Fragment f = mPagerAdapter.getCurrentFragment();
-		if (f != null && f instanceof DiningSessionListFragment) {
-			DiningSessionListFragment frag = (DiningSessionListFragment) f;
+		DiningSessionListFragment frag = mPagerAdapter.getCurrentDiningSessionListFragment();
+		if (frag != null) {
 			frag.removeDiningSession(session);
 		}
 
@@ -104,9 +92,8 @@ DiningSessionListListener {
 		super.addOrder(order);
 
 		// Update our UI for the current added Order 
-		Fragment f = mPagerAdapter.getCurrentFragment();
-		if (f != null && f instanceof OrderListFragment) {
-			OrderListFragment frag = (OrderListFragment) f;
+		OrderListFragment frag = mPagerAdapter.getCurrentOrderListFragment();
+		if (frag != null) {
 			frag.addOrder(order);
 		}
 	}
@@ -115,9 +102,8 @@ DiningSessionListListener {
 	protected void completeOrder(Order order) {
 
 		// Update our UI for the current added Order 
-		Fragment f = mPagerAdapter.getCurrentFragment();
-		if (f != null && f instanceof OrderListFragment) {
-			OrderListFragment frag = (OrderListFragment) f;
+		OrderListFragment frag = mPagerAdapter.getCurrentOrderListFragment();
+		if (frag != null) {
 			frag.deleteOrder(order);
 		}
 
@@ -129,9 +115,8 @@ DiningSessionListListener {
 		super.addCustomerRequest(request);
 
 		// Update our UI for the current added Request
-		Fragment f = mPagerAdapter.getCurrentFragment();
-		if (f != null && f instanceof RequestListFragment) {
-			RequestListFragment frag = (RequestListFragment) f;
+		RequestListFragment frag = mPagerAdapter.getCurrentRequestListFragment();
+		if (frag != null) {
 			frag.addRequest(request);
 		}	
 	}
@@ -140,9 +125,8 @@ DiningSessionListListener {
 	protected void removeCustomerRequest(CustomerRequest request) {
 
 		// Update our UI for the current added Request
-		Fragment f = mPagerAdapter.getCurrentFragment();
-		if (f != null && f instanceof RequestListFragment) {
-			RequestListFragment frag = (RequestListFragment) f;
+		RequestListFragment frag = mPagerAdapter.getCurrentRequestListFragment();
+		if (frag != null) {
 			frag.deleteRequest(request);
 		}	
 
@@ -185,8 +169,6 @@ DiningSessionListListener {
 	@Override
 	public void onRequestRequestDetail(CustomerRequest request) {
 		DevelopTools.getUnimplementedDialog(this, null);
-
-
 
 		//		Intent intent = new Intent(getApplicationContext(),
 		//				RequestDetailActivity.class);
@@ -239,8 +221,6 @@ DiningSessionListListener {
 	 */
 	private class ScreenSlidePagerAdapter extends FragmentPagerAdapter {
 
-		private Fragment mCurrent;
-
 		private final Fragment[] mFragments;
 
 		/**
@@ -256,24 +236,29 @@ DiningSessionListListener {
 		@Override
 		public Fragment getItem(int position) {
 
+			Restaurant current = getRestaurant();
+			assert (current != null); // WTF if that is null?
+			
 			// Narrow in position
 			position = Math.min(Math.max(position, 0), CONTENT.length - 1);
 
 			Fragment f;
 			switch (position) {
 			case 0:
-				f = new OrderListFragment();
+				f = OrderListFragment.newInstance(current.getPendingOrders());
 				break;
 			case 1:
 				f = new RequestListFragment();
 				break;
-			default:
+			case 2: // Should be 2
 				f = new DiningSessionListFragment();
+				break;
+			// TODO Add more options
+			default:
+				Log.wtf(TAG, "ScreenSlidePagerAdapter weird index requested: " + position);
+				return null;
 			}
-
-			mFragments[position] = f;
-			mCurrent = f;
-			return mCurrent;
+			return (mFragments[position] = f);
 		}
 
 		@Override
@@ -288,18 +273,27 @@ DiningSessionListListener {
 		}
 
 		/**
-		 * Returns the a reference to the current fragment in focus. 
-		 * @return Fragment user is looking at
+		 * Returns the a reference to the current Order list fragment. 
+		 * @return Order List fragment if it exists, else null
 		 */
-		public Fragment getCurrentFragment() {
-			return mCurrent;
+		public OrderListFragment getCurrentOrderListFragment() {
+			return (OrderListFragment) mFragments[0];
 		}
 
 		/**
-		 * @return an array of all current restaurants.
+		 * Returns a reference to the current Request List fragment. 
+		 * @return Request List fragment if it exists, else null
 		 */
-		public Fragment[] getAllCurrentFragments(){
-			return mFragments;
+		public RequestListFragment getCurrentRequestListFragment() {
+			return (RequestListFragment) mFragments[1];
+		}
+		
+		/**
+		 * Returns current Dining Session list fragment instance.
+		 * @return Dining Session list fragment if it exists, else null
+		 */
+		public DiningSessionListFragment getCurrentDiningSessionListFragment() {
+			return (DiningSessionListFragment) mFragments[2];
 		}
 	}
 

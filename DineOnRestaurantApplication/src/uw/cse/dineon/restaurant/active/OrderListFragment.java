@@ -12,6 +12,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,18 +32,68 @@ public class OrderListFragment extends ListFragment {
 
 	private static final String TAG = OrderListFragment.class.getSimpleName();
 
+	/**
+	 * Listener for fragment interactions.
+	 */
 	private OrderItemListener mListener;
 
+	/**
+	 * Adapter that controls the income of Orders.
+	 */
 	private ArrayAdapter<Order> mAdapter;
 
+	private static final String ORDERS = "orders"; 
+	
+	/**
+	 * Creates a new Order List Fragment from a list of orders.
+	 * @param orders Orders to use
+	 * @return an order list fragment.
+	 */
+	public static OrderListFragment newInstance(List<Order> orders) {
+		OrderListFragment f = new OrderListFragment();
+		Bundle args = new Bundle();
+		
+		Order[] orderArgs;
+		if (orders != null) {
+			orderArgs = new Order[orders.size()];
+			for (int i = 0; i < orders.size(); i++) {
+				orderArgs[i] = orders.get(i);
+			}
+		} else {
+			orderArgs = new Order[0];
+		}
+		
+		args.putParcelableArray(ORDERS, orderArgs);
+		f.setArguments(args);
+		return f;
+	}
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		
-		List<Order> orders = mListener.getCurrentOrders();
-		if (orders == null) {
-			orders = new ArrayList<Order>();
+		Order[] orderArray = null;
+		if (getArguments() != null && getArguments().containsKey(ORDERS)) {
+			// Ugh have to convert to array for type reasons.
+			// List are not contravariant in java... :-(
+			orderArray = (Order[])getArguments().getParcelableArray(ORDERS);
+			
+		} else if (savedInstanceState != null // From saved instance
+				&& savedInstanceState.containsKey(ORDERS)) {
+			orderArray = (Order[])savedInstanceState.getParcelableArray(ORDERS);
 		}
+		
+		// Error check
+		if (orderArray == null) {
+			Log.e(TAG, "Unable to extract list of orders");
+			return;
+		}
+		
+		List<Order> orders = new ArrayList<Order>(orderArray.length);
+		for (Order order : orderArray) {
+			orders.add(order);
+		}
+		
 		mAdapter = new OrderListAdapter(this.getActivity(), orders);
 		setListAdapter(mAdapter);
 	}
