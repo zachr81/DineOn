@@ -210,11 +210,10 @@ public class DineOnUserActivity extends FragmentActivity implements SatelliteLis
 
 		// Remove this activity from the back stack
 		i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-
+		startActivity(i);
 		// Making this null makes sure there is no 
 		// data leakage to the login page
 		mUser = null;
-		startActivity(i);
 	}
 
 	/**
