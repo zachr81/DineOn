@@ -174,6 +174,13 @@ public class RestaurantInfo extends Storable {
 		// Not found
 		return null;
 	}
+	
+	/**
+	 * @return The restaurant's list of menus
+	 */
+	public List<Menu> getMenuList(){
+		return this.mMenus;
+	}
 
 	/**
 	 * Checks if this restaurant has the associated menu.
