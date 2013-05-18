@@ -1,4 +1,3 @@
-
 package uw.cse.dineon.library;
 
 import java.util.ArrayList;
@@ -12,6 +11,7 @@ import android.util.Log;
 import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
+import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
 /**
@@ -68,7 +68,7 @@ public class RestaurantInfo extends Storable {
 	public RestaurantInfo(ParseObject po) throws ParseException {
 		super(po);
 		mUser = po.getParseUser(PARSEUSER).fetchIfNeeded();
-		mName = mUser.getUsername();
+		mName = po.getString(NAME);
 		mAddress = po.getString(ADDR);
 		mPhone = po.getString(PHONE);
 		mMainImageIndex = po.getInt(IMAGE_MAIN);
@@ -205,7 +205,7 @@ public class RestaurantInfo extends Storable {
 	 * false if the menu was not added because it already exists   
 	 */
 	public boolean addMenu(Menu newMenu) {
-		if (hasMenu(newMenu)) {
+		if (!hasMenu(newMenu)) {
 			return mMenus.add(newMenu);
 		}
 		return false;

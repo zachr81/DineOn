@@ -1,5 +1,6 @@
 package uw.cse.dineon.user;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 

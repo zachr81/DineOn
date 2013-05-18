@@ -14,6 +14,7 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -98,11 +99,13 @@ LoginFragment.OnLoginListener, RestaurantDownLoaderCallback {
 		int id = item.getItemId();
 		if (id == R.id.option_create_new_account) {
 			createNewAccount();
+			return true;
 		} else if (id == R.id.option_forgot_password) {
 			// TODO Implement - Beta Phase?
 			DevelopTools.getUnimplementedDialog(this, null).show();
+			return true;
 		}
-		return true;
+		return false;
 	}
 
 	@Override

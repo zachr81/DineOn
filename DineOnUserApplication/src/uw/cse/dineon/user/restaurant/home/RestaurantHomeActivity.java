@@ -3,7 +3,6 @@ package uw.cse.dineon.user.restaurant.home;
 import java.util.ArrayList;
 
 import uw.cse.dineon.library.DiningSession;
-import uw.cse.dineon.library.RestaurantInfo;
 import uw.cse.dineon.library.util.DineOnConstants;
 import uw.cse.dineon.user.DineOnUserActivity;
 import uw.cse.dineon.user.R;
@@ -138,7 +137,7 @@ RestaurantHomeMainFragment.ReferenceDataListener {
 	}
 
 	@Override
-	public RestaurantInfo getCurrentRestaurant() {
+	public String getCurrentRestaurant() {
 		// TODO Auto-generated method stub
 		return mRestaurant;
 	}

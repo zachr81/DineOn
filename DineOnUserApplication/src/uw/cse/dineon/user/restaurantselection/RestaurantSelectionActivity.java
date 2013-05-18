@@ -45,8 +45,6 @@ RestaurantInfoFragment.RestaurantInfoListener {
 	
 	private List<RestaurantInfo> mRestaurants;
 	
-	private ProgressDialog mProgressDialog;
-	
 
 	//////////////////////////////////////////////////////////////////////
 	////  Android specific 
@@ -63,8 +61,6 @@ RestaurantInfoFragment.RestaurantInfoListener {
 		if (ACTION_BAR != null) {
 			ACTION_BAR.setTitle(R.string.actionbar_title_restaurant_selection);
 		}
-		
-		createProgressDialog();
 		
 		mRestaurants = new ArrayList<RestaurantInfo>();
 		
@@ -89,13 +85,8 @@ RestaurantInfoFragment.RestaurantInfoListener {
 							Log.d(TAG, e1.getMessage());
 						}
 					}
-					destroyProgressDialog();
-					if (objects.size() == 0)
-						showNoRestaurantsDialog("No Restaurants found.");
 				} else { 
-					destroyProgressDialog();
-					showNoRestaurantsDialog(e.getMessage());
-					Log.d(TAG, "No restaurants found: " + e.getMessage());
+					Log.d(TAG, "No restaurants where found in the cloud.");
 				}
 			}
 			
@@ -168,10 +159,10 @@ RestaurantInfoFragment.RestaurantInfoListener {
 				(RestaurantInfoFragment) fm.findFragmentById(R.id.restaurantInfo);
 		// If the fragment already exists then just update its value
 		if (frag != null && frag.isInLayout()) {
-			frag.setRestaurantForDisplay(restaurant);
+			frag.setRestaurantForDisplay(restaurant.getName());
 		} else {
-			Intent i = new Intent(getApplicationContext(), RestaurantInfoActivity.class);
-			i.putExtra(RestaurantInfoActivity.EXTRA_RESTAURANT, restaurant);
+			Intent i = new Intent(getApplicationContext(), RestaurantInfoActivity.class);	
+			i.putExtra(RestaurantInfoActivity.EXTRA_RESTAURANT, restaurant.getName());
 			startActivity(i);
 		}
 	}
@@ -201,7 +192,7 @@ RestaurantInfoFragment.RestaurantInfoListener {
 	}
 
 	@Override
-	public RestaurantInfo getCurrentRestaurant() {
+	public String getCurrentRestaurant() {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -209,47 +200,6 @@ RestaurantInfoFragment.RestaurantInfoListener {
 	@Override
 	public List<RestaurantInfo> getRestaurants() {
 		return mRestaurants;
-	}
-	
-	/**
-	 * Instantiates a new progress dialog and shows it on the screen.
-	 */
-	public void createProgressDialog() {
-		if (mProgressDialog != null && mProgressDialog.isShowing()) {
-			return;
-		}
-		mProgressDialog = new ProgressDialog(this);
-		mProgressDialog.setTitle("Getting Restaurants");
-		mProgressDialog.setMessage("Searching...");       
-		mProgressDialog.setIndeterminate(true);
-		mProgressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-		mProgressDialog.show();
-	}
-
-	/**
-	 * Hides the progress dialog if there is one.
-	 */
-	public void destroyProgressDialog() {
-		if(mProgressDialog != null && mProgressDialog.isShowing()) {
-			mProgressDialog.dismiss();
-		}
-	}
-
-	/**
-	 * Indicate that no restaurants were returned.
-	 * @param message message to show
-	 */
-	public void showNoRestaurantsDialog(String message) {
-		AlertDialog.Builder b = new Builder(this);
-		b.setTitle("Couldn't find any restaurants.");
-		b.setMessage(message);
-		b.setCancelable(true);
-		b.setPositiveButton("Try Again", new OnClickListener() {
-			@Override
-			public void onClick(DialogInterface dialog, int which) {
-				dialog.cancel();
-			}
-		}).show();
 	}
 
 }
