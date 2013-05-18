@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import uw.cse.dineon.library.CustomerRequest;
+import uw.cse.dineon.library.Order;
 import uw.cse.dineon.restaurant.R;
 import android.app.Activity;
 import android.content.Context;
