@@ -58,7 +58,7 @@ public class RestaurantTest extends AndroidTestCase {
 		testUser.setPassword("pass");
 		testUser.signUp();
 		testUser.save();
-		testSession = new DiningSession(32, new Date(3254645), testUInfo);
+		
 		
 		testUInfo = new UserInfo(testUser);
 		testItems = new ArrayList<MenuItem>();
@@ -82,6 +82,8 @@ public class RestaurantTest extends AndroidTestCase {
 		testRequests.add(testRequest);
 		testReservations = new ArrayList<Reservation>();
 		testReservations.add(testReservation);
+		
+		testSession = new DiningSession(32, new Date(3254645), testUInfo, testRestaurantInfo);
 		testSessions = new ArrayList<DiningSession>();
 		testSessions.add(testSession);
 	}
