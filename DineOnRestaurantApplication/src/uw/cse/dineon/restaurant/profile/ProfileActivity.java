@@ -1,8 +1,5 @@
 package uw.cse.dineon.restaurant.profile;
 
-import com.parse.ParseException;
-import com.parse.SaveCallback;
-
 import uw.cse.dineon.library.MenuItem;
 import uw.cse.dineon.library.Restaurant;
 import uw.cse.dineon.library.RestaurantInfo;
@@ -15,14 +12,14 @@ import android.app.ActionBar.Tab;
 import android.app.ActionBar.TabListener;
 import android.app.Activity;
 import android.app.FragmentTransaction;
-import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.AttributeSet;
 import android.util.Log;
 import android.view.Menu;
-import android.view.View;
 import android.widget.Toast;
+
+import com.parse.ParseException;
+import com.parse.SaveCallback;
 
 /**
  * Activity that allows the user (Restaurant) to access and alter their menu
@@ -247,6 +244,11 @@ public class ProfileActivity extends DineOnRestaurantActivity implements
 
 	}
 
+	/**
+	 * @author cronus91
+	 *
+	 * @param <T> Fragment class to listen to
+	 */
 	public class TabListener<T extends Fragment> implements
 			ActionBar.TabListener {
 		private Fragment mFragment;
@@ -272,6 +274,7 @@ public class ProfileActivity extends DineOnRestaurantActivity implements
 
 		/* The following are each of the ActionBar.TabListener callbacks */
 
+		@Override
 		public void onTabSelected(Tab tab, FragmentTransaction ft) {
 
 			android.support.v4.app.FragmentTransaction supFT = getSupportFragmentManager()
@@ -295,7 +298,7 @@ public class ProfileActivity extends DineOnRestaurantActivity implements
 			}
 			supFT.commit();
 		}
-
+		@Override
 		public void onTabUnselected(Tab tab, FragmentTransaction ft) {
 			if (mFragment != null) {
 				// Detach the fragment, because another one is being attached
@@ -305,7 +308,7 @@ public class ProfileActivity extends DineOnRestaurantActivity implements
 				supFT.commit();
 			}
 		}
-
+		@Override
 		public void onTabReselected(Tab tab, FragmentTransaction ft) {
 			// User selected the already selected tab. Usually do nothing.
 		}

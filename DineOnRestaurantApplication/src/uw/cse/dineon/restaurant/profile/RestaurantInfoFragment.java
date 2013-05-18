@@ -3,11 +3,7 @@ package uw.cse.dineon.restaurant.profile;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.parse.ParseException;
-import com.parse.SaveCallback;
-
 import uw.cse.dineon.library.RestaurantInfo;
-import uw.cse.dineon.library.util.DineOnConstants;
 import uw.cse.dineon.restaurant.R;
 import android.app.Activity;
 import android.os.Bundle;
@@ -19,12 +15,10 @@ import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 /**
  * Main view that allows the user to access and see their restaurant.
@@ -68,10 +62,10 @@ public class RestaurantInfoFragment extends Fragment {
 		 * null;
 		 */
 
-		final RestaurantInfo info = mListener.getInfo();
+		final RestaurantInfo INFO = mListener.getInfo();
 		// Check the view and its state and initialize appropriately
 		View view;
-		if (isValid(info)) {
+		if (isValid(INFO)) {
 			view = inflater.inflate(R.layout.fragment_restaurant_info,
 					container, false);
 
@@ -108,9 +102,9 @@ public class RestaurantInfoFragment extends Fragment {
 			// user selects another image of focus.
 
 			// TODO Set the default values to the current argument
-			mPhoneInput.setText(info.getPhone());
-			mAddressInput.setText(info.getAddr());
-			restName.setText(info.getName());
+			mPhoneInput.setText(INFO.getPhone());
+			mAddressInput.setText(INFO.getAddr());
+			restName.setText(INFO.getName());
 
 			// TODO Set listener for the buttons
 			mSaveButton.setOnClickListener(new View.OnClickListener() {
@@ -118,10 +112,10 @@ public class RestaurantInfoFragment extends Fragment {
 				@Override
 				public void onClick(View v) {
 
-					info.setAddr(mAddressInput.getText().toString());
-					info.setPhone(mPhoneInput.getText().toString());
+					INFO.setAddr(mAddressInput.getText().toString());
+					INFO.setPhone(mPhoneInput.getText().toString());
 
-					mListener.onRestaurantInfoUpdate(info);
+					mListener.onRestaurantInfoUpdate(INFO);
 
 					// TODO Auto-generated method stub
 
@@ -138,7 +132,7 @@ public class RestaurantInfoFragment extends Fragment {
 			view = inflater.inflate(R.layout.fragment_empty, container, false);
 			TextView errorMessage = (TextView) view
 					.findViewById(R.id.label_error);
-			errorMessage.setText("Illegal Dining Session: " + info);
+			errorMessage.setText("Illegal Dining Session: " + INFO);
 
 			return view;
 		}
@@ -170,9 +164,11 @@ public class RestaurantInfoFragment extends Fragment {
 			return false;
 		}
 
+		/*
 		if (DineOnConstants.DEBUG) {
 			// TODO Implement
 		}
+		*/
 		return true;
 	}
 
@@ -190,10 +186,13 @@ public class RestaurantInfoFragment extends Fragment {
 		 * updated.
 		 * 
 		 * @param rest
-		 *            Updated Restuarant Info
+		 *            Updated Restaurant Info
 		 */
 		void onRestaurantInfoUpdate(RestaurantInfo rest);
 
+		/**
+		 * @return The RestaurantInfo object of this listener
+		 */
 		RestaurantInfo getInfo();
 
 	}
