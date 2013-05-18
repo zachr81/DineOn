@@ -82,7 +82,7 @@ public class DineOnUser extends Storable {
 		mFriendsLists = ParseUtil.toListOfStorables(
 				UserInfo.class, po.getList(FRIEND_LIST)); 
 		ParseObject currDiningSession = po.getParseObject(DINING_SESSION);
-		if (!EMPTY_DS.equals(currDiningSession.getObjectId())) {
+		if (currDiningSession != null && !EMPTY_DS.equals(currDiningSession.getObjectId())) {
 			mDiningSession = new DiningSession(currDiningSession);
 		} 
 	}
