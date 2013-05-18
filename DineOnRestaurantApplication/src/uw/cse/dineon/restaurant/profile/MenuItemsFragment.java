@@ -142,7 +142,8 @@ public class MenuItemsFragment extends ListFragment {
 	}
 
 	/**
-	 * Create new Menu Item.
+	 * Helper function to prompt the user for new menu item details and handle
+	 * saving/consistency.
 	 */
 	private void makeNewMenuItem() {
 		AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
@@ -186,7 +187,7 @@ public class MenuItemsFragment extends ListFragment {
 	}
 
 	/**
-	 * Switch current menu.
+	 * Helper function to prompt user to pick a menu (or create new one).
 	 */
 	private void switchMenus() {
 		AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
@@ -256,10 +257,6 @@ public class MenuItemsFragment extends ListFragment {
 	private boolean isValid(RestaurantInfo info) {
 		if (info == null) {
 			return false;
-		}
-
-		if (DineOnConstants.DEBUG) {
-			// TODO Implement
 		}
 		return true;
 	}

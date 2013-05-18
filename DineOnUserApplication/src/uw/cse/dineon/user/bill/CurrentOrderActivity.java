@@ -126,7 +126,11 @@ CurrentOrderFragment.OrderUpdateListener {
 	 */
 	public void onRequestMade() {
 		UserInfo ui = new UserInfo(ParseUser.getCurrentUser());
+		
+		
+		
 		final CustomerRequest C_REQ = new CustomerRequest("Refill my water!!!", ui);
+		
 		final CurrentOrderActivity COACT = this;
 		C_REQ.saveInBackGround(new SaveCallback() {
 			
