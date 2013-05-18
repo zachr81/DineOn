@@ -1,6 +1,5 @@
 package uw.cse.dineon.user.restaurantselection;
 
-import uw.cse.dineon.library.RestaurantInfo;
 import uw.cse.dineon.user.DineOnUserActivity;
 import uw.cse.dineon.user.R;
 import android.content.res.Configuration;
