@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import uw.cse.dineon.library.DiningSession;
+import uw.cse.dineon.library.Order;
 import uw.cse.dineon.library.UserInfo;
 import uw.cse.dineon.restaurant.R;
 import android.app.Activity;
@@ -161,7 +162,7 @@ public class DiningSessionListFragment extends ListFragment {
 		 * IE: Send the user a message
 		 */
 	}
-	
+
 	/**
 	 * List adapter for holding dining sessions.
 	 * @author mhotan
@@ -171,7 +172,7 @@ public class DiningSessionListFragment extends ListFragment {
 		private List<DiningSession> mDiningSessions;
 		private int expanded = -1;
 		private Context mContext;
-		
+
 		/**
 		 * Constructs a new UserList Adapter.
 		 * 
@@ -208,7 +209,7 @@ public class DiningSessionListFragment extends ListFragment {
 			// XXX This will likely break if we start reordering the list
 			// (which isn't a big deal if we never use the method)
 		}
-		
+
 		/**
 		 * Toggles expansion of the given list item.
 		 * Currently only one item can be expanded at a time
@@ -246,7 +247,7 @@ public class DiningSessionListFragment extends ListFragment {
 			Log.v(TAG, "Added customer " + customer);
 			notifyDataSetChanged();
 		}
-		
+
 		/**
 		 * 
 		 * @param customer DiningSession
@@ -256,8 +257,8 @@ public class DiningSessionListFragment extends ListFragment {
 			Log.v(TAG, "Removed customer " + customer);
 			notifyDataSetChanged();
 		}
-		
-		
+
+
 
 		@Override
 		public View getView(final int position, View convertView, ViewGroup parent) {
@@ -273,7 +274,7 @@ public class DiningSessionListFragment extends ListFragment {
 				//Initialize and verticalize parent container viewgroup
 				vw = new LinearLayout(mContext);
 				vw.setOrientation(LinearLayout.VERTICAL);
-				
+
 				//inflate views from xml and add to parent view
 				LayoutInflater inflater = 
 						(LayoutInflater)mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -291,38 +292,39 @@ public class DiningSessionListFragment extends ListFragment {
 			}
 
 			//Set up expand button
-			ImageButton expand = (ImageButton) vwTop.findViewById(R.id.button_expand_user);
-			
-			expand.setOnClickListener(new View.OnClickListener() {
-	             public void onClick(View v) {
-	            	 expand(position);
-	            	 Log.v(TAG, "Toggled position " + position);
-	            	 //Stick *that* in your closure and smoke it
-	             }
-	         });
-			
+			ImageButton arrowButton = (ImageButton) vwTop.findViewById(R.id.button_expand_user);
+			setArrow(position, arrowButton);
+			arrowButton.setOnClickListener(new View.OnClickListener() {
+				public void onClick(View v) {
+					expand(position);
+					ImageButton arrowButton = 
+							(ImageButton) v.findViewById(R.id.button_expand_user);
+					setArrow(position, arrowButton);
+					Log.v(TAG, "Toggled position " + position);
+					//Stick *that* in your closure and smoke it
+				}
+			});
+
 			if(expanded != position) {
 				vwBot.setVisibility(View.GONE);
 			} else {
 				vwBot.setVisibility(View.VISIBLE);
 			}
-			
+
 			//TODO Pull actual info from a UserInfo object
 			TextView custName = (TextView) vwTop.findViewById(R.id.label_user_name);
-			
+
 			String name;
 
 			List<UserInfo> infolist = mDiningSessions.get(position).getUsers();
 			if(infolist != null && infolist.size() > 0 && infolist.get(0) != null) {
 				UserInfo ui = infolist.get(0);
 				name = ui.getName();
-				phone = ui.getPhone();
 			} else {
 				Log.w(TAG, "Could not retrieve name for position: " + position);
 				name = "No Customer!";
-				phone = "No phone?";
 			}
-	
+
 			custName.setText(name);
 
 			//Displays Order information as a string
@@ -337,14 +339,10 @@ public class DiningSessionListFragment extends ListFragment {
 
 				orderString += "\n" + o.getOriginatingTime().toString() + "\n\n";
 			}
-			TextView orderText = (TextView) vwBot.findViewById(R.id.label_user_order_content);
+			TextView orderText = (TextView) vwBot.findViewById(R.id.label_order_contents);
 			orderText.setText(orderString);
 
 			return vw;
 		}
-		
-		
-		
 	}
-	
 }
