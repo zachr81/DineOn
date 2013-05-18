@@ -213,7 +213,6 @@ public class MenuItemsFragment extends ListFragment {
 		if (DineOnConstants.DEBUG) {
 			// TODO Implement
 		}
-		// TODO Auto-generated method stub
 		return true;
 	}
 

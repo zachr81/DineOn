@@ -23,7 +23,6 @@ public class MenuItem extends Storable {
 	private double mPrice;
 	private String mTitle; // price of this product
 	private String mDescription;	// description of this product
-
 	// TODO Image id;
 
 	/**
@@ -65,21 +64,28 @@ public class MenuItem extends Storable {
 		return mProductID;
 	}
 
+	/**
+	 * @param productID the productID to set
+	 */
+	public void setProductID(int productID) {
+		if(productID > -1) {	// or some other arbitrary value
+			this.mProductID = productID;			
+		}
+	}
 	
 	/**
 	 * @return The Name of the Menu Item
 	 */
-	public String getTitle(){
+	public String getTitle() {
 		return mTitle;
 	}
 	
 	/**
-	 * @return The Name of the Menu Item
+	 * @param title String name of MenuItem
 	 */
-	public void setTitle(String title){
+	public void setTitle(String title) {
 		mTitle = title;
 	}
-
 
 	/**
 	 * @return the price
@@ -88,10 +94,14 @@ public class MenuItem extends Storable {
 		return mPrice;
 	}
 
+
 	/**
 	 * @param price the price to set
 	 */
 	public void setPrice(double price) {
+		if(price < 0) {
+			throw new IllegalArgumentException("Price cannot be negative.");
+		}
 		this.mPrice = price;
 	}
 
@@ -102,15 +112,14 @@ public class MenuItem extends Storable {
 		return mDescription;
 	}
 
-
 	/**
 	 * @param description the description to set
 	 */
 	public void setDescription(String description) {
-		this.mDescription = description;
+		if(description != null) {
+			this.mDescription = description;
+		}
 	}
-
-
 
 	/**
 	 * Packs this MenuItem into a ParseObject to be stored.
