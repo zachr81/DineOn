@@ -81,8 +81,7 @@ public class MenuItem extends Storable {
 	}
 	
 	/**
-	 *
-	 * @param title String name of MenuItem
+	 * @param title a string to set as the menu title
 	 */
 	public void setTitle(String title) {
 		mTitle = title;
