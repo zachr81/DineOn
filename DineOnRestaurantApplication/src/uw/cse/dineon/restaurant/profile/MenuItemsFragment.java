@@ -110,7 +110,6 @@ public class MenuItemsFragment extends ListFragment {
 		if (DineOnConstants.DEBUG) {
 			// TODO Implement
 		}
-		// TODO Auto-generated method stub
 		return true;
 	}
 
@@ -238,18 +237,18 @@ public class MenuItemsFragment extends ListFragment {
 				// delete mItem
 				Log.i(TAG, "TODO Use listener to change image");
 			} else if (v == mDelete) {
-				// TODO User listener to delete this menu item
 				// use alert dialog
 				// delete mItem
-				Log.i(TAG, "TODO Use listener to delete this item");
+				mAdapter.remove(mItem);
+				mListener.onMenuItemDeleted(mItem);
 			} else if (v == mSave) {
-				// TODO User listener to save this menu item
 				// use alert dialog
 				// save mItem
+				
 				String newDescription = mDescription.getText().toString();
-//				mItem.setDescription(newDescription);
-				// TODO Add more modifications here
-
+				mItem.setDescription(newDescription);
+				mAdapter.add(mItem);
+				mListener.onMenuItemAdded(mItem);
 			}
 		}
 

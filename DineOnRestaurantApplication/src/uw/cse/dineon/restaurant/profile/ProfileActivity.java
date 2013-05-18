@@ -150,8 +150,8 @@ MenuItemsFragment.MenuItemListener {
 
 	@Override
 	public void onMenuItemAdded(MenuItem item) {
-		// TODO Auto-generated method stub
-
+		uw.cse.dineon.library.Menu m = mRestaurant.getInfo().getMenuList().get(0);
+		mRestaurant.getInfo().addItemToMenu(m, item);
 	}
 
 	@Override

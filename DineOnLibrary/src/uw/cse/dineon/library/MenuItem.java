@@ -20,10 +20,10 @@ public class MenuItem extends Storable {
 	private static final String TITLE = "title";
 
 	// We dont want 
-	private final int mProductID;		// ID of this product
-	private final double mPrice;  // price of this product
-	private final String mTitle; 
-	private final String mDescription;	// description of this product
+	private int mProductID;		// ID of this product
+	private double mPrice;  // price of this product
+	private String mTitle; 
+	private String mDescription;	// description of this product
 	// TODO Image id;
 
 	/**
@@ -65,12 +65,14 @@ public class MenuItem extends Storable {
 		return mProductID;
 	}
 
-	//	/**
-	//	 * @param productID the productID to set
-	//	 */
-	//	public void setProductID(int productID) {
-	//		this.mProductID = productID;
-	//	}
+	/**
+	 * @param productID the productID to set
+	 */
+	public void setProductID(int productID) {
+		if(productID > -1) {	// or some other arbitrary value
+			this.mProductID = productID;			
+		}
+	}
 
 	/**
 	 * @return the price
@@ -86,12 +88,15 @@ public class MenuItem extends Storable {
 		return mTitle;
 	}
 
-	//	/**
-	//	 * @param price the price to set
-	//	 */
-	//	public void setPrice(double price) {
-	//		this.mPrice = price;
-	//	}
+	/**
+	 * @param price the price to set
+	 */
+	public void setPrice(double price) {
+		if(price < 0) {
+			throw new IllegalArgumentException("Price cannot be negative.");
+		}
+		this.mPrice = price;
+	}
 
 	/**
 	 * @return the description
@@ -100,12 +105,14 @@ public class MenuItem extends Storable {
 		return mDescription;
 	}
 
-	//	/**
-	//	 * @param description the description to set
-	//	 */
-	//	public void setDescription(String description) {
-	//		this.mDescription = description;
-	//	}
+	/**
+	 * @param description the description to set
+	 */
+	public void setDescription(String description) {
+		if(description != null) {
+			this.mDescription = description;
+		}
+	}
 
 	/**
 	 * Packs this MenuItem into a ParseObject to be stored.
