@@ -10,7 +10,6 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.parse.ParseException;
-import com.parse.ParseFacebookUtils.Permissions.User;
 import com.parse.ParseObject;
 import com.parse.ParseUser;
 
@@ -66,6 +65,8 @@ public class DineOnUser extends Storable {
 		// Dining sessions are not instantiated until the user begins a dining session
 	}
 
+	private static final String EMPTY_DS = "NULL";
+	
 	/**
 	 * Creates a user from a parse object.
 	 * @param po Parse Object to use to build
@@ -82,7 +83,7 @@ public class DineOnUser extends Storable {
 		mFriendsLists = ParseUtil.toListOfStorables(
 				UserInfo.class, po.getList(FRIEND_LIST)); 
 		ParseObject currDiningSession = po.getParseObject(DINING_SESSION);
-		if (currDiningSession != null) {
+		if (currDiningSession != null && !EMPTY_DS.equals(currDiningSession.getObjectId())) {
 			mDiningSession = new DiningSession(currDiningSession);
 		} 
 	}

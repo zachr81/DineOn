@@ -2,8 +2,11 @@ package uw.cse.dineon.library.util;
 
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import uw.cse.dineon.library.MenuItem;
 import uw.cse.dineon.library.Order;
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
@@ -151,5 +154,31 @@ public final class Utility {
 			}
 		});
 		return orders;
+	}
+	
+	/**
+	 * For a given list of menu items, where some have the same product ID, 
+	 * this function creates a mapping of menu items to the quantity that exists
+	 * in the list.
+	 * 
+	 * If the inputted list is null or is empty an empty map is returned
+	 * 
+	 * @param items MenuItems to organize in a map
+	 * @return Mapping of MenuItems to number of occurences in the list.
+	 */
+	public static Map<MenuItem, Integer> toQuantityMap(List<MenuItem> items) {
+		HashMap<MenuItem, Integer> occurences = new HashMap<MenuItem, Integer>();
+		if (items == null || items.isEmpty()) {
+			return occurences;
+		}
+		for (MenuItem item : items) {
+			if (!occurences.containsKey(item)) {
+				occurences.put(item, 1);
+			} else {
+				int update = occurences.get(item) + 1;
+				occurences.put(item, update);
+			}
+		}
+		return occurences;
 	}
 }
