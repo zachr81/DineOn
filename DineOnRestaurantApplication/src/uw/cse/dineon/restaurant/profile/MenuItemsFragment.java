@@ -115,6 +115,14 @@ public class MenuItemsFragment extends ListFragment {
 					getActivity(), android.R.layout.simple_list_item_1, defList);
 			setListAdapter(adapter);
 		}
+		updateTitle();
+	}
+	
+	/**
+	 * Updates the title to reflect the current menu.
+	 */
+	private void updateTitle() {
+		getActivity().getActionBar().setTitle("Menu: " + currentMenu.getName());
 	}
 
 	@Override
@@ -195,8 +203,8 @@ public class MenuItemsFragment extends ListFragment {
 				R.layout.alert_select_menu, null);
 
 		alert.setView(alertView);
-		Spinner s = (Spinner) alertView.findViewById(R.id.spinner_select_menu);
-		ArrayAdapter<String> aa = new ArrayAdapter<String>(getActivity(),
+		final Spinner s = (Spinner) alertView.findViewById(R.id.spinner_select_menu);
+		final ArrayAdapter<String> aa = new ArrayAdapter<String>(getActivity(),
 				android.R.layout.simple_spinner_item, menuTitles);
 		s.setAdapter(aa);
 
@@ -208,6 +216,9 @@ public class MenuItemsFragment extends ListFragment {
 					Log.e(TAG, "Invalid menu index selected!");
 				} else {
 					currentMenu = mListener.getInfo().getMenuList().get(pos);
+					mAdapter.notifyDataSetInvalidated();
+					mAdapter = new RestaurantMenuItemAdapter(getActivity(), currentMenu.getItems());
+					setListAdapter(mAdapter);
 				}
 			}
 
@@ -229,7 +240,7 @@ public class MenuItemsFragment extends ListFragment {
 			}
 		});
 
-		Button addMenu = (Button) alertView.findViewById(R.id.button_save_menu);
+		ImageButton addMenu = (ImageButton) alertView.findViewById(R.id.button_save_menu);
 		addMenu.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -237,11 +248,20 @@ public class MenuItemsFragment extends ListFragment {
 				String newTitle = ((TextView) alertView
 						.findViewById(R.id.input_new_menu_title)).getText()
 						.toString();
-				Menu m = new Menu(newTitle);
+				((TextView) alertView.findViewById(R.id.input_new_menu_title)).setText("");
+				Menu newMenu = new Menu(newTitle);
 				menuTitles.add(newTitle);
-				// mListener.getInfo().a
+				mListener.getInfo().addMenu(newMenu);
+				s.setSelection(s.getCount()-1);//Switch spinner to last item added
 			}
 
+		});
+		
+		alert.setPositiveButton("Select", new DialogInterface.OnClickListener() {
+			@Override
+			public void onClick(DialogInterface d, int x) {
+				updateTitle();
+			}
 		});
 
 		alert.show();
