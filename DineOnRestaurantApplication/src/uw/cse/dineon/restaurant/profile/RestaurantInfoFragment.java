@@ -101,12 +101,10 @@ public class RestaurantInfoFragment extends Fragment {
 			// listen for the
 			// user selects another image of focus.
 
-			// TODO Set the default values to the current argument
 			mPhoneInput.setText(INFO.getPhone());
 			mAddressInput.setText(INFO.getAddr());
 			restName.setText(INFO.getName());
 
-			// TODO Set listener for the buttons
 			mSaveButton.setOnClickListener(new View.OnClickListener() {
 
 				@Override
@@ -117,14 +115,12 @@ public class RestaurantInfoFragment extends Fragment {
 
 					mListener.onRestaurantInfoUpdate(INFO);
 
-					// TODO Auto-generated method stub
 
 				}
 			});
 
 			// Listener will then Alter the restaurant Info instance.
 
-			// TODO set listener
 			return view;
 		} else {
 
@@ -164,11 +160,6 @@ public class RestaurantInfoFragment extends Fragment {
 			return false;
 		}
 
-		/*
-		if (DineOnConstants.DEBUG) {
-			// TODO Implement
-		}
-		*/
 		return true;
 	}
 
@@ -202,6 +193,7 @@ public class RestaurantInfoFragment extends Fragment {
 	 * 
 	 * @author mhotan
 	 */
+	@SuppressWarnings("unused")
 	private class ImageSelectListener implements View.OnClickListener {
 
 		/**

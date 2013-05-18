@@ -208,7 +208,6 @@ public class ProfileActivity extends DineOnRestaurantActivity implements
 
 	@Override
 	public void onMenuItemModified(MenuItem item) {
-		// TODO Auto-generated method stub
 		getRestaurant().saveInBackGround(new SaveCallback() {
 			@Override
 			public void done(ParseException e) {
@@ -226,7 +225,6 @@ public class ProfileActivity extends DineOnRestaurantActivity implements
 
 	@Override
 	public void onRestaurantInfoUpdate(RestaurantInfo rest) {
-		// TODO Auto-generated method stub
 		rest.saveInBackGround(new SaveCallback() {
 			@Override
 			public void done(ParseException e) {
@@ -274,6 +272,7 @@ public class ProfileActivity extends DineOnRestaurantActivity implements
 
 		/* The following are each of the ActionBar.TabListener callbacks */
 
+		@SuppressWarnings("unused")
 		@Override
 		public void onTabSelected(Tab tab, FragmentTransaction ft) {
 
@@ -316,7 +315,6 @@ public class ProfileActivity extends DineOnRestaurantActivity implements
 
 	@Override
 	public RestaurantInfo getInfo() {
-		// TODO Auto-generated method stub
 		return getRestaurant().getInfo();
 	}
 
