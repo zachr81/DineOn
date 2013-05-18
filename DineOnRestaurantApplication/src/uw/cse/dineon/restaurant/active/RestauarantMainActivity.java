@@ -236,8 +236,8 @@ DiningSessionListListener {
 		@Override
 		public Fragment getItem(int position) {
 
-			Restaurant current = getRestaurant();
-			assert (current != null); // WTF if that is null?
+			Restaurant restaurant = getRestaurant();
+			assert (restaurant != null); // WTF if that is null?
 			
 			// Narrow in position
 			position = Math.min(Math.max(position, 0), CONTENT.length - 1);
@@ -245,13 +245,13 @@ DiningSessionListListener {
 			Fragment f;
 			switch (position) {
 			case 0:
-				f = OrderListFragment.newInstance(current.getPendingOrders());
+				f = OrderListFragment.newInstance(restaurant.getPendingOrders());
 				break;
 			case 1:
-				f = new RequestListFragment();
+				f = RequestListFragment.newInstance(restaurant.getCustomerRequests());
 				break;
 			case 2: // Should be 2
-				f = new DiningSessionListFragment();
+				f = DiningSessionListFragment.newInstance(restaurant.getSessions());
 				break;
 			// TODO Add more options
 			default:

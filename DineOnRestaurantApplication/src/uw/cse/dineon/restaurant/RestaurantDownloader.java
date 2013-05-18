@@ -200,7 +200,7 @@ public class RestaurantDownloader extends AsyncTask<CachePolicy, ParseException,
 	}
 
 	@Override
-	protected void onPostExecute (Restaurant result) {
+	protected void onPostExecute(Restaurant result) {
 		if (result == null) {
 			Log.e(TAG, "Unable to download restaurant.");
 			// No need to call on fail.

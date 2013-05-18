@@ -40,7 +40,7 @@ public class OrderListFragment extends ListFragment {
 	/**
 	 * Adapter that controls the income of Orders.
 	 */
-	private ArrayAdapter<Order> mAdapter;
+	private OrderListAdapter mAdapter;
 
 	private static final String ORDERS = "orders"; 
 	
@@ -73,14 +73,13 @@ public class OrderListFragment extends ListFragment {
 		super.onCreate(savedInstanceState);
 		
 		Order[] orderArray = null;
-		if (getArguments() != null && getArguments().containsKey(ORDERS)) {
-			// Ugh have to convert to array for type reasons.
-			// List are not contravariant in java... :-(
-			orderArray = (Order[])getArguments().getParcelableArray(ORDERS);
-			
-		} else if (savedInstanceState != null // From saved instance
+		if (savedInstanceState != null // From saved instance
 				&& savedInstanceState.containsKey(ORDERS)) {
 			orderArray = (Order[])savedInstanceState.getParcelableArray(ORDERS);
+		} else if (getArguments() != null && getArguments().containsKey(ORDERS)) {
+			// Ugh have to convert to array for type reasons.
+			// List are not contravariant in java... :-(
+			orderArray = (Order[])getArguments().getParcelableArray(ORDERS);	
 		}
 		
 		// Error check
@@ -89,6 +88,8 @@ public class OrderListFragment extends ListFragment {
 			return;
 		}
 		
+		// Must convert to array because this allows dynamic additions
+		// Our Adapter needs a dynamic list.
 		List<Order> orders = new ArrayList<Order>(orderArray.length);
 		for (Order order : orderArray) {
 			orders.add(order);
@@ -96,6 +97,16 @@ public class OrderListFragment extends ListFragment {
 		
 		mAdapter = new OrderListAdapter(this.getActivity(), orders);
 		setListAdapter(mAdapter);
+	}
+	
+	@Override
+	public void onSaveInstanceState(Bundle outState) {
+		ArrayList<Order> orders = mAdapter.getOrders();
+		Order[] orderArray = new Order[orders.size()];
+		for (int i = 0; i < orderArray.length; ++i) {
+			orderArray[i] = orders.get(i);
+		}
+		outState.putParcelableArray(ORDERS, orderArray);
 	}
 
 	@Override
@@ -224,6 +235,13 @@ public class OrderListFragment extends ListFragment {
 			this.mItemListener = new OrderItemListener();
 			this.mProgessListener = new OrderProgressListener();
 		}
+		
+		/**
+		 * @return list of current orders.
+		 */
+		public ArrayList<Order> getOrders() {
+			return new ArrayList<Order>(mOrders);
+		} 
 
 		/**
 		 * Sets the arrow based on whether or not the list item
