@@ -36,6 +36,15 @@ CurrentOrderFragment.OrderUpdateListener {
 		setContentView(R.layout.activity_current_order);
 		mReqButton = (Button) this.findViewById(R.id.button_request);
 		mReqButton.setOnClickListener(new OrderButtonListener());
+		
+		if(mUser == null){
+			Toast.makeText(this, this.getClass().getSimpleName() +
+					" mUser was null", Toast.LENGTH_LONG).show();
+		}
+		else{
+			Toast.makeText(this, this.getClass().getSimpleName() +
+					" Valid mUser", Toast.LENGTH_LONG).show();
+		}
 	}
 	
 	@Override

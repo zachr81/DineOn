@@ -129,7 +129,14 @@ public class DineOnUserActivity extends FragmentActivity implements SatelliteLis
 	@Override
 	protected void onResume() {
 		super.onResume();
-
+		if(mUser == null){
+			Toast.makeText(this, this.getClass().getSimpleName() +
+					" mUser was null", Toast.LENGTH_LONG).show();
+		}
+		else{
+			Toast.makeText(this, this.getClass().getSimpleName() +
+					" Valid mUser", Toast.LENGTH_LONG).show();
+		}
 		mSat.register(mUser, thisActivity);
 		intializeUI();
 		
@@ -369,17 +376,17 @@ public class DineOnUserActivity extends FragmentActivity implements SatelliteLis
 	@Override
 	public void onInitialDiningSessionReceived(DiningSession session) {
 		// TODO Auto-generated method stub
-		Toast.makeText(this, "Dining Session Started", Toast.LENGTH_SHORT).show();
 
 		// DEBUG:
 		Log.d("GOT_DINING_SESSION_FROM_CLOUD", session.getTableID() + "");
-
+		Toast.makeText(this, "Dining Session Started", Toast.LENGTH_SHORT).show();
 		mUser.setDiningSession(session);
 		mUser.saveInBackGround(new SaveCallback() {
 			
 			@Override
 			public void done(ParseException e) {
 				if (e == null) {
+
 					intializeUI();
 				} else {
 					Log.e(TAG, "unable to save the updated dineon user " 
