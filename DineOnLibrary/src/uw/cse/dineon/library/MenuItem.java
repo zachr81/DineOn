@@ -17,12 +17,11 @@ public class MenuItem extends Storable {
 	private static final String PRODUCT_ID = "productId";
 	private static final String PRICE = "price";
 	private static final String DESCRIPTION = "description";
-	private static final String TITLE = "title";
-
-	// We dont want 
+	private static final String TITLE = "menuItemTitle";
+	
 	private int mProductID;		// ID of this product
-	private double mPrice;  // price of this product
-	private String mTitle; 
+	private double mPrice;
+	private String mTitle; // price of this product
 	private String mDescription;	// description of this product
 	// TODO Image id;
 
@@ -73,6 +72,20 @@ public class MenuItem extends Storable {
 			this.mProductID = productID;			
 		}
 	}
+	
+	/**
+	 * @return The Name of the Menu Item
+	 */
+	public String getTitle() {
+		return mTitle;
+	}
+	
+	/**
+	 * @param title String name of MenuItem
+	 */
+	public void setTitle(String title) {
+		mTitle = title;
+	}
 
 	/**
 	 * @return the price
@@ -81,12 +94,6 @@ public class MenuItem extends Storable {
 		return mPrice;
 	}
 
-	/**
-	 * @return the title
-	 */
-	public String getTitle() {
-		return mTitle;
-	}
 
 	/**
 	 * @param price the price to set
