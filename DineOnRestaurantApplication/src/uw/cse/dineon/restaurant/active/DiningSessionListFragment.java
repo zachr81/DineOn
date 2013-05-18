@@ -35,41 +35,74 @@ public class DiningSessionListFragment extends ListFragment {
 	//An activity that implements the required listener functions
 	private DiningSessionListListener mListener;
 
-	//String for storing list in arguments
-//	private static final String KEY_LIST = "MY LIST";
+	private static final String SESSIONS = TAG + "_sessions";
 
 	private DiningSessionListAdapter mAdapter;
 
-//	/**
-//	 * Creates a new customer list fragment.
-//	 * @param sessions List of DiningSessions
-//	 * @return New CustomerListFragment
-//	 */
-//	public static DiningSessionListFragment newInstance(List<DiningSession> sessions) {
-//		DiningSessionListFragment frag = new DiningSessionListFragment();
-//		ArrayList<DiningSession> mList = new ArrayList<DiningSession>();
-//		if (sessions != null) {
-//			mList.addAll(sessions);
-//		}
-//
-//		//Store list in arguments for future retrieval
-//		Bundle args = new Bundle();
-////		args.putParcelableArrayList(KEY_LIST, mList);
-//		frag.setArguments(args);
-//		return frag;
-//	}
+	/**
+	 * Creates a new customer list fragment.
+	 * @param sessions List of DiningSessions
+	 * @return New CustomerListFragment
+	 */
+	public static DiningSessionListFragment newInstance(List<DiningSession> sessions) {
+		DiningSessionListFragment frag = new DiningSessionListFragment();
+		Bundle args = new Bundle();
+
+		DiningSession[] dsArray;
+		if (sessions == null) {
+			dsArray = new DiningSession[0];
+		} else {
+			dsArray = new DiningSession[sessions.size()];
+			for (int i = 0; i < sessions.size(); ++i) {
+				dsArray[i] = sessions.get(i);
+			}
+		}
+
+		args.putParcelableArray(SESSIONS, dsArray);
+		frag.setArguments(args);
+		return frag;
+	}
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		
-		List<DiningSession> sessions = mListener.getCurrentSessions();
-		if (sessions == null) {
-			sessions = new ArrayList<DiningSession>();
+
+
+		DiningSession[] dsArray = null;
+		if (savedInstanceState != null // From saved instance
+				&& savedInstanceState.containsKey(SESSIONS)) {
+			dsArray = (DiningSession[])savedInstanceState.getParcelableArray(SESSIONS);
+		} else if (getArguments() != null && getArguments().containsKey(SESSIONS)) {
+			// Ugh have to convert to array for type reasons.
+			// List are not contravariant in java... :-(
+			dsArray = (DiningSession[])getArguments().getParcelableArray(SESSIONS);	
+		}
+
+		// Error check
+		if (dsArray == null) {
+			Log.e(TAG, "Unable to extract list of dining sessions");
+			return;
+		}
+
+		// Must convert to array because this allows dynamic additions
+		// Our Adapter needs a dynamic list.
+		List<DiningSession> sessions = new ArrayList<DiningSession>(dsArray.length);
+		for (DiningSession session : dsArray) {
+			sessions.add(session);
 		}
 
 		mAdapter = new DiningSessionListAdapter(getActivity(), sessions);
 		setListAdapter(mAdapter);
+	}
+	
+	@Override
+	public void onSaveInstanceState(Bundle outState) {
+		ArrayList<DiningSession> sessions = mAdapter.getCurrentSessions();
+		DiningSession[] dsArray = new DiningSession[sessions.size()];
+		for (int i = 0; i < dsArray.length; ++i) {
+			dsArray[i] = sessions.get(i);
+		}
+		outState.putParcelableArray(SESSIONS, dsArray);
 	}
 
 	@Override
@@ -134,8 +167,8 @@ public class DiningSessionListFragment extends ListFragment {
 	 * @author mhotan
 	 */
 	private class DiningSessionListAdapter extends BaseAdapter {
-		
-		private List<DiningSession> users;
+
+		private List<DiningSession> mDiningSessions;
 		private int expanded = -1;
 		private Context mContext;
 		
@@ -143,21 +176,28 @@ public class DiningSessionListFragment extends ListFragment {
 		 * Constructs a new UserList Adapter.
 		 * 
 		 * @param context The current context
-		 * @param userlist The list of users to display
+		 * @param sessionList The list of users to display
 		 */
-		public DiningSessionListAdapter(Context context, List<DiningSession> userlist) {
+		public DiningSessionListAdapter(Context context, List<DiningSession> sessionList) {
 			mContext = context;
-			users = userlist;
+			mDiningSessions = sessionList;
+		}
+		
+		/**
+		 * @return Current list of Dining Sessions.
+		 */
+		public ArrayList<DiningSession> getCurrentSessions() {
+			return new ArrayList<DiningSession>(mDiningSessions);
 		}
 
 		@Override
 		public int getCount() {
-			return users.size();
+			return mDiningSessions.size();
 		}
 
 		@Override
 		public Object getItem(int position) {
-			return users.get(position);
+			return mDiningSessions.get(position);
 		}
 
 		@Override
@@ -182,13 +222,27 @@ public class DiningSessionListFragment extends ListFragment {
 			}
 			notifyDataSetChanged();
 		}
-		
+
+		/**
+		 * Sets the arrow based on whether or not the list item
+		 * is expanded or not.
+		 * @param position The position of the list item to set
+		 * @param arrowButton The specified arrow button to set
+		 */
+		private void setArrow(int position, ImageButton arrowButton) {
+			if(position == expanded) {
+				arrowButton.setImageResource(R.drawable.navigation_next_item);
+			} else {
+				arrowButton.setImageResource(R.drawable.navigation_expand);
+			}
+		}
+
 		/**
 		 * 
 		 * @param customer DiningSession
 		 */
 		public void add(DiningSession customer) {
-			users.add(customer);
+			mDiningSessions.add(customer);
 			Log.v(TAG, "Added customer " + customer);
 			notifyDataSetChanged();
 		}
@@ -198,7 +252,7 @@ public class DiningSessionListFragment extends ListFragment {
 		 * @param customer DiningSession
 		 */
 		public void remove(DiningSession customer) {
-			users.remove(customer);
+			mDiningSessions.remove(customer);
 			Log.v(TAG, "Removed customer " + customer);
 			notifyDataSetChanged();
 		}
@@ -209,9 +263,12 @@ public class DiningSessionListFragment extends ListFragment {
 		public View getView(final int position, View convertView, ViewGroup parent) {
 			LinearLayout vw;
 			//use vw.findViewById(R.id.whatever) to get children views
-			
+
+			DiningSession mDiningSession = mDiningSessions.get(position);
+
 			View vwTop;
 			View vwBot;
+
 			if (convertView == null) {
 				//Initialize and verticalize parent container viewgroup
 				vw = new LinearLayout(mContext);
@@ -222,14 +279,17 @@ public class DiningSessionListFragment extends ListFragment {
 						(LayoutInflater)mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 				vwTop = inflater.inflate(R.layout.listitem_restaurant_user_top, null, true);
 				vwBot = inflater.inflate(R.layout.listitem_restaurant_user_bot, null, true);
+
 				vw.addView(vwTop);
 				vw.addView(vwBot);
+
 			} else {
 				//Everything already created, just find them
 				vw = (LinearLayout) convertView;
 				vwTop = vw.findViewById(R.id.listitem_user_top);
 				vwBot = vw.findViewById(R.id.listitem_user_bot);
 			}
+
 			//Set up expand button
 			ImageButton expand = (ImageButton) vwTop.findViewById(R.id.button_expand_user);
 			
@@ -251,9 +311,8 @@ public class DiningSessionListFragment extends ListFragment {
 			TextView custName = (TextView) vwTop.findViewById(R.id.label_user_name);
 			
 			String name;
-			String phone;
-			
-			List<UserInfo> infolist = users.get(position).getUsers();
+
+			List<UserInfo> infolist = mDiningSessions.get(position).getUsers();
 			if(infolist != null && infolist.size() > 0 && infolist.get(0) != null) {
 				UserInfo ui = infolist.get(0);
 				name = ui.getName();
@@ -265,11 +324,22 @@ public class DiningSessionListFragment extends ListFragment {
 			}
 	
 			custName.setText(name);
-			
-			TextView infotext = (TextView) vwBot.findViewById(R.id.label_user_info);
-			infotext.setText(phone);
-			
-			
+
+			//Displays Order information as a string
+			String orderString = "";
+
+			for (Order o : mDiningSession.getOrders()) {
+
+				int tableID = o.getTableID();
+				if(tableID != -1) {
+					orderString += "Table " + tableID;
+				}
+
+				orderString += "\n" + o.getOriginatingTime().toString() + "\n\n";
+			}
+			TextView orderText = (TextView) vwBot.findViewById(R.id.label_user_order_content);
+			orderText.setText(orderString);
+
 			return vw;
 		}
 		
