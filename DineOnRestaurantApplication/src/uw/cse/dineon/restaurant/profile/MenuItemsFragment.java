@@ -84,23 +84,23 @@ public class MenuItemsFragment extends ListFragment {
 		 * getArguments() .getParcelable(DineOnConstants.KEY_RESTAURANTINFO) :
 		 * null;
 		 */
-		final RestaurantInfo info = mListener.getInfo();
+		final RestaurantInfo INFO = mListener.getInfo();
 
 		// If arguments existed and it included a Restaurant Info
 		// Proceed
-		if (isValid(info)) {
+		if (isValid(INFO)) {
 
 			// TODO Handle multiple menus
-			if (info.getMenuList().size() < 1) {
+			if (INFO.getMenuList().size() < 1) {
 				Menu defaultMenu = new Menu("Default");
-				info.getMenuList().add(defaultMenu);
+				INFO.getMenuList().add(defaultMenu);
 				defaultMenu.saveInBackGround(null);
 				Log.d(TAG, "No menu exists, created a default menu!");
 			}
-			currentMenu = info.getMenuList().get(0);
+			currentMenu = INFO.getMenuList().get(0);
 
 			// Make list of menu titles for future reference
-			for (Menu m : info.getMenuList()) {
+			for (Menu m : INFO.getMenuList()) {
 				menuTitles.add(m.getName());
 			}
 
@@ -137,6 +137,9 @@ public class MenuItemsFragment extends ListFragment {
 		}
 	}
 
+	/**
+	 * Create new Menu Item.
+	 */
 	private void makeNewMenuItem() {
 		AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
 		alert.setTitle("Add New Menu Item");
@@ -172,6 +175,9 @@ public class MenuItemsFragment extends ListFragment {
 		alert.show();
 	}
 
+	/**
+	 * Switch current menu.
+	 */
 	private void switchMenus() {
 		AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
 		alert.setTitle("Add New Menu Item");
@@ -255,6 +261,9 @@ public class MenuItemsFragment extends ListFragment {
 		 */
 		void onMenuItemModified(MenuItem item);
 
+		/**
+		 * @return RestaurantInfo
+		 */
 		RestaurantInfo getInfo();
 
 	}
@@ -293,8 +302,9 @@ public class MenuItemsFragment extends ListFragment {
 
 		@Override
 		public View getView(int position, View convertView, ViewGroup parent) {
-			if (position >= this.getCount())
+			if (position >= this.getCount()) {
 				super.getView(position, convertView, parent);
+			}
 			LayoutInflater inflater = (LayoutInflater) mContext
 					.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 			View view;
