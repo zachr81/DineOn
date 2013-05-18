@@ -20,6 +20,7 @@ import uw.cse.dineon.user.checkin.IntentResult;
 import uw.cse.dineon.user.general.ProfileActivity;
 import uw.cse.dineon.user.general.UserPreferencesActivity;
 import uw.cse.dineon.user.login.UserLoginActivity;
+import uw.cse.dineon.user.restaurant.home.RestaurantHomeActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
@@ -106,7 +107,6 @@ public class DineOnUserActivity extends FragmentActivity implements SatelliteLis
 			intent.putExtra(DineOnConstants.KEY_USER, mUser);
 		} else if (DineOnConstants.DEBUG && mUser == null) {
 			Toast.makeText(this, "Need to create or download a User", Toast.LENGTH_SHORT).show();
-			return;
 		}
 
 		super.startActivity(intent);
@@ -372,15 +372,20 @@ public class DineOnUserActivity extends FragmentActivity implements SatelliteLis
 
 		// DEBUG:
 		Log.d("GOT_DINING_SESSION_FROM_CLOUD", session.getTableID() + "");
-		Toast.makeText(this, "Dining Session Started", Toast.LENGTH_SHORT).show();
+
+		final DiningSession mSession = session;
 		mUser.setDiningSession(session);
 		mUser.saveInBackGround(new SaveCallback() {
 			
 			@Override
 			public void done(ParseException e) {
 				if (e == null) {
-
-					intializeUI();
+					//intializeUI();
+					
+					// start the restaurant home activity for selected restaurant
+					Intent i = new Intent(thisActivity, RestaurantHomeActivity.class);
+					i.putExtra(DineOnConstants.KEY_DININGSESSION, mSession);
+					startActivity(i);
 				} else {
 					Log.e(TAG, "unable to save the updated dineon user " 
 							+ "after new dining session received.");
