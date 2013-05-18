@@ -60,7 +60,7 @@ public class RestaurantDownloader extends AsyncTask<CachePolicy, ParseException,
 	 * @param user ParseUser to use to download the restaurant
 	 * @param callback Callback to listen for events
 	 */
-	public RestaurantDownloader(ParseUser user, RestaurantDownLoaderCallback callback){
+	public RestaurantDownloader(ParseUser user, RestaurantDownLoaderCallback callback) {
 		if (user == null) {
 			throw new NullPointerException(TAG + "Can't have null user");
 		}

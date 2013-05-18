@@ -15,8 +15,6 @@ import java.util.Set;
 
 import org.json.JSONObject;
 
-import uw.cse.dineon.library.DineOnUser;
-import uw.cse.dineon.library.Restaurant;
 import uw.cse.dineon.library.RestaurantInfo;
 import uw.cse.dineon.library.Storable;
 import uw.cse.dineon.library.UserInfo;
@@ -511,7 +509,7 @@ public final class ParseUtil {
 	
 	
 	/**
-	 * Returns the channel identifier for this Restaurant
+	 * Returns the channel identifier for this Restaurant.
 	 * @param user User to extract channel from
 	 * @return Channel as string
 	 */

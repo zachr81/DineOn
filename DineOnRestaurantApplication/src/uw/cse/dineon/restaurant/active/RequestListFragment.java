@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Map;
 
 import uw.cse.dineon.library.CustomerRequest;
-import uw.cse.dineon.library.Order;
 import uw.cse.dineon.restaurant.R;
 import android.app.Activity;
 import android.content.Context;
@@ -333,6 +332,8 @@ public class RequestListFragment extends ListFragment {
 			Spinner spinner = (Spinner) VIEW.findViewById(
 					R.id.spinner_staff_to_assign);
 
+			//TODO Load assigned staff into spinner
+			
 			spinner.setAdapter(new ArrayAdapter<String>(getActivity(), 
 					android.R.layout.simple_list_item_1, mStaff));
 
