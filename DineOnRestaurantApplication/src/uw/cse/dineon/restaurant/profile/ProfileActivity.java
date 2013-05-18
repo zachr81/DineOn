@@ -190,7 +190,7 @@ public class ProfileActivity extends DineOnRestaurantActivity implements
 			public void done(ParseException e) {
 				if (e == null) {
 
-					getRestaurant().saveInBackGround(new SaveCallback() {
+					getRestaurant().getInfo().saveInBackGround(new SaveCallback() {
 
 						@Override
 						public void done(ParseException e) {

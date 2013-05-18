@@ -17,7 +17,7 @@ import android.support.v4.app.ListFragment;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
+import uw.cse.dineon.library.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,6 +25,7 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -42,12 +43,14 @@ public class MenuItemsFragment extends ListFragment {
 
 	private static final String TAG = "MenuItemsFragment";
 
+	private List<String> menuTitles;
+
 	/**
 	 * Activity listener.
 	 */
 	private MenuItemListener mListener;
 
-	private uw.cse.dineon.library.Menu currentMenu;
+	private Menu currentMenu;
 
 	/**
 	 * Creates a MenuItemsFragment that is ready to build and view.
@@ -83,17 +86,23 @@ public class MenuItemsFragment extends ListFragment {
 		 */
 		final RestaurantInfo info = mListener.getInfo();
 
-		// If arguments existed and it invluded a Restaurant Info
+		// If arguments existed and it included a Restaurant Info
 		// Proceed
 		if (isValid(info)) {
 
 			// TODO Handle multiple menus
 			if (info.getMenuList().size() < 1) {
-				info.getMenuList().add(
-						new uw.cse.dineon.library.Menu("Default"));
+				Menu defaultMenu = new Menu("Default");
+				info.getMenuList().add(defaultMenu);
+				defaultMenu.saveInBackGround(null);
 				Log.d(TAG, "No menu exists, created a default menu!");
 			}
 			currentMenu = info.getMenuList().get(0);
+
+			// Make list of menu titles for future reference
+			for (Menu m : info.getMenuList()) {
+				menuTitles.add(m.getName());
+			}
 
 			List<MenuItem> menuitems = currentMenu.getItems();
 			mAdapter = new RestaurantMenuItemAdapter(getActivity(), menuitems);
@@ -108,7 +117,8 @@ public class MenuItemsFragment extends ListFragment {
 	}
 
 	@Override
-	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+	public void onCreateOptionsMenu(android.view.Menu menu,
+			MenuInflater inflater) {
 		// TODO Add your menu entries here
 		inflater.inflate(R.menu.menu_menu, menu);
 		super.onCreateOptionsMenu(menu, inflater);
@@ -118,6 +128,9 @@ public class MenuItemsFragment extends ListFragment {
 	public boolean onOptionsItemSelected(android.view.MenuItem item) {
 		if (item.getItemId() == R.id.menu_add_menu_item) {
 			makeNewMenuItem();
+			return true;
+		} else if (item.getItemId() == R.id.menu_switch_menu) {
+			switchMenus();
 			return true;
 		} else {
 			return super.onOptionsItemSelected(item);
@@ -157,6 +170,20 @@ public class MenuItemsFragment extends ListFragment {
 			}
 		});
 		alert.show();
+	}
+
+	private void switchMenus() {
+		AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
+		alert.setTitle("Add New Menu Item");
+		alert.setMessage("Input Menu Item Details");
+		final View alertView = getLayoutInflater(getArguments()).inflate(
+				R.layout.alert_select_menu, null);
+
+		alert.setView(alertView);
+		Spinner s = (Spinner) alertView.findViewById(R.id.spinner_select_menu);
+		ArrayAdapter<String> aa = new ArrayAdapter<String>(getActivity(),
+				android.R.layout.simple_spinner_item, menuTitles);
+		s.setAdapter(aa);
 	}
 
 	@Override

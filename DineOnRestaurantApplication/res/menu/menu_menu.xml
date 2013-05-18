@@ -6,5 +6,6 @@
         android:icon="@drawable/new_item"
         android:title="@string/menu_add_menu_item" android:showAsAction="ifRoom|withText">
     </item>
+    <item android:id="@+id/menu_switch_menu" android:icon="@drawable/list" android:title="@string/menu_switch_menu" android:showAsAction="ifRoom|withText"></item>
 
 </menu>
