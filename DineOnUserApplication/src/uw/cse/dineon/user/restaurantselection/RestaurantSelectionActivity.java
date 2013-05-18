@@ -6,23 +6,22 @@ import java.util.ArrayList;
 import java.util.List;
 
 import uw.cse.dineon.library.RestaurantInfo;
+import uw.cse.dineon.library.util.DineOnConstants;
 import uw.cse.dineon.user.DineOnUserActivity;
 import uw.cse.dineon.user.R;
+import uw.cse.dineon.user.restaurant.home.RestaurantHomeActivity;
 import android.app.ActionBar;
 import android.app.AlertDialog;
-import android.app.ProgressDialog;
 import android.app.AlertDialog.Builder;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.DialogInterface.OnClickListener;
+import android.content.Intent;
 import android.os.Bundle;
-import android.os.Parcel;
-import android.os.Parcelable;
 import android.support.v4.app.FragmentManager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Toast;
 
 import com.parse.FindCallback;
 import com.parse.ParseException;
@@ -144,12 +143,19 @@ RestaurantInfoFragment.RestaurantInfoListener {
 	// Method inherited from Restaurant list listener 
 	// for use when user selects a restaurant to focus on
 	@Override
-	public void onRestaurantSelected(String restaurant) {
+	public void onRestaurantSelected(RestaurantInfo restaurant) {
 		// TODO Auto-generated method stub
 		// Continue on to next activity
 		
-		Toast.makeText(this, "Restaurant \"" + restaurant + "\" Selected", 
-				Toast.LENGTH_SHORT).show();
+		Intent i = new Intent(this, RestaurantHomeActivity.class);
+		
+		// send over the restaurantInfo
+		i.putExtra(DineOnConstants.KEY_RESTAURANTINFO, restaurant);
+		
+		startActivity(i);
+		
+		//Toast.makeText(this, "Restaurant \"" + restaurant + "\" Selected", 
+		//		Toast.LENGTH_SHORT).show();
 
 	}
 

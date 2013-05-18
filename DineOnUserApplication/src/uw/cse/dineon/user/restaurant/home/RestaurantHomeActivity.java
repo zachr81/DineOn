@@ -29,6 +29,8 @@ RestaurantHomeMainFragment.ReferenceDataListener {
 	public static final String EXTRA_RESTAURANT = "restaurant"; 
 
 	private RestaurantInfo mRestaurant;
+	
+	private DiningSession mDiningSession;
 
 	//////////////////////////////////////////////////////////////////////
 	////  Android specific 
@@ -49,11 +51,29 @@ RestaurantHomeMainFragment.ReferenceDataListener {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
+		Bundle extras = getIntent().getExtras();
+		
 		// Attempt to get the restaurant name
-		ArrayList<Parcelable> extras = 
-				getIntent().getParcelableArrayListExtra(DineOnConstants.DINING_SESSION);
+		//ArrayList<Parcelable> extras = 
+		//		getIntent().getParcelableArrayListExtra(DineOnConstants.DINING_SESSION);
+		//if (extras != null) {
+		//	DiningSession mDiningSession = (DiningSession) extras.get(0);
+		//}
+		
 		if (extras != null) {
-			DiningSession mDiningSession = (DiningSession) extras.get(0);
+			if (extras.containsKey(DineOnConstants.KEY_DININGSESSION)) {
+				mDiningSession = extras.getParcelable(DineOnConstants.KEY_DININGSESSION);
+				mRestaurant = mDiningSession.getRestaurantInfo();
+			} else if (extras.containsKey(DineOnConstants.KEY_RESTAURANTINFO)) {
+				mRestaurant = extras.getParcelable(DineOnConstants.KEY_RESTAURANTINFO);
+			}
+		} else if (savedInstanceState != null) {
+			if (savedInstanceState.containsKey(DineOnConstants.KEY_DININGSESSION)) {
+				mDiningSession = savedInstanceState.getParcelable(DineOnConstants.KEY_DININGSESSION);
+				mRestaurant = mDiningSession.getRestaurantInfo();
+			} else if (savedInstanceState.containsKey(DineOnConstants.KEY_RESTAURANTINFO)) {
+				mRestaurant = savedInstanceState.getParcelable(DineOnConstants.KEY_RESTAURANTINFO);
+			}
 		}
 
 		setContentView(R.layout.activity_restaurant_home);

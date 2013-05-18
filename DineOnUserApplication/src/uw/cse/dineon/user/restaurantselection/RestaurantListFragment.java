@@ -83,7 +83,7 @@ public class RestaurantListFragment extends ListFragment {
 		 * TODO finish.
 		 * @param restaurant String
 		 */
-		public void onRestaurantSelected(String restaurant);
+		public void onRestaurantSelected(RestaurantInfo restaurant);
 
 		/**
 		 * TODO finish.
@@ -116,7 +116,9 @@ public class RestaurantListFragment extends ListFragment {
 		 * TODO Change String to restaurant;
 		 * NOTE (MH): Not exactly sure if this works
 		 */
-		private final HashMap<View, RestaurantInfo> mMapping;
+		private final HashMap<View, RestaurantInfo> mInfoMapping;
+		
+		private final HashMap<View, RestaurantInfo> mRestaurantMapping;
 
 		private final View.OnClickListener mButtonListener, mItemSelectedListener;
 
@@ -133,7 +135,8 @@ public class RestaurantListFragment extends ListFragment {
 			} else {
 				this.mValues = new ArrayList<RestaurantInfo>();
 			}
-			mMapping = new HashMap<View, RestaurantInfo>();
+			mInfoMapping = new HashMap<View, RestaurantInfo>();
+			mRestaurantMapping = new HashMap<View, RestaurantInfo>();
 			mButtonListener = new View.OnClickListener() {
 
 				@Override
@@ -142,7 +145,7 @@ public class RestaurantListFragment extends ListFragment {
 					// Listener is not yet instantiated
 					if (mListener != null) {
 						// Make sure the mapping has the right value
-						RestaurantInfo info = mMapping.get(v);
+						RestaurantInfo info = mInfoMapping.get(v);
 						if (info == null) {
 							Log.w(TAG, "Unable to find restaurant " 
 									+ "that is attached to this view: " + v);
@@ -162,9 +165,12 @@ public class RestaurantListFragment extends ListFragment {
 				@Override
 				public void onClick(View v) {
 					TextView restaurantView = (TextView) v.findViewById(R.id.label_restaurant_name);
-					String restName = restaurantView.getText().toString();
-					if (mListener != null) {
-						mListener.onRestaurantSelected(restName);
+					//String restName = restaurantView.getText().toString();
+					
+					RestaurantInfo restaurant = mRestaurantMapping.get(restaurantView);
+					
+					if (mListener != null && restaurant != null) {
+						mListener.onRestaurantSelected(restaurant);
 					}
 				}
 			};
@@ -200,7 +206,10 @@ public class RestaurantListFragment extends ListFragment {
 			Button moreInfoButton = (Button) rowView.findViewById(R.id.button_restaurant_info);
 
 			// Add to the mapping so listeners can reference it later
-			mMapping.put(moreInfoButton, mValues.get(position));
+			mInfoMapping.put(moreInfoButton, mValues.get(position));
+			
+			// add mapping to text view so listeners can reference later
+			mRestaurantMapping.put(restLabel, mValues.get(position));
 
 			moreInfoButton.setOnClickListener(mButtonListener);
 
