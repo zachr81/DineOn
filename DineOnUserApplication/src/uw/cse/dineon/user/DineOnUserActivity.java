@@ -109,7 +109,6 @@ public class DineOnUserActivity extends FragmentActivity implements SatelliteLis
 			intent.putExtra(DineOnConstants.KEY_USER, mUser);
 		} else if (DineOnConstants.DEBUG && mUser == null) {
 			Toast.makeText(this, "Need to create or download a User", Toast.LENGTH_SHORT).show();
-			return;
 		}
 
 		super.startActivity(intent);

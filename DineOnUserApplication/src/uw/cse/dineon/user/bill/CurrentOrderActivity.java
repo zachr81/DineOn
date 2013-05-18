@@ -10,7 +10,10 @@ import uw.cse.dineon.library.util.DineOnConstants;
 import uw.cse.dineon.user.DineOnUserActivity;
 import uw.cse.dineon.user.R;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Fragment;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -20,6 +23,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Toast;
 
 /**
@@ -122,14 +126,13 @@ CurrentOrderFragment.OrderUpdateListener {
 	}
 
 	/**
-	 * 
+	 * @param request String request description
 	 */
-	public void onRequestMade() {
+	public void onRequestMade(String request) {
 		UserInfo ui = new UserInfo(ParseUser.getCurrentUser());
 		
 		
-		
-		final CustomerRequest C_REQ = new CustomerRequest("Refill my water!!!", ui);
+		final CustomerRequest C_REQ = new CustomerRequest(request, ui);
 		
 		final CurrentOrderActivity COACT = this;
 		C_REQ.saveInBackGround(new SaveCallback() {
@@ -155,9 +158,48 @@ CurrentOrderFragment.OrderUpdateListener {
 
 		@Override
 		public void onClick(View arg0) {
-			onRequestMade();
+			getRequestDescription();
 		}
 		
 	}
 
+	/**
+	 * Helper function to prompt user to submit request details.
+	 */
+	private void getRequestDescription() {
+//		Fragment fragment = 
+//			getFragmentManager().findFragmentById(R.id.fragment_current_order);
+
+		
+		AlertDialog.Builder alert = new AlertDialog.Builder(this);
+		alert.setTitle("Make a Request");
+		alert.setMessage("What is your request?");
+
+		final View alertView = findViewById(R.id.fragment_current_order);
+		alert.setView(alertView);
+		alert.setPositiveButton("Send", new DialogInterface.OnClickListener() {
+
+			@Override
+			public void onClick(DialogInterface d, int arg1) {
+				
+				String description = ((EditText) alertView
+						.findViewById(R.id.input_request_description)).getText()
+						.toString();
+				if(description == null || description.length() > 2) {
+					Log.v(TAG, "Requested nothing important. So you got cancelled!");
+					return;
+				}
+				onRequestMade(description);
+				Log.v(TAG, "Sending a new request");
+			}
+		});
+		alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+			@Override
+			public void onClick(DialogInterface arg0, int arg1) {
+				//Do nothing
+			}
+		});
+		alert.show();
+	}
+	
 }

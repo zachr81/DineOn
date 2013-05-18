@@ -3,6 +3,8 @@ package uw.cse.dineon.library;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.json.JSONObject;
+
 import uw.cse.dineon.library.util.ParseUtil;
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -60,6 +62,7 @@ public class DineOnUser extends Storable {
 		mFavRestaurants = new ArrayList<RestaurantInfo>();
 		mReservations = new ArrayList<Reservation>();
 		mFriendsLists = new ArrayList<UserInfo>();
+		mDiningSession = null;
 		// Dining sessions are not instantiated until the user begins a dining session
 	}
 
@@ -94,7 +97,9 @@ public class DineOnUser extends Storable {
 		pobj.put(RESERVATIONS, ParseUtil.toListOfParseObjects(mReservations));
 		pobj.put(FRIEND_LIST, ParseUtil.toListOfParseObjects(mFriendsLists));
 		if (mDiningSession != null) {
-			pobj.put(DineOnUser.DINING_SESSION, this.mDiningSession.packObject());
+			pobj.put(DineOnUser.DINING_SESSION, this.mDiningSession.packObject());			
+		} else {
+			pobj.put(DineOnUser.DINING_SESSION, JSONObject.NULL);
 		}
 
 		return pobj;

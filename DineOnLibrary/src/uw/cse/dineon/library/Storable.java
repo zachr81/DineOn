@@ -73,6 +73,10 @@ public abstract class Storable implements Parcelable {
 	 * @return ParseObject that represents this.
 	 */
 	public ParseObject packObject() {
+		ParseACL acl = new ParseACL();
+		acl.setPublicReadAccess(true);
+		acl.setPublicWriteAccess(true);
+		mCompleteObject.setACL(acl);
 		return mCompleteObject;
 	}
 
