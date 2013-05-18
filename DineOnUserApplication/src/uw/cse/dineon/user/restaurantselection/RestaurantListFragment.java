@@ -60,8 +60,11 @@ public class RestaurantListFragment extends ListFragment {
 	 * 
 	 * @param info info to add.
 	 */
-	public void addRestaurantInfo(RestaurantInfo info) {
-		this.mAdapter.addRestaurantInfo(info);
+	public void addRestaurantInfos(List<RestaurantInfo> infos) {
+		//this.mAdapter.clear();
+		for (RestaurantInfo r : infos)
+			this.mAdapter.add(r);
+		this.mAdapter.notifyDataSetChanged();
 	}
 
 	/**
@@ -170,17 +173,15 @@ public class RestaurantListFragment extends ListFragment {
 			};
 		}
 		
-		/**
-		 * Add a restaurantInfo to the list.
-		 * 
-		 * @param info info to add.
-		 */
-		public void addRestaurantInfo(RestaurantInfo info) {
-			this.mValues.add(info);
+		@Override
+		public void add(RestaurantInfo r) {
+			//super.add(r);
+			this.mValues.add(r);
 		}
 
 		@Override
 		public View getView(int position, View covnertView, ViewGroup parent) {
+
 			LayoutInflater inflater = (LayoutInflater) mContext
 					.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 			View rowView = inflater.inflate(R.layout.listitem_restaurant, parent, false);

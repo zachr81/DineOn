@@ -1,15 +1,13 @@
 package uw.cse.dineon.user.restaurant.home;
 
-import java.util.ArrayList;
-
 import uw.cse.dineon.library.DiningSession;
+import uw.cse.dineon.library.RestaurantInfo;
 import uw.cse.dineon.library.util.DineOnConstants;
 import uw.cse.dineon.user.DineOnUserActivity;
 import uw.cse.dineon.user.R;
 import uw.cse.dineon.user.restaurantselection.RestaurantInfoFragment;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -137,12 +135,15 @@ RestaurantHomeMainFragment.ReferenceDataListener {
 	}
 
 	@Override
-	public String getCurrentRestaurant() {
+	public RestaurantInfo getCurrentRestaurant() {
 		// TODO Auto-generated method stub
 		return mRestaurant;
 	}
 
-
-
+	@Override
+	public void setCurrentRestaurant(RestaurantInfo r) {
+		// TODO Auto-generated method stub
+		mRestaurant = r;
+	}
 
 }
