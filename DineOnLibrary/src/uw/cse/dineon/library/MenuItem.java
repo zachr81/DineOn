@@ -69,14 +69,14 @@ public class MenuItem extends Storable {
 	/**
 	 * @return The Name of the Menu Item
 	 */
-	public String getTitle(){
+	public String getTitle() {
 		return mTitle;
 	}
 	
 	/**
-	 * @return The Name of the Menu Item
+	 * @param title a string to set as the menu title
 	 */
-	public void setTitle(String title){
+	public void setTitle(String title) {
 		mTitle = title;
 	}
 
