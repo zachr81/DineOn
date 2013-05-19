@@ -155,14 +155,14 @@ extends Fragment implements OnClickListener {
 		AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
 		alert.setTitle("Add New Menu Item");
 		alert.setMessage("Input Menu Item Details");
-		final View alertView = getLayoutInflater(getArguments()).inflate(
+		final View AV = getLayoutInflater(getArguments()).inflate(
 				R.layout.alert_build_request, null);
-		alert.setView(alertView);
+		alert.setView(AV);
 		alert.setPositiveButton("Save", new DialogInterface.OnClickListener() {
 			
 			@Override
 			public void onClick(DialogInterface d, int arg1) {
-				getDescription(alertView);
+				getDescription(AV);
 			}
 		});
 		alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
