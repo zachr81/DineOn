@@ -52,8 +52,8 @@ public class MenuItemsFragment extends ListFragment {
 
 	private Menu currentMenu;
 	
-	public AlertDialog.Builder newItemAlert; //for testing. Otherwise can't access views
-	public AlertDialog.Builder newMenuAlert;
+	public AlertDialog newItemAlert; //for testing. Otherwise can't access
+	public AlertDialog newMenuAlert; //for testing. Otherwise can't access
 
 	/**
 	 * Creates a MenuItemsFragment that is ready to build and view.
@@ -152,14 +152,14 @@ public class MenuItemsFragment extends ListFragment {
 	 * saving/consistency.
 	 */
 	private void makeNewMenuItem() {
-		newItemAlert = new AlertDialog.Builder(getActivity());
-		newItemAlert.setTitle("Add New Menu Item");
-		newItemAlert.setMessage("Input Menu Item Details");
+		AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
+		alert.setTitle("Add New Menu Item");
+		alert.setMessage("Input Menu Item Details");
 		final View AV = getLayoutInflater(getArguments()).inflate(
 				R.layout.alert_new_menuitem, null);
 
-		newItemAlert.setView(AV);
-		newItemAlert.setPositiveButton("Save", new DialogInterface.OnClickListener() {
+		alert.setView(AV);
+		alert.setPositiveButton("Save", new DialogInterface.OnClickListener() {
 
 			@Override
 			public void onClick(DialogInterface d, int arg1) {
@@ -183,27 +183,27 @@ public class MenuItemsFragment extends ListFragment {
 				Log.v(TAG, "Adding new menu item");
 			}
 		});
-		newItemAlert.setNegativeButton("Cancel",
+		alert.setNegativeButton("Cancel",
 				new DialogInterface.OnClickListener() {
 					@Override
 					public void onClick(DialogInterface arg0, int arg1) {
 						// Do nothing
 					}
 				});
-		newItemAlert.show();
+		this.newItemAlert = alert.show();
 	}
 
 	/**
 	 * Helper function to prompt user to pick a menu (or create new one).
 	 */
 	private void switchMenus() {
-		newMenuAlert = new AlertDialog.Builder(getActivity());
-		newMenuAlert.setTitle("Add New Menu");
-		newMenuAlert.setMessage("Select Menu");
+		AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
+		alert.setTitle("Add New Menu");
+		alert.setMessage("Select Menu");
 		final View AV = getLayoutInflater(getArguments()).inflate(
 				R.layout.alert_select_menu, null);
 
-		newMenuAlert.setView(AV);
+		alert.setView(AV);
 		final Spinner SPINNER = (Spinner) AV.findViewById(R.id.spinner_select_menu);
 		final ArrayAdapter<String> ADAPTER = new ArrayAdapter<String>(getActivity(),
 				android.R.layout.simple_spinner_item, menuTitles);
@@ -257,14 +257,14 @@ public class MenuItemsFragment extends ListFragment {
 
 		});
 		
-		newMenuAlert.setPositiveButton("Select", new DialogInterface.OnClickListener() {
+		alert.setPositiveButton("Select", new DialogInterface.OnClickListener() {
 			@Override
 			public void onClick(DialogInterface d, int x) {
 				updateTitle();
 			}
 		});
 
-		newMenuAlert.show();
+		this.newMenuAlert = alert.show();
 
 	}
 
