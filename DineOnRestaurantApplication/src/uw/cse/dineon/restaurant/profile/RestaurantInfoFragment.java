@@ -63,15 +63,15 @@ public class RestaurantInfoFragment extends Fragment {
 			view = inflater.inflate(R.layout.fragment_restaurant_info,
 					container, false);
 
-			// Reference the gallery to place images of this restaurant
-			LinearLayout mGallery = (LinearLayout) view
-					.findViewById(R.id.gallery_restaurant_images);
-			CheckBox mCheckBox = (CheckBox) view
-					.findViewById(R.id.checkbox_is_default_image);
-			ImageButton mButtonAdd = (ImageButton) view
-					.findViewById(R.id.button_add_new_image);
-			ImageButton mButtonDelt = (ImageButton) view
-					.findViewById(R.id.button_delete_image);
+//			// Reference the gallery to place images of this restaurant
+//			LinearLayout mGallery = (LinearLayout) view
+//					.findViewById(R.id.gallery_restaurant_images);
+//			CheckBox mCheckBox = (CheckBox) view
+//					.findViewById(R.id.checkbox_is_default_image);
+//			ImageButton mButtonAdd = (ImageButton) view
+//					.findViewById(R.id.button_add_new_image);
+//			ImageButton mButtonDelt = (ImageButton) view
+//					.findViewById(R.id.button_delete_image);
 			final TextView mPhoneInput = (TextView) view
 					.findViewById(R.id.edittext_restaurant_phone);
 			final TextView mAddressInput = (TextView) view

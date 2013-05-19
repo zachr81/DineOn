@@ -407,12 +407,12 @@ public class MenuItemsFragment extends ListFragment {
 			}
 
 			// Obtain the view used for this menu item
-			ImageView image = (ImageView) view
-					.findViewById(R.id.image_thumbnail_menuitem);
+//			ImageView image = (ImageView) view
+//					.findViewById(R.id.image_thumbnail_menuitem);
 			TextView title = (TextView) view
 					.findViewById(R.id.label_menuitem_title);
-			ImageButton delete = (ImageButton) view
-					.findViewById(R.id.button_menuitem_delete);
+//			ImageButton delete = (ImageButton) view
+//					.findViewById(R.id.button_menuitem_delete);
 			TextView description = (TextView) view
 					.findViewById(R.id.label_menuitem_desc);
 			TextView price = (TextView) view
