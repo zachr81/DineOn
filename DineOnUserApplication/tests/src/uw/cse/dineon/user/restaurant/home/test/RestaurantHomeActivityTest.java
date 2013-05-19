@@ -10,6 +10,7 @@ import com.parse.ParseUser;
 
 import uw.cse.dineon.library.DineOnUser;
 import uw.cse.dineon.library.DiningSession;
+import uw.cse.dineon.library.MenuItem;
 import uw.cse.dineon.library.RestaurantInfo;
 import uw.cse.dineon.library.UserInfo;
 import uw.cse.dineon.library.util.DineOnConstants;
@@ -61,7 +62,8 @@ public class RestaurantHomeActivityTest extends
 	}
 
 	public void testOnMenuItemFocusedOn() {
-		mActivity.onMenuItemFocusedOn("fries");
+		MenuItem m = new MenuItem(1, 1, "Fries", "Yum");
+		mActivity.onMenuItemFocusedOn(m);
 	}
 	
 	public void testDeleteResume() {
