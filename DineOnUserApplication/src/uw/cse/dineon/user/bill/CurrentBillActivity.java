@@ -32,14 +32,6 @@ public class CurrentBillActivity extends DineOnUserActivity {
 			frag.setDiningSession(s);
 		}
 		
-		if(mUser == null){
-			Toast.makeText(this, this.getClass().getSimpleName() +
-					" mUser was null", Toast.LENGTH_LONG).show();
-		}
-		else{
-			Toast.makeText(this, this.getClass().getSimpleName() +
-					" Valid mUser", Toast.LENGTH_LONG).show();
-		}
 	}
 
 }

@@ -49,11 +49,6 @@ public class DineOnUserActivity extends FragmentActivity implements SatelliteLis
 	private static final String TAG = DineOnUserActivity.class.getSimpleName();
 
 	/**
-	 * The associated user .
-	 */
-	protected DineOnUser mUser;	
-
-	/**
 	 * Satellite for communication.
 	 */
 	private UserSatellite mSat;
@@ -71,25 +66,7 @@ public class DineOnUserActivity extends FragmentActivity implements SatelliteLis
 
 		mSat = new UserSatellite();
 
-		// Check two cases
-		// 1. This activity is being created for the first time
-		// 2. This activity is being restored
-
-		// 1. 
-		Bundle extras = getIntent() == null ? null : getIntent().getExtras();
-
-		if (extras != null && extras.containsKey(DineOnConstants.KEY_USER)) {
-			mUser = extras.getParcelable(DineOnConstants.KEY_USER);
-		} // 2.  
-		else if (savedInstanceState != null 
-				&& savedInstanceState.containsKey(DineOnConstants.KEY_USER)) {
-			mUser = savedInstanceState.getParcelable(DineOnConstants.KEY_USER);
-		} else {
-			Log.e(TAG, "Unable to retrieve user instance");
-			return;
-		}
-		
-		if (mUser == null) {
+		if (DineOnUserApplication.cachedUser == null) {
 			Utility.getBackToLoginAlertDialog(this, 
 					"Unable to find your information", UserLoginActivity.class).show();
 		}
@@ -103,12 +80,6 @@ public class DineOnUserActivity extends FragmentActivity implements SatelliteLis
 	@Override
 	public void startActivity(Intent intent) {
 		// Adds the User object id
-		if (mUser != null) {
-			intent.putExtra(DineOnConstants.KEY_USER, mUser);
-		} else if (DineOnConstants.DEBUG && mUser == null) {
-			Toast.makeText(this, "Need to create or download a User", Toast.LENGTH_SHORT).show();
-		}
-
 		super.startActivity(intent);
 	}
 
@@ -129,15 +100,7 @@ public class DineOnUserActivity extends FragmentActivity implements SatelliteLis
 	@Override
 	protected void onResume() {
 		super.onResume();
-		if(mUser == null){
-			Toast.makeText(this, this.getClass().getSimpleName() +
-					" mUser was null", Toast.LENGTH_LONG).show();
-		}
-		else{
-			Toast.makeText(this, this.getClass().getSimpleName() +
-					" Valid mUser", Toast.LENGTH_LONG).show();
-		}
-		mSat.register(mUser, thisActivity);
+		mSat.register(DineOnUserApplication.cachedUser, thisActivity);
 		intializeUI();
 		
 	}
@@ -170,7 +133,7 @@ public class DineOnUserActivity extends FragmentActivity implements SatelliteLis
 				if(data.has(DineOnConstants.KEY_RESTAURANT) 
 						&& data.has(DineOnConstants.TABLE_NUM)) {
 
-					mSat.requestCheckIn(mUser.getUserInfo(),
+					mSat.requestCheckIn(DineOnUserApplication.cachedUser.getUserInfo(),
 							data.getInt(DineOnConstants.TABLE_NUM), 
 							data.getString(DineOnConstants.KEY_RESTAURANT));
 				}
@@ -212,12 +175,9 @@ public class DineOnUserActivity extends FragmentActivity implements SatelliteLis
 	public void startLoginActivity() {
 		Intent i = new Intent(this, UserLoginActivity.class);
 
-		// Remove this activity from the back stack
-		i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-
 		// Making this null makes sure there is no 
 		// data leakage to the login page
-		mUser = null;
+		DineOnUserApplication.cachedUser = null;
 		startActivity(i);
 	}
 
@@ -249,13 +209,13 @@ public class DineOnUserActivity extends FragmentActivity implements SatelliteLis
 
 		// This is for the case where nothing is updated yet
 		// There is no User class
-		if (mUser == null) {
+		if (DineOnUserApplication.cachedUser == null) {
 			disableMenuItem(menu, R.id.option_check_in);
 			disableMenuItem(menu, R.id.option_bill);
 			return true;
 		}
 
-		if(mUser.getDiningSession() != null) {
+		if(DineOnUserApplication.cachedUser.getDiningSession() != null) {
 			disableMenuItem(menu, R.id.option_check_in);
 			enableMenuItem(menu, R.id.option_bill);
 		} 
@@ -341,8 +301,8 @@ public class DineOnUserActivity extends FragmentActivity implements SatelliteLis
 	@Override
 	public void onSaveInstanceState(Bundle savedInstanceState) {
 		// Save the ID if the user is not null
-		if (mUser != null) {
-			savedInstanceState.putString(DineOnConstants.KEY_USER, mUser.getObjId());
+		if (DineOnUserApplication.cachedUser != null) {
+			savedInstanceState.putString(DineOnConstants.KEY_USER, DineOnUserApplication.cachedUser.getObjId());
 		}
 		super.onSaveInstanceState(savedInstanceState);
 	}
@@ -374,8 +334,8 @@ public class DineOnUserActivity extends FragmentActivity implements SatelliteLis
 		Log.d("GOT_DINING_SESSION_FROM_CLOUD", session.getTableID() + "");
 
 		final DiningSession mSession = session;
-		mUser.setDiningSession(session);
-		mUser.saveInBackGround(new SaveCallback() {
+		DineOnUserApplication.cachedUser.setDiningSession(session);
+		DineOnUserApplication.cachedUser.saveInBackGround(new SaveCallback() {
 			
 			@Override
 			public void done(ParseException e) {
@@ -424,8 +384,8 @@ public class DineOnUserActivity extends FragmentActivity implements SatelliteLis
 	 * @param cr CustomerRequest to place
 	 */
 	public void placeRequest(CustomerRequest cr) {
-		mSat.requestCustomerRequest(mUser.getDiningSession(), cr, 
-				mUser.getDiningSession().getRestaurantInfo());
+		mSat.requestCustomerRequest(DineOnUserApplication.cachedUser.getDiningSession(), cr, 
+				DineOnUserApplication.cachedUser.getDiningSession().getRestaurantInfo());
 		Toast.makeText(this, "Made Request", Toast.LENGTH_LONG).show();
 	}
 }
