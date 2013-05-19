@@ -271,8 +271,8 @@ public class MenuItemsFragment extends ListFragment {
 				Menu newMenu = new Menu(newTitle);
 				menuTitles.add(newTitle);
 				mListener.getInfo().addMenu(newMenu);
-				SPINNER.setSelection(SPINNER.getCount()); // Switch spinner to
-															// last item added
+				SPINNER.setSelection(SPINNER.getCount() - 1);
+				// Switch spinner to last item added
 			}
 		});
 
