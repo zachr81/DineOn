@@ -55,8 +55,8 @@ public class MenuItemsFragment extends ListFragment {
 
 	private Menu currentMenu;
 
-	public AlertDialog newItemAlert; // for testing. Otherwise can't access
-	public AlertDialog newMenuAlert; // for testing. Otherwise can't access
+	//	public AlertDialog newItemAlert; // for testing. Otherwise can't access
+	//	public AlertDialog newMenuAlert; // for testing. Otherwise can't access
 
 	/**
 	 * Creates a MenuItemsFragment that is ready to build and view.
@@ -182,7 +182,7 @@ public class MenuItemsFragment extends ListFragment {
 							Toast.LENGTH_SHORT).show();
 					return;
 				}
-				
+
 				double price = Double.parseDouble(priceString);
 
 				MenuItem mi = new MenuItem(mAdapter.getCount() + 1, price,
@@ -198,12 +198,12 @@ public class MenuItemsFragment extends ListFragment {
 		});
 		alert.setNegativeButton("Cancel",
 				new DialogInterface.OnClickListener() {
-					@Override
-					public void onClick(DialogInterface arg0, int arg1) {
-						// Do nothing
-					}
-				});
-		this.newItemAlert = alert.show();
+			@Override
+			public void onClick(DialogInterface arg0, int arg1) {
+				// Do nothing
+			}
+		});
+		alert.show();
 	}
 
 	/**
@@ -266,7 +266,7 @@ public class MenuItemsFragment extends ListFragment {
 						.findViewById(R.id.input_new_menu_title)).getText()
 						.toString();
 				((TextView) AV.findViewById(R.id.input_new_menu_title))
-						.setText("");
+				.setText("");
 				if (newTitle.trim() == "") {
 					Toast.makeText(getActivity(), "Please input title",
 							Toast.LENGTH_SHORT).show();
@@ -283,13 +283,12 @@ public class MenuItemsFragment extends ListFragment {
 
 		alert.setPositiveButton("Select",
 				new DialogInterface.OnClickListener() {
-					@Override
-					public void onClick(DialogInterface d, int x) {
-						updateTitle();
-					}
-				});
-
-		this.newMenuAlert = alert.show();
+			@Override
+			public void onClick(DialogInterface d, int x) {
+				updateTitle();
+			}
+		});
+		alert.show();
 
 	}
 
@@ -407,12 +406,12 @@ public class MenuItemsFragment extends ListFragment {
 			}
 
 			// Obtain the view used for this menu item
-//			ImageView image = (ImageView) view
-//					.findViewById(R.id.image_thumbnail_menuitem);
+			//			ImageView image = (ImageView) view
+			//					.findViewById(R.id.image_thumbnail_menuitem);
 			TextView title = (TextView) view
 					.findViewById(R.id.label_menuitem_title);
-//			ImageButton delete = (ImageButton) view
-//					.findViewById(R.id.button_menuitem_delete);
+			//			ImageButton delete = (ImageButton) view
+			//					.findViewById(R.id.button_menuitem_delete);
 			TextView description = (TextView) view
 					.findViewById(R.id.label_menuitem_desc);
 			TextView price = (TextView) view

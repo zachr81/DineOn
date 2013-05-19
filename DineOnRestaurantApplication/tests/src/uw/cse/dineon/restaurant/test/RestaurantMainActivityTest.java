@@ -108,18 +108,6 @@ ActivityInstrumentationTestCase2<RestauarantMainActivity> {
 		super.tearDown();
 	}
 
-	public void testNumOrders() {
-		assertEquals(1, mActivity.getCurrentOrders().size());
-	}
-
-	public void testNumRequests() {
-		assertEquals(1, mActivity.getCurrentRequests().size());
-	}
-
-	public void testNumDiningSessions() {
-		assertEquals(1, mActivity.getCurrentSessions().size());
-	}
-
 	public void testOrderLayoutItemsPopulate() {
 		TextView orderTitle = (TextView) mActivity.findViewById(uw.cse.dineon.restaurant.R.id.button_order_title);
 		TextView orderTime = (TextView) mActivity.findViewById(uw.cse.dineon.restaurant.R.id.label_order_time);
