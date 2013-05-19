@@ -3,9 +3,9 @@ package uw.cse.dineon.restaurant.profile;
 import java.util.ArrayList;
 import java.util.List;
 
-import uw.cse.dineon.library.Menu;
 import uw.cse.dineon.library.MenuItem;
 import uw.cse.dineon.library.RestaurantInfo;
+import uw.cse.dineon.library.util.DineOnConstants;
 import uw.cse.dineon.restaurant.R;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -13,8 +13,10 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
+import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
+import uw.cse.dineon.library.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -25,6 +27,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -52,8 +55,8 @@ public class MenuItemsFragment extends ListFragment {
 
 	private Menu currentMenu;
 
-	//	public AlertDialog newItemAlert; // for testing. Otherwise can't access
-	//	public AlertDialog newMenuAlert; // for testing. Otherwise can't access
+	public AlertDialog newItemAlert; // for testing. Otherwise can't access
+	public AlertDialog newMenuAlert; // for testing. Otherwise can't access
 
 	/**
 	 * Creates a MenuItemsFragment that is ready to build and view.
@@ -174,12 +177,12 @@ public class MenuItemsFragment extends ListFragment {
 				String priceString = ((EditText) AV
 						.findViewById(R.id.input_menuitem_price)).getText()
 						.toString();
-				if (title.trim().equals("") || priceString.equals("")) {
+				if (title.trim() == "" || priceString == "") {
 					Toast.makeText(getActivity(), "Please input Title and Price",
 							Toast.LENGTH_SHORT).show();
 					return;
 				}
-
+				
 				double price = Double.parseDouble(priceString);
 
 				MenuItem mi = new MenuItem(mAdapter.getCount() + 1, price,
@@ -195,12 +198,12 @@ public class MenuItemsFragment extends ListFragment {
 		});
 		alert.setNegativeButton("Cancel",
 				new DialogInterface.OnClickListener() {
-			@Override
-			public void onClick(DialogInterface arg0, int arg1) {
-				// Do nothing
-			}
-		});
-		alert.show();
+					@Override
+					public void onClick(DialogInterface arg0, int arg1) {
+						// Do nothing
+					}
+				});
+		this.newItemAlert = alert.show();
 	}
 
 	/**
@@ -264,7 +267,7 @@ public class MenuItemsFragment extends ListFragment {
 						.toString();
 				((TextView) AV.findViewById(R.id.input_new_menu_title))
 						.setText("");
-				if (newTitle.trim().equals("")) {
+				if (newTitle.trim() == "") {
 					Toast.makeText(getActivity(), "Please input title",
 							Toast.LENGTH_SHORT).show();
 					return;
@@ -280,12 +283,13 @@ public class MenuItemsFragment extends ListFragment {
 
 		alert.setPositiveButton("Select",
 				new DialogInterface.OnClickListener() {
-			@Override
-			public void onClick(DialogInterface d, int x) {
-				updateTitle();
-			}
-		});
-		alert.show();
+					@Override
+					public void onClick(DialogInterface d, int x) {
+						updateTitle();
+					}
+				});
+
+		this.newMenuAlert = alert.show();
 
 	}
 
@@ -403,12 +407,12 @@ public class MenuItemsFragment extends ListFragment {
 			}
 
 			// Obtain the view used for this menu item
-			//			ImageView image = (ImageView) view
-			//					.findViewById(R.id.image_thumbnail_menuitem);
+//			ImageView image = (ImageView) view
+//					.findViewById(R.id.image_thumbnail_menuitem);
 			TextView title = (TextView) view
 					.findViewById(R.id.label_menuitem_title);
-			//			ImageButton delete = (ImageButton) view
-			//					.findViewById(R.id.button_menuitem_delete);
+//			ImageButton delete = (ImageButton) view
+//					.findViewById(R.id.button_menuitem_delete);
 			TextView description = (TextView) view
 					.findViewById(R.id.label_menuitem_desc);
 			TextView price = (TextView) view
