@@ -160,18 +160,18 @@ public class MenuItemsFragment extends ListFragment {
 		AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
 		alert.setTitle("Add New Menu Item");
 		alert.setMessage("Input Menu Item Details");
-		final View alertView = getLayoutInflater(getArguments()).inflate(
+		final View AV = getLayoutInflater(getArguments()).inflate(
 				R.layout.alert_new_menuitem, null);
 
-		alert.setView(alertView);
+		alert.setView(AV);
 		alert.setPositiveButton("Save", new DialogInterface.OnClickListener() {
 
 			@Override
 			public void onClick(DialogInterface d, int arg1) {
-				String title = ((EditText) alertView
+				String title = ((EditText) AV
 						.findViewById(R.id.input_menuitem_title)).getText()
 						.toString();
-				String desc = ((EditText) alertView
+				String desc = ((EditText) AV
 						.findViewById(R.id.input_menuitem_desc)).getText()
 						.toString();
 				String priceString = ((EditText) AV
@@ -213,7 +213,7 @@ public class MenuItemsFragment extends ListFragment {
 		AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
 		alert.setTitle("Add New Menu Item");
 		alert.setMessage("Input Menu Item Details");
-		final View alertView = getLayoutInflater(getArguments()).inflate(
+		final View AV = getLayoutInflater(getArguments()).inflate(
 				R.layout.alert_select_menu, null);
 
 		alert.setView(AV);
