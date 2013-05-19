@@ -3,9 +3,9 @@ package uw.cse.dineon.restaurant.profile;
 import java.util.ArrayList;
 import java.util.List;
 
-import uw.cse.dineon.library.Menu;
 import uw.cse.dineon.library.MenuItem;
 import uw.cse.dineon.library.RestaurantInfo;
+import uw.cse.dineon.library.util.DineOnConstants;
 import uw.cse.dineon.restaurant.R;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -13,8 +13,10 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
+import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
+import uw.cse.dineon.library.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -28,6 +30,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 /**
  * Fragment that presents a editable list of menu items of this restaurant.
@@ -51,6 +54,9 @@ public class MenuItemsFragment extends ListFragment {
 	private MenuItemListener mListener;
 
 	private Menu currentMenu;
+
+	public AlertDialog newItemAlert; // for testing. Otherwise can't access
+	public AlertDialog newMenuAlert; // for testing. Otherwise can't access
 
 	/**
 	 * Creates a MenuItemsFragment that is ready to build and view.
@@ -90,6 +96,7 @@ public class MenuItemsFragment extends ListFragment {
 		// Proceed
 		if (isValid(INFO)) {
 
+			// TODO Handle multiple menus
 			if (INFO.getMenuList().size() < 1) {
 				Menu defaultMenu = new Menu("Default");
 				INFO.getMenuList().add(defaultMenu);
@@ -116,7 +123,7 @@ public class MenuItemsFragment extends ListFragment {
 		}
 		updateTitle();
 	}
-	
+
 	/**
 	 * Updates the title to reflect the current menu.
 	 */
@@ -127,6 +134,7 @@ public class MenuItemsFragment extends ListFragment {
 	@Override
 	public void onCreateOptionsMenu(android.view.Menu menu,
 			MenuInflater inflater) {
+		// TODO Add your menu entries here
 		inflater.inflate(R.menu.menu_menu, menu);
 		super.onCreateOptionsMenu(menu, inflater);
 	}
@@ -166,9 +174,17 @@ public class MenuItemsFragment extends ListFragment {
 				String desc = ((EditText) AV
 						.findViewById(R.id.input_menuitem_desc)).getText()
 						.toString();
-				double price = Double.parseDouble(((EditText) AV
+				String priceString = ((EditText) AV
 						.findViewById(R.id.input_menuitem_price)).getText()
-						.toString());
+						.toString();
+				if (title.trim() == "" || priceString == "") {
+					Toast.makeText(getActivity(), "Please input Title and Price",
+							Toast.LENGTH_SHORT).show();
+					return;
+				}
+				
+				double price = Double.parseDouble(priceString);
+
 				MenuItem mi = new MenuItem(mAdapter.getCount() + 1, price,
 						title, desc);
 
@@ -187,7 +203,7 @@ public class MenuItemsFragment extends ListFragment {
 						// Do nothing
 					}
 				});
-		alert.show();
+		this.newItemAlert = alert.show();
 	}
 
 	/**
@@ -195,33 +211,36 @@ public class MenuItemsFragment extends ListFragment {
 	 */
 	private void switchMenus() {
 		AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
-		alert.setTitle("Add New Menu");
-		alert.setMessage("Select Menu");
+		alert.setTitle("Add New Menu Item");
+		alert.setMessage("Input Menu Item Details");
 		final View AV = getLayoutInflater(getArguments()).inflate(
 				R.layout.alert_select_menu, null);
 
 		alert.setView(AV);
-		final Spinner SPINNER = (Spinner) AV.findViewById(R.id.spinner_select_menu);
-		final ArrayAdapter<String> ADAPTER = new ArrayAdapter<String>(getActivity(),
-				android.R.layout.simple_spinner_item, menuTitles);
+		final Spinner SPINNER = (Spinner) AV
+				.findViewById(R.id.spinner_select_menu);
+		final ArrayAdapter<String> ADAPTER = new ArrayAdapter<String>(
+				getActivity(), android.R.layout.simple_spinner_item, menuTitles);
 		SPINNER.setAdapter(ADAPTER);
 
 		SPINNER.setOnItemSelectedListener(new OnItemSelectedListener() {
 			@Override
-			public void onItemSelected(AdapterView<?> a, View v, int pos,
-					long id) {
-				if (pos > mListener.getInfo().getMenuList().size()) {
-					Log.e(TAG, "Invalid menu index selected!");
+			public void onItemSelected(AdapterView<?> a, View v,
+					int pos, long id) {
+				if(pos > mListener.getInfo().getMenuList().size()){
+					Log.e(TAG,"Invalid menu index selected!");
 				} else {
 					currentMenu = mListener.getInfo().getMenuList().get(pos);
 					mAdapter.notifyDataSetInvalidated();
-					mAdapter = new RestaurantMenuItemAdapter(getActivity(), currentMenu.getItems());
+					mAdapter = new RestaurantMenuItemAdapter(getActivity(),
+							currentMenu.getItems());
 					setListAdapter(mAdapter);
 				}
 			}
 
 			@Override
 			public void onNothingSelected(AdapterView<?> arg0) {
+				// TODO Auto-generated method stub
 				Log.v(TAG, "Nothing selected");
 			}
 		});
@@ -237,7 +256,8 @@ public class MenuItemsFragment extends ListFragment {
 			}
 		});
 
-		ImageButton addMenu = (ImageButton) AV.findViewById(R.id.button_save_menu);
+		ImageButton addMenu = (ImageButton) AV
+				.findViewById(R.id.button_save_menu);
 		addMenu.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -245,23 +265,31 @@ public class MenuItemsFragment extends ListFragment {
 				String newTitle = ((TextView) AV
 						.findViewById(R.id.input_new_menu_title)).getText()
 						.toString();
-				((TextView) AV.findViewById(R.id.input_new_menu_title)).setText("");
+				((TextView) AV.findViewById(R.id.input_new_menu_title))
+						.setText("");
+				if (newTitle.trim() == "") {
+					Toast.makeText(getActivity(), "Please input title",
+							Toast.LENGTH_SHORT).show();
+					return;
+				}
+
 				Menu newMenu = new Menu(newTitle);
 				menuTitles.add(newTitle);
 				mListener.getInfo().addMenu(newMenu);
-				SPINNER.setSelection(SPINNER.getCount() - 1); //Switch spinner to last item added
-			}
-
-		});
-		
-		alert.setPositiveButton("Select", new DialogInterface.OnClickListener() {
-			@Override
-			public void onClick(DialogInterface d, int x) {
-				updateTitle();
+				SPINNER.setSelection(SPINNER.getCount() - 1);
+				// Switch spinner to last item added
 			}
 		});
 
-		alert.show();
+		alert.setPositiveButton("Select",
+				new DialogInterface.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface d, int x) {
+						updateTitle();
+					}
+				});
+
+		this.newMenuAlert = alert.show();
 
 	}
 
@@ -320,6 +348,8 @@ public class MenuItemsFragment extends ListFragment {
 		 */
 		void onMenuItemAdded(MenuItem item);
 
+		// XXX Seems like this might be redundant right now
+
 		/**
 		 * Notifies that the user chose to modify the current item.
 		 * 
@@ -327,9 +357,9 @@ public class MenuItemsFragment extends ListFragment {
 		 *            menu item to modify
 		 */
 		void onMenuItemModified(MenuItem item);
-		
+
 		/**
-		 * @return The RestaurantInfo object of this listener
+		 * @return RestaurantInfo
 		 */
 		RestaurantInfo getInfo();
 
@@ -340,7 +370,7 @@ public class MenuItemsFragment extends ListFragment {
 	 * 
 	 * @author mhotan
 	 */
-	private class RestaurantMenuItemAdapter extends ArrayAdapter<MenuItem> {
+	private static class RestaurantMenuItemAdapter extends ArrayAdapter<MenuItem> {
 
 		/**
 		 * Context to use this adapter.
@@ -361,7 +391,6 @@ public class MenuItemsFragment extends ListFragment {
 			mContext = ctx;
 		}
 
-		@SuppressWarnings("unused")
 		@Override
 		public View getView(int position, View convertView, ViewGroup parent) {
 			if (position >= this.getCount()) {
@@ -378,12 +407,12 @@ public class MenuItemsFragment extends ListFragment {
 			}
 
 			// Obtain the view used for this menu item
-			ImageView image = (ImageView) view
-					.findViewById(R.id.image_thumbnail_menuitem);
+//			ImageView image = (ImageView) view
+//					.findViewById(R.id.image_thumbnail_menuitem);
 			TextView title = (TextView) view
 					.findViewById(R.id.label_menuitem_title);
-			ImageButton delete = (ImageButton) view
-					.findViewById(R.id.button_menuitem_delete);
+//			ImageButton delete = (ImageButton) view
+//					.findViewById(R.id.button_menuitem_delete);
 			TextView description = (TextView) view
 					.findViewById(R.id.label_menuitem_desc);
 			TextView price = (TextView) view
@@ -393,10 +422,6 @@ public class MenuItemsFragment extends ListFragment {
 			title.setText(item.getTitle());
 			description.setText(item.getDescription());
 			price.setText(Double.toString(item.getPrice()));
-
-			// ItemListener listener = new ItemListener(item, image, title,
-			// delete, description, price);
-
 			return view;
 		}
 	}

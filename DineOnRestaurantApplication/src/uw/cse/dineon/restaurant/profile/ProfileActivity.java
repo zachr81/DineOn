@@ -39,6 +39,8 @@ public class ProfileActivity extends DineOnRestaurantActivity implements
 	 */
 	private int mLastTabPosition;
 
+	public static final String LAST_FRAG_TAG = "LAST_FRAG";
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -55,6 +57,30 @@ public class ProfileActivity extends DineOnRestaurantActivity implements
 		 * android.R.anim.fade_out); //ft.add(R.id.container_profile_fragment,
 		 * frag); ft.commit();
 		 */
+//		Fragment frag;
+		if (isLoggedIn()) {
+			// If logged in fill views appropriately
+			// Set the actionbar with associated tabs
+			ActionBar ab = getActionBar();
+			if (ab != null) { // Support older builds
+				ab.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+				ab.setTitle(getRestaurant().getName());
+				ab.setDisplayShowTitleEnabled(true);
+				ab.addTab(ab.newTab()
+						.setText(R.string.tab_actionbar_restaurant_profile)
+						.setTabListener(this));
+				ab.addTab(ab.newTab()
+						.setText(R.string.tab_actionbar_restaurant_menuitems)
+						.setTabListener(this));
+			}
+
+			// Obtain the most recently used Restaurant via intent or call
+			// TODO Fix Fragment instantiation issues
+			// frag = RestaurantInfoFragment.newInstance(new RestaurantInfo());
+		} else {
+			Log.w(TAG, "User not logged in cant show profile");
+//			frag = new NotLoggedInFragment();
+		}
 
 	}
 
@@ -71,29 +97,7 @@ public class ProfileActivity extends DineOnRestaurantActivity implements
 		 * ft.replace(android.R.id.content, frag); ft.commit();
 		 */
 
-		Fragment frag;
-		if (isLoggedIn() || DineOnConstants.DEBUG) {
-			// If logged in fill views appropriately
-			// Set the actionbar with associated tabs
-			ActionBar ab = getActionBar();
-			ab.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
-			ab.setDisplayShowTitleEnabled(false);
-			if (ab != null) { // Support older builds
-				ab.addTab(ab.newTab()
-						.setText(R.string.tab_actionbar_restaurant_profile)
-						.setTabListener(this));
-				ab.addTab(ab.newTab()
-						.setText(R.string.tab_actionbar_restaurant_menuitems)
-						.setTabListener(this));
-			}
-
-			// Obtain the most recently used Restaurant via intent or call
-			// TODO Fix Fragment instantiation issues
-			// frag = RestaurantInfoFragment.newInstance(new RestaurantInfo());
-		} else {
-			Log.w(TAG, "User not logged in cant show profile");
-			frag = new NotLoggedInFragment();
-		}
+		
 	}
 
 	@Override
@@ -154,7 +158,7 @@ public class ProfileActivity extends DineOnRestaurantActivity implements
 		mLastTabPosition = pos;
 
 		if (frag != null) {
-			supFT.replace(android.R.id.content, frag);
+			supFT.replace(android.R.id.content, frag, LAST_FRAG_TAG );
 			supFT.commit();
 		}
 	}
