@@ -16,14 +16,11 @@ import uw.cse.dineon.library.Order;
 import uw.cse.dineon.library.Restaurant;
 import uw.cse.dineon.library.RestaurantInfo;
 import uw.cse.dineon.library.UserInfo;
-import uw.cse.dineon.library.util.DineOnConstants;
 import uw.cse.dineon.user.DineOnUserApplication;
 import uw.cse.dineon.user.R;
 import uw.cse.dineon.user.bill.CurrentOrderActivity;
 import uw.cse.dineon.user.bill.CurrentOrderFragment;
 import android.content.Intent;
-import android.os.Parcelable;
-import android.support.v4.app.Fragment;
 import android.test.ActivityInstrumentationTestCase2;
 import android.test.suitebuilder.annotation.SmallTest;
 import android.view.View;
@@ -70,9 +67,8 @@ public class CurrentOrderActivityTest extends
 		r.addDiningSession(testSession);
 		dineOnUser.setDiningSession(testSession);
 		DineOnUserApplication.cachedUser = dineOnUser;
-		
+		DineOnUserApplication.setDineOnUser(dineOnUser);
 		Intent addEvent = new Intent();
-	    addEvent.putExtra(DineOnConstants.KEY_USER, dineOnUser);
 	    setActivityIntent(addEvent);
 		mActivity = getActivity();
 	}
@@ -82,20 +78,7 @@ public class CurrentOrderActivityTest extends
 		super.tearDown();
 	}
 
-//	public void testOnPlaceOrder() {
-//		mActivity.onPlaceOrder("rs");
-//	}
-//
-//	public void testOnRequestMade() {
-//		mActivity.onRequestMade("Food please");
-//	}
-//	
-//	public void testDeleteResume() {
-//		getInstrumentation().waitForIdleSync();
-//		mActivity.finish();
-//
-//		mActivity = getActivity();
-//	}
+
 	@SmallTest
 	public void testOnClickRequestButton() {
 		Button b = (Button) mActivity.findViewById(R.id.button_request);
@@ -112,6 +95,22 @@ public class CurrentOrderActivityTest extends
 				R.layout.alert_build_request, null);
 		cof.getDescription(alertView);
 	}
+	
+	public void testOnPlaceOrder() {
+		mActivity.onPlaceOrder("rs");
+	}
+
+	public void testOnRequestMade() {
+		mActivity.onRequestMade("MORE WATER!!!!");
+	}
+	
+	public void testDeleteResume() {
+		getInstrumentation().waitForIdleSync();
+		mActivity.finish();
+
+		mActivity = getActivity();
+	}
+
 	
 	private DiningSession createFakeDiningSession(ParseUser user) throws ParseException {
 		return new DiningSession(1, 
