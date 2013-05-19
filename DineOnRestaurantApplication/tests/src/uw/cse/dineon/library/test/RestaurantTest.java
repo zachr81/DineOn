@@ -12,6 +12,10 @@ import uw.cse.dineon.library.Reservation;
 import uw.cse.dineon.library.Restaurant;
 import uw.cse.dineon.library.RestaurantInfo;
 import uw.cse.dineon.library.UserInfo;
+
+import com.parse.Parse;
+import com.parse.ParseUser;
+
 import android.app.Activity;
 import android.content.Context;
 import android.test.AndroidTestCase;
