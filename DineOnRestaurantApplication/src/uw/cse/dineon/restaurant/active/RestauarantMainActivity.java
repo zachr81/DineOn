@@ -215,7 +215,7 @@ RequestDetailListener {
 			container.setVisibility(View.VISIBLE);
 
 			FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-			ft.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left);
+			ft.setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
 			ft.replace(R.id.container, frag);
 			ft.commit();
 			return true;
