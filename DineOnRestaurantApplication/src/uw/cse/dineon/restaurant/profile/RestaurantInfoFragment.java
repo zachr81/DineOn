@@ -1,8 +1,5 @@
 package uw.cse.dineon.restaurant.profile;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import uw.cse.dineon.library.RestaurantInfo;
 import uw.cse.dineon.restaurant.R;
 import android.app.Activity;
@@ -27,8 +24,6 @@ import android.widget.TextView;
  */
 public class RestaurantInfoFragment extends Fragment {
 
-	private List<View> imageViews;
-
 	private InfoChangeListener mListener;
 
 	/**
@@ -49,7 +44,6 @@ public class RestaurantInfoFragment extends Fragment {
 		return frag;
 	}
 
-	@SuppressWarnings("unused")
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
@@ -87,23 +81,8 @@ public class RestaurantInfoFragment extends Fragment {
 			TextView restName = (TextView) view
 					.findViewById(R.id.label_restaurant_name);
 
-			imageViews = new ArrayList<View>();
-
-			// TODO Dynamically add the images from the restaurant Info instance
-			// Set the default image to the be the first image
-			// View imgView = insertPhoto(String pathToImage)
-			// imgView.setOnClickListener(new ImageSelectListener(IMG ID));
-			// This will set the selected back ground image
-			// imageViews.add(imvView)
-			// Should set all default images to white grey background
-
-			// TODO For each image add the correct listener to listener to
-			// listen for the
-			// user selects another image of focus.
-
 			mPhoneInput.setText(INFO.getPhone());
 			mAddressInput.setText(INFO.getAddr());
-//			restName.setText(INFO.getName());
 			restName.setEnabled(false);
 			restName.setVisibility(View.GONE);
 
@@ -148,8 +127,6 @@ public class RestaurantInfoFragment extends Fragment {
 		}
 	}
 
-	// TODO Add a customer listener to interact with this fragment
-
 	/**
 	 * Returns whether the Restaurant Info instance is valid.
 	 * 
@@ -187,46 +164,6 @@ public class RestaurantInfoFragment extends Fragment {
 		 * @return The RestaurantInfo object of this listener
 		 */
 		RestaurantInfo getInfo();
-
-	}
-
-	/**
-	 * Listener for when the user selects on view containing image.
-	 * 
-	 * @author mhotan
-	 */
-	@SuppressWarnings("unused")
-	private class ImageSelectListener implements View.OnClickListener {
-
-		/**
-		 * Create a listener associated with this Image Id.
-		 * 
-		 * @param imgId
-		 *            int
-		 */
-		public ImageSelectListener(int imgId) {
-			mImgID = imgId;
-		}
-
-		/**
-		 * Image ID that this view presents.
-		 */
-		private final int mImgID;
-
-		@Override
-		public void onClick(View v) {
-			// TODO Auto-generated method stub
-
-		}
-
-		/**
-		 * Gets the associated Image id for this restaurant image.
-		 * 
-		 * @return int
-		 */
-		public int getImageID() {
-			return mImgID;
-		}
 
 	}
 
