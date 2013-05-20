@@ -96,7 +96,7 @@ ActivityInstrumentationTestCase2<CreateNewRestaurantAccountActivity> {
 	 * Asserts that a user correctly creates an account
 	 * with valid credentials.
 	 * 
-	 * White-box
+	 * Black-box
 	 */
 	public void testCreateNewAccount() throws ParseException {
 		
@@ -149,7 +149,7 @@ ActivityInstrumentationTestCase2<CreateNewRestaurantAccountActivity> {
 	/**
 	 * Asserts that a user can't create an account without a username.
 	 * 
-	 * White-box
+	 * Black-box
 	 */
 	public void testNoUsernameFailure() {
 		ActivityMonitor monitor = getInstrumentation().addMonitor(
@@ -172,7 +172,7 @@ ActivityInstrumentationTestCase2<CreateNewRestaurantAccountActivity> {
 	/**
 	 * Asserts that a user can't create an account without a password.
 	 * 
-	 * White-box
+	 * Black-box
 	 */
 	public void testNoPasswordFailure() {
 		ActivityMonitor monitor = getInstrumentation().addMonitor(
@@ -194,7 +194,7 @@ ActivityInstrumentationTestCase2<CreateNewRestaurantAccountActivity> {
 	/**
 	 * Asserts that a user can't create an account with different passwords.
 	 * 
-	 * White-box
+	 * Black-box
 	 */
 	public void testNoPasswordMatchFailure() {
 		ActivityMonitor monitor = getInstrumentation().addMonitor(
@@ -218,7 +218,7 @@ ActivityInstrumentationTestCase2<CreateNewRestaurantAccountActivity> {
 	/**
 	 * Asserts that a user can't create an account without an email.
 	 * 
-	 * White-box
+	 * Black-box
 	 */
 	public void testNoEmailFailure() {
 		ActivityMonitor monitor = getInstrumentation().addMonitor(
