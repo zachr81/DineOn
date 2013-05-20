@@ -159,10 +159,6 @@ public class RestaurantInfo extends Storable {
 	 */
 	public void setImageMain(int pos) {
 		pos = Math.min(Math.max(0, pos), mImageList.size() - 1);
-		if (pos == -1) {
-			//TODO Handle no images
-			Log.d(TAG, "No images.");
-		}
 		this.mMainImageIndex = pos;
 	}
 
