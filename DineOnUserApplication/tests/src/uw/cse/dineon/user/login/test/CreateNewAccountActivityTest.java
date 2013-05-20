@@ -6,10 +6,11 @@ import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
-import uw.cse.dineon.library.Restaurant;
-import uw.cse.dineon.library.RestaurantInfo;
+import uw.cse.dineon.library.DineOnUser;
+import uw.cse.dineon.library.UserInfo;
 import uw.cse.dineon.user.login.CreateNewAccountActivity;
 import uw.cse.dineon.user.login.CreateNewAccountFragment;
+import uw.cse.dineon.user.restaurantselection.RestaurantSelectionActivity;
 import android.app.Instrumentation.ActivityMonitor;
 import android.support.v4.app.Fragment;
 import android.test.ActivityInstrumentationTestCase2;
@@ -17,16 +18,18 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
+/**
+ * Tests CreateNewAccountActivity and its corresponding fragment.
+ * Ensures that they can be accessed and function properly.
+ * @author espeo196
+ */
 public class CreateNewAccountActivityTest extends ActivityInstrumentationTestCase2<CreateNewAccountActivity> {
-
-	private CreateNewAccountActivity activity;
 
 	private static final int WAIT_TIME = 10000;
 	
 	private static final String fakeUserName = "createUserFakeUser";
 	private static final String fakePassword = "createUserFakePass";
 	private static final String fakeEmail = "fake@fake.com";
-	private ParseUser mFakeUser;
 	private CreateNewAccountActivity mActivity;
 
 	public CreateNewAccountActivityTest() {
@@ -57,7 +60,7 @@ public class CreateNewAccountActivityTest extends ActivityInstrumentationTestCas
 	public void testCreateNewAccount() throws ParseException {
 		
 		ActivityMonitor monitor = getInstrumentation().addMonitor(
-				CreateNewAccountActivity.class.getName(), null, false);
+				RestaurantSelectionActivity.class.getName(), null, false);
 		
 		CreateNewAccountFragment frag = getFragment();
 		View current = frag.getView();
@@ -88,31 +91,31 @@ public class CreateNewAccountActivityTest extends ActivityInstrumentationTestCas
 			}
 		});
 		
-		CreateNewAccountActivity mainAct = (CreateNewAccountActivity) 
+		RestaurantSelectionActivity mainAct = (RestaurantSelectionActivity) 
 				monitor.waitForActivityWithTimeout(WAIT_TIME);
 		assertNotNull(mainAct);
-		
+
 		ParseUser curUser = ParseUser.getCurrentUser();
 		curUser.fetch();
 		assertNotNull(curUser);
 		assertEquals(curUser.getUsername(), fakeUserName);
 		assertEquals(curUser.getEmail(), fakeEmail);
 		
-		ParseQuery inner = new ParseQuery(RestaurantInfo.class.getSimpleName());
-		inner.whereEqualTo(RestaurantInfo.PARSEUSER, curUser);
-		ParseQuery query = new ParseQuery(Restaurant.class.getSimpleName());
-		query.whereMatchesQuery(Restaurant.INFO, inner);
+		ParseQuery inner = new ParseQuery(UserInfo.class.getSimpleName());
+		inner.whereEqualTo(UserInfo.PARSEUSER, curUser);
+		ParseQuery query = new ParseQuery(DineOnUser.class.getSimpleName());
+		query.whereMatchesQuery(DineOnUser.USER_INFO, inner);
 		ParseObject object = query.getFirst();
 		
 		assertNotNull(object);
 		
-		Restaurant justMade = new Restaurant(object);
+		DineOnUser justMade = new DineOnUser(object);
 		
 		assertNotNull(justMade);
-		assertNotNull(justMade.getInfo());
+		assertNotNull(justMade.getUserInfo());
 		
 		assertEquals(justMade.getName(), fakeUserName);
-		
+		justMade.getUserInfo().deleteFromCloud();
 		justMade.deleteFromCloud();
 		curUser.deleteInBackground();
 		
