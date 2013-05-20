@@ -59,7 +59,12 @@ ActivityInstrumentationTestCase2<RestauarantMainActivity> {
 		mUser = new ParseUser();
 		mUser.setUsername(fakeUserName);
 		mUser.setPassword(fakePassword);
-		mUser.signUp();
+		
+		try {
+			mUser = ParseUser.logIn(fakeUserName, fakePassword);
+		} catch (ParseException e) {
+			mUser.signUp();
+		}
 
 		mUI = new DineOnUser(mUser);
 		mRestaurant = new Restaurant(mUser);
