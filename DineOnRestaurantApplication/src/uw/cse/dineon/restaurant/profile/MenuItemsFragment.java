@@ -3,9 +3,11 @@ package uw.cse.dineon.restaurant.profile;
 import java.util.ArrayList;
 import java.util.List;
 
+import edu.umd.cs.findbugs.annotations.SuppressWarnings;
+
+import uw.cse.dineon.library.Menu;
 import uw.cse.dineon.library.MenuItem;
 import uw.cse.dineon.library.RestaurantInfo;
-import uw.cse.dineon.library.util.DineOnConstants;
 import uw.cse.dineon.restaurant.R;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -13,10 +15,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
-import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
-import uw.cse.dineon.library.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -27,7 +27,6 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -37,6 +36,7 @@ import android.widget.Toast;
  * 
  * @author mhotan
  */
+@SuppressWarnings("URF_UNREAD_PUBLIC_OR_PROTECTED_FIELD")
 public class MenuItemsFragment extends ListFragment {
 
 	/**
@@ -177,7 +177,7 @@ public class MenuItemsFragment extends ListFragment {
 				String priceString = ((EditText) AV
 						.findViewById(R.id.input_menuitem_price)).getText()
 						.toString();
-				if (title.trim() == "" || priceString == "") {
+				if (title.trim().equals("") || priceString.equals("")) {
 					Toast.makeText(getActivity(), "Please input Title and Price",
 							Toast.LENGTH_SHORT).show();
 					return;
@@ -227,8 +227,8 @@ public class MenuItemsFragment extends ListFragment {
 			@Override
 			public void onItemSelected(AdapterView<?> a, View v,
 					int pos, long id) {
-				if(pos > mListener.getInfo().getMenuList().size()){
-					Log.e(TAG,"Invalid menu index selected!");
+				if(pos > mListener.getInfo().getMenuList().size()) {
+					Log.e(TAG, "Invalid menu index selected!");
 				} else {
 					currentMenu = mListener.getInfo().getMenuList().get(pos);
 					mAdapter.notifyDataSetInvalidated();
@@ -267,7 +267,7 @@ public class MenuItemsFragment extends ListFragment {
 						.toString();
 				((TextView) AV.findViewById(R.id.input_new_menu_title))
 						.setText("");
-				if (newTitle.trim() == "") {
+				if (newTitle.trim().equals("")) {
 					Toast.makeText(getActivity(), "Please input title",
 							Toast.LENGTH_SHORT).show();
 					return;

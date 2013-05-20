@@ -3,9 +3,7 @@ package uw.cse.dineon.restaurant.profile;
 import uw.cse.dineon.library.MenuItem;
 import uw.cse.dineon.library.Restaurant;
 import uw.cse.dineon.library.RestaurantInfo;
-import uw.cse.dineon.library.util.DineOnConstants;
 import uw.cse.dineon.restaurant.DineOnRestaurantActivity;
-import uw.cse.dineon.restaurant.NotLoggedInFragment;
 import uw.cse.dineon.restaurant.R;
 import android.app.ActionBar;
 import android.app.ActionBar.Tab;
@@ -276,7 +274,6 @@ public class ProfileActivity extends DineOnRestaurantActivity implements
 
 		/* The following are each of the ActionBar.TabListener callbacks */
 
-		@SuppressWarnings("unused")
 		@Override
 		public void onTabSelected(Tab tab, FragmentTransaction ft) {
 
@@ -286,9 +283,9 @@ public class ProfileActivity extends DineOnRestaurantActivity implements
 			RestaurantInfo info = getRestaurant().getInfo();
 			assert (info != null);
 
-			Fragment frag;
-
-			frag = RestaurantInfoFragment.newInstance(info);
+			//Commented out for findbugs
+			//Fragment frag;
+			//frag = RestaurantInfoFragment.newInstance(info);
 
 			// Check if the fragment is already initialized
 			if (mFragment == null) {

@@ -46,5 +46,13 @@ public class DineOnUserApplication extends Application {
 		
 		this.cachedOrderMapping = new HashMap<MenuItem, CurrentOrderItem>();
 	}
+	
+	/**
+	 * Sets cachedUser.
+	 * @param user DineOnUser
+	 */
+	public static void setDineOnUser(DineOnUser user) {
+		cachedUser = user;
+	}
 
 }

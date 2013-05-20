@@ -312,7 +312,8 @@ OrderUpdateListener /* manipulation of list from the current order activity */{
 	public void onSaveInstanceState(Bundle savedInstanceState) {
 		// Save the ID if the user is not null
 		if (DineOnUserApplication.cachedUser != null) {
-			savedInstanceState.putString(DineOnConstants.KEY_USER, DineOnUserApplication.cachedUser.getObjId());
+			savedInstanceState
+				.putString(DineOnConstants.KEY_USER, DineOnUserApplication.cachedUser.getObjId());
 		}
 		super.onSaveInstanceState(savedInstanceState);
 	}
@@ -343,7 +344,7 @@ OrderUpdateListener /* manipulation of list from the current order activity */{
 		// DEBUG:
 		Log.d("GOT_DINING_SESSION_FROM_CLOUD", session.getTableID() + "");
 
-		final DiningSession mSession = session;
+		final DiningSession M_SESSION = session;
 		DineOnUserApplication.cachedUser.setDiningSession(session);
 		DineOnUserApplication.cachedUser.saveInBackGround(new SaveCallback() {
 			
@@ -354,7 +355,7 @@ OrderUpdateListener /* manipulation of list from the current order activity */{
 					
 					// start the restaurant home activity for selected restaurant
 					Intent i = new Intent(thisActivity, RestaurantHomeActivity.class);
-					i.putExtra(DineOnConstants.KEY_DININGSESSION, mSession);
+					i.putExtra(DineOnConstants.KEY_DININGSESSION, M_SESSION);
 					startActivity(i);
 				} else {
 					Log.e(TAG, "unable to save the updated dineon user " 
