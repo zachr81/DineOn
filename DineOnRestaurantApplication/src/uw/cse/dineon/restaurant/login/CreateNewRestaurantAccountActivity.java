@@ -70,7 +70,7 @@ implements CreateNewAccountListener {
 
 		Resolution completeRes = CredentialValidator.validateAll(username, email, pw, pwRepeat);
 
-		if (completeRes.isValid()) { // Valid passwords
+		if (completeRes.isValid() && !username.equals("")) { // Valid passwords
 			final ParseUser USER = new ParseUser();
 			USER.setUsername(username);
 			USER.setPassword(pw);
@@ -80,6 +80,12 @@ implements CreateNewAccountListener {
 		else {
 			Utility.getFailedToCreateAccountDialog(completeRes.getMessage(), This).show();
 		}
+	}
+	
+	@Override
+	protected void onPause() {
+		destroyProgressDialog();
+		super.onPause();
 	}
 
 	/**
@@ -201,7 +207,7 @@ implements CreateNewAccountListener {
 	 * Instantiates a new progress dialog and shows it on the screen.
 	 */
 	protected void createProgressDialog() {
-		if (mProgressDialog != null && mProgressDialog.isShowing()) {
+		if (mProgressDialog != null) {
 			return;
 		}
 		mProgressDialog = new ProgressDialog(this);

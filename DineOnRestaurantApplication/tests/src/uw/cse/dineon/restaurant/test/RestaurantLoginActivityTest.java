@@ -11,24 +11,29 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.parse.Parse;
+import com.parse.ParseException;
 import com.parse.ParseUser;
 
 public class RestaurantLoginActivityTest extends
 ActivityInstrumentationTestCase2<RestaurantLoginActivity> {
 
-	private static final int WAIT_TIME = 10000;
+	private static final int WAIT_TIME = 30000;
+	private static final int WAIT_LOGIN_TIME = 1000;
 	
 	private Activity mActivity;
 	private EditText mNameText;
 	private EditText mPassText;
 	private LoginFragment mFragment;
 	private Button mSubmit;
-	private static final String fakeUserName = "fakeLoginName";
-	private static final String fakePassword = "fakeLoginPassword";
+	private static final String fakeUserName = "fakeRestaurantLoginName";
+	private static final String fakePassword = "fakeRestaurantLoginPassword";
 	private ParseUser mUser;
 	private Restaurant mRestaurant;
 	private ActivityMonitor mMonitor;
 
+	/**
+	 * Creates a new RestaurantLoginActivityTest.
+	 */
 	public RestaurantLoginActivityTest() {
 		super(RestaurantLoginActivity.class);
 	}
@@ -63,8 +68,13 @@ ActivityInstrumentationTestCase2<RestaurantLoginActivity> {
 		mUser = new ParseUser();
 		mUser.setUsername(fakeUserName);
 		mUser.setPassword(fakePassword);
-		mUser.signUp();
 		
+		try {
+			mUser = ParseUser.logIn(fakeUserName, fakePassword);
+		} catch (ParseException e) {
+			mUser.signUp();
+		}
+	
 		// Have to create the restaurant for this user
 		mRestaurant = new Restaurant(mUser);
 		mRestaurant.saveOnCurrentThread();
@@ -91,6 +101,9 @@ ActivityInstrumentationTestCase2<RestaurantLoginActivity> {
 		assertNotNull(mSubmit);
 	}
 
+	/**
+	 * Asserts that a valid logged in user logs in.
+	 */
 	public void testLoginSucess() {
 		mActivity.runOnUiThread(new Runnable() {
 			public void run() {
@@ -117,4 +130,41 @@ ActivityInstrumentationTestCase2<RestaurantLoginActivity> {
 		assertNotNull(mainAct);
 		mainAct.finish();
 	}
+	
+	/**
+	 * Asserts that a user can't log in without a username.
+	 */
+	public void testLoginNoUsernameFailure() {
+		ActivityMonitor monitor = getInstrumentation().addMonitor(
+				RestauarantMainActivity.class.getName(), null, false);
+		mActivity.runOnUiThread(new Runnable() {
+			public void run() {
+				mPassText.setText(fakePassword);
+				mSubmit.requestFocus();
+				mSubmit.performClick();
+			} // end of run() method definition
+		});
+		RestauarantMainActivity startedActivity = (RestauarantMainActivity) monitor
+		        .waitForActivityWithTimeout(WAIT_LOGIN_TIME);
+		assertNull(startedActivity);
+	}
+	
+	/**
+	 * Asserts that a user can't log in without a password.
+	 */
+	public void testLoginNoPasswordFailure() {
+		ActivityMonitor monitor = getInstrumentation().addMonitor(
+				RestauarantMainActivity.class.getName(), null, false);
+		mActivity.runOnUiThread(new Runnable() {
+			public void run() {
+				mNameText.setText(fakeUserName);
+				mSubmit.requestFocus();
+				mSubmit.performClick();
+			} // end of run() method definition
+		});
+		RestauarantMainActivity startedActivity = (RestauarantMainActivity) monitor
+		        .waitForActivityWithTimeout(WAIT_LOGIN_TIME);
+		assertNull(startedActivity);
+	}
+	
 }
