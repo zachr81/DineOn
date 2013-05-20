@@ -27,7 +27,7 @@ public class RestaurantTest extends AndroidTestCase {
 	Context mContext = null;
 	
 	DiningSession testSession;
-	ParseUser testUser;
+	ParseUser mUser;
 	UserInfo testUInfo;
 	List<MenuItem> testItems;
 	MenuItem testItem;
@@ -43,15 +43,13 @@ public class RestaurantTest extends AndroidTestCase {
 	List<CustomerRequest> testRequests;
 	List<Reservation> testReservations;
 	List<DiningSession> testSessions;
-
-	private final static String fakeUserName = "restaurantTestFakeUserName";
-	private final static String fakePassword = "restaurantTestFakePassword";
 	
+
 	@Override
 	protected void tearDown() throws Exception {
-		testUser.delete();
-		ParseUser.logOut();
 		super.tearDown();
+		mUser.delete();
+		testRestaurant.deleteFromCloud();
 	}
 	@Override
 	protected void setUp() throws Exception {
@@ -61,15 +59,14 @@ public class RestaurantTest extends AndroidTestCase {
 		Parse.initialize(mContext, "RUWTM02tSuenJPcHGyZ0foyemuL6fjyiIwlMO0Ul", "wvhUoFw5IudTuKIjpfqQoj8dADTT1vJcJHVFKWtK");
 		Log.i("progress", "init parse");
 		
-		testUser = new ParseUser();
-		testUser.setUsername(fakeUserName);
-		testUser.setPassword(fakePassword);
-		testUser.signUp();
+		mUser = new ParseUser();
+		mUser.setUsername("restaurantTest");
+		mUser.setPassword("rtest");
+		mUser.signUp();
 		
-		testRestaurantInfo = new RestaurantInfo(testUser);
 		testSession = new DiningSession(32, new Date(3254645), testUInfo, testRestaurantInfo);
 		
-		testUInfo = new UserInfo(testUser);
+		testUInfo = new UserInfo(mUser);
 		testItems = new ArrayList<MenuItem>();
 		testItem = new MenuItem(24, 4.5, "Root Beer Float", "Ice cream and root beer");
 		testItems.add(testItem);
@@ -81,8 +78,8 @@ public class RestaurantTest extends AndroidTestCase {
 		
 		testUInfos.add(testUInfo);
 		
-		testRestaurantInfo = new RestaurantInfo(testUser);
-		testRestaurant = new Restaurant(testUser);
+		testRestaurantInfo = new RestaurantInfo(mUser);
+		testRestaurant = new Restaurant(mUser);
 		
 		testRequest = new CustomerRequest("Order", testUInfo);
 		testReservation = new Reservation(testUInfo, testRestaurantInfo, new Date(32));
