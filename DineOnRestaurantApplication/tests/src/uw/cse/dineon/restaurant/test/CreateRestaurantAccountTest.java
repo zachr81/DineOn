@@ -22,16 +22,19 @@ import com.parse.ParseUser;
 public class CreateRestaurantAccountTest extends
 ActivityInstrumentationTestCase2<CreateNewRestaurantAccountActivity> {
 
-	private CreateNewRestaurantAccountActivity activity;
-
-	private static final int WAIT_TIME = 30000;
-
-	private static final String fakeUserName = "createRestaurantFakeUserName";
-	private static final String fakePassword = "createRestaurantFakePassword";
-	private static final String fakeEmail = "fakeemail@yourmomhouse.com";
-	private ParseUser mFakeUser;
+	private static final int WAIT_TIME = 10000;
+	
+	private static final String fakeUserName = "createRestAcctFakeUserName";
+	private static final String fakePassword = "createRestAcctFakePassword";
+	private static final String fakeEmail = "createRestAcct@yourmomhouse.com";
 	private CreateNewRestaurantAccountActivity mActivity;
 
+	private EditText username;
+	private EditText password;
+	private EditText passwordrepeat;
+	private EditText email;
+	private Button submit;
+	
 	public CreateRestaurantAccountTest() throws ParseException {
 		super(CreateNewRestaurantAccountActivity.class);
 
@@ -40,65 +43,68 @@ ActivityInstrumentationTestCase2<CreateNewRestaurantAccountActivity> {
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
-
+		
 		// initialize Parse
 		Parse.initialize(getInstrumentation().getTargetContext(),
 				"RUWTM02tSuenJPcHGyZ0foyemuL6fjyiIwlMO0Ul",
 				"wvhUoFw5IudTuKIjpfqQoj8dADTT1vJcJHVFKWtK");
-
+		
 		setActivityInitialTouchMode(false);
 
 		mActivity = getActivity();
+		
+		CreateNewAccountFragment frag = getFragment();
+		View current = frag.getView();
+		username = (EditText) 
+				current.findViewById(
+						uw.cse.dineon.restaurant.R.id.input_createnewaccount_username);
+		
+		password = (EditText) 
+				current.findViewById(
+						uw.cse.dineon.restaurant.R.id.input_createnewaccount_password);
+		
+		passwordrepeat = (EditText) 
+				current.findViewById(
+						uw.cse.dineon.restaurant.R.id.input_createnewaccount_repeat_password);
+		
+		email = (EditText) 
+				current.findViewById(
+						uw.cse.dineon.restaurant.R.id.input_createnewaccount_email);
+		
+		submit = (Button) current.findViewById(
+				uw.cse.dineon.restaurant.R.id.button_create_account);
 	}
 
 	@Override
 	protected void tearDown() throws Exception {
-		//		mActivity.finish();
-		if (mFakeUser != null) {
-			try{
-				mFakeUser.delete();
-			} catch (Exception e) {}
-		}
+//		mActivity.finish();
 		super.tearDown();
 	}
-
-	public void test() {
-		assertTrue(true);
-	} 
-
+	
 	/**
 	 * Test the existence of the CreateNewAccount Fragment
+	 * 
+	 * White-box
 	 */
 	public void testFragmentExistence() {
 		Fragment f = getFragment();
 		assertNotNull(f);
 		assertNotNull(f.getView());
 	}
-
+	
+	/**
+	 * Asserts that a user correctly creates an account
+	 * with valid credentials.
+	 * 
+	 * White-box
+	 */
 	public void testCreateNewAccount() throws ParseException {
-
+		
 		ActivityMonitor monitor = getInstrumentation().addMonitor(
 				RestauarantMainActivity.class.getName(), null, false);
-
-		CreateNewAccountFragment frag = getFragment();
-		View current = frag.getView();
-		final EditText username = (EditText) 
-				current.findViewById(
-						uw.cse.dineon.restaurant.R.id.input_createnewaccount_username);
-		final EditText password = (EditText) 
-				current.findViewById(
-						uw.cse.dineon.restaurant.R.id.input_createnewaccount_password);
-		final EditText passwordrepeat = (EditText) 
-				current.findViewById(
-						uw.cse.dineon.restaurant.R.id.input_createnewaccount_repeat_password);
-		final EditText email = (EditText) 
-				current.findViewById(
-						uw.cse.dineon.restaurant.R.id.input_createnewaccount_email);
-		final Button submit = (Button) current.findViewById(
-				uw.cse.dineon.restaurant.R.id.button_create_account);
-
+		
 		mActivity.runOnUiThread(new Runnable() {
-
+			
 			@Override
 			public void run() {
 				username.setText(fakeUserName);
@@ -108,38 +114,135 @@ ActivityInstrumentationTestCase2<CreateNewRestaurantAccountActivity> {
 				submit.performClick();
 			}
 		});
-
+		
 		RestauarantMainActivity mainAct = (RestauarantMainActivity) 
 				monitor.waitForActivityWithTimeout(WAIT_TIME);
 		assertNotNull(mainAct);
-
-		mFakeUser = ParseUser.getCurrentUser();
-		mFakeUser.fetch();
-		assertNotNull(mFakeUser);
-		assertEquals(mFakeUser.getUsername(), fakeUserName);
-		assertEquals(mFakeUser.getEmail(), fakeEmail);
-
+		
+		ParseUser curUser = ParseUser.getCurrentUser();
+		curUser.fetch();
+		assertNotNull(curUser);
+		assertEquals(curUser.getUsername(), fakeUserName);
+		assertEquals(curUser.getEmail(), fakeEmail);
+		
 		ParseQuery inner = new ParseQuery(RestaurantInfo.class.getSimpleName());
-		inner.whereEqualTo(RestaurantInfo.PARSEUSER, mFakeUser);
+		inner.whereEqualTo(RestaurantInfo.PARSEUSER, curUser);
 		ParseQuery query = new ParseQuery(Restaurant.class.getSimpleName());
 		query.whereMatchesQuery(Restaurant.INFO, inner);
 		ParseObject object = query.getFirst();
-
+		
 		assertNotNull(object);
-
+		
 		Restaurant justMade = new Restaurant(object);
-
+		
 		assertNotNull(justMade);
 		assertNotNull(justMade.getInfo());
-
+		
 		assertEquals(justMade.getName(), fakeUserName);
-
+		
 		justMade.deleteFromCloud();
-		mFakeUser.delete();
-
+		curUser.delete();
+		
 		mainAct.finish();
 	}
-
+	
+	/**
+	 * Asserts that a user can't create an account without a username.
+	 * 
+	 * White-box
+	 */
+	public void testNoUsernameFailure() {
+		ActivityMonitor monitor = getInstrumentation().addMonitor(
+				RestauarantMainActivity.class.getName(), null, false);
+		
+		mActivity.runOnUiThread(new Runnable() {
+			public void run() {
+				password.setText(fakePassword);
+				passwordrepeat.setText(fakePassword);
+				email.setText(fakeEmail);
+				submit.requestFocus();
+				submit.performClick();
+			} // end of run() method definition
+		});
+		RestauarantMainActivity startedActivity = (RestauarantMainActivity) monitor
+		        .waitForActivityWithTimeout(WAIT_TIME);
+		assertNull(startedActivity);
+	}
+	
+	/**
+	 * Asserts that a user can't create an account without a password.
+	 * 
+	 * White-box
+	 */
+	public void testNoPasswordFailure() {
+		ActivityMonitor monitor = getInstrumentation().addMonitor(
+				RestauarantMainActivity.class.getName(), null, false);
+		
+		mActivity.runOnUiThread(new Runnable() {
+			public void run() {
+				username.setText(fakeUserName);
+				email.setText(fakeEmail);
+				submit.requestFocus();
+				submit.performClick();
+			} // end of run() method definition
+		});
+		RestauarantMainActivity startedActivity = (RestauarantMainActivity) monitor
+		        .waitForActivityWithTimeout(WAIT_TIME);
+		assertNull(startedActivity);
+	}
+	
+	/**
+	 * Asserts that a user can't create an account with different passwords.
+	 * 
+	 * White-box
+	 */
+	public void testNoPasswordMatchFailure() {
+		ActivityMonitor monitor = getInstrumentation().addMonitor(
+				RestauarantMainActivity.class.getName(), null, false);
+		
+		mActivity.runOnUiThread(new Runnable() {
+			public void run() {
+				username.setText(fakeUserName);
+				email.setText(fakeEmail);
+				password.setText(fakePassword);
+				passwordrepeat.setText("lolz");
+				submit.requestFocus();
+				submit.performClick();
+			} // end of run() method definition
+		});
+		RestauarantMainActivity startedActivity = (RestauarantMainActivity) monitor
+		        .waitForActivityWithTimeout(WAIT_TIME);
+		assertNull(startedActivity);
+	}
+	
+	/**
+	 * Asserts that a user can't create an account without an email.
+	 * 
+	 * White-box
+	 */
+	public void testNoEmailFailure() {
+		ActivityMonitor monitor = getInstrumentation().addMonitor(
+				RestauarantMainActivity.class.getName(), null, false);
+		
+		mActivity.runOnUiThread(new Runnable() {
+			public void run() {
+				username.setText(fakeUserName);
+				password.setText(fakePassword);
+				passwordrepeat.setText(fakePassword);
+				submit.requestFocus();
+				submit.performClick();
+			} // end of run() method definition
+		});
+		RestauarantMainActivity startedActivity = (RestauarantMainActivity) monitor
+		        .waitForActivityWithTimeout(2000);
+		assertNull(startedActivity);
+	}
+	
+	/**
+	 * Returns the fragment
+	 * 
+	 * @return frag CreateNewAccountFragment
+	 */
 	private CreateNewAccountFragment getFragment(){
 		Fragment f = mActivity.getSupportFragmentManager().findFragmentById(
 				uw.cse.dineon.restaurant.R.id.fragment1);
