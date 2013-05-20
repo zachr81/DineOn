@@ -55,7 +55,7 @@ public class UserLoginActivityTest extends
 		ParseUser.enableAutomaticUser();
 		ParseUser user = new ParseUser();
 		user.setUsername("testUser");
-		user.setPassword("12345");;
+		user.setPassword("12345");
 		
 		ParseUser restUser = new ParseUser();
 		restUser.setUsername("testRestUser");
