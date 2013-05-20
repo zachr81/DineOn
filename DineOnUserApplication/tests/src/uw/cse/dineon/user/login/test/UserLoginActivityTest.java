@@ -1,6 +1,7 @@
 package uw.cse.dineon.user.login.test;
 
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 
 import com.parse.Parse;
@@ -12,11 +13,14 @@ import uw.cse.dineon.library.Menu;
 import uw.cse.dineon.library.MenuItem;
 import uw.cse.dineon.library.Order;
 import uw.cse.dineon.library.Restaurant;
+import uw.cse.dineon.library.RestaurantInfo;
 import uw.cse.dineon.library.util.TestUtility;
 import uw.cse.dineon.user.DineOnUserApplication;
 import uw.cse.dineon.user.R;
 import uw.cse.dineon.user.login.UserLoginActivity;
+import uw.cse.dineon.user.restaurantselection.RestaurantSelectionActivity;
 import android.app.Instrumentation;
+import android.app.Instrumentation.ActivityMonitor;
 import android.content.Intent;
 import android.test.ActivityInstrumentationTestCase2;
 import android.widget.Button;
@@ -73,6 +77,9 @@ public class UserLoginActivityTest extends
 	}
 	
 	public void testOnLogin() {
+		ActivityMonitor mon = this.mInstrumentation.addMonitor(
+				UserLoginActivity.class.getName(), null, false);
+		
 		et_uname = (EditText) mActivity.findViewById(uw.cse.dineon.user.R.id.input_login_email);
 		et_passwd = (EditText) mActivity.findViewById(R.id.input_login_password);
 		
@@ -89,10 +96,23 @@ public class UserLoginActivityTest extends
 		mActivity.runOnUiThread(new Runnable() {
 	          public void run() {
 	        	  mActivity.startRestSelectionAct(DU);
-	        	  
 	          }
 	      });
-	    mInstrumentation.waitForIdleSync();
+		int time = 10000;
+		RestaurantSelectionActivity resSelect = (RestaurantSelectionActivity) mon
+				.waitForActivityWithTimeout(time);
+		assertNotNull(resSelect);
+		List<RestaurantInfo> rlst = new LinkedList<RestaurantInfo>();
+		rlst.add(this.dineOnUser.getDiningSession().getRestaurantInfo());
+		resSelect.addRestaurantInfos(rlst);
+		final RestaurantSelectionActivity rsa = resSelect; 
+		mActivity.runOnUiThread(new Runnable() {
+	          public void run() {
+	        	  rsa.destroyProgressDialog();
+	          }
+	      });
+		
+		
 	}
 	
 }
