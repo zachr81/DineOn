@@ -18,6 +18,8 @@ import uw.cse.dineon.library.util.TestUtility;
 import uw.cse.dineon.user.DineOnUserApplication;
 import uw.cse.dineon.user.R;
 import uw.cse.dineon.user.login.UserLoginActivity;
+import uw.cse.dineon.user.restaurant.home.RestaurantHomeActivity;
+import uw.cse.dineon.user.restaurantselection.RestaurantInfoActivity;
 import uw.cse.dineon.user.restaurantselection.RestaurantSelectionActivity;
 import android.app.Instrumentation;
 import android.app.Instrumentation.ActivityMonitor;
@@ -41,8 +43,7 @@ public class UserLoginActivityTest extends
 	protected void setUp() throws Exception {
 		super.setUp();
 		Parse.initialize(null, "RUWTM02tSuenJPcHGyZ0foyemuL6fjyiIwlMO0Ul", "wvhUoFw5IudTuKIjpfqQoj8dADTT1vJcJHVFKWtK");
-		setActivityInitialTouchMode(false);
-		
+		ParseUser.enableAutomaticUser();
 		ParseUser user = new ParseUser();
 		user.setUsername("testUser");
 		user.setPassword("12345");;
@@ -60,7 +61,7 @@ public class UserLoginActivityTest extends
 		List<MenuItem> mi = TestUtility.getFakeMenuItems();
 		Order one = new Order(1, dineOnUser.getUserInfo(), mi);
 		ds.addPendingOrder(one);
-		
+		dineOnUser.setDiningSession(ds);
 		Menu m = TestUtility.getFakeMenu();
 		m.addNewItem(mi.get(0));
 		rest.getInfo().addMenu(m);
@@ -77,42 +78,53 @@ public class UserLoginActivityTest extends
 	}
 	
 	public void testOnLogin() {
-		ActivityMonitor mon = this.mInstrumentation.addMonitor(
-				UserLoginActivity.class.getName(), null, false);
-		
 		et_uname = (EditText) mActivity.findViewById(uw.cse.dineon.user.R.id.input_login_email);
 		et_passwd = (EditText) mActivity.findViewById(R.id.input_login_password);
 		
+		int time = 10000;
+		ActivityMonitor monRsa = this.mInstrumentation.addMonitor(
+				RestaurantSelectionActivity.class.getName(), null, false);
+  	  	
+		final DineOnUser DO = this.dineOnUser;
 		mActivity.runOnUiThread(new Runnable() {
 	          public void run() {
 	              et_uname.setText("");
 	              et_passwd.setText("");
 	              Button loginButton = (Button) mActivity.findViewById(R.id.button_login);
 	              loginButton.performClick();
+	              mActivity.startRestSelectionAct(DO);
+
+	          }
+		});
+		mInstrumentation.waitForIdleSync();
+			
+		RestaurantSelectionActivity resSelect = (RestaurantSelectionActivity) monRsa
+				.waitForActivityWithTimeout(time);
+		assertNotNull(resSelect);
+		final RestaurantSelectionActivity RSA = resSelect; 
+		resSelect.runOnUiThread(new Runnable() {
+	          public void run() {
+	        	  RSA.destroyProgressDialog();
+	        	  List<RestaurantInfo> rlst = new LinkedList<RestaurantInfo>();
+	        	  rlst.add(DO.getDiningSession().getRestaurantInfo());
+	        	  RSA.addRestaurantInfos(rlst);
 	          }
 	      });
 		mInstrumentation.waitForIdleSync();
-		final DineOnUser DU = this.dineOnUser; 
-		mActivity.runOnUiThread(new Runnable() {
+		
+		ActivityMonitor monRia = this.mInstrumentation.addMonitor(
+				RestaurantHomeActivity.class.getName(), null, false);
+		resSelect.runOnUiThread(new Runnable() {
 	          public void run() {
-	        	  mActivity.startRestSelectionAct(DU);
+	      		RSA.diningSessionChangeActivity(DO.getDiningSession());	        
 	          }
 	      });
-		int time = 10000;
-		RestaurantSelectionActivity resSelect = (RestaurantSelectionActivity) mon
-				.waitForActivityWithTimeout(time);
-		assertNotNull(resSelect);
-		List<RestaurantInfo> rlst = new LinkedList<RestaurantInfo>();
-		rlst.add(this.dineOnUser.getDiningSession().getRestaurantInfo());
-		resSelect.addRestaurantInfos(rlst);
-		final RestaurantSelectionActivity rsa = resSelect; 
-		mActivity.runOnUiThread(new Runnable() {
-	          public void run() {
-	        	  rsa.destroyProgressDialog();
-	          }
-	      });
-		
-		
+		mInstrumentation.waitForIdleSync();
+  	  	RestaurantHomeActivity ria = (RestaurantHomeActivity) monRia
+  	  			.waitForActivityWithTimeout(time);
+  	  	
+  	  	assertNotNull(ria);
+  	  	
 	}
 	
 }
