@@ -31,7 +31,6 @@ public class DiningSessionTest extends AndroidTestCase {
 	
 	DiningSession testSession;
 	ParseUser testUser;
-	ParseUser testUser1;
 	UserInfo testUInfo;
 	UserInfo testUInfo1;
 	List<MenuItem> testItems;
@@ -41,7 +40,8 @@ public class DiningSessionTest extends AndroidTestCase {
 	List<UserInfo> testUInfos;
 	RestaurantInfo testRInfo;
 	
-	
+	private final static String fakeUserName1 = "diningSessionTestFakeUserName1";
+	private final static String fakePassword1 = "diningSessionTestFakeUserPassword1";
 	
 	public DiningSessionTest() {
 		super();
@@ -54,12 +54,12 @@ public class DiningSessionTest extends AndroidTestCase {
 		Parse.initialize(this.getContext(), "RUWTM02tSuenJPcHGyZ0foyemuL6fjyiIwlMO0Ul", "wvhUoFw5IudTuKIjpfqQoj8dADTT1vJcJHVFKWtK");
 		Log.i("progress", "init parse");
 
-		testUser1 = ParseUser.logIn("zach1", "zach1");
+		testUser = new ParseUser();
+		testUser.setUsername(fakeUserName1);
+		testUser.setPassword(fakePassword1);
+		testUser.signUp();
 		
-		testUser = ParseUser.logIn("zach", "zach");
-		
-
-		testUInfo1 = new UserInfo(testUser1);
+		testUInfo1 = new UserInfo(testUser);
 		testRInfo = new RestaurantInfo(testUser);
 		testSession = new DiningSession(32, new Date(3254645), testUInfo1, testRInfo);
 		
@@ -78,8 +78,9 @@ public class DiningSessionTest extends AndroidTestCase {
 	}
 	@Override
 	protected void tearDown() throws Exception {
-		super.tearDown();
+		testUser.delete();
 		ParseUser.logOut();
+		super.tearDown();
 	}
 
 	public void testPackObject() throws ParseException {

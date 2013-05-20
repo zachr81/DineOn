@@ -43,11 +43,15 @@ public class RestaurantTest extends AndroidTestCase {
 	List<CustomerRequest> testRequests;
 	List<Reservation> testReservations;
 	List<DiningSession> testSessions;
-	
 
+	private final static String fakeUserName = "restaurantTestFakeUserName";
+	private final static String fakePassword = "restaurantTestFakePassword";
+	
 	@Override
 	protected void tearDown() throws Exception {
+		testUser.delete();
 		ParseUser.logOut();
+		super.tearDown();
 	}
 	@Override
 	protected void setUp() throws Exception {
@@ -57,7 +61,10 @@ public class RestaurantTest extends AndroidTestCase {
 		Parse.initialize(mContext, "RUWTM02tSuenJPcHGyZ0foyemuL6fjyiIwlMO0Ul", "wvhUoFw5IudTuKIjpfqQoj8dADTT1vJcJHVFKWtK");
 		Log.i("progress", "init parse");
 		
-		testUser = ParseUser.logIn("zach", "zach");
+		testUser = new ParseUser();
+		testUser.setUsername(fakeUserName);
+		testUser.setPassword(fakePassword);
+		testUser.signUp();
 		
 		testRestaurantInfo = new RestaurantInfo(testUser);
 		testSession = new DiningSession(32, new Date(3254645), testUInfo, testRestaurantInfo);
