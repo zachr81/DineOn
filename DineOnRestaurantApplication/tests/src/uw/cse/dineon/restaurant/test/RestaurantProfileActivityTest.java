@@ -23,6 +23,10 @@ import com.parse.Parse;
 import com.parse.ParseException;
 import com.parse.ParseUser;
 
+/**
+ * Test class for testing restaurant profile
+ * @author mhotan
+ */
 @SuppressLint("DefaultLocale")
 public class RestaurantProfileActivityTest extends
 		ActivityInstrumentationTestCase2<ProfileActivity> {
@@ -47,6 +51,9 @@ public class RestaurantProfileActivityTest extends
 	private static final double TEST_ITEM_PRICE = 9.99;
 	private static final int TEST_ITEM_ID = 1;
 
+	private final static String fakeUserName = "vinceRestProfileActTest";
+	private final static String fakePassword = "password";
+	
 	public RestaurantProfileActivityTest() {
 		super(ProfileActivity.class);
 	}
@@ -58,11 +65,16 @@ public class RestaurantProfileActivityTest extends
 				"RUWTM02tSuenJPcHGyZ0foyemuL6fjyiIwlMO0Ul",
 				"wvhUoFw5IudTuKIjpfqQoj8dADTT1vJcJHVFKWtK");
 		setActivityInitialTouchMode(false);
-		//mUser = ParseUser.logIn("vince", "v");
 		mUser = new ParseUser();
-		mUser.setPassword("password");
-		mUser.setUsername("vinceRestProfileActTest");
-		mUser.signUp();
+		mUser.setUsername(fakeUserName);
+		mUser.setPassword(fakePassword);
+		
+		try {
+			mUser = ParseUser.logIn(fakeUserName, fakeUserName);
+		} catch (ParseException e) {
+			mUser.signUp();
+		}
+		
 		
 		// construct fake restaurant for intent
 		r = createFakeRestaurant(mUser);
@@ -95,7 +107,7 @@ public class RestaurantProfileActivityTest extends
 	}
 
 	/**
-	 * Tests that actionbar tabs properly switch between tabs
+	 * Tests that actionbar tabs properly switch between tabs.
 	 */
 	public void testActionBarTabs() {
 		mActivity.runOnUiThread(new Runnable() {
@@ -122,7 +134,7 @@ public class RestaurantProfileActivityTest extends
 
 	/**
 	 * Test that the menu_add_menu_item button displays the appropriate action
-	 * window and that it can receive text
+	 * window and that it can receive text.
 	 */
 	public void testAddMenuItem() {
 		mActivity.runOnUiThread(new Runnable() {
@@ -150,7 +162,7 @@ public class RestaurantProfileActivityTest extends
 
 	/**
 	 * Test that activity properly extracts phone/address from the RestInfo
-	 * inside the intent
+	 * inside the intent.
 	 */
 	public void testGetInfoFromIntent() {
 		mActivity.runOnUiThread(new Runnable() {
@@ -170,6 +182,9 @@ public class RestaurantProfileActivityTest extends
 		assertEquals(TEST_PHONE, phone);
 	}
 
+	/**
+	 * Create a menu item through the dialogue and make sure it's added to the list.
+	 */
 	public void testMenuListPopulate() {
 		mActivity.runOnUiThread(new Runnable() {
 			@Override
@@ -206,6 +221,9 @@ public class RestaurantProfileActivityTest extends
 
 	}
 
+	/**
+	 * Test that the menuitem from the intent is displayed.
+	 */
 	public void testMenuItemFromIntent() {
 		mActivity.runOnUiThread(new Runnable() {
 			@Override
@@ -222,6 +240,10 @@ public class RestaurantProfileActivityTest extends
 		assertEquals(TEST_ITEM_PRICE, mi.getPrice());
 	}
 
+	/**
+	 * Test that the Menu Selection Spinner shows the correct title
+	 * for the menu included in the intent.
+	 */
 	public void testMenuSelectionSpinner() {
 		// only one menu should exist, so it should be displayed in the spinner
 		// by default
@@ -248,6 +270,10 @@ public class RestaurantProfileActivityTest extends
 		assertEquals(TEST_MENU_TITLE, menuname);
 	}
 
+	/**
+	 * Test that the add menu dialogue shows up and properly adds the new menu to
+	 * the spinner and switches to it.
+	 */
 	public void testAddMenu() {
 		// copy paste everything from prev test.
 		mActivity.runOnUiThread(new Runnable() {
