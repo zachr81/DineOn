@@ -22,6 +22,10 @@ import com.parse.Parse;
 import com.parse.ParseException;
 import com.parse.ParseUser;
 
+/**
+ * Test Class for testing Restaurant main activity
+ * @author mhotan
+ */
 public class RestaurantMainActivityTest extends
 ActivityInstrumentationTestCase2<RestauarantMainActivity> {
 
@@ -98,6 +102,10 @@ ActivityInstrumentationTestCase2<RestauarantMainActivity> {
 		super.tearDown();
 	}
 
+	/**
+	 * Tests for requests page
+	 * Whitebox testing
+	 */
 	public void testOrdersPage() { 
 		android.support.v4.view.ViewPager pager = (android.support.v4.view.ViewPager) 
 				mActivity.findViewById(uw.cse.dineon.restaurant.R.id.pager_restaurant_main);
@@ -127,6 +135,10 @@ ActivityInstrumentationTestCase2<RestauarantMainActivity> {
 		});
 	}
 
+	/**
+	 * Tests for requests page
+	 * Whitebox testing
+	 */
 	public void testRequestsPage() {
 		final android.support.v4.view.ViewPager pager = (android.support.v4.view.ViewPager) 
 				mActivity.findViewById(uw.cse.dineon.restaurant.R.id.pager_restaurant_main);
@@ -165,7 +177,8 @@ ActivityInstrumentationTestCase2<RestauarantMainActivity> {
 	}
 	
 	/**
-	 * 
+	 * Tests for requests page
+	 * Whitebox testing
 	 */
 	public void testDiningSessionDetailPage() {
 		final android.support.v4.view.ViewPager pager = (android.support.v4.view.ViewPager) 
@@ -204,6 +217,10 @@ ActivityInstrumentationTestCase2<RestauarantMainActivity> {
 		});
 	}
 
+	/**
+	 * Tests for requests page
+	 * Whitebox testing
+	 */
 	public void testOrderLayoutItemsPopulate() {
 		TextView orderTitle = (TextView) mActivity.findViewById(uw.cse.dineon.restaurant.R.id.button_order_title);
 		TextView orderTime = (TextView) mActivity.findViewById(uw.cse.dineon.restaurant.R.id.label_order_time);
@@ -213,6 +230,10 @@ ActivityInstrumentationTestCase2<RestauarantMainActivity> {
 		assertNotNull(arrowButton);
 	}
 
+	/**
+	 * Tests for requests page
+	 * Whitebox testing
+	 */
 	public void testRequestLayoutItemsPopulate() {
 		TextView requestTitle = (TextView) mActivity.findViewById(uw.cse.dineon.restaurant.R.id.label_request_title);
 		TextView requestTime = (TextView) mActivity.findViewById(uw.cse.dineon.restaurant.R.id.label_request_time);

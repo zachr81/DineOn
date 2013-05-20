@@ -1,26 +1,28 @@
 package uw.cse.dineon.restaurant.test;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
-import java.util.ListIterator;
-
-import com.parse.Parse;
-import com.parse.ParseException;
-import com.parse.ParseUser;
+import java.util.GregorianCalendar;
 
 import uw.cse.dineon.library.CustomerRequest;
 import uw.cse.dineon.library.DineOnUser;
 import uw.cse.dineon.library.DiningSession;
 import uw.cse.dineon.library.MenuItem;
 import uw.cse.dineon.library.Order;
+import uw.cse.dineon.library.Reservation;
 import uw.cse.dineon.library.Restaurant;
 import uw.cse.dineon.library.util.DineOnConstants;
 import uw.cse.dineon.restaurant.active.RestauarantMainActivity;
 import android.content.Intent;
 import android.test.ActivityInstrumentationTestCase2;
 
+import com.parse.Parse;
+import com.parse.ParseException;
+import com.parse.ParseUser;
+
+/**
+ * Test class to cover basic cases of DineOnRestaurantActivity 
+ * @author mhotan
+ */
 public class DineOnRestaurantActivityTest extends
 ActivityInstrumentationTestCase2<RestauarantMainActivity> {
 
@@ -139,6 +141,25 @@ ActivityInstrumentationTestCase2<RestauarantMainActivity> {
 		} catch (Exception e) {
 			if (order != null) {
 				order.deleteFromCloud();
+			}
+		}
+	}
+	
+	/**
+	 * Test restaurant can confirm reservation
+	 * White box testing
+	 */
+	public void onReservationRequested() {
+		Reservation res = null;
+		try {
+			res = new Reservation(
+					mDineOnUser.getUserInfo(), mRestaurant.getInfo(), new GregorianCalendar().getTime());
+			res.saveOnCurrentThread();
+			mActivity.onReservationRequest(res);
+			res.deleteFromCloud();
+		} catch (Exception e) {
+			if (res != null) {
+				res.deleteFromCloud();
 			}
 		}
 	}
