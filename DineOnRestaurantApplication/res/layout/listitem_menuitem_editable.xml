@@ -17,6 +17,7 @@
         android:id="@+id/image_thumbnail_menuitem"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
         android:layout_marginRight="10dp"
         android:contentDescription="@string/label_menu_item_thumbnail"
         android:src="@drawable/placeholdermenuitem" />
