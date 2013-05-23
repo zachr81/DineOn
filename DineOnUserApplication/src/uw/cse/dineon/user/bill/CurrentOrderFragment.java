@@ -189,16 +189,25 @@ extends Fragment implements OnClickListener {
 		alert.show();
 	}
 	
+	/**
+	 * @return String value of subtotal
+	 */
 	public String getSubtotal() {
 		return ((TextView)mListView.findViewById(R.id.value_subtotal)).
 				getText().toString();
 	}
 
+	/**
+	 * @return String representatio of tax
+	 */
 	public String getTax() {
 		return ((TextView) mListView.findViewById(R.id.value_tax)).
 				getText().toString();
 	}
 	
+	/**
+	 * @return String representation of total bill
+	 */
 	public String getTotal() {
 		return ((TextView) mListView.findViewById(R.id.value_total)).
 				getText().toString();
@@ -431,19 +440,19 @@ extends Fragment implements OnClickListener {
 								items.add(m);
 							}
 						}
-						final Order newOrder = new Order(session.getTableID(),  
+						final Order NEW_ORDER = new Order(session.getTableID(),  
 								DineOnUserApplication.cachedUser.getUserInfo(), 
 								items);
 						
 						// save the new order
-						newOrder.saveInBackGround(new SaveCallback() {
+						NEW_ORDER.saveInBackGround(new SaveCallback() {
 
 							@Override
 							public void done(ParseException e) {
 								// TODO Auto-generated method stub
 								if (e == null) {
 									// successful, send the push notification
-									mListener.onPlaceOrder(newOrder);
+									mListener.onPlaceOrder(NEW_ORDER);
 								} else {
 									Log.d(TAG, "Couldn't save the new order: " + e.getMessage());
 								}

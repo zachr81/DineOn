@@ -170,7 +170,10 @@ RestaurantInfoFragment.RestaurantInfoListener {
 		//		Toast.LENGTH_SHORT).show();
 	}
 	
-	public void diningSessionChangeActivity(DiningSession dsession){
+	/**
+	 * @param dsession DiningSession to change to
+	 */
+	public void diningSessionChangeActivity(DiningSession dsession) {
 		Intent i = new Intent(thisActivity, RestaurantHomeActivity.class);
 		i.putExtra(DineOnConstants.KEY_DININGSESSION, dsession);
 		startActivity(i);
