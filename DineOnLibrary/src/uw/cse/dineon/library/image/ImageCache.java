@@ -3,7 +3,6 @@ package uw.cse.dineon.library.image;
 import java.text.ParseException;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
 
 import uw.cse.dineon.library.util.DineOnConstants;
 import android.content.ContentValues;

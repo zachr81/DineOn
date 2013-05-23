@@ -150,19 +150,21 @@ public class RestaurantInfo extends Storable {
 
 	/**
 	 * Returns the main image if it exists.
-	 * @return the main image if it exists, null else
+	 * @return the main image if it exists, null if no image is set to default
 	 */
 	public DineOnImage getMainImage() {
-		if (mImageList.isEmpty() || mMainImageIndex < 0 || mMainImageIndex >= mImageList.size()) {
+		if (mImageList.isEmpty()) {
 			return null;
-		} 
+		} else if (mMainImageIndex < 0 || mMainImageIndex >= mImageList.size()) {
+			return mImageList.get(0);
+		}
 		return mImageList.get(mMainImageIndex);
 	}
 
 	/**
 	 * @param pos int
 	 */
-	public void setImageMain(int pos) {
+	public void setMainImage(int pos) {
 		// This can be -1;
 		pos = Math.min(Math.max(0, pos), mImageList.size() - 1);
 		this.mMainImageIndex = pos;
@@ -174,6 +176,17 @@ public class RestaurantInfo extends Storable {
 	 */
 	public List<DineOnImage> getImageList() {
 		return new ArrayList<DineOnImage>(mImageList);
+	}
+	
+	/**
+	 * Adds an image to the end of the group of images.
+	 * @param image Image to add to the restaurant.
+	 */
+	void addImage(DineOnImage image) {
+		if (image == null) {
+			return;
+		}
+		mImageList.add(image);
 	}
 
 	/**

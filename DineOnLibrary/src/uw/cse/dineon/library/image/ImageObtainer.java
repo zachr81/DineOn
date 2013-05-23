@@ -40,8 +40,7 @@ public final class ImageObtainer {
 	 * @param resultCode Result code that will be passed back to onActivityResult
 	 * @throws IOException If the method is not able to create a temporary file directory
 	 */
-	public static void launchTakePictureIntent(Activity activity, int resultCode) 
-			throws IOException {
+	public static void launchTakePictureIntent(Activity activity, int resultCode) {
 		// Launch the intent to actually capture the image
 		Intent i = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 		activity.startActivityForResult(i, resultCode);
