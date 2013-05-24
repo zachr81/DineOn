@@ -54,15 +54,13 @@ RestaurantHomeMainFragment.ReferenceDataListener {
 		
 		if (extras != null && extras.containsKey(DineOnConstants.KEY_RESTAURANTINFO)) {
 			this.mRestaurant = extras.getParcelable(DineOnConstants.KEY_RESTAURANTINFO);
+		} else if (savedInstanceState != null 
+				&& savedInstanceState.containsKey(DineOnConstants.KEY_RESTAURANTINFO)) {
+			this.mRestaurant = savedInstanceState.getParcelable(DineOnConstants.KEY_RESTAURANTINFO);
 		} else if (DineOnUserApplication.getCurrentDiningSession() != null) {
 			this.mDiningSession = DineOnUserApplication.getCurrentDiningSession();
 			this.mRestaurant = this.mDiningSession.getRestaurantInfo();
-		} else if (savedInstanceState != null) {
-			if (savedInstanceState.containsKey(DineOnConstants.KEY_RESTAURANTINFO)) {
-				mRestaurant = savedInstanceState.getParcelable(DineOnConstants.KEY_RESTAURANTINFO);
-			}
 		}
-
 		setContentView(R.layout.activity_restaurant_home);
 		
 	}
