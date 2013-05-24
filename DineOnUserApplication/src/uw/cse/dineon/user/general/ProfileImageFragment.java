@@ -29,7 +29,7 @@ public class ProfileImageFragment extends Fragment {
 
 		mProfileImage = (ImageView) view.findViewById(R.id.image_profile_picture);
 		mProfileName = (TextView) view.findViewById(R.id.label_profile_name);
-		mProfileName.setText(DineOnUserApplication.cachedUser.getName());
+		mProfileName.setText(DineOnUserApplication.getDineOnUser().getName());
 		
 		return view;
 	}

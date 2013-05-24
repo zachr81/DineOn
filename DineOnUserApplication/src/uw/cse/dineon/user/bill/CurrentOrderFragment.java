@@ -6,13 +6,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.parse.ParseException;
-import com.parse.SaveCallback;
-
 import uw.cse.dineon.library.CurrentOrderItem;
 import uw.cse.dineon.library.DiningSession;
 import uw.cse.dineon.library.MenuItem;
 import uw.cse.dineon.library.Order;
+import uw.cse.dineon.library.util.DineOnConstants;
 import uw.cse.dineon.user.DineOnUserApplication;
 import uw.cse.dineon.user.R;
 import android.app.Activity;
@@ -34,6 +32,9 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.parse.ParseException;
+import com.parse.SaveCallback;
+
 /**
  * 
  * @author mhotan
@@ -42,8 +43,6 @@ public class CurrentOrderFragment
 extends Fragment implements OnClickListener {
 
 	private static final String TAG = CurrentBillFragment.class.getSimpleName();
-	
-	private static final double TAX = 0.08;
 
 	/**
 	 * an argument that can be used to pass this bundle explicit.
@@ -118,8 +117,8 @@ extends Fragment implements OnClickListener {
 			mAdapter = new OrderArrayAdapter(this.getActivity(), items, orderItems);
 			
 			mSubtotal.setText(mFormatter.format(totalPrice));
-			mTax.setText(mFormatter.format(totalPrice * TAX));
-			mTotal.setText(mFormatter.format(totalPrice * (1 + TAX)));
+			mTax.setText(mFormatter.format(totalPrice * DineOnConstants.TAX));
+			mTotal.setText(mFormatter.format(totalPrice * (1 + DineOnConstants.TAX)));
 		}
 		listview.setAdapter(mAdapter);
 	}
@@ -190,7 +189,8 @@ extends Fragment implements OnClickListener {
 	}
 	
 	/**
-	 * @return String value of subtotal
+	 * Return the subtotal for current order.
+	 * @return subtotal
 	 */
 	public String getSubtotal() {
 		return ((TextView)mListView.findViewById(R.id.value_subtotal)).
@@ -198,7 +198,8 @@ extends Fragment implements OnClickListener {
 	}
 
 	/**
-	 * @return String representatio of tax
+	 * Return the tax for order.
+	 * @return tax
 	 */
 	public String getTax() {
 		return ((TextView) mListView.findViewById(R.id.value_tax)).
@@ -206,7 +207,8 @@ extends Fragment implements OnClickListener {
 	}
 	
 	/**
-	 * @return String representation of total bill
+	 * Return the total for the order.
+	 * @return total
 	 */
 	public String getTotal() {
 		return ((TextView) mListView.findViewById(R.id.value_total)).
@@ -431,7 +433,7 @@ extends Fragment implements OnClickListener {
 					
 				case R.id.button_place_order:
 					// check to see if user is currently in a dining session
-					DiningSession session = DineOnUserApplication.cachedUser.getDiningSession();
+					DiningSession session = DineOnUserApplication.getCurrentDiningSession();
 					if (session != null) {
 						// create and save the order
 						List<MenuItem> items = new ArrayList<MenuItem>();
@@ -440,8 +442,9 @@ extends Fragment implements OnClickListener {
 								items.add(m);
 							}
 						}
+
 						final Order NEW_ORDER = new Order(session.getTableID(),  
-								DineOnUserApplication.cachedUser.getUserInfo(), 
+								DineOnUserApplication.getUserInfo(), 
 								items);
 						
 						// save the new order
@@ -476,8 +479,8 @@ extends Fragment implements OnClickListener {
 					double newTotal = priceChange 
 							+ Double.parseDouble(mSubtotal.getText().toString().substring(1));
 					mSubtotal.setText(mFormatter.format(newTotal));
-					mTax.setText(mFormatter.format((newTotal * TAX)));
-					mTotal.setText(mFormatter.format((newTotal * (1 + TAX))));
+					mTax.setText(mFormatter.format((newTotal * DineOnConstants.TAX)));
+					mTotal.setText(mFormatter.format((newTotal * (1 + DineOnConstants.TAX))));
 				}
 			}
 
