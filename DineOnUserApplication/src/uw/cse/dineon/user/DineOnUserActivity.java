@@ -339,7 +339,6 @@ OrderUpdateListener /* manipulation of list from the current order activity */ {
 
 	@Override
 	public void onInitialDiningSessionReceived(DiningSession session) {
-		// TODO Auto-generated method stub
 
 		// DEBUG:
 		Log.d("GOT_DINING_SESSION_FROM_CLOUD", session.getTableID() + "");
