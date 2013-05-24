@@ -52,13 +52,11 @@ RestaurantHomeMainFragment.ReferenceDataListener {
 
 		Bundle extras = getIntent().getExtras();
 		
-		if (DineOnUserApplication.getCurrentDiningSession() != null) {
+		if (extras != null && extras.containsKey(DineOnConstants.KEY_RESTAURANTINFO)) {
+			this.mRestaurant = extras.getParcelable(DineOnConstants.KEY_RESTAURANTINFO);
+		} else if (DineOnUserApplication.getCurrentDiningSession() != null) {
 			this.mDiningSession = DineOnUserApplication.getCurrentDiningSession();
 			this.mRestaurant = this.mDiningSession.getRestaurantInfo();
-		} else if (extras != null) {
-			if (extras.containsKey(DineOnConstants.KEY_RESTAURANTINFO)) {
-				mRestaurant = extras.getParcelable(DineOnConstants.KEY_RESTAURANTINFO);
-			}
 		} else if (savedInstanceState != null) {
 			if (savedInstanceState.containsKey(DineOnConstants.KEY_RESTAURANTINFO)) {
 				mRestaurant = savedInstanceState.getParcelable(DineOnConstants.KEY_RESTAURANTINFO);
