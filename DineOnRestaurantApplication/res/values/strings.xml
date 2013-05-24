@@ -53,5 +53,11 @@
     <string name="label_orders">Orders:</string>
     <string name="label_order_contents">Order Contents</string>
     <string name="label_message_customer">Message Customer</string>
+    <string name="content_description_take_new_picture">Take a picture and add it to your restaurant</string>
+    <string name="content_description_get_image_from_gallery">Get an image from your gallery and add it to your restaurant.</string>
+    <string name="content_description_delete_current_image">Delete the currently selected image from your restaurant.</string>
+    <string name="checkbox_default_image">Default</string>
+    <string name="label_address">Address</string>
+    <string name="label_phone">Phone</string>
 
 </resources>

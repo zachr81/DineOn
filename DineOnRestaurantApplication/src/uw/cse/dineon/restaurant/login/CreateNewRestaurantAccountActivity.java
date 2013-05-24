@@ -43,20 +43,8 @@ implements CreateNewAccountListener {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_create_new_account);
-
 		This = this;
 	}
-
-//	/**
-//	 * This automates the addition of the User Intent. Should never be called
-//	 * when mUser is null.
-//	 * @param intent Intent
-//	 */
-//	@Override
-//	public void startActivity(Intent intent) {
-////		intent.putExtra(DineOnConstants.KEY_RESTAURANT, mRestaurant);
-//		super.startActivity(intent);
-//	}
 
 	@Override
 	public void submitNewAccount(String username, String email, String pw,

@@ -3,17 +3,27 @@ package uw.cse.dineon.restaurant.profile;
 import uw.cse.dineon.library.MenuItem;
 import uw.cse.dineon.library.Restaurant;
 import uw.cse.dineon.library.RestaurantInfo;
+import uw.cse.dineon.library.image.DineOnImage;
+import uw.cse.dineon.library.image.ImageCache.ImageGetCallback;
+import uw.cse.dineon.library.image.ImageIO;
+import uw.cse.dineon.library.image.ImageObtainer;
+import uw.cse.dineon.library.util.DineOnConstants;
 import uw.cse.dineon.restaurant.DineOnRestaurantActivity;
 import uw.cse.dineon.restaurant.R;
 import android.app.ActionBar;
 import android.app.ActionBar.Tab;
 import android.app.ActionBar.TabListener;
-import android.app.Activity;
 import android.app.FragmentTransaction;
+import android.content.Context;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.Menu;
+import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.parse.ParseException;
@@ -26,8 +36,8 @@ import com.parse.SaveCallback;
  * @author mhotan
  */
 public class ProfileActivity extends DineOnRestaurantActivity implements
-		TabListener, RestaurantInfoFragment.InfoChangeListener,
-		MenuItemsFragment.MenuItemListener {
+TabListener, RestaurantInfoFragment.InfoChangeListener,
+MenuItemsFragment.MenuItemListener {
 
 	private static final String TAG = ProfileActivity.class.getSimpleName();
 
@@ -37,65 +47,48 @@ public class ProfileActivity extends DineOnRestaurantActivity implements
 	 */
 	private int mLastTabPosition;
 
-	public static final String LAST_FRAG_TAG = "LAST_FRAG";
+	/**
+	 * Last used fragment string.  used to reference for fragment substitution.
+	 */
+	private static final String LAST_FRAG_TAG = "LAST_FRAG";
+
+	private MenuItemsFragment mItemsFragment;
+	private RestaurantInfoFragment mRestInfoFragment;
+	
+	private Context This;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		// setContentView(R.layout.activity_restaurant_profile);
-
-		// TODO Grab which action bar is selected
+		This = this;
+		
 		mLastTabPosition = 1; // Let the tab be either the 0 or 1
 
-		/*
-		 * android.support.v4.app.FragmentTransaction ft =
-		 * getSupportFragmentManager().beginTransaction();
-		 * ft.setCustomAnimations(android.R.anim.fade_in,
-		 * android.R.anim.fade_out); //ft.add(R.id.container_profile_fragment,
-		 * frag); ft.commit();
-		 */
-//		Fragment frag;
-		if (isLoggedIn()) {
-			// If logged in fill views appropriately
-			// Set the actionbar with associated tabs
-			ActionBar ab = getActionBar();
-			if (ab != null) { // Support older builds
-				ab.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
-				ab.setTitle(getRestaurant().getName());
-				ab.setDisplayShowTitleEnabled(true);
-				ab.addTab(ab.newTab()
-						.setText(R.string.tab_actionbar_restaurant_profile)
-						.setTabListener(this));
-				ab.addTab(ab.newTab()
-						.setText(R.string.tab_actionbar_restaurant_menuitems)
-						.setTabListener(this));
-			}
-
-			// Obtain the most recently used Restaurant via intent or call
-			// TODO Fix Fragment instantiation issues
-			// frag = RestaurantInfoFragment.newInstance(new RestaurantInfo());
-		} else {
+		if (!isLoggedIn()) {
 			Log.w(TAG, "User not logged in cant show profile");
-//			frag = new NotLoggedInFragment();
+			return;
 		}
 
+		// If logged in fill views appropriately
+		// Set the actionbar with associated tabs
+		ActionBar ab = getActionBar();
+		if (ab != null) { // Support older builds
+			ab.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+			ab.setTitle(getRestaurant().getName());
+			ab.setDisplayShowTitleEnabled(true);
+			ab.addTab(ab.newTab()
+					.setText(R.string.tab_actionbar_restaurant_profile)
+					.setTabListener(this));
+			ab.addTab(ab.newTab()
+					.setText(R.string.tab_actionbar_restaurant_menuitems)
+					.setTabListener(this));
+		}
 	}
 
 	@Override
 	public void updateUI() {
-
-		super.updateUI();
-		/*
-		 * Fragment frag; android.support.v4.app.FragmentTransaction ft =
-		 * getSupportFragmentManager() .beginTransaction();
-		 * //ft.setCustomAnimations(android.R.anim.fade_in,
-		 * android.R.anim.fade_out); frag =
-		 * MenuItemsFragment.newInstance(getRestaurant().getInfo());
-		 * ft.replace(android.R.id.content, frag); ft.commit();
-		 */
-
-		
+		super.updateUI();	
 	}
 
 	@Override
@@ -109,18 +102,12 @@ public class ProfileActivity extends DineOnRestaurantActivity implements
 			itemProfile.setEnabled(false);
 			itemProfile.setVisible(false);
 		}
-
 		return true;
 	}
-
-	/*
-	 * Tab Listener to bring up the correct fragment
-	 */
 
 	@Override
 	public void onTabSelected(Tab tab, FragmentTransaction ft) {
 		// Obtain a reference on which tab is being selected
-		Log.v(TAG, "Tab selected!");
 		int pos = tab.getPosition();
 		int diff = pos - mLastTabPosition;
 
@@ -135,8 +122,8 @@ public class ProfileActivity extends DineOnRestaurantActivity implements
 		Fragment frag = null;
 		if (diff < 0) { // move to a tab that relatively left
 
-			frag = RestaurantInfoFragment.newInstance(info);
-
+			frag = new RestaurantInfoFragment();
+			mRestInfoFragment = (RestaurantInfoFragment) frag;
 			// Assign the animation where the fragment slides
 			// in from the right
 			supFT.setCustomAnimations(android.R.anim.slide_in_left,
@@ -144,7 +131,8 @@ public class ProfileActivity extends DineOnRestaurantActivity implements
 		} else { // move the tab relatively rights
 			// TODO Correctly obtain the Restaurant
 
-			frag = MenuItemsFragment.newInstance(info);
+			frag = new MenuItemsFragment();
+			mItemsFragment = (MenuItemsFragment)frag;
 
 			// Assign the animation where the fragment slides
 			// in from the
@@ -163,12 +151,12 @@ public class ProfileActivity extends DineOnRestaurantActivity implements
 
 	@Override
 	public void onTabReselected(Tab tab, FragmentTransaction ft) {
-		// TODO Refresh the tab
+		// Nothing to really do.
 	}
 
 	@Override
 	public void onTabUnselected(Tab tab, FragmentTransaction ft) {
-		// As of May 1st cant think of anything to add here
+		// Nothing to really do.
 	}
 
 	// ////////////////////////////////////////////////////
@@ -178,7 +166,7 @@ public class ProfileActivity extends DineOnRestaurantActivity implements
 	@Override
 	public void onMenuItemDeleted(MenuItem item) {
 		Toast.makeText(this, "Delete not available yet", Toast.LENGTH_SHORT)
-				.show();
+		.show();
 	}
 
 	@Override
@@ -193,7 +181,7 @@ public class ProfileActivity extends DineOnRestaurantActivity implements
 
 						@Override
 						public void done(ParseException e) {
-							notifyAllUsersOfRestaurantChange();
+							notifyAllRestaurantChange();
 							Toast.makeText(getApplicationContext(),
 									"Menu Item Added!", Toast.LENGTH_SHORT)
 									.show();
@@ -214,7 +202,7 @@ public class ProfileActivity extends DineOnRestaurantActivity implements
 			@Override
 			public void done(ParseException e) {
 				if (e == null) {
-					notifyAllUsersOfRestaurantChange();
+					notifyAllRestaurantChange();
 					Toast.makeText(getApplicationContext(),
 							"Menu Item Updated!", Toast.LENGTH_SHORT).show();
 				} else {
@@ -231,7 +219,7 @@ public class ProfileActivity extends DineOnRestaurantActivity implements
 			@Override
 			public void done(ParseException e) {
 				if (e == null) {
-					notifyAllUsersOfRestaurantChange();
+					notifyAllRestaurantChange();
 					Toast.makeText(getApplicationContext(),
 							"Restaurant Info Updated!", Toast.LENGTH_SHORT)
 							.show();
@@ -241,82 +229,158 @@ public class ProfileActivity extends DineOnRestaurantActivity implements
 				}
 			}
 		});
-
-	}
-
-	/**
-	 * @author cronus91
-	 *
-	 * @param <T> Fragment class to listen to
-	 */
-	public class TabListener<T extends Fragment> implements
-			ActionBar.TabListener {
-		private Fragment mFragment;
-		private final Activity mActivity;
-		private final String mTag;
-		private final Class<T> mClass;
-
-		/**
-		 * Constructor used each time a new tab is created.
-		 * 
-		 * @param activity
-		 *            The host Activity, used to instantiate the fragment
-		 * @param tag
-		 *            The identifier tag for the fragment
-		 * @param clz
-		 *            The fragment's Class, used to instantiate the fragment
-		 */
-		public TabListener(Activity activity, String tag, Class<T> clz) {
-			mActivity = activity;
-			mTag = tag;
-			mClass = clz;
-		}
-
-		/* The following are each of the ActionBar.TabListener callbacks */
-
-		@Override
-		public void onTabSelected(Tab tab, FragmentTransaction ft) {
-
-			android.support.v4.app.FragmentTransaction supFT = getSupportFragmentManager()
-					.beginTransaction();
-
-			RestaurantInfo info = getRestaurant().getInfo();
-			assert (info != null);
-
-			//Commented out for findbugs
-			//Fragment frag;
-			//frag = RestaurantInfoFragment.newInstance(info);
-
-			// Check if the fragment is already initialized
-			if (mFragment == null) {
-				// If not, instantiate and add it to the activity
-				mFragment = Fragment.instantiate(mActivity, mClass.getName());
-				supFT.add(android.R.id.content, mFragment, mTag);
-			} else {
-				// If it exists, simply attach it in order to show it
-				supFT.attach(mFragment);
-			}
-			supFT.commit();
-		}
-		@Override
-		public void onTabUnselected(Tab tab, FragmentTransaction ft) {
-			if (mFragment != null) {
-				// Detach the fragment, because another one is being attached
-				android.support.v4.app.FragmentTransaction supFT = getSupportFragmentManager()
-						.beginTransaction();
-				supFT.detach(mFragment);
-				supFT.commit();
-			}
-		}
-		@Override
-		public void onTabReselected(Tab tab, FragmentTransaction ft) {
-			// User selected the already selected tab. Usually do nothing.
-		}
 	}
 
 	@Override
 	public RestaurantInfo getInfo() {
+		if (getRestaurant() == null) {
+			return null;
+		}
 		return getRestaurant().getInfo();
+	}
+
+	@Override
+	public void onRequestTakePicture() {
+		ImageObtainer.launchTakePictureIntent(this, DineOnConstants.REQUEST_TAKE_PHOTO);
+	}
+
+	@Override
+	public void onRequestGetPictureFromGallery() {
+		ImageObtainer.launchChoosePictureIntent(this, DineOnConstants.REQUEST_CHOOSE_PHOTO);
+	}
+
+	@Override
+	public void onSelectImageAsDefault(int i) {
+		// TODO set image at index I as  the default
+	}
+	
+	@Override
+	public void onImageRemoved(int index) {
+		getRestaurant().getInfo().removeImageAt(index);
+		getRestaurant().saveInBackGround(new SaveCallback() {
+			
+			@Override
+			public void done(ParseException e) {
+				notifyAllRestaurantChange();
+			}
+		});
+	}
+	
+	@Override
+	public void getThisImage(DineOnImage image, final ViewGroup layout, final int id) {
+		
+		// Make a potentiall asyncronous call to download the image
+		// from local storage or network.
+		mImageCache.getImageFromCache(image, new ImageGetCallback() {
+			
+			@Override
+			public void onImageReceived(Exception e, Bitmap b) {
+				if (e != null) { // Error
+					Log.e(TAG, "Unable to get image because e: " + e.getMessage());
+					return;
+				}
+				// we go the picture.
+				if (mRestInfoFragment == null) {
+					Log.e(TAG, "Can't replace the correct view fragment is null");
+					return;
+				}
+				
+				mRestInfoFragment.replaceWithImage(layout, b, id);
+			}
+		});
+	}
+
+	/**
+	 * Adds the photo to the restaurant. This method takes care of 
+	 * all the image sizing and alignment.
+	 * 
+	 * This method will notify all the views in this activity that 
+	 * need to know about a new photo.
+	 * 
+	 * This method will also handle the save of the new image
+	 * While also adding it to the cache.
+	 * 
+	 * @param uri Uri for the image to download.
+	 */
+	private void addPhotoToRestaurant(Uri uri) {
+		Bitmap b = ImageIO.loadBitmapFromURI(getContentResolver(), uri);
+		final DineOnImage NEWIMG = new DineOnImage(b, null);
+
+		if (mRestInfoFragment != null) {
+			mRestInfoFragment.addImage(b);
+		}
+		// Recycle the image after adding it.
+		b.recycle();
+
+		Restaurant rest = getRestaurant();
+		rest.addImage(NEWIMG);
+		rest.saveInBackGround(new SaveCallback() {
+
+			@Override
+			public void done(ParseException e) {
+				if (e != null) {
+					// Able to save the restaurant
+					mImageCache.addToCache(NEWIMG);	
+				} else {
+					// unable to save restaurant
+					Log.w(TAG, "Unable to update restaurant with new image in the cloud");
+				}
+			}
+		});
+
+	}
+
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+
+		if (resultCode != RESULT_OK) {
+			Log.d(TAG, "User cancelled job for request code " + requestCode);
+			return;
+		}
+
+		Uri u = data.getData();
+		if (u == null) {
+			Log.e(TAG, "Error getting image null Uri returned");
+			return;
+		}
+
+		switch (requestCode) {
+		// Took a photo.
+		case DineOnConstants.REQUEST_TAKE_PHOTO:
+		case DineOnConstants.REQUEST_CHOOSE_PHOTO: 
+			addPhotoToRestaurant(u);
+			break;
+		default:
+			Log.w(TAG, "Unsupported operation occured onActivityResult");
+		}
+	}
+
+	/**
+	 * 
+	 * @author mhotan
+	 */
+	private class AsynchronousImageSaver extends AsyncTask<Void, Void, DineOnImage> {
+
+		private final Bitmap mBitmap;
+		
+		/**
+		 * 
+		 * @param b bitmap to save in background thread.
+		 */
+		public AsynchronousImageSaver(Bitmap b) {
+			if (b == null) {
+				throw new NullPointerException("AsynchronousImageSaver image cannot be null");
+			}
+			mBitmap = b;
+		}
+		
+		@Override
+		protected DineOnImage doInBackground(Void... params) {
+			// TODO Auto-generated method stub
+			return null;
+		}
+		
 	}
 
 }
