@@ -5,7 +5,6 @@ import java.text.NumberFormat;
 import uw.cse.dineon.library.DiningSession;
 import uw.cse.dineon.user.DineOnUserApplication;
 import uw.cse.dineon.user.R;
-import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -62,22 +61,22 @@ OnClickListener {
 		mTip.setText("" + mCurTipPercent + "%");
 		mTipBar.setOnSeekBarChangeListener(this);
 		
-		mSession = DineOnUserApplication.cachedUser.getDiningSession();
+		mSession = DineOnUserApplication.getCurrentDiningSession();
 		
-		// Total is currently zer
-		//mTotalAmount = 0.0;
 		return view;
 	}
 	
 	/**
-	 * Activities that own this fragment can use this to determine.
-	 * TODO Replace the Dining Session string with instance 
-	 * @param session to set
+	 * Update the UI fragment to reflect current bill.
+	 * @param subtotal of current order
+	 * @param tax for current order
 	 */
 	public void setBill(String subtotal, String tax) {
 		
-		if (this.mSession == null)
-			DineOnUserApplication.cachedUser.getDiningSession();
+		if (this.mSession == null) {
+
+			DineOnUserApplication.getCurrentDiningSession();
+		}
 
 		mTitle.setText("Current Bill for " + mSession.getRestaurantInfo().getName());
 		

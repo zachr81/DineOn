@@ -112,7 +112,7 @@ RestaurantInfoFragment.RestaurantInfoListener {
 	}
 	
 	/**
-	 * 
+	 * Add the list of restaurant infos to the list.
 	 */
 	public void addListOfRestaurantInfos() {
 		addRestaurantInfos(this.mRestaurants);
@@ -120,7 +120,6 @@ RestaurantInfoFragment.RestaurantInfoListener {
 	
 	/**
 	 * Add a new restaurant info object to the restaurant list.
-	 * 
 	 * @param infos RestaurantInfo object to add to list.
 	 */
 	public void addRestaurantInfos(List<RestaurantInfo> infos) {
@@ -156,12 +155,9 @@ RestaurantInfoFragment.RestaurantInfoListener {
 	////   Call backs for Fragment methods
 	//////////////////////////////////////////////////////////////////////
 
-	// Method inherited from Restaurant list listener 
-	// for use when user selects a restaurant to focus on
 	@Override
 	public void onRestaurantSelected(RestaurantInfo restaurant) {
 		// Continue on to next activity
-		
 		Intent i = new Intent(this, RestaurantHomeActivity.class);
 		// send over the restaurantInfo
 		i.putExtra(DineOnConstants.KEY_RESTAURANTINFO, restaurant);
@@ -170,7 +166,10 @@ RestaurantInfoFragment.RestaurantInfoListener {
 		//		Toast.LENGTH_SHORT).show();
 	}
 	
-	public void diningSessionChangeActivity(DiningSession dsession){
+	/**
+	 * @param dsession DiningSession to change to
+	 */
+	public void diningSessionChangeActivity(DiningSession dsession) {
 		Intent i = new Intent(thisActivity, RestaurantHomeActivity.class);
 		i.putExtra(DineOnConstants.KEY_DININGSESSION, dsession);
 		startActivity(i);
@@ -219,13 +218,11 @@ RestaurantInfoFragment.RestaurantInfoListener {
 
 	@Override
 	public RestaurantInfo getCurrentRestaurant() {
-		// TODO Auto-generated method stub
 		return currentRestaurant;
 	}
 	
 	@Override
 	public void setCurrentRestaurant(RestaurantInfo r) {
-		// TODO Auto-generated method stub
 		currentRestaurant = r;
 	}
 	
