@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" >
+    android:layout_height="match_parent" 
+    android:orientation="horizontal" >
 
-    <fragment
-        android:id="@+id/fragment1"
-        android:name="uw.cse.dineon.user.general.ProfileFragment"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
-
-</FrameLayout>
+	<FrameLayout 
+	    android:id="@+id/profile_container"
+	    android:layout_width="match_parent"
+	    android:layout_height="match_parent"
+	    android:layout_weight="2" >
+	
+	</FrameLayout>
+</LinearLayout>

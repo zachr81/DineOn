@@ -14,6 +14,9 @@
             android:id="@+id/image_profile_picture"
             android:layout_width="125dp"
             android:layout_height="125dp"
+            android:scaleType="fitXY"
+            android:layout_margin="0dp"
+            android:padding="0dp"
             android:contentDescription="@string/image_profile_picture_placeholder"
             android:src="@drawable/user_default_placeholder" />
         
@@ -24,5 +27,60 @@
             android:layout_weight="0.26"
             android:text="Save Changes" />
     </LinearLayout>
+    <EditText
+        android:id="@+id/user_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="textPersonName" >
 
+        <requestFocus />
+    </EditText>
+    <TextView
+        android:id="@+id/label_user_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Username"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <EditText
+        android:id="@+id/user_phone"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="phone" />
+    <TextView
+        android:id="@+id/label_user_phone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Phone Number"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+    
+    
+    <EditText
+        android:id="@+id/user_old_pass"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="textPassword" />
+    <TextView
+        android:id="@+id/label_old_pass"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Current Password"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+    
+    <EditText
+        android:id="@+id/user_new_pass"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="textPassword" />
+    <TextView
+        android:id="@+id/label_new_pass"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="New Password"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+    
 </LinearLayout>

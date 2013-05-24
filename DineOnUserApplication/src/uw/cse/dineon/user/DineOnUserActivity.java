@@ -57,7 +57,7 @@ OrderUpdateListener /* manipulation of list from the current order activity */ {
 	/**
 	 * Satellite for communication.
 	 */
-	private UserSatellite mSat;
+	protected UserSatellite mSat;
 
 	/**
 	 * A self reference.
@@ -189,6 +189,7 @@ OrderUpdateListener /* manipulation of list from the current order activity */ {
 		// data leakage to the login page
 		DineOnUserApplication.cachedUser = null;
 		startActivity(i);
+		this.finish();
 	}
 
 	/**
