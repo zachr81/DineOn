@@ -19,7 +19,7 @@ import com.parse.ParseUser;
  * @author Espeo196, mhotan
  *
  */
-public class RestaurantInfo extends Storable {
+public class RestaurantInfo extends LocatableStorable {
 
 	private static final String TAG = RestaurantInfo.class.getSimpleName();
 
@@ -189,6 +189,19 @@ public class RestaurantInfo extends Storable {
 		mImageList.add(image);
 	}
 
+	/**
+	 * For a zero based index it removes the image at index.
+	 * @param index Index to remove
+	 * @return True upon success, false on failure
+	 */
+	public boolean removeImageAt(int index) {
+		if (index < 0 || index >= mImageList.size()) {
+			return false;
+		}
+		mImageList.remove(index);
+		return true;
+	}
+	
 	/**
 	 * Retrieves menu with associated name menuName.
 	 * 
