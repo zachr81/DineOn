@@ -5,7 +5,6 @@ import java.text.NumberFormat;
 import uw.cse.dineon.library.DiningSession;
 import uw.cse.dineon.user.DineOnUserApplication;
 import uw.cse.dineon.user.R;
-import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -72,12 +71,14 @@ OnClickListener {
 	/**
 	 * Activities that own this fragment can use this to determine.
 	 * TODO Replace the Dining Session string with instance 
-	 * @param session to set
+	 * @param subtotal String price of bill
+	 * @param tax String tax value
 	 */
 	public void setBill(String subtotal, String tax) {
 		
-		if (this.mSession == null)
+		if (this.mSession == null) {
 			DineOnUserApplication.cachedUser.getDiningSession();
+		}
 
 		mTitle.setText("Current Bill for " + mSession.getRestaurantInfo().getName());
 		
