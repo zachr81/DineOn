@@ -1,11 +1,13 @@
 package uw.cse.dineon.library.image;
 
-import java.io.FileNotFoundException;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Date;
 
 import uw.cse.dineon.library.util.DineOnConstants;
 import android.content.ContentResolver;
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -28,6 +30,30 @@ public final class ImageIO {
 
 	private static final String TAG = ImageIO.class.getSimpleName();
 
+	private static final String JPEG_FILE_PREFIX = "DineOnImage_";
+	private static final String JPEG_FILE_SUFFIX = ".jpg";
+	
+	/**
+	 * Creates a temporary file from the context inputted.
+	 * This File is only temporary and therefore has a time span.
+	 * It will eventually to be removed
+	 * @param ctx Context to grab temporary directory
+	 * @return temporary file for image storage
+	 * @throws IOException If there was an error creating a temp file
+	 */
+	public static File createImageFile(Context ctx) throws IOException {
+	    // Create an image file name
+	    String timeStamp = 
+	        DineOnConstants.getCurrentDateFormat().format(new Date());
+	    String imageFileName = JPEG_FILE_PREFIX + timeStamp + "_";
+	    File image = File.createTempFile(
+	        imageFileName, 
+	        JPEG_FILE_SUFFIX, 
+	        ctx.getCacheDir()
+	    );
+	    return image;
+	}
+	
 	/**
 	 * Gives the size of the image at the given uri.
 	 * @param resolver Content resolver to establish access
