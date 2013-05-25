@@ -1,16 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:orientation="vertical" >
 
-    <TextView
-        android:id="@+id/label_user_name"
-        android:layout_width="wrap_content"
+    
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Username"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
-   <EditText
+        android:orientation="horizontal" >
+
+        <ImageButton
+            android:id="@+id/image_profile_picture"
+            android:layout_width="125dp"
+            android:layout_height="125dp"
+            android:scaleType="fitXY"
+            android:layout_margin="0dp"
+            android:padding="0dp"
+            android:contentDescription="@string/image_profile_picture_placeholder"
+            android:src="@drawable/user_default_placeholder" />
+        
+        <Button
+            android:id="@+id/button_save_changes"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.26"
+            android:text="Save Changes" />
+    </LinearLayout>
+    <EditText
         android:id="@+id/user_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -19,46 +36,51 @@
 
         <requestFocus />
     </EditText>
-    
-    
     <TextView
-        android:id="@+id/label_user_phone"
+        android:id="@+id/label_user_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Phone Number"
+        android:text="Username"
         android:textAppearance="?android:attr/textAppearanceMedium" />
+
     <EditText
         android:id="@+id/user_phone"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10"
         android:inputType="phone" />
-
-    
     <TextView
-        android:id="@+id/label_old_pass"
+        android:id="@+id/label_user_phone"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Current Password"
+        android:text="Phone Number"
         android:textAppearance="?android:attr/textAppearanceMedium" />
+    
+    
     <EditText
         android:id="@+id/user_old_pass"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10"
         android:inputType="textPassword" />
-
     <TextView
-        android:id="@+id/label_new_pass"
+        android:id="@+id/label_old_pass"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="New Password"
+        android:text="Current Password"
         android:textAppearance="?android:attr/textAppearanceMedium" />
+    
     <EditText
         android:id="@+id/user_new_pass"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10"
         android:inputType="textPassword" />
-        
+    <TextView
+        android:id="@+id/label_new_pass"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="New Password"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+    
 </LinearLayout>

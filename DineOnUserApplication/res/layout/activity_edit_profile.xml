@@ -6,7 +6,7 @@
     
     <fragment
         android:id="@+id/fragment_edit_top"
-        android:name="uw.cse.dineon.user.general.ProfileEditTopFragment"
+        android:name="uw.cse.dineon.user.general.ProfileEditFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
     

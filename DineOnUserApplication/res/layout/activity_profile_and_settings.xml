@@ -1,14 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/profile_id"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" 
-    android:orientation="horizontal" >
+    android:layout_height="match_parent"
+    android:orientation="vertical" 
+    android:baselineAligned="false">
 
-	<FrameLayout 
-	    android:id="@+id/profile_container"
-	    android:layout_width="match_parent"
-	    android:layout_height="match_parent"
-	    android:layout_weight="2" >
-	
-	</FrameLayout>
+    <FrameLayout     
+        android:id="@+id/profile_id"
+        android:layout_width="match_parent"
+    	android:layout_height="match_parent">
+    </FrameLayout>
+<!-- <fragment
+        android:id="@+id/fragmentProfileImage"
+        android:name="uw.cse.dineon.user.general.ProfileImageFragment"
+        android:layout_weight="1"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        tools:layout="@layout/profile_image_fragment" />
+    
+    <fragment
+        android:id="@+id/fragmentTabView"
+        android:name="uw.cse.dineon.user.general.ProfileTabsFragment"
+        android:layout_weight="2"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        tools:layout="@layout/profile_tab_fragment" />
+	-->
+<!--<fragment
+        android:id="@+id/fragmentProfileImageEdit"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <fragment
+        android:id="@+id/fragmentTabViewEdit"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="bottom" />
+  -->
+
 </LinearLayout>

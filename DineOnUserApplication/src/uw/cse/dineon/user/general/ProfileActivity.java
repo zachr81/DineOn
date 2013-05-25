@@ -3,12 +3,14 @@ package uw.cse.dineon.user.general;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.parse.ParseException;
 import com.parse.ParseUser;
+import com.parse.SaveCallback;
 
+import uw.cse.dineon.library.UserInfo;
 import uw.cse.dineon.user.DineOnUserActivity;
 import uw.cse.dineon.user.DineOnUserApplication;
 import uw.cse.dineon.user.R;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -16,32 +18,39 @@ import android.util.Log;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup.LayoutParams;
 import android.widget.FrameLayout;
+import android.widget.Toast;
 
 /**
  * Activity that manages the profile and settings fragments.
  * 
  * @author mhotan
  */
-public class ProfileActivity extends DineOnUserActivity {
+public class ProfileActivity extends DineOnUserActivity implements 
+		ProfileEditFragment.InfoChangeListener {
 
 	private static final String STATE_SELECTED_NAVIGATION_ITEM = "selected_navigation_item";
 
 	private static final String TAG = ProfileActivity.class.getSimpleName();
-	
-	private ProfileFragment mProfileFragment;
+	private Fragment frag;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_profile_and_settings);
-		Fragment frag = 
-				ProfileFragment.newInstance(DineOnUserApplication.cachedUser.getUserInfo());
-		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-		ft.add(frag, "profile_fragment");
-		ft.addToBackStack(null);
-		ft.commit();
+		FrameLayout frame = new FrameLayout(this);
+		frame.setId(10101010);
+		setContentView(frame, 
+				new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
 		
+	//	setContentView(R.layout.activity_profile_and_settings);
+		if(savedInstanceState == null) {
+		frag = ProfileImageFragment.newInstance(DineOnUserApplication.getUserInfo());
+			FragmentTransaction ft = this.getSupportFragmentManager().beginTransaction();
+			ft.add(10101010, frag, "image_frag");
+			ft.addToBackStack(null);
+			ft.commit();	
+		}
 	}
 
 	@Override
@@ -88,21 +97,14 @@ public class ProfileActivity extends DineOnUserActivity {
 	
 	@Override
 	public boolean onOptionsItemSelected(android.view.MenuItem item) {
-		Intent i = null;
 		switch (item.getItemId()) {
 		case R.id.option_edit_profile:
-		//	i = new Intent(getApplicationContext(), ProfileEditActivity.class);
-			View view = findViewById(R.id.profile_container);
-			FrameLayout container = (FrameLayout) view;
-
-			container.setVisibility(View.VISIBLE);
-
 			
 			Fragment frag = 
-				ProfileEditTopFragment.newInstance(DineOnUserApplication.cachedUser.getUserInfo());
+				ProfileEditFragment.newInstance(DineOnUserApplication.getUserInfo());
 			FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
 			
-			ft.replace(R.id.profile_container, frag);
+			ft.replace(10101010, frag);
 			ft.addToBackStack(null);
 			
 			ft.commit();
@@ -117,5 +119,26 @@ public class ProfileActivity extends DineOnUserActivity {
 		}
 		return true;
 	}
-	
+
+	@Override
+	public void onUserInfoUpdate(UserInfo user) {
+		
+		user.saveInBackGround(new SaveCallback() {
+			@Override
+			public void done(ParseException e) {
+				if (e == null) {
+					Toast.makeText(getApplicationContext(),
+							"User Info Updated!", Toast.LENGTH_LONG)
+							.show();
+				} else {
+					Log.e(TAG, e.getMessage() + " #" + e.getCode());
+				}
+			}
+		});
+	}
+
+	@Override
+	public UserInfo getInfo() {
+		return DineOnUserApplication.getUserInfo();
+	}
 }
