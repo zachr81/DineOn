@@ -368,10 +368,9 @@ MenuItemsFragment.MenuItemListener {
 
 		private final Bitmap mBitmap;
 		private final Restaurant mRestaurant;
-		private boolean isDownloading;
 		
 		/**
-		 * 
+		 * Creates an asynchronous process to save images for this restaurant.
 		 * @param b bitmap to save in background thread.
 		 * @param rest Restaurant to save image to.
 		 */
@@ -381,7 +380,12 @@ MenuItemsFragment.MenuItemListener {
 			}
 			mBitmap = b;
 			mRestaurant = rest;
-	
+		}
+		
+		@Override
+		protected void onPreExecute() {
+			isWorkingBackground = true;
+			invalidateOptionsMenu();
 		}
 
 		@Override
@@ -409,7 +413,8 @@ MenuItemsFragment.MenuItemListener {
 			} else {
 				Toast.makeText(This, "Unable to save image", Toast.LENGTH_SHORT).show();
 			}
-			
+			isWorkingBackground = false;
+			invalidateOptionsMenu();
 		}
 
 	}
