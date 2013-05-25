@@ -33,6 +33,7 @@ import android.widget.TextView;
 /**
  * Main view that allows the user to access and see their restaurant.
  * 
+ * 
  * @author mhotan
  */
 public class RestaurantInfoFragment extends Fragment {
@@ -50,11 +51,6 @@ public class RestaurantInfoFragment extends Fragment {
 	private InfoChangeListener mListener;
 
 	private Context mOwner;
-
-	/**
-	 * Singleton instance of a image loading progress bar.
-	 */
-	private static ProgressBar mImageLoadingBar;
 
 	private UserInputHandler mInputHandler;
 
@@ -172,11 +168,9 @@ public class RestaurantInfoFragment extends Fragment {
 	 * @return Indeterminate progress bar.
 	 */
 	private static View getLoadingImageProgressDialog(Context ctx) {
-		if (mImageLoadingBar == null) {
-			mImageLoadingBar = new ProgressBar(ctx);
-			mImageLoadingBar.setIndeterminate(true);
-		}
-		return mImageLoadingBar;
+		ProgressBar p = new ProgressBar(ctx);
+		p.setIndeterminate(true);
+		return p;
 	}
 
 	/**
@@ -194,6 +188,7 @@ public class RestaurantInfoFragment extends Fragment {
 		for (int i = 0; i < images.size(); ++i) {
 			// Get the default layout
 			LinearLayout layout = getStanderdLinearLayout(ctx);
+			layout.removeAllViews();
 			// Get a place holder image before we download
 			layout.addView(getLoadingImageProgressDialog(ctx));
 			int id = handler.addRestaurantImage(layout, false);
@@ -402,6 +397,10 @@ public class RestaurantInfoFragment extends Fragment {
 				}
 				mListener.onRestaurantInfoUpdate(mInfo);
 			} else { // user selected a restaurant image
+				if (v == mCurrentDefault) { // If the default image is selected
+					// Then do nothing
+					return;
+				}
 				setSelected(v);
 			}
 		}
@@ -429,7 +428,7 @@ public class RestaurantInfoFragment extends Fragment {
 			}
 			mCurrentDefault = v;
 			if (mCurrentDefault != null) {
-				mCurrentDefault.setBackgroundColor(Color.CYAN);
+				mCurrentDefault.setBackgroundColor(Color.RED);
 			}
 		}
 

@@ -3,7 +3,13 @@ package uw.cse.dineon.library.image;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
+
+import edu.umd.cs.findbugs.annotations.CleanupObligation;
 
 import uw.cse.dineon.library.util.DineOnConstants;
 import android.content.ContentResolver;
@@ -30,8 +36,8 @@ public final class ImageIO {
 
 	private static final String TAG = ImageIO.class.getSimpleName();
 
-	private static final String JPEG_FILE_PREFIX = "DineOnImage_";
-	private static final String JPEG_FILE_SUFFIX = ".jpg";
+	private static final String IMAGE_PREFIX = "DineOnImage_";
+	private static final String BITMAP_SUFFIX = ".bmp";
 	
 	/**
 	 * Creates a temporary file from the context inputted.
@@ -43,12 +49,12 @@ public final class ImageIO {
 	 */
 	public static File createImageFile(Context ctx) throws IOException {
 	    // Create an image file name
-	    String timeStamp = 
-	        DineOnConstants.getCurrentDateFormat().format(new Date());
-	    String imageFileName = JPEG_FILE_PREFIX + timeStamp + "_";
+	    String timeStamp = new SimpleDateFormat("ddMMyyyyhhmmss", Locale.getDefault()).
+	    		format(Calendar.getInstance().getTime());
+	    String imageFileName = IMAGE_PREFIX + timeStamp + "_";
 	    File image = File.createTempFile(
 	        imageFileName, 
-	        JPEG_FILE_SUFFIX, 
+	        BITMAP_SUFFIX, 
 	        ctx.getCacheDir()
 	    );
 	    return image;

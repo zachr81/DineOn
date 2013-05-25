@@ -60,7 +60,7 @@ MenuItemsFragment.MenuItemListener {
 	private File mTempFile;
 
 	private Context This;
-	
+
 	private boolean isWorkingBackground;
 
 	@Override
@@ -109,12 +109,12 @@ MenuItemsFragment.MenuItemListener {
 			itemProfile.setEnabled(false);
 			itemProfile.setVisible(false);
 		}
-		
+
 		android.view.MenuItem itemDownload = menu.findItem(R.id.item_progress);
 		if (itemDownload != null) {
 			itemDownload.setVisible(isWorkingBackground);
 		}
-		
+
 		return true;
 	}
 
@@ -135,8 +135,11 @@ MenuItemsFragment.MenuItemListener {
 		Fragment frag = null;
 		if (diff < 0) { // move to a tab that relatively left
 
-			frag = new RestaurantInfoFragment();
-			mRestInfoFragment = (RestaurantInfoFragment) frag;
+			// Ad hic singleton pattern for fragments
+			if (mRestInfoFragment == null) {
+				mRestInfoFragment = new RestaurantInfoFragment();
+			}
+			frag = mRestInfoFragment;
 			// Assign the animation where the fragment slides
 			// in from the right
 			supFT.setCustomAnimations(android.R.anim.slide_in_left,
@@ -144,9 +147,11 @@ MenuItemsFragment.MenuItemListener {
 		} else { // move the tab relatively rights
 			// TODO Correctly obtain the Restaurant
 
-			frag = new MenuItemsFragment();
-			mItemsFragment = (MenuItemsFragment)frag;
-
+			if (mItemsFragment == null) {
+				mItemsFragment = new MenuItemsFragment();
+			}
+			frag = mItemsFragment;
+			
 			// Assign the animation where the fragment slides
 			// in from the
 			supFT.setCustomAnimations(R.anim.slide_in_right,
@@ -368,7 +373,7 @@ MenuItemsFragment.MenuItemListener {
 
 		private final Bitmap mBitmap;
 		private final Restaurant mRestaurant;
-		
+
 		/**
 		 * Creates an asynchronous process to save images for this restaurant.
 		 * @param b bitmap to save in background thread.
@@ -381,7 +386,7 @@ MenuItemsFragment.MenuItemListener {
 			mBitmap = b;
 			mRestaurant = rest;
 		}
-		
+
 		@Override
 		protected void onPreExecute() {
 			isWorkingBackground = true;
@@ -409,7 +414,7 @@ MenuItemsFragment.MenuItemListener {
 					mRestInfoFragment.addImage(mBitmap);
 				}
 				mImageCache.addToCache(result);
-//				mBitmap.recycle();
+				//				mBitmap.recycle();
 			} else {
 				Toast.makeText(This, "Unable to save image", Toast.LENGTH_SHORT).show();
 			}
