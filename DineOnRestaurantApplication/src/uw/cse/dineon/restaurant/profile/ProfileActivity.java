@@ -1,5 +1,8 @@
 package uw.cse.dineon.restaurant.profile;
 
+import java.io.File;
+import java.io.IOException;
+
 import uw.cse.dineon.library.MenuItem;
 import uw.cse.dineon.library.Restaurant;
 import uw.cse.dineon.library.RestaurantInfo;
@@ -54,17 +57,20 @@ MenuItemsFragment.MenuItemListener {
 
 	private MenuItemsFragment mItemsFragment;
 	private RestaurantInfoFragment mRestInfoFragment;
-	
+	private File mTempFile;
+
 	private Context This;
+	
+	private boolean isWorkingBackground;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
 		This = this;
-		
-		mLastTabPosition = 1; // Let the tab be either the 0 or 1
 
+		mLastTabPosition = 1; // Let the tab be either the 0 or 1
+		isWorkingBackground = false;
 		if (!isLoggedIn()) {
 			Log.w(TAG, "User not logged in cant show profile");
 			return;
@@ -88,7 +94,8 @@ MenuItemsFragment.MenuItemListener {
 
 	@Override
 	public void updateUI() {
-		super.updateUI();	
+		super.updateUI();
+		invalidateOptionsMenu();
 	}
 
 	@Override
@@ -102,6 +109,12 @@ MenuItemsFragment.MenuItemListener {
 			itemProfile.setEnabled(false);
 			itemProfile.setVisible(false);
 		}
+		
+		android.view.MenuItem itemDownload = menu.findItem(R.id.item_progress);
+		if (itemDownload != null) {
+			itemDownload.setVisible(isWorkingBackground);
+		}
+		
 		return true;
 	}
 
@@ -241,7 +254,15 @@ MenuItemsFragment.MenuItemListener {
 
 	@Override
 	public void onRequestTakePicture() {
-		ImageObtainer.launchTakePictureIntent(this, DineOnConstants.REQUEST_TAKE_PHOTO);
+		try {
+			mTempFile = ImageIO.createImageFile(this);
+			ImageObtainer.launchTakePictureIntent(this,
+					DineOnConstants.REQUEST_TAKE_PHOTO, mTempFile);
+		} catch (IOException e) {
+			String message = "Unable to create a file to save your image";
+			Log.e(TAG, message + " Exception " + e.getMessage());
+			Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+		}
 	}
 
 	@Override
@@ -253,26 +274,26 @@ MenuItemsFragment.MenuItemListener {
 	public void onSelectImageAsDefault(int i) {
 		// TODO set image at index I as  the default
 	}
-	
+
 	@Override
 	public void onImageRemoved(int index) {
 		getRestaurant().getInfo().removeImageAt(index);
 		getRestaurant().saveInBackGround(new SaveCallback() {
-			
+
 			@Override
 			public void done(ParseException e) {
 				notifyAllRestaurantChange();
 			}
 		});
 	}
-	
+
 	@Override
 	public void getThisImage(DineOnImage image, final ViewGroup layout, final int id) {
-		
+
 		// Make a potentiall asyncronous call to download the image
 		// from local storage or network.
 		mImageCache.getImageFromCache(image, new ImageGetCallback() {
-			
+
 			@Override
 			public void onImageReceived(Exception e, Bitmap b) {
 				if (e != null) { // Error
@@ -284,7 +305,7 @@ MenuItemsFragment.MenuItemListener {
 					Log.e(TAG, "Can't replace the correct view fragment is null");
 					return;
 				}
-				
+
 				mRestInfoFragment.replaceWithImage(layout, b, id);
 			}
 		});
@@ -303,31 +324,9 @@ MenuItemsFragment.MenuItemListener {
 	 * @param uri Uri for the image to download.
 	 */
 	private void addPhotoToRestaurant(Uri uri) {
-		Bitmap b = ImageIO.loadBitmapFromURI(getContentResolver(), uri);
-		final DineOnImage NEWIMG = new DineOnImage(b, null);
-
-		if (mRestInfoFragment != null) {
-			mRestInfoFragment.addImage(b);
-		}
-		// Recycle the image after adding it.
-		b.recycle();
-
-		Restaurant rest = getRestaurant();
-		rest.addImage(NEWIMG);
-		rest.saveInBackGround(new SaveCallback() {
-
-			@Override
-			public void done(ParseException e) {
-				if (e != null) {
-					// Able to save the restaurant
-					mImageCache.addToCache(NEWIMG);	
-				} else {
-					// unable to save restaurant
-					Log.w(TAG, "Unable to update restaurant with new image in the cloud");
-				}
-			}
-		});
-
+		Bitmap b = ImageIO.loadBitmapFromURI(getContentResolver(), uri);	
+		AsynchronousImageSaver saver = new AsynchronousImageSaver(b, getRestaurant());
+		saver.execute();
 	}
 
 	@Override
@@ -339,48 +338,80 @@ MenuItemsFragment.MenuItemListener {
 			return;
 		}
 
-		Uri u = data.getData();
-		if (u == null) {
-			Log.e(TAG, "Error getting image null Uri returned");
-			return;
-		}
-
+		Uri u = null;
 		switch (requestCode) {
 		// Took a photo.
 		case DineOnConstants.REQUEST_TAKE_PHOTO:
-		case DineOnConstants.REQUEST_CHOOSE_PHOTO: 
-			addPhotoToRestaurant(u);
+			u = Uri.fromFile(mTempFile);
+			mTempFile = null;
+		case DineOnConstants.REQUEST_CHOOSE_PHOTO:
+			u = data.getData();
 			break;
 		default:
 			Log.w(TAG, "Unsupported operation occured onActivityResult");
 		}
+
+		if (u != null) {
+			addPhotoToRestaurant(u);
+		} else {
+			Log.w(TAG, "Was not able to obtain a new image");
+		}
 	}
 
 	/**
+	 * This class helps in saving an image to the restaurant.
+	 * There must be a sequence of steps to take in order to add an image successfully
 	 * 
 	 * @author mhotan
 	 */
 	private class AsynchronousImageSaver extends AsyncTask<Void, Void, DineOnImage> {
 
 		private final Bitmap mBitmap;
+		private final Restaurant mRestaurant;
+		private boolean isDownloading;
 		
 		/**
 		 * 
 		 * @param b bitmap to save in background thread.
+		 * @param rest Restaurant to save image to.
 		 */
-		public AsynchronousImageSaver(Bitmap b) {
+		public AsynchronousImageSaver(Bitmap b, Restaurant rest) {
 			if (b == null) {
 				throw new NullPointerException("AsynchronousImageSaver image cannot be null");
 			}
 			mBitmap = b;
+			mRestaurant = rest;
+	
 		}
-		
+
 		@Override
 		protected DineOnImage doInBackground(Void... params) {
-			// TODO Auto-generated method stub
-			return null;
+			try {
+				DineOnImage image = new DineOnImage(mBitmap);
+				image.saveOnCurrentThread();
+				mRestaurant.addImage(image);
+				mRestaurant.saveOnCurrentThread();
+				return image;
+			} catch (ParseException e) {
+				Log.e(TAG, "Unable to save image exception: " + e.getMessage());
+				return null; // Fail case
+			}
 		}
-		
+
+		@Override 
+		protected void onPostExecute(DineOnImage result) {
+			if (result != null) {
+				if (mRestInfoFragment != null) {
+					mRestInfoFragment.addImage(mBitmap);
+				}
+				mImageCache.addToCache(result);
+//				mBitmap.recycle();
+			} else {
+				Toast.makeText(This, "Unable to save image", Toast.LENGTH_SHORT).show();
+			}
+			
+		}
+
 	}
 
 }

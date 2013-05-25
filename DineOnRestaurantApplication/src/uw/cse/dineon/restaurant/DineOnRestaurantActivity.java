@@ -7,18 +7,12 @@ import uw.cse.dineon.library.Reservation;
 import uw.cse.dineon.library.Restaurant;
 import uw.cse.dineon.library.UserInfo;
 import uw.cse.dineon.library.image.ImageCache;
-import uw.cse.dineon.library.image.ImageIO;
-import uw.cse.dineon.library.image.Size;
-import uw.cse.dineon.library.util.DineOnConstants;
 import uw.cse.dineon.library.util.Utility;
 import uw.cse.dineon.restaurant.RestaurantSatellite.SateliteListener;
 import uw.cse.dineon.restaurant.login.RestaurantLoginActivity;
 import uw.cse.dineon.restaurant.profile.ProfileActivity;
 import android.app.ProgressDialog;
-import android.content.ContentResolver;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
@@ -26,6 +20,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.MenuItem.OnMenuItemClickListener;
+import android.view.Window;
 import android.widget.Toast;
 
 import com.parse.ParseException;
@@ -97,6 +92,9 @@ implements SateliteListener {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
+		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS); 
+		setProgressBarIndeterminateVisibility(true); 
+		
 		// Initialize the satellite 
 		mSatellite = new RestaurantSatellite();
 		// Initialize the Cache
@@ -433,6 +431,12 @@ implements SateliteListener {
 		if (!isLoggedIn()) {
 			setMenuToNonUser(menu);
 		}
+		
+		MenuItem progressbar = menu.findItem(R.id.item_progress);
+		if (progressbar != null) {
+			progressbar.setEnabled(false);
+			progressbar.setVisible(false);
+		}
 		return true;
 	}
 
@@ -487,6 +491,8 @@ implements SateliteListener {
 	// /// UI Specific methods
 	// //////////////////////////////////////////////////////////////////////
 
+	
+	
 	/**
 	 * Instantiates a new progress dialog and shows it on the screen.
 	 * @param cancelable Allows the progress dialog to be cancelable.
