@@ -24,7 +24,7 @@ import android.widget.Toast;
 import android.telephony.PhoneNumberUtils;
 
 /**
- * 
+ * Fragment with editable text fields. Used for changing profile information.
  * @author espeo196
  *
  */
@@ -68,26 +68,40 @@ public class ProfileEditFragment extends Fragment {
 			final TextView OLD_PASS = (TextView) view.findViewById(R.id.user_old_pass);
 			final TextView NEW_PASS = (TextView) view.findViewById(R.id.user_new_pass);
 			
+			EMAIL.setText(DineOnUserApplication.getUserInfo().getEmail());
+			if(DineOnUserApplication.getUserInfo().getPhone() != null) {
+				PHONENUMBER.setText(DineOnUserApplication.getUserInfo().getPhone());
+			} else {
+				PHONENUMBER.setText("");				
+			}
+			
+			
 			Button mSaveButton = (Button) view.findViewById(R.id.button_save_changes);
 			mSaveButton.setOnClickListener(new View.OnClickListener() {
 				
 				@Override
 				public void onClick(View v) {	
+						
+					
 					INFO.setEmail(EMAIL.getText().toString());
 					INFO.setPhone(PhoneNumberUtils.formatNumber(PHONENUMBER.getText().toString()));
 					
-					
-					// TODO find way to set username and validate it
-					// TODO check if OLD_PASS is same as their old pass word
-					try {
-						ParseUser.logIn(DineOnUserApplication.getUserInfo().getName(), 
-								OLD_PASS.getText().toString());
-					} catch (ParseException e) {
-						Toast.makeText(getActivity(), 
-								"Old Password doesn't match.", Toast.LENGTH_LONG).show();
-						return;
+					// if password fields are empty don't attempt to login/change passwords
+					if(OLD_PASS.getText().toString() != null 
+							&& !OLD_PASS.getText().toString().equals("")
+							&& NEW_PASS.getText().toString() != null
+							&& !NEW_PASS.getText().toString().equals("")) {
+						try {
+							ParseUser.logIn(DineOnUserApplication.getUserInfo().getName(), 
+									OLD_PASS.getText().toString());
+							DineOnUserApplication.getUserInfo()
+									.setPassword(NEW_PASS.getText().toString());
+						} catch (ParseException e) {
+							Toast.makeText(getActivity(), 
+									"Old Password doesn't match.", Toast.LENGTH_LONG).show();
+							return;
+						}
 					}
-					ParseUser.getCurrentUser().setPassword(NEW_PASS.getText().toString());
 					mListener.onUserInfoUpdate(INFO);
 				}
 			});

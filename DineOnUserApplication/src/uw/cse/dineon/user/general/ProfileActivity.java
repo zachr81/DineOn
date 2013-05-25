@@ -45,10 +45,8 @@ public class ProfileActivity extends DineOnUserActivity implements
 		
 		if(savedInstanceState == null) {
 			Fragment imageFrag = ProfileImageFragment.newInstance(getInfo());
-			Fragment tabsFrag = ProfileTabsFragment.newInstance(getInfo());
 			FragmentTransaction ft = this.getSupportFragmentManager().beginTransaction();
 			ft.add(CONTAINER_ID, imageFrag, "imageFrag");
-			ft.add(CONTAINER_ID, tabsFrag, "tabsFrag");
 			ft.addToBackStack(null);
 			ft.commit();	
 		}
