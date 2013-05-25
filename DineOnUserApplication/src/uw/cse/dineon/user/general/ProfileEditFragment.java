@@ -113,8 +113,7 @@ public class ProfileEditFragment extends Fragment {
 		 * Notifies the Activity that the restaurant info requested to be
 		 * updated.
 		 * 
-		 * @param rest
-		 *            Updated Restaurant Info
+		 * @param user updated User Info
 		 */
 		void onUserInfoUpdate(UserInfo user);
 

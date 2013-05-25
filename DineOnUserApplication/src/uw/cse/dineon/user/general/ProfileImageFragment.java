@@ -35,6 +35,11 @@ public class ProfileImageFragment extends Fragment {
 		return view;
 	}
 	
+	/**
+	 * Creates a new instance of this fragment.
+	 * @param info UserInfo of current user
+	 * @return ProfileImageFragment instance
+	 */
 	public static ProfileImageFragment newInstance(UserInfo info) {
 		// Prepare a Bundle argument
 		// for starting an activity with
