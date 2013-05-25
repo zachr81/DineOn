@@ -25,6 +25,7 @@ import android.support.v4.app.FragmentManager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.parse.FindCallback;
 import com.parse.ParseException;
@@ -76,8 +77,9 @@ RestaurantInfoFragment.RestaurantInfoListener {
 		
 		mRestaurants = new ArrayList<RestaurantInfo>();
 		
-		// By default show nearby restaurants
-		onShowNearbyRestaurants();
+		// TODO for now get all restaurants
+		ParseQuery query = new ParseQuery(RestaurantInfo.class.getSimpleName());
+		queryForRestaurants(query);
 	}
 	
 	/**
@@ -181,7 +183,10 @@ RestaurantInfoFragment.RestaurantInfoListener {
 					DineOnConstants.MAX_RESTAURANT_DISTANCE);
 			queryForRestaurants(query);
 		} else {
+			Toast.makeText(this, "You don't have location info stupid!", 
+					Toast.LENGTH_SHORT).show();
 			Log.d(TAG, "Don't have current location info.");
+			destroyProgressDialog();
 		}
 	}
 
