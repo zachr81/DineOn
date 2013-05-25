@@ -199,6 +199,7 @@ OrderUpdateListener /* manipulation of list from the current order activity */ {
 		// data leakage to the login page
 		DineOnUserApplication.setDineOnUser(null);
 		startActivity(i);
+		this.finish();
 	}
 
 	/**
