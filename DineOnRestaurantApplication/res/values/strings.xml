@@ -2,7 +2,7 @@
 <resources>
 
     <string name="hello">Hello World, RestaurantLoginActivity</string>
-    <string name="app_name">DineOn</string>
+    <string name="app_name">DineOn Restaurant</string>
     <string name="TaskTitle">Restaurant Order</string>
     <string name="item_rest_profile">Profile</string>
     <string name="hint_username">Username</string>
@@ -62,5 +62,6 @@
     <string name="checkbox_default_image">Default</string>
     <string name="label_address">Address</string>
     <string name="label_phone">Phone</string>
+    <string name="dineonad">DineOn Ad</string>
 
 </resources>
