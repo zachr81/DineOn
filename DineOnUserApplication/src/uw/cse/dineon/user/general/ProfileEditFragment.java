@@ -1,8 +1,10 @@
 package uw.cse.dineon.user.general;
 
+import com.parse.ParseException;
 import com.parse.ParseUser;
 
 import uw.cse.dineon.library.UserInfo;
+import uw.cse.dineon.user.DineOnUserApplication;
 import uw.cse.dineon.user.R;
 import android.app.Activity;
 import android.graphics.Bitmap;
@@ -18,6 +20,8 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
+import android.telephony.PhoneNumberUtils;
 
 /**
  * 
@@ -59,7 +63,7 @@ public class ProfileEditFragment extends Fragment {
 			
 			
 			// Grab all of the editable text fields so that you can grab their values
-			final TextView USERNAME = (TextView) view.findViewById(R.id.user_name);
+			final TextView EMAIL = (TextView) view.findViewById(R.id.user_email);
 			final TextView PHONENUMBER = (TextView) view.findViewById(R.id.user_phone);
 			final TextView OLD_PASS = (TextView) view.findViewById(R.id.user_old_pass);
 			final TextView NEW_PASS = (TextView) view.findViewById(R.id.user_new_pass);
@@ -69,12 +73,21 @@ public class ProfileEditFragment extends Fragment {
 				
 				@Override
 				public void onClick(View v) {	
-					INFO.setPhone(PHONENUMBER.getText().toString());
+					INFO.setEmail(EMAIL.getText().toString());
+					INFO.setPhone(PhoneNumberUtils.formatNumber(PHONENUMBER.getText().toString()));
+					
+					
 					// TODO find way to set username and validate it
 					// TODO check if OLD_PASS is same as their old pass word
-					// if(OLD_PASS.getText().toString().equals(current user's password)) {
-						ParseUser.getCurrentUser().setPassword(NEW_PASS.getText().toString());
-					// }
+					try {
+						ParseUser.logIn(DineOnUserApplication.getUserInfo().getName(), 
+								OLD_PASS.getText().toString());
+					} catch (ParseException e) {
+						Toast.makeText(getActivity(), 
+								"Old Password doesn't match.", Toast.LENGTH_LONG).show();
+						return;
+					}
+					ParseUser.getCurrentUser().setPassword(NEW_PASS.getText().toString());
 					mListener.onUserInfoUpdate(INFO);
 				}
 			});
