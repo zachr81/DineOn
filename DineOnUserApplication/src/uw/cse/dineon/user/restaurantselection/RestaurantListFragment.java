@@ -204,17 +204,9 @@ public class RestaurantListFragment extends ListFragment {
 			// Get the restaurant name by associating with the position
 			String name = mValues.get(position).getName();
 			restLabel.setText(name);	
-
-			// TODO Change the button to a more intuitive picture that describes "more info"
-			Button moreInfoButton = (Button) rowView.findViewById(R.id.button_restaurant_info);
-
-			// Add to the mapping so listeners can reference it later
-			mInfoMapping.put(moreInfoButton, mValues.get(position));
 			
 			// add mapping to text view so listeners can reference later
 			mRestaurantMapping.put(restLabel, mValues.get(position));
-
-			moreInfoButton.setOnClickListener(mButtonListener);
 
 			return rowView;
 		}
