@@ -261,7 +261,7 @@ implements SateliteListener {
 
 	@Override
 	public void onFail(String message) {
-		Toast.makeText(this, "onFail " + message, Toast.LENGTH_LONG).show();
+		Toast.makeText(this, "Failed to do something: " + message, Toast.LENGTH_LONG).show();
 	}
 
 	@Override
@@ -312,7 +312,6 @@ implements SateliteListener {
 		}
 
 		// TODO Validate Order
-
 		for (final DiningSession SESSION: mRestaurant.getSessions()) {
 			if (SESSION.getObjId().equals(sessionID)) {
 				// Found the correct session.
