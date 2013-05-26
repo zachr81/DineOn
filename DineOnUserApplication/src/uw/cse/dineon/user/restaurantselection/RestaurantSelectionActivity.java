@@ -3,6 +3,7 @@
 package uw.cse.dineon.user.restaurantselection;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import uw.cse.dineon.library.DiningSession;
@@ -10,6 +11,7 @@ import uw.cse.dineon.library.LocatableStorable;
 import uw.cse.dineon.library.RestaurantInfo;
 import uw.cse.dineon.library.util.DineOnConstants;
 import uw.cse.dineon.user.DineOnUserActivity;
+import uw.cse.dineon.user.DineOnUserApplication;
 import uw.cse.dineon.user.R;
 import uw.cse.dineon.user.restaurant.home.RestaurantHomeActivity;
 import android.app.ActionBar;
@@ -78,8 +80,9 @@ RestaurantInfoFragment.RestaurantInfoListener {
 		mRestaurants = new ArrayList<RestaurantInfo>();
 		
 		// TODO for now get all restaurants
-		ParseQuery query = new ParseQuery(RestaurantInfo.class.getSimpleName());
-		queryForRestaurants(query);
+		//ParseQuery query = new ParseQuery(RestaurantInfo.class.getSimpleName());
+		//queryForRestaurants(query);
+		onShowUserFavorites();
 	}
 	
 	/**
@@ -161,6 +164,11 @@ RestaurantInfoFragment.RestaurantInfoListener {
 		}
 	}
 
+	@Override
+	protected void onSearch(String query) {
+		onSearchForRestaurantByName(query);
+	}
+	
 	/**
 	 * Search for a restaurant by name.
 	 * @param name name of restaurant
@@ -199,9 +207,15 @@ RestaurantInfoFragment.RestaurantInfoListener {
 
 	@Override
 	public void onShowUserFavorites() {
-		// TODO
-		//createProgressDialog();
-		//ParseQuery query = new ParseQuery(RestaurantInfo.class.getSimpleName());
+		createProgressDialog();
+		ParseQuery query = new ParseQuery(RestaurantInfo.class.getSimpleName());
+		String[] objIds = new String[DineOnUserApplication.getDineOnUser().getFavs().size()];
+		List<RestaurantInfo> favs = DineOnUserApplication.getDineOnUser().getFavs();
+		for (int i = 0; i < favs.size(); i++) {
+			objIds[i] = favs.get(i).getObjId();
+		}
+		query.whereContainedIn("objectId", Arrays.asList(objIds));
+		queryForRestaurants(query);
 	}
 	
 	/**
