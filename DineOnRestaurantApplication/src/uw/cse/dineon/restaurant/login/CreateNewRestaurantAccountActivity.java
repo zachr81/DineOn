@@ -170,7 +170,7 @@ implements CreateNewAccountListener {
 	}
 
 	/**
-	 * 
+	 * Creates a restaurant in the back ground.
 	 * @author mhotan
 	 */
 	private class AsyncRestaurantCreator extends AsyncTask<Void, Exception, Restaurant> {
@@ -248,75 +248,6 @@ implements CreateNewAccountListener {
 		}
 
 	}
-
-//	/**
-//	 * Private Helper Class to help create a new ParseUser for a restaurant.
-//	 * @author mhotan 
-//	 */
-//	private class RestaurantSignUpCallback extends SignUpCallback {
-//
-//		private final ParseUser mCallbackParseUser;
-//
-//		/**
-//		 * Creates a Restaurant Sign up callback.
-//		 * @param user User to sign up.
-//		 */
-//		public RestaurantSignUpCallback(ParseUser user) {
-//			mCallbackParseUser = user;
-//		}
-//
-//		@Override
-//		public void done(ParseException e) {
-//
-//			if (e == null) {
-//				// Download the Restaurant
-//				try {
-//					final Restaurant NEWREST = new Restaurant(mCallbackParseUser);
-//					NEWREST.saveInBackGround(new SaveCallback() {
-//
-//						@Override
-//						public void done(ParseException e) {
-//							destroyProgressDialog();
-//							if (e == null) {
-//								// get the location of the restaurant
-//								Location loc = mLocationListener.getLastLocation();
-//								if (loc != null) {
-//									NEWREST.getInfo().updateLocation(loc.getLongitude(), 
-//											loc.getLatitude());
-//									NEWREST.getInfo().saveInBackGround(null);
-//									DineOnRestaurantApplication.logIn(NEWREST);
-//									startMainActivity();
-//								} else {
-//									DineOnRestaurantApplication.logIn(NEWREST);
-//									if (mLocationListener.mLocationManager.
-//											getProvider(LocationManager.NETWORK_PROVIDER) == null) {
-//										// we're in an emulator so don't wait
-//										NEWREST.getInfo().updateLocation(0.0, 0.0);
-//										NEWREST.getInfo().saveInBackGround(null);
-//										startMainActivity();
-//									} else {
-//										mLocationListener.waitForLocation();
-//									}
-//								}
-//							} else {
-//								Utility.getFailedToCreateAccountDialog(
-//										e.getMessage(), This).show();
-//							}
-//						}
-//					});
-//				} catch (ParseException e1) {
-//					Utility.getFailedToCreateAccountDialog(
-//							"Need to be connected to internet", This).show();
-//				}
-//			} else {
-//				destroyProgressDialog();
-//				// Sign up didn't succeed. Look at the ParseException
-//				// to figure out what went wrong
-//				Utility.getFailedToCreateAccountDialog(e.getMessage(), This).show();
-//
-//			}
-//		}
-//	}
 
 	/**
 	 * Starts the Main activity for this restaurant.
