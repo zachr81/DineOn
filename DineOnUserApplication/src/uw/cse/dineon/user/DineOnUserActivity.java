@@ -240,7 +240,7 @@ OrderUpdateListener /* manipulation of list from the current order activity */ {
 			public boolean onQueryTextSubmit(String query) {
 				// Make the call to search for a particular restaurant
 				onSearch(query);
-				return false;
+				return true;
 			}
 
 			@Override

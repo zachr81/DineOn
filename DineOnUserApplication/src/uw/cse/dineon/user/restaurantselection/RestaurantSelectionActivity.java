@@ -90,6 +90,7 @@ RestaurantInfoFragment.RestaurantInfoListener {
 	 */
 	public void addListOfRestaurantInfos() {
 		addRestaurantInfos(this.mRestaurants);
+		this.mRestaurants.clear();
 	}
 	
 	/**
@@ -177,7 +178,7 @@ RestaurantInfoFragment.RestaurantInfoListener {
 		createProgressDialog();
 		ParseQuery query = new ParseQuery(RestaurantInfo.class.getSimpleName());
 		query.whereEqualTo(RestaurantInfo.NAME, name);
-		queryForRestaurants(query);
+		queryForRestaurants(query, "No restaurants mtach. Check spelling.");
 	}
 
 	@Override
@@ -189,7 +190,8 @@ RestaurantInfoFragment.RestaurantInfoListener {
 			query.whereWithinMiles(LocatableStorable.LOCATION, 
 					new ParseGeoPoint(lastLoc.getLatitude(), lastLoc.getLongitude()), 
 					DineOnConstants.MAX_RESTAURANT_DISTANCE);
-			queryForRestaurants(query);
+			queryForRestaurants(query, 
+					"There are no restaurants nearby. Your in the middle of nowhere.");
 		} else {
 			Toast.makeText(this, "You don't have location info stupid!", 
 					Toast.LENGTH_SHORT).show();
@@ -215,15 +217,16 @@ RestaurantInfoFragment.RestaurantInfoListener {
 			objIds[i] = favs.get(i).getObjId();
 		}
 		query.whereContainedIn("objectId", Arrays.asList(objIds));
-		queryForRestaurants(query);
+		queryForRestaurants(query, "No restaurants in your favorites. Add some.");
 	}
 	
 	/**
 	 * Query for restaurants using attributes set and populate selection list.
 	 * on return
 	 * @param query parse query object to query restaurants.
+	 * @param message message to display if no restaurant found.
 	 */
-	public void queryForRestaurants(ParseQuery query) {
+	public void queryForRestaurants(ParseQuery query, final String message) {
 		query.setCachePolicy(ParseQuery.CachePolicy.NETWORK_ONLY);
 		query.setLimit(DineOnConstants.MAX_RESTAURANTS); 
 		query.findInBackground(new FindCallback() {
@@ -243,7 +246,7 @@ RestaurantInfoFragment.RestaurantInfoListener {
 					}
 					destroyProgressDialog();
 					if (objects.size() == 0) {
-						showNoRestaurantsDialog("Couldn't get restaurants");
+						showNoRestaurantsDialog(message);
 					} else {
 						addListOfRestaurantInfos();
 					}
@@ -286,8 +289,8 @@ RestaurantInfoFragment.RestaurantInfoListener {
 			return;
 		}
 		mProgressDialog = new ProgressDialog(this);
-		mProgressDialog.setTitle("Loading your restaurants.");
-		mProgressDialog.setMessage("Loading...");       
+		mProgressDialog.setTitle("Getting restaurants.");
+		mProgressDialog.setMessage("Searching...");       
 		mProgressDialog.setIndeterminate(true);
 		mProgressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
 		mProgressDialog.show();
@@ -307,16 +310,6 @@ RestaurantInfoFragment.RestaurantInfoListener {
 	 * @param message message to show
 	 */
 	public void showNoRestaurantsDialog(String message) {
-		AlertDialog.Builder b = new Builder(this);
-		b.setTitle("Couldn't find any restaurants.");
-		b.setMessage(message);
-		b.setCancelable(true);
-		b.setPositiveButton("Try Again", new OnClickListener() {
-
-			@Override
-			public void onClick(DialogInterface dialog, int which) {
-				dialog.cancel();
-			}
-		}).show();
+		Toast.makeText(this, message, Toast.LENGTH_LONG).show();
 	}
 }
