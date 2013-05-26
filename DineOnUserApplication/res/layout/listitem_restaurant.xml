@@ -10,7 +10,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
-        android:text="Restaurant name goes here"
+        android:text="@string/restaurant_name_here"
         android:paddingTop="10dp"
         android:paddingBottom="10dp"
         android:textAppearance="?android:attr/textAppearanceLarge" />
