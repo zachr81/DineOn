@@ -3,7 +3,12 @@ package uw.cse.dineon.user.restaurant.home;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.parse.ParseException;
+import com.parse.SaveCallback;
+
+import uw.cse.dineon.library.DineOnUser;
 import uw.cse.dineon.library.RestaurantInfo;
+import uw.cse.dineon.user.DineOnUserApplication;
 import uw.cse.dineon.user.R;
 import uw.cse.dineon.user.restaurantselection.RestaurantInfoActivity;
 import uw.cse.dineon.user.restaurantselection.RestaurantInfoFragment;
@@ -13,9 +18,12 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 
 /**
  * This Fragment shows a swipable pager that can flip through
@@ -57,6 +65,14 @@ public class RestaurantHomeMainFragment extends Fragment {
 
 		// Set initial page to the menu page
 		pager.setCurrentItem(0);
+		
+		View v =  view.findViewById(R.id.button_user_favorites);
+		if(v != null && v instanceof ImageButton){
+			this.determineFavorite((ImageButton) v, this.mRestaurantInfo); 
+		}
+		else{
+			Log.d(TAG, "Button not found.");
+		}
 		
 		return view;
 	}
@@ -135,6 +151,65 @@ public class RestaurantHomeMainFragment extends Fragment {
 			return this.mRestaurantInfo.getMenuList().size() + 1;
 		}
 	}
+	
+	public void determineFavorite(ImageButton ib, RestaurantInfo ri){
+		DineOnUser dou = DineOnUserApplication.getDineOnUser();
+		if(dou == null){
+			Log.d(TAG, "Your DineOnUser was null.");
+			return;
+		}
+		if(this.mRestaurantInfo == null){
+			Log.d(TAG, "The RestaurantInfo was null for some reason.");
+			return;
+		}
+		if(! dou.isFavorite(ri)){
+			ib.setImageResource(R.drawable.addtofavorites);
+			ib.setTag("notFavorite");
+		}else{
+			ib.setImageResource(R.drawable.is_favorite);
+			ib.setTag("isFavorite");
+		}
+		ib.setOnClickListener(new OnClickListener(){
+
+			@Override
+			public void onClick(View v) {
+				ImageButton ib = (ImageButton) v;
+				if(ib.getTag().equals("notFavorite")){
+					favoriteRestaurant(mRestaurantInfo);
+				}
+				else if(ib.getTag().equals("isFavorite")){
+					unFavoriteRestaurant(mRestaurantInfo);
+				}	
+			}
+		});
+
+	}
+	
+	public void favoriteRestaurant(RestaurantInfo ri){
+		DineOnUserApplication.getDineOnUser().addFavorite(ri);
+		DineOnUserApplication.getDineOnUser().saveInBackGround(new SaveCallback(){
+			@Override
+			public void done(ParseException e) {
+				if(e != null){
+					Log.d(TAG, "the callback for saving favorited failed.\n" + e.getMessage());
+				}
+			}
+		});
+	}
+	
+	public void unFavoriteRestaurant(RestaurantInfo ri){
+		DineOnUserApplication.getDineOnUser().removeFavorite(ri);
+		DineOnUserApplication.getDineOnUser().saveInBackGround(new SaveCallback(){
+			@Override
+			public void done(ParseException e) {
+				if(e != null){
+					Log.d(TAG, "the callback for saving unfavorited failed.\n" + e.getMessage());
+				}
+			}
+		});
+	}
+	
+	
 
 	/**
 	 * TODO implement.
@@ -149,5 +224,7 @@ public class RestaurantHomeMainFragment extends Fragment {
 		public RestaurantInfo getCurrentRestaurant();
 
 	}
+	
+	
 
 }
