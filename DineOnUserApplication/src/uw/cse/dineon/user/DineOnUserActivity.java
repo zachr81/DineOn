@@ -56,8 +56,7 @@ import com.parse.SaveCallback;
 public class DineOnUserActivity extends FragmentActivity implements 
 SatelliteListener,
 SubMenuFragment.MenuItemListListener, /* manipulation of order from sub menu */
-OrderUpdateListener /* manipulation of list from the current order activity */
-{ 
+OrderUpdateListener /* manipulation of list from the current order activity */ { 
 
 	private static final String TAG = DineOnUserActivity.class.getSimpleName();
 
@@ -72,12 +71,12 @@ OrderUpdateListener /* manipulation of list from the current order activity */
 	private DineOnUserActivity thisActivity;
 
 	private HashMap<MenuItem, CurrentOrderItem> mMenuItemMappings;
-	
+
 	/**
 	 * Location Listener for location based services.
 	 */
 	private UserLocationListener mLocationListener;
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -90,11 +89,11 @@ OrderUpdateListener /* manipulation of list from the current order activity */
 			Utility.getBackToLoginAlertDialog(this, 
 					"Unable to find your information", UserLoginActivity.class).show();
 		}
-		
+
 		this.mMenuItemMappings = new HashMap<MenuItem, CurrentOrderItem>();		
 		this.mLocationListener = new UserLocationListener();
 		this.mLocationListener.requestLocationUpdates();
-		
+
 		handleSearchIntent(getIntent());
 	}
 
@@ -102,8 +101,8 @@ OrderUpdateListener /* manipulation of list from the current order activity */
 	protected void onNewIntent(Intent intent) {
 		handleSearchIntent(intent);
 	}
-	
-	
+
+
 	/**
 	 * Given an intent where the user request to search something, 
 	 * process the query and react accordingly.
@@ -115,7 +114,7 @@ OrderUpdateListener /* manipulation of list from the current order activity */
 			this.onSearch(intent.getStringExtra(SearchManager.QUERY));
 		}
 	}
-	
+
 	/**
 	 * Method where sub activities can override to receive specific search request for example.
 	 * 
@@ -128,7 +127,7 @@ OrderUpdateListener /* manipulation of list from the current order activity */
 		// TODO Implement Parse Query
 		Log.d(TAG, "User requested a search for " + query);
 	}
-	
+
 	/**
 	 * This automates the addition of the User Intent.
 	 * Should never be called when mUser is null.
@@ -159,7 +158,7 @@ OrderUpdateListener /* manipulation of list from the current order activity */
 		super.onResume();
 		mSat.register(DineOnUserApplication.getDineOnUser(), thisActivity);
 		intializeUI();
-		
+
 	}
 
 	@Override
@@ -221,27 +220,31 @@ OrderUpdateListener /* manipulation of list from the current order activity */
 		customActionBarButtons.add(menu.findItem(R.id.option_check_in));
 		setOnClick(M, customActionBarButtons);
 
-		// Enable the search widget in the action bar
-		SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
 		final SearchView SEARCHVIEW = (SearchView) 
 				menu.findItem(R.id.option_search).getActionView();
-		
+
+		// Enable the search widget in the action bar
+		SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+		if (searchManager != null) {
+			SEARCHVIEW.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+		}
+
 		SEARCHVIEW.setIconified(true);
 		SEARCHVIEW.setOnQueryTextListener(new OnQueryTextListener() {
-			
+
 			@Override
 			public boolean onQueryTextSubmit(String query) {
 				// Make the call to search for a particular restaurant
 				onSearch(query);
 				return false;
 			}
-			
+
 			@Override
 			public boolean onQueryTextChange(String newText) { // Do nothing
 				return false;
 			}
 		});
-		
+
 		return true;
 	}
 
@@ -293,7 +296,7 @@ OrderUpdateListener /* manipulation of list from the current order activity */
 		}
 
 		SearchView searchView = (SearchView) menu.findItem(R.id.option_search).getActionView();
-		
+
 		// If checked in
 		if(DineOnUserApplication.getCurrentDiningSession() != null) {
 			disableMenuItem(menu, R.id.option_check_in);
@@ -425,7 +428,7 @@ OrderUpdateListener /* manipulation of list from the current order activity */
 		final DiningSession M_SESSION = session;
 		DineOnUserApplication.setCurrentDiningSession(session);
 		DineOnUserApplication.getDineOnUser().saveInBackGround(new SaveCallback() {
-			
+
 			@Override
 			public void done(ParseException e) {
 				if (e == null) {
@@ -450,7 +453,7 @@ OrderUpdateListener /* manipulation of list from the current order activity */
 		DineOnUserApplication.setCurrentDiningSession(dsession);
 		startActivity(i);
 	}
-	
+
 	@Override
 	public void onRestaurantInfoChanged(RestaurantInfo restaurant) {
 		// TODO Auto-generated method stub
@@ -474,7 +477,7 @@ OrderUpdateListener /* manipulation of list from the current order activity */
 		// TODO Auto-generated method stub
 		Toast.makeText(this, "onConfirmReservation", Toast.LENGTH_SHORT).show();
 	}
-	
+
 	/**
 	 * 
 	 * @param cr CustomerRequest to place
@@ -484,14 +487,14 @@ OrderUpdateListener /* manipulation of list from the current order activity */
 				DineOnUserApplication.getCurrentDiningSession().getRestaurantInfo());
 		Toast.makeText(this, "Made Request", Toast.LENGTH_LONG).show();
 	}
-	
+
 	/**
 	 * Pay bill for current order.
 	 */
 	public void payBill() {
 		mSat.requestCheckOut(DineOnUserApplication.getCurrentDiningSession(), 
 				DineOnUserApplication.getCurrentDiningSession().getRestaurantInfo());
-		
+
 		// TODO Need to add a confirmation from restaurant that the user
 		// has successfully paid
 		DineOnUserApplication.setCurrentDiningSession(null);
@@ -500,13 +503,13 @@ OrderUpdateListener /* manipulation of list from the current order activity */
 	@Override
 	public void onMenuItemFocusedOn(uw.cse.dineon.library.MenuItem menuItem) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void onRestaurantInfoRequested() {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
@@ -541,7 +544,7 @@ OrderUpdateListener /* manipulation of list from the current order activity */
 	public void onRemoveItemFromOrder(MenuItem item) {
 		DineOnUserApplication.removeItemInCurrentOrder(item);
 	}
-	
+
 	@Override
 	public void onMenuItemIncremented(MenuItem item) {
 		DineOnUserApplication.incrementItemInCurrentOrder(item);
@@ -561,7 +564,7 @@ OrderUpdateListener /* manipulation of list from the current order activity */
 	public void resetCurrentOrder() {
 		DineOnUserApplication.clearCurrentOrder();
 	}
-	
+
 	/**
 	 * Listener for getting restaurant location at creation time.
 	 * @author mtrathjen08
@@ -573,12 +576,12 @@ OrderUpdateListener /* manipulation of list from the current order activity */
 		 * Location Manager for location services.
 		 */
 		private LocationManager mLocationManager;
-		
+
 		/**
 		 * Last received location from mananger. Initially null.
 		 */
 		private Location mLocation;
-		
+
 		/**
 		 * Constructor for the location listener.
 		 */
@@ -586,7 +589,7 @@ OrderUpdateListener /* manipulation of list from the current order activity */
 			this.mLocationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 			this.mLocation = null;
 		}
-		
+
 		/**
 		 * Return the last recorder location of the user. Null if no update.
 		 * @return last recorder location.
@@ -595,7 +598,7 @@ OrderUpdateListener /* manipulation of list from the current order activity */
 			return this.mLocationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
 			// TODO add support for gps
 		}
-		
+
 		/**
 		 * Request a location reading from the Location Manager.
 		 */
@@ -609,7 +612,7 @@ OrderUpdateListener /* manipulation of list from the current order activity */
 					this);
 			// TODO add support for gps
 		}
-		
+
 		@Override
 		public void onLocationChanged(Location loc) {
 			this.mLocation = loc;
@@ -618,22 +621,22 @@ OrderUpdateListener /* manipulation of list from the current order activity */
 		@Override
 		public void onProviderDisabled(String arg0) {
 			// TODO Auto-generated method stub
-			
+
 		}
 
 		@Override
 		public void onProviderEnabled(String arg0) {
 			// TODO Auto-generated method stub
-			
+
 		}
 
 		@Override
 		public void onStatusChanged(String arg0, int arg1, Bundle arg2) {
 			// TODO Auto-generated method stub
-			
+
 		}
 	}
-	
+
 	/**
 	 * Return the last location updated by the location manager.
 	 * @return last known location.
