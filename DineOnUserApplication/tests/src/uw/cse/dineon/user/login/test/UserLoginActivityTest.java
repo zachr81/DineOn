@@ -37,6 +37,7 @@ public class UserLoginActivityTest extends
 	private DineOnUser dineOnUser;
 	private EditText et_uname, et_passwd;
 	private Instrumentation mInstrumentation;
+	
 	public UserLoginActivityTest() {
 		super(UserLoginActivity.class);
 	}
