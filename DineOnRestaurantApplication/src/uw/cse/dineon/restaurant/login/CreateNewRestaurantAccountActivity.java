@@ -70,8 +70,6 @@ implements CreateNewAccountListener {
 	public void submitNewAccount(String username, String email, String pw,
 			String pwRepeat) {
 		// Handle the validation
-		createProgressDialog();
-
 		Resolution completeRes = CredentialValidator.validateAll(username, email, pw, pwRepeat);
 
 		if (completeRes.isValid() && !username.equals("")) { // Valid passwords
