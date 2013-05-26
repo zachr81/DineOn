@@ -329,7 +329,7 @@ OrderUpdateListener /* manipulation of list from the current order activity */ {
 	 * @param menu The specified menu
 	 * @param rID The id of the specified menu item
 	 */
-	private void disableMenuItem(android.view.Menu menu, int rID) {
+	protected void disableMenuItem(android.view.Menu menu, int rID) {
 		android.view.MenuItem item = menu.findItem(rID);
 		if(item != null) {
 			item.setEnabled(false);
@@ -344,7 +344,7 @@ OrderUpdateListener /* manipulation of list from the current order activity */ {
 	 * @param menu The specified menu
 	 * @param rID The id of the specified menu item
 	 */
-	private void enableMenuItem(android.view.Menu menu, int rID) {
+	protected void enableMenuItem(android.view.Menu menu, int rID) {
 		android.view.MenuItem item = menu.findItem(rID);
 		if(item == null) {
 			menu.add(rID);

@@ -21,6 +21,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.FrameLayout;
+import android.widget.SearchView;
 import android.widget.Toast;
 
 /**
@@ -79,7 +80,6 @@ public class ProfileActivity extends DineOnUserActivity implements
 	
 	@Override
 	public boolean onPrepareOptionsMenu(android.view.Menu menu) {
-		super.onPrepareOptionsMenu(menu);
 		MenuItem m = menu.findItem(R.id.option_edit_profile);
 		if(state == State.EDIT) {
 			m.setEnabled(false);
@@ -88,9 +88,25 @@ public class ProfileActivity extends DineOnUserActivity implements
 			state = State.DEFAULT;
 			m.setEnabled(true);
 			m.setVisible(true);
+		}		
+
+		// This is for the case where nothing is updated yet
+		// There is no User class
+		if (DineOnUserApplication.getDineOnUser() == null) {
+			disableMenuItem(menu, R.id.option_check_in);
+			disableMenuItem(menu, R.id.option_bill);
+			return true;
 		}
-		return true;
-		
+
+		// If checked in
+		if(DineOnUserApplication.getCurrentDiningSession() != null) {
+			disableMenuItem(menu, R.id.option_check_in);
+			enableMenuItem(menu, R.id.option_bill);
+		} else { // If not checked in
+			enableMenuItem(menu, R.id.option_check_in);
+			disableMenuItem(menu, R.id.option_bill);
+		}
+		return true;		
 	}
 	
 	@Override
