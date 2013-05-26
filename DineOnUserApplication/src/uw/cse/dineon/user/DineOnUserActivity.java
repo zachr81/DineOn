@@ -26,6 +26,7 @@ import uw.cse.dineon.user.general.UserPreferencesActivity;
 import uw.cse.dineon.user.login.UserLoginActivity;
 import uw.cse.dineon.user.restaurant.home.RestaurantHomeActivity;
 import uw.cse.dineon.user.restaurant.home.SubMenuFragment;
+import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.location.Location;
@@ -36,6 +37,8 @@ import android.util.Log;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.SearchView;
+import android.widget.SearchView.OnQueryTextListener;
 import android.widget.Toast;
 
 import com.parse.ParseException;
@@ -53,7 +56,8 @@ import com.parse.SaveCallback;
 public class DineOnUserActivity extends FragmentActivity implements 
 SatelliteListener,
 SubMenuFragment.MenuItemListListener, /* manipulation of order from sub menu */
-OrderUpdateListener /* manipulation of list from the current order activity */ { 
+OrderUpdateListener /* manipulation of list from the current order activity */
+{ 
 
 	private static final String TAG = DineOnUserActivity.class.getSimpleName();
 
@@ -87,12 +91,44 @@ OrderUpdateListener /* manipulation of list from the current order activity */ {
 					"Unable to find your information", UserLoginActivity.class).show();
 		}
 		
-		this.mMenuItemMappings = new HashMap<MenuItem, CurrentOrderItem>();
-		
+		this.mMenuItemMappings = new HashMap<MenuItem, CurrentOrderItem>();		
 		this.mLocationListener = new UserLocationListener();
 		this.mLocationListener.requestLocationUpdates();
+		
+		handleSearchIntent(getIntent());
 	}
 
+	@Override
+	protected void onNewIntent(Intent intent) {
+		handleSearchIntent(intent);
+	}
+	
+	
+	/**
+	 * Given an intent where the user request to search something, 
+	 * process the query and react accordingly.
+	 * 
+	 * @param intent intent
+	 */
+	private void handleSearchIntent(Intent intent) {
+		if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
+			this.onSearch(intent.getStringExtra(SearchManager.QUERY));
+		}
+	}
+	
+	/**
+	 * Method where sub activities can override to receive specific search request for example.
+	 * 
+	 * IE the activity can expose a search view and to the user and just react to user request
+	 * with this method.
+	 * 
+	 * @param query Query user is requesting
+	 */
+	protected void onSearch(String query) {
+		// TODO Implement Parse Query
+		Log.d(TAG, "User requested a search for " + query);
+	}
+	
 	/**
 	 * This automates the addition of the User Intent.
 	 * Should never be called when mUser is null.
@@ -183,9 +219,29 @@ OrderUpdateListener /* manipulation of list from the current order activity */ {
 		List<android.view.MenuItem> customActionBarButtons = new ArrayList<android.view.MenuItem>();
 		customActionBarButtons.add(menu.findItem(R.id.option_bill));
 		customActionBarButtons.add(menu.findItem(R.id.option_check_in));
-
 		setOnClick(M, customActionBarButtons);
 
+		// Enable the search widget in the action bar
+		SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+		final SearchView SEARCHVIEW = (SearchView) 
+				menu.findItem(R.id.option_search).getActionView();
+		
+		SEARCHVIEW.setIconified(true);
+		SEARCHVIEW.setOnQueryTextListener(new OnQueryTextListener() {
+			
+			@Override
+			public boolean onQueryTextSubmit(String query) {
+				// Make the call to search for a particular restaurant
+				onSearch(query);
+				return false;
+			}
+			
+			@Override
+			public boolean onQueryTextChange(String newText) { // Do nothing
+				return false;
+			}
+		});
+		
 		return true;
 	}
 
@@ -236,13 +292,25 @@ OrderUpdateListener /* manipulation of list from the current order activity */ {
 			return true;
 		}
 
+		SearchView searchView = (SearchView) menu.findItem(R.id.option_search).getActionView();
+		
+		// If checked in
 		if(DineOnUserApplication.getCurrentDiningSession() != null) {
 			disableMenuItem(menu, R.id.option_check_in);
 			enableMenuItem(menu, R.id.option_bill);
+			if (searchView != null) {
+				searchView.setEnabled(false);
+				searchView.setVisibility(View.INVISIBLE);
+			}
 		} 
-		else {
+		else { // If not checked in
 			enableMenuItem(menu, R.id.option_check_in);
+			enableMenuItem(menu, R.id.option_search);
 			disableMenuItem(menu, R.id.option_bill);
+			if (searchView != null) {
+				searchView.setEnabled(true);
+				searchView.setVisibility(View.VISIBLE);
+			}
 		}
 
 		return true;
