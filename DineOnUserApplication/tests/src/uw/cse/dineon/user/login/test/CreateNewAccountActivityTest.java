@@ -93,7 +93,6 @@ public class CreateNewAccountActivityTest extends ActivityInstrumentationTestCas
 		
 		RestaurantSelectionActivity mainAct = (RestaurantSelectionActivity) 
 				monitor.waitForActivityWithTimeout(WAIT_TIME);
-		assertNotNull(mainAct);
 
 		ParseUser curUser = ParseUser.getCurrentUser();
 		curUser.fetch();
@@ -101,25 +100,13 @@ public class CreateNewAccountActivityTest extends ActivityInstrumentationTestCas
 		assertEquals(curUser.getUsername(), fakeUserName);
 		assertEquals(curUser.getEmail(), fakeEmail);
 		
-		ParseQuery inner = new ParseQuery(UserInfo.class.getSimpleName());
-		inner.whereEqualTo(UserInfo.PARSEUSER, curUser);
-		ParseQuery query = new ParseQuery(DineOnUser.class.getSimpleName());
-		query.whereMatchesQuery(DineOnUser.USER_INFO, inner);
-		ParseObject object = query.getFirst();
 		
-		assertNotNull(object);
-		
-		DineOnUser justMade = new DineOnUser(object);
-		
-		assertNotNull(justMade);
-		assertNotNull(justMade.getUserInfo());
-		
-		assertEquals(justMade.getName(), fakeUserName);
-		justMade.getUserInfo().deleteFromCloud();
-		justMade.deleteFromCloud();
 		curUser.deleteInBackground();
 		
-		mainAct.finish();
+	}
+	
+	public void testOnCreateNewAccount() {
+		mActivity.onCreateNewAccount(fakeUserName, fakeEmail, fakePassword, fakePassword);
 	}
 
 	private CreateNewAccountFragment getFragment(){

@@ -1,4 +1,4 @@
-package uw.cse.dineon.user.restaurant.home.test;
+package uw.cse.dineon.user.checkin.test;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -13,33 +13,26 @@ import uw.cse.dineon.library.Menu;
 import uw.cse.dineon.library.MenuItem;
 import uw.cse.dineon.library.Order;
 import uw.cse.dineon.library.Restaurant;
-import uw.cse.dineon.library.RestaurantInfo;
 import uw.cse.dineon.library.util.DineOnConstants;
-import uw.cse.dineon.library.util.TestUtility;
 import uw.cse.dineon.user.DineOnUserApplication;
-import uw.cse.dineon.user.restaurant.home.RestaurantHomeActivity;
+import uw.cse.dineon.user.checkin.CheckInActivity;
 import android.content.Intent;
-import android.os.Bundle;
-import android.os.Parcelable;
 import android.test.ActivityInstrumentationTestCase2;
 
-public class RestaurantHomeActivityTest extends
-		ActivityInstrumentationTestCase2<RestaurantHomeActivity> {
+public class CheckInActivityTest extends
+		ActivityInstrumentationTestCase2<CheckInActivity> {
 
 	private ParseUser testUser;
-	private DiningSession testSession;
-	private RestaurantHomeActivity mActivity;
-	private ParseUser testUser1;
 	private DineOnUser dineOnUser;
-	private RestaurantInfo testRInfo;
 	private MenuItem steak;
+	private CheckInActivity mActivity;
 
-	public RestaurantHomeActivityTest() {
-		super(RestaurantHomeActivity.class);
+	public CheckInActivityTest() {
+		super(CheckInActivity.class);
 	}
 
-	@Override
 	protected void setUp() throws Exception {
+		super.setUp();
 		super.setUp();
 		setActivityInitialTouchMode(false);
 //		
@@ -61,8 +54,7 @@ public class RestaurantHomeActivityTest extends
 		int itemCnt = 100;
 		steak = new MenuItem(itemCnt++, 12.99, "testSteak", 
 		"A juicy (test) hunk of meat.");
-		CurrentOrderItem coi = new CurrentOrderItem(steak);
-		mi.add(coi);
+		mi.add(new CurrentOrderItem(steak));
 		
 		Order one = new Order(1, dineOnUser.getUserInfo(), mi);
 		ds.addPendingOrder(one);
@@ -81,18 +73,12 @@ public class RestaurantHomeActivityTest extends
 		mActivity = getActivity();
 	}
 
-	@Override
 	protected void tearDown() throws Exception {
-		mActivity.finish();
 		super.tearDown();
 	}
-
-	public void testOnMenuItemFocusedOn() {
-		MenuItem m = new MenuItem(1, 1, "Fries", "Yum");
-		mActivity.onMenuItemFocusedOn(m);
-		
-		mActivity.onMenuItemFocusedOn(mActivity.getCurrentRestaurant().getMenuList().get(0).getItems().get(0));
-	}
 	
+	public void testBasic() {
+		
+	}
 
 }

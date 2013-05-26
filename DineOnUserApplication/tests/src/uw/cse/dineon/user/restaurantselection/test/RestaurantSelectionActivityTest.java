@@ -27,17 +27,19 @@ public class RestaurantSelectionActivityTest extends
 
 	@Override
 	protected void setUp() throws Exception {
-//		super.setUp();
+		super.setUp();
 //		Parse.initialize(null, "RUWTM02tSuenJPcHGyZ0foyemuL6fjyiIwlMO0Ul", "wvhUoFw5IudTuKIjpfqQoj8dADTT1vJcJHVFKWtK");
-//		setActivityInitialTouchMode(false);
-//		
-//		testUser = ParseUser.logIn("zach", "zach");
-//		dineOnUser = new DineOnUser(testUser);
-//		DineOnUserApplication.setDineOnUser(dineOnUser);
-//		
-//	    Intent addEvent = new Intent();
-//	    setActivityIntent(addEvent);
-//		mActivity = getActivity();
+		setActivityInitialTouchMode(false);
+		testUser = new ParseUser();
+		testUser.setUsername("rest");
+		dineOnUser = new DineOnUser(testUser);
+		DineOnUserApplication.setDineOnUser(dineOnUser);
+		testRInfo = new RestaurantInfo(testUser);
+	    Intent addEvent = new Intent();
+	    setActivityIntent(addEvent);
+
+	    
+		mActivity = getActivity();
 //		
 //		ParseQuery inner = new ParseQuery(RestaurantInfo.class.getSimpleName());
 //		inner.whereEqualTo(RestaurantInfo.PARSEUSER, ParseUser.logIn("r", "r"));
@@ -47,7 +49,7 @@ public class RestaurantSelectionActivityTest extends
 
 	@Override
 	protected void tearDown() throws Exception {
-//		super.tearDown();
+		super.tearDown();
 	}
 
 	public void testAddRestaurantInfo() throws ParseException {
@@ -57,7 +59,7 @@ public class RestaurantSelectionActivityTest extends
 	}
 
 	public void testOnRestaurantFocusedOn() {
-//		mActivity.onRestaurantFocusedOn(testRInfo);
+		mActivity.onRestaurantFocusedOn(testRInfo);
 	}
 
 	
@@ -65,11 +67,16 @@ public class RestaurantSelectionActivityTest extends
 //		assertNotNull(mActivity.getRestaurants());
 	}
 	
-	public void testDeleteResume() {
-//		getInstrumentation().waitForIdleSync();
+	public void testShowNoRestaurantsDialog() {
+//		mActivity.showNoRestaurantsDialog("test for failure");
 //		mActivity.finish();
-//
-//		mActivity = getActivity();
+	}
+	
+	public void testDeleteResume() {
+		getInstrumentation().waitForIdleSync();
+		mActivity.finish();
+
+		mActivity = getActivity();
 	}
 
 }
