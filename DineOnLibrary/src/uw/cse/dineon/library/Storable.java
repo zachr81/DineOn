@@ -173,6 +173,7 @@ public abstract class Storable implements Parcelable {
 		if (!o.getClass().equals(getClass())) {
 			return false;
 		}
+		
 		Storable s = (Storable) o;
 		return s.mCompleteObject.equals(this.mCompleteObject);
 	}
