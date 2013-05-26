@@ -1,30 +1,18 @@
 package uw.cse.dineon.user.general.test;
 
-import java.util.Date;
-import java.util.List;
-
 import com.parse.ParseUser;
 
-import uw.cse.dineon.library.CurrentOrderItem;
 import uw.cse.dineon.library.DineOnUser;
-import uw.cse.dineon.library.DiningSession;
-import uw.cse.dineon.library.Menu;
-import uw.cse.dineon.library.Order;
-import uw.cse.dineon.library.Restaurant;
-import uw.cse.dineon.library.util.TestUtility;
 import uw.cse.dineon.user.DineOnUserApplication;
 import uw.cse.dineon.user.R;
 import uw.cse.dineon.user.general.ProfileActivity;
 import uw.cse.dineon.user.login.UserLoginActivity;
-import uw.cse.dineon.user.restaurant.home.RestaurantHomeActivity;
-import uw.cse.dineon.user.restaurantselection.RestaurantSelectionActivity;
 import android.app.Instrumentation;
 import android.app.Instrumentation.ActivityMonitor;
 import android.content.Intent;
 import android.test.ActivityInstrumentationTestCase2;
 import android.view.KeyEvent;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.TextView;
 
 public class ProfileActivityTest extends ActivityInstrumentationTestCase2<ProfileActivity> {

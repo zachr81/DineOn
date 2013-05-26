@@ -11,7 +11,6 @@ import uw.cse.dineon.library.Menu;
 import uw.cse.dineon.library.Order;
 import uw.cse.dineon.library.Restaurant;
 import uw.cse.dineon.library.RestaurantInfo;
-import uw.cse.dineon.library.util.DineOnConstants;
 import uw.cse.dineon.library.util.TestUtility;
 import uw.cse.dineon.user.DineOnUserApplication;
 import uw.cse.dineon.user.R;
@@ -29,7 +28,6 @@ import android.view.KeyEvent;
 import android.widget.Button;
 import android.widget.EditText;
 
-import com.parse.Parse;
 import com.parse.ParseUser;
 
 public class UserLoginActivityTest extends
