@@ -399,6 +399,8 @@ OrderUpdateListener /* manipulation of list from the current order activity */ {
 	public void onConfirmOrder(DiningSession ds, String orderId) {
 		// TODO Auto-generated method stub
 		Toast.makeText(this, "onConfirmOrder", Toast.LENGTH_SHORT).show();
+		DineOnUserApplication.setCurrentDiningSession(ds);
+		DineOnUserApplication.clearCurrentOrder();
 	}
 
 	@Override
@@ -429,6 +431,9 @@ OrderUpdateListener /* manipulation of list from the current order activity */ {
 	public void payBill() {
 		mSat.requestCheckOut(DineOnUserApplication.getCurrentDiningSession(), 
 				DineOnUserApplication.getCurrentDiningSession().getRestaurantInfo());
+		
+		Toast.makeText(this, "Payment Sent!", 
+				Toast.LENGTH_SHORT).show();
 		
 		// TODO Need to add a confirmation from restaurant that the user
 		// has successfully paid
