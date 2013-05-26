@@ -33,7 +33,6 @@ implements CreateNewAccountListener {
 
 	private static final String TAG = CreateNewRestaurantAccountActivity.class.getSimpleName();
 
-
 	/**
 	 * Progress bar dialog for showing user progress.
 	 */
