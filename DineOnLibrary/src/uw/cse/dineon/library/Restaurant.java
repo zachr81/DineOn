@@ -19,7 +19,7 @@ import com.parse.ParseUser;
  * and old restaurant transactions.
  * @author zachr81, mhotan
  */
-public class Restaurant extends LocatableStorable {
+public class Restaurant extends Storable {
 
 	/*
 	 * Abstract Representation:
@@ -304,7 +304,7 @@ public class Restaurant extends LocatableStorable {
 	 * Adds image associated to this image.
 	 * @param image Image to add.
 	 */
-	public void addImage(DineOnImage image) {
+	public synchronized void addImage(DineOnImage image) {
 		mRestInfo.addImage(image);
 	}
 	

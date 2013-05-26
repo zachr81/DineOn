@@ -6,12 +6,16 @@ import uw.cse.dineon.library.Order;
 import uw.cse.dineon.library.Reservation;
 import uw.cse.dineon.library.Restaurant;
 import uw.cse.dineon.library.UserInfo;
+import uw.cse.dineon.library.image.ImageCache;
 import uw.cse.dineon.library.util.Utility;
 import uw.cse.dineon.restaurant.RestaurantSatellite.SateliteListener;
 import uw.cse.dineon.restaurant.login.RestaurantLoginActivity;
 import uw.cse.dineon.restaurant.profile.ProfileActivity;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.location.Location;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
@@ -19,6 +23,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.MenuItem.OnMenuItemClickListener;
+import android.view.Window;
 import android.widget.Toast;
 
 import com.parse.ParseException;
@@ -60,8 +65,21 @@ implements SateliteListener {
 	 */
 	protected Restaurant mRestaurant;
 
+	/**
+	 * Reference to this activity for inner class listeners.
+	 */
 	private DineOnRestaurantActivity thisResActivity;
+	
+	/**
+	 * Location Listener for location based services.
+	 */
+	private RestaurantLocationListener mLocationListener;
 
+	/**
+	 * Protected reference for ease of use.
+	 * Don't be dumbass a null it out.
+	 */
+	protected ImageCache mImageCache;
 
 	/**
 	 * This is a very important call that serves as a notification 
@@ -82,49 +100,41 @@ implements SateliteListener {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
+		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS); 
+		setProgressBarIndeterminateVisibility(true); 
+		
+		// Initialize the satellite 
 		mSatellite = new RestaurantSatellite();
-
+		// Initialize the Cache
+		mImageCache = new ImageCache(this);
+		mImageCache.open();
+		
+		// retrieve necessary references.
 		thisResActivity = this;
-
-		// Grab reference to the extras
-		Bundle extras = getIntent().getExtras();
-
-		// Lets first check if the activity is being recreated after being
-		// destroyed but there was an already existing restuarant
-//		if (savedInstanceState != null && savedInstanceState.containsKey(
-//				DineOnConstants.KEY_RESTAURANT)) { 
-//			// Activity recreated
-//			mRestaurant = savedInstanceState.getParcelable(
-//					DineOnConstants.KEY_RESTAURANT);
-//		} 
-//		else if (extras != null && extras.containsKey(
-//				DineOnConstants.KEY_RESTAURANT)) {
-//			// Activity started and created for the first time
-//			// Valid extras were passed into this
-//			mRestaurant = extras.getParcelable(
-//					DineOnConstants.KEY_RESTAURANT);
-//		}
 		mRestaurant = DineOnRestaurantApplication.getRestaurant();
 		
 		if (mRestaurant == null) {
 			Utility.getGeneralAlertDialog("Uh OH!", "Doesn't look like your logged in"
 					, this).show();
 		}
+		
+		this.mLocationListener = new RestaurantLocationListener();
 	}
 
 	@Override
 	protected void onResume() {
 		super.onResume();
-
 		mSatellite.register(mRestaurant, thisResActivity);
+		mImageCache.open();
 		updateUI(); // This is the call that should trigger a lot of UI changes.
 	}
 
 	@Override
 	protected void onPause() {
 		destroyProgressDialog();
-		super.onPause();
 		mSatellite.unRegister();
+		mImageCache.close();
+		super.onPause();
 	}
 
 	/**
@@ -240,33 +250,9 @@ implements SateliteListener {
 	 * @return whether a user is logged in
 	 */
 	protected boolean isLoggedIn() {
-		// TODO Sync with Parse User to ensure
 		// That the user is logged in via Parse
 		// Then check if we have a associated restaurant
-		if (mRestaurant != null) {
-			return true;
-		}
-		Log.w(TAG, "Restaurant instance associated with this user is null");
-		return false;
-	}
-
-	////////////////////////////////////////////////
-	/////  Satellite Calls 
-	/////////////////////////////////////////////////
-
-	/**
-	 * Notifies all the current Customers that 
-	 * a change in the state of this restaurant 
-	 * has changed.  
-	 */
-	protected void notifyAllUsersOfRestaurantChange() {
-		if (mRestaurant == null) {
-			Log.e(TAG, "Restaurant is null while attempting to use the satellite");
-			return;
-		}
-		// For every User that is currently in the restaurant
-		//  That is get all the Users for all the active dining sessions
-
+		return mRestaurant != null;
 	}
 
 	////////////////////////////////////////////////
@@ -275,7 +261,6 @@ implements SateliteListener {
 
 	@Override
 	public void onFail(String message) {
-		// TODO Auto-generated method stub
 		Toast.makeText(this, "onFail " + message, Toast.LENGTH_LONG).show();
 	}
 
@@ -414,6 +399,8 @@ implements SateliteListener {
 		// All we do is call the 
 		removeDiningSession(session);
 	}
+	
+
 
 	////////////////////////////////////////////////
 	/////  Establish Menu
@@ -453,6 +440,12 @@ implements SateliteListener {
 		// Adjust what is presented to the user		
 		if (!isLoggedIn()) {
 			setMenuToNonUser(menu);
+		}
+		
+		MenuItem progressbar = menu.findItem(R.id.item_progress);
+		if (progressbar != null) {
+			progressbar.setEnabled(false);
+			progressbar.setVisible(false);
 		}
 		return true;
 	}
@@ -504,27 +497,12 @@ implements SateliteListener {
 		startActivity(i);
 	}
 
-//	@Override
-//	public void startActivity(Intent intent) {
-//		if (mRestaurant != null) {
-//			intent.putExtra(DineOnConstants.KEY_RESTAURANT, mRestaurant);
-//		}
-//		super.startActivity(intent);
-//	}
-//
-//	@Override
-//	public void onSaveInstanceState(Bundle savedInstanceState) {
-//		// Place the correct Key for the restaurant
-////		if (mRestaurant != null) {
-////			savedInstanceState.putParcelable(DineOnConstants.KEY_RESTAURANT, mRestaurant);
-////		}
-//		super.onSaveInstanceState(savedInstanceState);
-//	}
-
 	// //////////////////////////////////////////////////////////////////////
 	// /// UI Specific methods
 	// //////////////////////////////////////////////////////////////////////
 
+	
+	
 	/**
 	 * Instantiates a new progress dialog and shows it on the screen.
 	 * @param cancelable Allows the progress dialog to be cancelable.
@@ -548,6 +526,72 @@ implements SateliteListener {
 	protected void destroyProgressDialog() {
 		if (mProgressDialog != null && mProgressDialog.isShowing()) {
 			mProgressDialog.dismiss();
+		}
+	}
+	
+	/**
+	 * Listener for getting restaurant location at creation time.
+	 * @author mtrathjen08
+	 *
+	 */
+	private class RestaurantLocationListener implements android.location.LocationListener {
+
+		/**
+		 * Location Manager for location services.
+		 */
+		private LocationManager mLocationManager;
+		
+		/**
+		 * Last received location from mananger. Initially null.
+		 */
+		private Location mLocation;
+		
+		/**
+		 * Constructor for the location listener.
+		 */
+		public RestaurantLocationListener() {
+			this.mLocationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+			this.mLocation = null;
+		}
+		
+		/**
+		 * Return the last recorder location of the user. Null if no update.
+		 * @return last recorder location.
+		 */
+		private Location getLastLocation() {
+			return this.mLocation;
+			// TODO add support for gps
+		}
+		
+		/**
+		 * Request a location reading from the Location Manager.
+		 */
+		private void requestLocationUpdate() {
+			this.mLocationManager.requestSingleUpdate(LocationManager.NETWORK_PROVIDER, this, null);
+			// TODO add support for gps
+		}
+		
+		@Override
+		public void onLocationChanged(Location loc) {
+			this.mLocation = loc;
+		}
+
+		@Override
+		public void onProviderDisabled(String arg0) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void onProviderEnabled(String arg0) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void onStatusChanged(String arg0, int arg1, Bundle arg2) {
+			// TODO Auto-generated method stub
+			
 		}
 	}
 

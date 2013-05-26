@@ -49,7 +49,7 @@ public final class DineOnConstants {
 	 * For unskewed image with height h and width w
 	 * w <= LONGEST_IMAGE_DIMENSION && h <= LONGEST_IMAGE_DIMENSION
 	 */
-	public static final int LONGEST_IMAGE_DIMENSION = 2048;
+	public static final int LONGEST_IMAGE_DIMENSION = 1024;
 	
 	/**
 	 * This can be used as a generalized key for Bundles.
@@ -91,6 +91,19 @@ public final class DineOnConstants {
 	 * Tax for determining price of orders.
 	 */
 	public static final double TAX = 0.08;
+	
+	/**
+	 * Max number of restaurants to show on the restaurant selection screen.
+	 */
+	public static final int MAX_RESTAURANTS = 20;
+	
+	/**
+	 * Near restaurants definition in miles.
+	 */
+	public static final double MAX_RESTAURANT_DISTANCE = 2.0;
+	
+	public static final long MIN_LOCATION_UPDATE_INTERVAL_MILLIS = 5 * 60 * 1000;
+	public static final float MIN_LOCATION_UPDATE_DISTANCE_METERS = (float) (1.0 * 1609.34);
 
 	// Callback Key for braodcast receiver callbacks
 	public static final String OBJ_ID = "objectId";

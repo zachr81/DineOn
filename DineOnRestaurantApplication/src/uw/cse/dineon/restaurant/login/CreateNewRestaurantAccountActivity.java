@@ -3,16 +3,19 @@ package uw.cse.dineon.restaurant.login;
 import uw.cse.dineon.library.Restaurant;
 import uw.cse.dineon.library.util.CredentialValidator;
 import uw.cse.dineon.library.util.CredentialValidator.Resolution;
-import uw.cse.dineon.library.util.DineOnConstants;
 import uw.cse.dineon.library.util.Utility;
 import uw.cse.dineon.restaurant.DineOnRestaurantApplication;
 import uw.cse.dineon.restaurant.R;
 import uw.cse.dineon.restaurant.active.RestauarantMainActivity;
 import uw.cse.dineon.restaurant.login.CreateNewAccountFragment.CreateNewAccountListener;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.location.Location;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.widget.Toast;
 
 import com.parse.ParseException;
 import com.parse.ParseUser;
@@ -28,6 +31,7 @@ public class CreateNewRestaurantAccountActivity extends FragmentActivity
 implements CreateNewAccountListener {
 
 	private static final String TAG = CreateNewRestaurantAccountActivity.class.getSimpleName();
+	
 
 	/**
 	 * Progress bar dialog for showing user progress.
@@ -39,24 +43,27 @@ implements CreateNewAccountListener {
 	 */
 	private CreateNewRestaurantAccountActivity This;
 
+	/**
+	 * Location Listener for location based services.
+	 */
+	private RestaurantLocationListener mLocationListener;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_create_new_account);
 
+		this.mLocationListener = new RestaurantLocationListener();
+		try {
+			this.mLocationListener.requestLocationUpdate();
+		} catch (IllegalArgumentException ex) {
+			// provider is not available because using emulator
+			Toast.makeText(this, "Stop using an emulator idiot!", 
+					Toast.LENGTH_SHORT).show();
+		}
+		
 		This = this;
 	}
-
-//	/**
-//	 * This automates the addition of the User Intent. Should never be called
-//	 * when mUser is null.
-//	 * @param intent Intent
-//	 */
-//	@Override
-//	public void startActivity(Intent intent) {
-////		intent.putExtra(DineOnConstants.KEY_RESTAURANT, mRestaurant);
-//		super.startActivity(intent);
-//	}
 
 	@Override
 	public void submitNewAccount(String username, String email, String pw,
@@ -82,6 +89,86 @@ implements CreateNewAccountListener {
 	protected void onPause() {
 		destroyProgressDialog();
 		super.onPause();
+	}
+	
+	/**
+	 * Listener for getting restaurant location at creation time.
+	 * @author mtrathjen08
+	 *
+	 */
+	private class RestaurantLocationListener implements android.location.LocationListener {
+
+		/**
+		 * Location Manager for location services.
+		 */
+		private LocationManager mLocationManager;
+		
+		private boolean waitingForLocation;
+		
+		private Location mLocation;
+		
+		/**
+		 * Constructor for the location listener.
+		 */
+		public RestaurantLocationListener() {
+			this.mLocationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+			this.waitingForLocation = false;
+			this.mLocation = null;
+		}
+		
+		/**
+		 * Return the last recorder location of the user.
+		 * @return last recorder location.
+		 */
+		private Location getLastLocation() {
+			return this.mLocation;
+			// TODO add support for gps
+		}
+		
+		/**
+		 * Request a location reading from the Location Manager.
+		 */
+		private void requestLocationUpdate() {
+			this.mLocationManager.requestSingleUpdate(LocationManager.NETWORK_PROVIDER, this, null);
+			// TODO add support for gps
+		}
+		
+		/**
+		 * The location was not returned before login, wait for return.
+		 */
+		public void waitForLocation() {
+			this.waitingForLocation = true;
+		}
+		
+		@Override
+		public void onLocationChanged(Location loc) {
+			this.mLocation = loc;
+			
+			if (this.waitingForLocation) {
+				DineOnRestaurantApplication.getRestaurant().getInfo().
+					updateLocation(loc.getLongitude(), loc.getLatitude());
+				DineOnRestaurantApplication.getRestaurant().getInfo().saveInBackGround(null);
+				startMainActivity();
+			}
+		}
+
+		@Override
+		public void onProviderDisabled(String arg0) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void onProviderEnabled(String arg0) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void onStatusChanged(String arg0, int arg1, Bundle arg2) {
+			// TODO Auto-generated method stub
+			
+		}
 	}
 
 	/**
@@ -113,8 +200,26 @@ implements CreateNewAccountListener {
 						public void done(ParseException e) {
 							destroyProgressDialog();
 							if (e == null) {
-								DineOnRestaurantApplication.logIn(NEWREST);
-								startMainActivity();
+								// get the location of the restaurant
+								Location loc = mLocationListener.getLastLocation();
+								if (loc != null) {
+									NEWREST.getInfo().updateLocation(loc.getLongitude(), 
+												loc.getLatitude());
+									NEWREST.getInfo().saveInBackGround(null);
+									DineOnRestaurantApplication.logIn(NEWREST);
+									startMainActivity();
+								} else {
+									DineOnRestaurantApplication.logIn(NEWREST);
+									if (mLocationListener.mLocationManager.
+											getProvider(LocationManager.NETWORK_PROVIDER) == null) {
+										// we're in an emulator so don't wait
+										NEWREST.getInfo().updateLocation(0.0, 0.0);
+										NEWREST.getInfo().saveInBackGround(null);
+										startMainActivity();
+									} else {
+										mLocationListener.waitForLocation();
+									}
+								}
 							} else {
 								Utility.getFailedToCreateAccountDialog(
 										e.getMessage(), This).show();
