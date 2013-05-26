@@ -21,7 +21,6 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.FrameLayout;
-import android.widget.SearchView;
 import android.widget.Toast;
 
 /**
@@ -33,6 +32,10 @@ public class ProfileActivity extends DineOnUserActivity implements
 		ProfileEditFragment.InfoChangeListener {
 
 	private static final String STATE_SELECTED_NAVIGATION_ITEM = "selected_navigation_item";
+	
+	/**
+	 * Enums for keeping track of state.
+	 */
 	public enum State { DEFAULT, EDIT, BACK };
 	private State state;
 	
@@ -89,14 +92,6 @@ public class ProfileActivity extends DineOnUserActivity implements
 			m.setEnabled(true);
 			m.setVisible(true);
 		}		
-
-		// This is for the case where nothing is updated yet
-		// There is no User class
-		if (DineOnUserApplication.getDineOnUser() == null) {
-			disableMenuItem(menu, R.id.option_check_in);
-			disableMenuItem(menu, R.id.option_bill);
-			return true;
-		}
 
 		// If checked in
 		if(DineOnUserApplication.getCurrentDiningSession() != null) {

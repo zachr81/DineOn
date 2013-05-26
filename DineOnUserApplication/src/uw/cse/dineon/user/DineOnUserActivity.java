@@ -291,14 +291,6 @@ OrderUpdateListener /* manipulation of list from the current order activity */ {
 	@Override
 	public boolean onPrepareOptionsMenu(android.view.Menu menu) {
 
-		// This is for the case where nothing is updated yet
-		// There is no User class
-		if (DineOnUserApplication.getDineOnUser() == null) {
-			disableMenuItem(menu, R.id.option_check_in);
-			disableMenuItem(menu, R.id.option_bill);
-			return true;
-		}
-
 		SearchView searchView = (SearchView) menu.findItem(R.id.option_search).getActionView();
 
 		// If checked in
