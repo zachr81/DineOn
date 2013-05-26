@@ -91,7 +91,6 @@ implements CreateNewAccountListener {
 	/**
 	 * Listener for getting restaurant location at creation time.
 	 * @author mtrathjen08
-	 *
 	 */
 	private class RestaurantLocationListener implements android.location.LocationListener {
 
