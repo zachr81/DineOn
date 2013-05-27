@@ -114,12 +114,12 @@ public class CreateNewAccountActivityTest extends ActivityInstrumentationTestCas
 		//suCall.done(new ParseException(3, "test excep"));
 //	}
 	
-	public void testSaveCallback() {
-		SaveCallback sCall = mActivity.getSaveCallback(new DineOnUser(new ParseUser()));
-		sCall.done(null);
-		sCall.done(new ParseException(3, "test excep"));
-		
-	}
+//	public void testSaveCallback() {
+//		SaveCallback sCall = mActivity.getSaveCallback(new DineOnUser(new ParseUser()));
+//		sCall.done(null);
+//		sCall.done(new ParseException(3, "test excep"));
+//		
+//	}
 
 	private CreateNewAccountFragment getFragment(){
 		Fragment f = mActivity.getSupportFragmentManager().findFragmentById(
