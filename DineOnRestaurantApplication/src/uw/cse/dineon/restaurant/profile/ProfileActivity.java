@@ -1,15 +1,9 @@
 package uw.cse.dineon.restaurant.profile;
 
-import java.io.File;
-
 import uw.cse.dineon.library.MenuItem;
 import uw.cse.dineon.library.Restaurant;
 import uw.cse.dineon.library.RestaurantInfo;
 import uw.cse.dineon.library.image.DineOnImage;
-import uw.cse.dineon.library.image.ImageCache.ImageGetCallback;
-import uw.cse.dineon.library.image.ImageIO;
-import uw.cse.dineon.library.image.ImageObtainer;
-import uw.cse.dineon.library.util.DineOnConstants;
 import uw.cse.dineon.restaurant.DineOnRestaurantActivity;
 import uw.cse.dineon.restaurant.R;
 import android.app.ActionBar;
@@ -17,16 +11,12 @@ import android.app.ActionBar.Tab;
 import android.app.ActionBar.TabListener;
 import android.app.FragmentTransaction;
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Bitmap;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.Menu;
-import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.parse.ParseException;
@@ -57,17 +47,10 @@ MenuItemsFragment.MenuItemListener {
 
 	private MenuItemsFragment mItemsFragment;
 	private RestaurantInfoFragment mRestInfoFragment;
-
-	/**
-	 * Temporary file for storing image.
-	 */
-	private File mTempFile;
-
+	
 	private Context This;
 
 	private boolean isWorkingBackground;
-
-	private ImageGetCallback mGetImageCallback;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -270,29 +253,6 @@ MenuItemsFragment.MenuItemListener {
 	}
 
 	@Override
-	public void onRequestTakePicture(ImageGetCallback callback) {
-		// Assign the right callback
-		mGetImageCallback = callback;
-
-		// Delete the old temporary file
-		if (mTempFile != null) {
-			mTempFile.delete();
-		}
-
-		// Create a new temporary file
-		mTempFile = getTempImageFile();
-		ImageObtainer.launchTakePictureIntent(this,
-				DineOnConstants.REQUEST_TAKE_PHOTO, mTempFile);
-	}
-
-	@Override
-	public void onRequestGetPictureFromGallery(ImageGetCallback callback) {
-		// Assign the right callback
-		mGetImageCallback = callback;
-		ImageObtainer.launchChoosePictureIntent(this, DineOnConstants.REQUEST_CHOOSE_PHOTO);
-	}
-
-	@Override
 	public void onSelectImageAsDefault(int i) {
 		// TODO set image at index I as  the default
 	}
@@ -309,56 +269,6 @@ MenuItemsFragment.MenuItemListener {
 		});
 	}
 
-	/**
-	 * Adds the photo to the restaurant. This method takes care of 
-	 * all the image sizing and alignment.
-	 * 
-	 * This method will notify all the views in this activity that 
-	 * need to know about a new photo.
-	 * 
-	 * This method will also handle the save of the new image
-	 * While also adding it to the cache.
-	 * 
-	 * @param uri Uri for the image to download.
-	 * @param callback Image callback to invoke
-	 */
-	private void addPhotoToRestaurant(Uri uri, ImageGetCallback callback) {
-		Bitmap b = ImageIO.loadBitmapFromURI(getContentResolver(), uri);
-		callback.onImageReceived(null, b);
-
-	}
-
-	@Override
-	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		super.onActivityResult(requestCode, resultCode, data);
-
-		if (resultCode != RESULT_OK) {
-			Log.d(TAG, "User cancelled job for request code " + requestCode);
-			return;
-		}
-
-		Uri uriForInfoFragment = null;
-		switch (requestCode) {
-		// Took a photo.
-		case DineOnConstants.REQUEST_TAKE_PHOTO:
-			uriForInfoFragment = Uri.fromFile(mTempFile);
-			break;
-		case DineOnConstants.REQUEST_CHOOSE_PHOTO:
-			uriForInfoFragment = data.getData();
-			break;
-		default:
-			Log.w(TAG, "Unsupported operation occured onActivityResult");
-		}
-
-		if (uriForInfoFragment != null && mGetImageCallback != null) {
-			addPhotoToRestaurant(uriForInfoFragment, mGetImageCallback);
-		} else {
-			Log.w(TAG, "Was not able to obtain a new image");
-		}
-	}
-
-
-
 	@Override
 	public void onAddImageToRestaurant(Bitmap b) {
 		RestaurantImageCreator saver = new RestaurantImageCreator(b);
@@ -366,16 +276,10 @@ MenuItemsFragment.MenuItemListener {
 	}
 
 	@Override
-	public void onGetImage(DineOnImage image, ImageGetCallback callback) {
-		getImage(image, callback);
-	}
-
-	@Override
 	public void onImageAddedToMenuItem(MenuItem item, Bitmap b) {
 		MenuItemImageCreator creator = new MenuItemImageCreator(item, b);
 		creator.execute();
 	}
-
 
 	/**
 	 * This class helps in saving an image to the restaurant.

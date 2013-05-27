@@ -10,7 +10,11 @@ import uw.cse.dineon.library.Restaurant;
 import uw.cse.dineon.library.UserInfo;
 import uw.cse.dineon.library.image.DineOnImage;
 import uw.cse.dineon.library.image.ImageCache;
+import uw.cse.dineon.library.image.ImageObtainer;
 import uw.cse.dineon.library.image.ImageCache.ImageGetCallback;
+import uw.cse.dineon.library.image.ImageIO;
+import uw.cse.dineon.library.image.ImageObtainable;
+import uw.cse.dineon.library.util.DineOnConstants;
 import uw.cse.dineon.library.util.Utility;
 import uw.cse.dineon.restaurant.RestaurantSatellite.SateliteListener;
 import uw.cse.dineon.restaurant.login.RestaurantLoginActivity;
@@ -21,6 +25,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.location.Location;
 import android.location.LocationManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v4.app.FragmentActivity;
@@ -43,7 +48,7 @@ import com.parse.SaveCallback;
  * @author mhotan
  */
 public class DineOnRestaurantActivity extends FragmentActivity 
-implements SateliteListener {
+implements SateliteListener, ImageObtainable {
 
 	/**
 	 * member that defines this restaurant user
@@ -56,8 +61,6 @@ implements SateliteListener {
 	 * 		with a proper Restaurant account
 	 */
 	protected static final String TAG = DineOnRestaurantActivity.class.getSimpleName();
-
-
 
 	/**
 	 * Progress bar dialog for showing user progress.
@@ -94,6 +97,16 @@ implements SateliteListener {
 	 * Don't be dumbass a null it out.
 	 */
 	protected ImageCache mImageCache;
+	
+	/**
+	 * Temporary file for storing image.
+	 */
+	private File mTempFile;
+	
+	/**
+	 * Holds a reference to the current GetImage Callback.
+	 */
+	private ImageGetCallback mGetImageCallback;
 
 	/**
 	 * This file is just a local storage for 
@@ -155,6 +168,82 @@ implements SateliteListener {
 			}
 		};
 	}
+	
+	@Override
+	public void onRequestTakePicture(ImageGetCallback callback) {
+		// Assign the right callback
+		mGetImageCallback = callback;
+
+		// Delete the old temporary file
+		if (mTempFile != null) {
+			mTempFile.delete();
+		}
+
+		// Create a new temporary file
+		mTempFile = getTempImageFile();
+		ImageObtainer.launchTakePictureIntent(this,
+				DineOnConstants.REQUEST_TAKE_PHOTO, mTempFile);
+	}
+
+	@Override
+	public void onRequestGetPictureFromGallery(ImageGetCallback callback) {
+		// Assign the right callback
+		mGetImageCallback = callback;
+		ImageObtainer.launchChoosePictureIntent(this, DineOnConstants.REQUEST_CHOOSE_PHOTO);
+	}
+	
+	@Override
+	public void onGetImage(DineOnImage image, ImageGetCallback callback) {
+		getImage(image, callback);
+	}
+	
+	/**
+	 * Adds the photo to the restaurant. This method takes care of 
+	 * all the image sizing and alignment.
+	 * 
+	 * This method will notify all the views in this activity that 
+	 * need to know about a new photo.
+	 * 
+	 * This method will also handle the save of the new image
+	 * While also adding it to the cache.
+	 * 
+	 * @param uri Uri for the image to download.
+	 * @param callback Image callback to invoke
+	 */
+	private void addPhoto(Uri uri, ImageGetCallback callback) {
+		Bitmap b = ImageIO.loadBitmapFromURI(getContentResolver(), uri);
+		callback.onImageReceived(null, b);
+
+	}
+	
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+
+		if (resultCode != RESULT_OK) {
+			Log.d(TAG, "User cancelled job for request code " + requestCode);
+			return;
+		}
+
+		Uri uriForInfoFragment = null;
+		switch (requestCode) {
+		// Took a photo.
+		case DineOnConstants.REQUEST_TAKE_PHOTO:
+			uriForInfoFragment = Uri.fromFile(mTempFile);
+			break;
+		case DineOnConstants.REQUEST_CHOOSE_PHOTO:
+			uriForInfoFragment = data.getData();
+			break;
+		default:
+			Log.w(TAG, "Unsupported operation occured onActivityResult");
+		}
+
+		if (uriForInfoFragment != null && mGetImageCallback != null) {
+			addPhoto(uriForInfoFragment, mGetImageCallback);
+		} else {
+			Log.w(TAG, "Was not able to obtain a new image");
+		}
+	}
 
 	@Override
 	protected void onResume() {
@@ -195,7 +284,12 @@ implements SateliteListener {
 	 * @param bitmap 
 	 */
 	protected void addImageToCache(DineOnImage image, Bitmap bitmap) {
-		mImageMemCache.put(image.getObjId(), bitmap);
+		Log.d(TAG, "Adding bitmap of size " + bitmap.getByteCount() / 1024 + "KB");
+		Log.d(TAG, "Image Cache size " + mImageMemCache.size() + "KB");
+		Log.d(TAG, "Image Cache max size " + mImageMemCache.maxSize() + "KB");
+		
+		String id = image.getObjId();
+		mImageMemCache.put(id, bitmap);
 		mImageCache.addToCache(image);
 	}
 	
@@ -205,7 +299,8 @@ implements SateliteListener {
 	 * @return Bitmap associated with this image. 
 	 */
 	protected Bitmap getBitmapFromMemCache(DineOnImage image) {
-		return mImageMemCache.get(image.getObjId());
+		String id = image.getObjId();
+		return mImageMemCache.get(id);
 	}
 	
 	/**
