@@ -8,7 +8,9 @@ import uw.cse.dineon.library.Order;
 import uw.cse.dineon.library.Reservation;
 import uw.cse.dineon.library.Restaurant;
 import uw.cse.dineon.library.UserInfo;
+import uw.cse.dineon.library.image.DineOnImage;
 import uw.cse.dineon.library.image.ImageCache;
+import uw.cse.dineon.library.image.ImageCache.ImageGetCallback;
 import uw.cse.dineon.library.util.Utility;
 import uw.cse.dineon.restaurant.RestaurantSatellite.SateliteListener;
 import uw.cse.dineon.restaurant.login.RestaurantLoginActivity;
@@ -16,11 +18,13 @@ import uw.cse.dineon.restaurant.profile.ProfileActivity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.util.LruCache;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -53,6 +57,8 @@ implements SateliteListener {
 	 */
 	protected static final String TAG = DineOnRestaurantActivity.class.getSimpleName();
 
+
+
 	/**
 	 * Progress bar dialog for showing user progress.
 	 */
@@ -77,6 +83,11 @@ implements SateliteListener {
 	 * Location Listener for location based services.
 	 */
 	private RestaurantLocationListener mLocationListener;
+
+	/**
+	 * Image cache for use in memory.
+	 */
+	private LruCache<String, Bitmap> mImageMemCache;
 
 	/**
 	 * Protected reference for ease of use.
@@ -130,6 +141,19 @@ implements SateliteListener {
 		}
 
 		this.mLocationListener = new RestaurantLocationListener();
+
+		// Initialize the memory cache
+		final int MAXMEMORY = (int) (Runtime.getRuntime().maxMemory() / 1024);
+		final int CACHESIZE = MAXMEMORY / 8;
+
+		mImageMemCache = new LruCache<String, Bitmap>(CACHESIZE) {
+			@Override
+			protected int sizeOf(String key, Bitmap bitmap) {
+				// The cache size will be measured in kilobytes rather than
+				// number of items.
+				return bitmap.getByteCount() / 1024;
+			}
+		};
 	}
 
 	@Override
@@ -163,6 +187,54 @@ implements SateliteListener {
 	 */
 	protected Restaurant getRestaurant() {
 		return mRestaurant;
+	}
+	
+	/**
+	 * Adds an image to cache replacing old version if it exists.
+	 * @param image image to associate bitmap to
+	 * @param bitmap 
+	 */
+	protected void addImageToCache(DineOnImage image, Bitmap bitmap) {
+		mImageMemCache.put(image.getObjId(), bitmap);
+		mImageCache.addToCache(image);
+	}
+	
+	/**
+	 * Memory cache to upload image.
+	 * @param image image to get from memory cache
+	 * @return Bitmap associated with this image. 
+	 */
+	protected Bitmap getBitmapFromMemCache(DineOnImage image) {
+		return mImageMemCache.get(image.getObjId());
+	}
+	
+	/**
+	 * Attempts to get the image as fast as possible.
+	 * @param image image to get.
+	 * @param callback Callback to get back
+	 */
+	protected void getImage(final DineOnImage image, final ImageGetCallback callback) {
+		
+		// Check in memory cache
+		Bitmap ret = getBitmapFromMemCache(image);
+		if (ret != null) {
+			callback.onImageReceived(null, ret);
+			return;
+		}
+		
+		// Check in SQL database or network
+		mImageCache.getImageFromCache(image, new ImageGetCallback() {
+			
+			@Override
+			public void onImageReceived(Exception e, Bitmap b) {
+				if (e == null) {
+					addImageToCache(image, b);
+					callback.onImageReceived(null, b);
+				} else {
+					callback.onImageReceived(e, null);
+				}
+			}
+		});
 	}
 
 	/**
