@@ -157,7 +157,7 @@ public class MenuItem extends Storable {
 		pobj.put(DESCRIPTION, mDescription);
 		pobj.put(TITLE, mTitle);
 		if (mImage != null) {
-			pobj.put(IMAGE, mImage);
+			pobj.put(IMAGE, mImage.packObject());
 		}
 		return pobj;
 	}
