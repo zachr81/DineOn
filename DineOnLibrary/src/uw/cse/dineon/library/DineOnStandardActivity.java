@@ -1,7 +1,12 @@
-package uw.cse.dineon.library.image;
+package uw.cse.dineon.library;
 
 import java.io.File;
 
+import uw.cse.dineon.library.image.DineOnImage;
+import uw.cse.dineon.library.image.ImageCache;
+import uw.cse.dineon.library.image.ImageIO;
+import uw.cse.dineon.library.image.ImageObtainable;
+import uw.cse.dineon.library.image.ImageObtainer;
 import uw.cse.dineon.library.image.ImageCache.ImageGetCallback;
 import uw.cse.dineon.library.util.DineOnConstants;
 import android.content.Intent;

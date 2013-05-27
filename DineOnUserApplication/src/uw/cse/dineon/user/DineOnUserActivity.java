@@ -10,12 +10,12 @@ import org.json.JSONObject;
 
 import uw.cse.dineon.library.CurrentOrderItem;
 import uw.cse.dineon.library.CustomerRequest;
+import uw.cse.dineon.library.DineOnStandardActivity;
 import uw.cse.dineon.library.DiningSession;
 import uw.cse.dineon.library.MenuItem;
 import uw.cse.dineon.library.Order;
 import uw.cse.dineon.library.Reservation;
 import uw.cse.dineon.library.RestaurantInfo;
-import uw.cse.dineon.library.image.DineOnStandardActivity;
 import uw.cse.dineon.library.image.ImageCache;
 import uw.cse.dineon.library.util.DineOnConstants;
 import uw.cse.dineon.library.util.Utility;
