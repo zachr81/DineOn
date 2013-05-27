@@ -57,7 +57,7 @@ public class RestaurantInfoFragment extends Fragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-
+		
 		RestaurantInfo info = mListener.getInfo();
 		// Check the view and its state and initialize appropriately
 		View view;

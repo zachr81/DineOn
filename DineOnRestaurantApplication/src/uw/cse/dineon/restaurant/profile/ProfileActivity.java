@@ -376,6 +376,7 @@ MenuItemsFragment.MenuItemListener {
 
 		private final Bitmap mBitmap;
 		private final Restaurant mRestaurant;
+		private final MenuItem mItem;
 
 		/**
 		 * Creates an asynchronous process to save images for this restaurant.
@@ -388,6 +389,21 @@ MenuItemsFragment.MenuItemListener {
 			}
 			mBitmap = b;
 			mRestaurant = rest;
+			mItem = null;
+		}
+		
+		/**
+		 * Saves an image asyncronously and then sets the image for the Menu Item.
+		 * @param b Bitmap 
+		 * @param item
+		 */
+		public AsynchronousImageSaver(Bitmap b, MenuItem item) {
+			if (b == null) {
+				throw new NullPointerException("AsynchronousImageSaver image cannot be null");
+			}
+			mBitmap = b;
+			mRestaurant = null;
+			mItem = item;
 		}
 
 		@Override
@@ -426,6 +442,8 @@ MenuItemsFragment.MenuItemListener {
 
 	}
 
+	
+	
 	@Override
 	public void onTakePicture(ImageView view, MenuItem item) {
 		// TODO Auto-generated method stub
