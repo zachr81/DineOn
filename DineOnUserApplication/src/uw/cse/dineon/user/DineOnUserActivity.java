@@ -14,6 +14,7 @@ import uw.cse.dineon.library.MenuItem;
 import uw.cse.dineon.library.Order;
 import uw.cse.dineon.library.Reservation;
 import uw.cse.dineon.library.RestaurantInfo;
+import uw.cse.dineon.library.image.ImageObtainable;
 import uw.cse.dineon.library.util.DineOnConstants;
 import uw.cse.dineon.library.util.Utility;
 import uw.cse.dineon.user.UserSatellite.SatelliteListener;
@@ -56,7 +57,8 @@ import com.parse.SaveCallback;
 public class DineOnUserActivity extends FragmentActivity implements 
 SatelliteListener,
 SubMenuFragment.MenuItemListListener, /* manipulation of order from sub menu */
-OrderUpdateListener /* manipulation of list from the current order activity */ { 
+OrderUpdateListener /* manipulation of list from the current order activity */ 
+/*, ImageObtainable*/ { 
 
 	private static final String TAG = DineOnUserActivity.class.getSimpleName();
 

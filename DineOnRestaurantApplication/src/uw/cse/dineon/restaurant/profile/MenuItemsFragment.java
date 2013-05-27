@@ -63,25 +63,6 @@ public class MenuItemsFragment extends ListFragment {
 	public AlertDialog newItemAlert; // for testing. Otherwise can't access
 	public AlertDialog newMenuAlert; // for testing. Otherwise can't access
 
-	/**
-	 * Creates a MenuItemsFragment that is ready to build and view.
-	 * 
-	 * @param info
-	 *            Restaurant that contains a group of menus that each contain
-	 *            menu items
-	 * @return A MenuItemsFragment that is ready to display all the items of the
-	 *         restaurant
-	 */
-	public static MenuItemsFragment newInstance(RestaurantInfo info) {
-		// Prepare a Bundle argument
-		// for starting an activity with
-		MenuItemsFragment frag = new MenuItemsFragment();
-		Bundle args = new Bundle();
-		// args.putParcelable(DineOnConstants.KEY_RESTAURANTINFO, info);
-		frag.setArguments(args);
-		return frag;
-	}
-
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -90,32 +71,28 @@ public class MenuItemsFragment extends ListFragment {
 		// IF there are arguments
 		// then check if there is a restaurant info instance
 		// info can be null
-		/*
-		 * RestaurantInfo info = getArguments() != null ? (RestaurantInfo)
-		 * getArguments() .getParcelable(DineOnConstants.KEY_RESTAURANTINFO) :
-		 * null;
-		 */
-		final RestaurantInfo INFO = mListener.getInfo();
+		RestaurantInfo info = mListener.getInfo();
 
 		// If arguments existed and it included a Restaurant Info
-		// Proceed
-		if (isValid(INFO)) {
+		if (isValid(info)) {
 
+			List<Menu> menus = info.getMenuList();
+			
 			// TODO Handle multiple menus
-			if (INFO.getMenuList().size() < 1) {
+			if (menus.size() < 1) {
 				Menu defaultMenu = new Menu("Default");
-				INFO.getMenuList().add(defaultMenu);
+				info.getMenuList().add(defaultMenu);
 				defaultMenu.saveInBackGround(null);
 				Log.d(TAG, "No menu exists, created a default menu!");
 			}
-			currentMenu = INFO.getMenuList().get(0);
+			currentMenu = menus.get(0);
 
 			// Make list of menu titles for future reference
 			menuTitles = new ArrayList<String>();
-			for (Menu m : INFO.getMenuList()) {
+			for (Menu m : menus) {
 				menuTitles.add(m.getName());
 			}
-
+			
 			List<MenuItem> menuitems = currentMenu.getItems();
 			mAdapter = new RestaurantMenuItemAdapter(getActivity(), menuitems);
 			setListAdapter(mAdapter);
@@ -142,6 +119,15 @@ public class MenuItemsFragment extends ListFragment {
 		// TODO Add your menu entries here
 		inflater.inflate(R.menu.menu_menu, menu);
 		super.onCreateOptionsMenu(menu, inflater);
+	}
+
+	@Override
+	public void onPrepareOptionsMenu(android.view.Menu menu) {
+		if (currentMenu == null) {
+
+		}
+
+		super.onPrepareOptionsMenu(menu);
 	}
 
 	@Override
@@ -187,7 +173,7 @@ public class MenuItemsFragment extends ListFragment {
 							Toast.LENGTH_SHORT).show();
 					return;
 				}
-				
+
 				double price = Double.parseDouble(priceString);
 
 				MenuItem mi = new MenuItem(mAdapter.getCount() + 1, price,
@@ -203,11 +189,11 @@ public class MenuItemsFragment extends ListFragment {
 		});
 		alert.setNegativeButton("Cancel",
 				new DialogInterface.OnClickListener() {
-					@Override
-					public void onClick(DialogInterface arg0, int arg1) {
-						// Do nothing
-					}
-				});
+			@Override
+			public void onClick(DialogInterface arg0, int arg1) {
+				// Do nothing
+			}
+		});
 		this.newItemAlert = alert.show();
 	}
 
@@ -271,7 +257,7 @@ public class MenuItemsFragment extends ListFragment {
 						.findViewById(R.id.input_new_menu_title)).getText()
 						.toString();
 				((TextView) AV.findViewById(R.id.input_new_menu_title))
-						.setText("");
+				.setText("");
 				if (newTitle.trim().equals("")) {
 					Toast.makeText(getActivity(), "Please input title",
 							Toast.LENGTH_SHORT).show();
@@ -288,11 +274,11 @@ public class MenuItemsFragment extends ListFragment {
 
 		alert.setPositiveButton("Select",
 				new DialogInterface.OnClickListener() {
-					@Override
-					public void onClick(DialogInterface d, int x) {
-						updateTitle();
-					}
-				});
+			@Override
+			public void onClick(DialogInterface d, int x) {
+				updateTitle();
+			}
+		});
 
 		this.newMenuAlert = alert.show();
 
@@ -362,7 +348,7 @@ public class MenuItemsFragment extends ListFragment {
 		 *            menu item to modify
 		 */
 		void onMenuItemModified(MenuItem item);
-		
+
 		/**
 		 * The user has just added an image to this menu item.
 		 * @param item Item to change
@@ -388,7 +374,7 @@ public class MenuItemsFragment extends ListFragment {
 		 * Context to use this adapter.
 		 */
 		private final Context mContext;
-		
+
 		private final NumberFormat mCurrencyFormatter;
 
 		/**
@@ -428,8 +414,8 @@ public class MenuItemsFragment extends ListFragment {
 			imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
 			TextView title = (TextView) view
 					.findViewById(R.id.label_menuitem_title);
-//			ImageButton delete = (ImageButton) view
-//					.findViewById(R.id.button_menuitem_delete);
+			//			ImageButton delete = (ImageButton) view
+			//					.findViewById(R.id.button_menuitem_delete);
 			TextView description = (TextView) view
 					.findViewById(R.id.label_menuitem_desc);
 			TextView price = (TextView) view
@@ -437,21 +423,21 @@ public class MenuItemsFragment extends ListFragment {
 
 			// Get the item at the established position
 			final MenuItem ITEM = super.getItem(position);
-			
+
 			// Set all the regular descriptive stuff
 			title.setText(ITEM.getTitle());
 			description.setText(ITEM.getDescription());
 			price.setText(mCurrencyFormatter.format(ITEM.getPrice()));
-			
+
 			// 
 			DineOnImage image = ITEM.getImage();
 			if (image != null) {
 				mListener.onGetImage(image, new InitialGetImageCallback(imageView));
 			}
-			
+
 			// Set an onlick listener to handle the changing of images.
 			imageView.setOnClickListener(new OnClickListener() {
-				
+
 				@Override
 				public void onClick(View v) {
 					ImageView imageView = (ImageView) v;
@@ -460,10 +446,10 @@ public class MenuItemsFragment extends ListFragment {
 					getImageDialog.show();
 				}
 			});
-			
+
 			return view;
 		}
-		
+
 		/**
 		 * Get an alert dialog to present the user with the option to take pictures.
 		 * 
@@ -476,7 +462,7 @@ public class MenuItemsFragment extends ListFragment {
 			builder.setMessage(R.string.dialog_message_getimage_for_menuitem);
 			builder.setPositiveButton(R.string.dialog_option_take_picture, 
 					new DialogInterface.OnClickListener() {
-				
+
 				@Override
 				public void onClick(DialogInterface dialog, int which) {
 					mListener.onRequestTakePicture(callback);
@@ -485,7 +471,7 @@ public class MenuItemsFragment extends ListFragment {
 			});
 			builder.setNeutralButton(R.string.dialog_option_choose_picture, 
 					new DialogInterface.OnClickListener() {
-				
+
 				@Override
 				public void onClick(DialogInterface dialog, int which) {
 					mListener.onRequestGetPictureFromGallery(callback);
@@ -493,16 +479,16 @@ public class MenuItemsFragment extends ListFragment {
 				}
 			});
 			builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-				
+
 				@Override
 				public void onClick(DialogInterface dialog, int which) {
 					dialog.dismiss();
 				}
 			});
-			
+
 			return builder.create();
 		}
-		
+
 		/**
 		 * An image get callback to to populate menu item view. 
 		 * @author mhotan
@@ -511,7 +497,7 @@ public class MenuItemsFragment extends ListFragment {
 
 			private final MenuItem mItem;
 			private final ImageView mView;
-			
+
 			/**
 			 * A callback to handle the retrieving of images.
 			 * @param item Item to get image for.
@@ -521,7 +507,7 @@ public class MenuItemsFragment extends ListFragment {
 				mItem = item;
 				mView = view;
 			}
-			
+
 			@Override
 			public void onImageReceived(Exception e, Bitmap b) {
 				if (e == null) {
@@ -534,15 +520,15 @@ public class MenuItemsFragment extends ListFragment {
 				}
 			}
 		}
-		
+
 		/**
 		 * Get the pre set image for this menuitem.
 		 * @author mhotan
 		 */
 		private class InitialGetImageCallback implements ImageGetCallback {
-			
+
 			private ImageView mView;
-			
+
 			/**
 			 * prepares callback for placing an image in the view.
 			 * @param view
