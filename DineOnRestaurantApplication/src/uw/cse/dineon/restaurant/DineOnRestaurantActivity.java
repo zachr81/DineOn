@@ -10,10 +10,10 @@ import uw.cse.dineon.library.Restaurant;
 import uw.cse.dineon.library.UserInfo;
 import uw.cse.dineon.library.image.DineOnImage;
 import uw.cse.dineon.library.image.ImageCache;
-import uw.cse.dineon.library.image.ImageObtainer;
 import uw.cse.dineon.library.image.ImageCache.ImageGetCallback;
 import uw.cse.dineon.library.image.ImageIO;
 import uw.cse.dineon.library.image.ImageObtainable;
+import uw.cse.dineon.library.image.ImageObtainer;
 import uw.cse.dineon.library.util.DineOnConstants;
 import uw.cse.dineon.library.util.Utility;
 import uw.cse.dineon.restaurant.RestaurantSatellite.SateliteListener;
@@ -107,14 +107,8 @@ implements SateliteListener, ImageObtainable {
 	 * Holds a reference to the current GetImage Callback.
 	 */
 	private ImageGetCallback mGetImageCallback;
-
-	/**
-	 * This file is just a local storage for 
-	 * retrieving images from Take picture intent.
-	 * Not the best method and has some overhead but right now
-	 * it is the only way to get images from taking pictures.
-	 */
-	private File mLastFile;
+	
+	private DineOnRestaurantActivity This;
 
 	/**
 	 * This is a very important call that serves as a notification 
@@ -135,6 +129,8 @@ implements SateliteListener, ImageObtainable {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
+		This = this;
+		
 		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS); 
 		setProgressBarIndeterminateVisibility(true); 
 
@@ -615,7 +611,7 @@ implements SateliteListener, ImageObtainable {
 					@Override
 					public void done(ParseException e) {
 						destroyProgressDialog();
-						DineOnRestaurantApplication.logOut();
+						DineOnRestaurantApplication.logOut(This);
 						startLoginActivity();
 					}
 				});
@@ -775,21 +771,18 @@ implements SateliteListener, ImageObtainable {
 		}
 
 		@Override
-		public void onProviderDisabled(String arg0) {
-			// TODO Auto-generated method stub
-
+		public void onProviderDisabled(String arg0) { 
+			// Do nothing
 		}
 
 		@Override
 		public void onProviderEnabled(String arg0) {
-			// TODO Auto-generated method stub
-
+			// Do nothing
 		}
 
 		@Override
 		public void onStatusChanged(String arg0, int arg1, Bundle arg2) {
-			// TODO Auto-generated method stub
-
+			// Do nothing
 		}
 	}
 
