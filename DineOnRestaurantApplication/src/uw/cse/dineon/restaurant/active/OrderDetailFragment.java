@@ -61,7 +61,7 @@ public class OrderDetailFragment extends Fragment implements OnClickListener {
 		super.onCreate(savedInstanceState);
 		View view = inflater.inflate(R.layout.fragment_order_detail,
 				container, false);
-		
+		mOrder = null;
 		Bundle args = getArguments();
 		
 		// If the orientation changed or fragment temporarily died and 
