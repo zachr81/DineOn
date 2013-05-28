@@ -195,6 +195,8 @@ public class DineOnStandardActivity extends FragmentActivity implements ImageObt
 			callback.onImageReceived(null, ret);
 			return;
 		}
+		
+		Log.w(tag, "Cache miss for image " + image.getObjId());
 
 		// Check in SQL database or network
 		mPersImageCache.getImageFromCache(image, new ImageGetCallback() {
