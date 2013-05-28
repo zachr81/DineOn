@@ -319,24 +319,6 @@ RestaurantInfoFragment.RestaurantInfoListener {
 					destroyProgressDialog();
 					// notify the fragment of the change
 					notifyFragment();
-					
-					//for (int i = 0; i < objects.size(); i++) {
-//						try {
-//							ParseObject p = objects.get(i);
-//							RestaurantInfo r = new RestaurantInfo(p);
-//							mRestaurants.add(r);
-//						} catch (ParseException e1) {
-//							Log.d(TAG, e1.getMessage());
-//						}
-//					}
-//					
-					
-//					destroyProgressDialog();
-//					if (objects.size() == 0) {
-//						showNoRestaurantsDialog(message);
-//					} else {
-//						addListOfRestaurantInfos();
-//					}
 				} else { 
 					destroyProgressDialog();
 					showNoRestaurantsDialog("Problem getting restaurants:" + e.getMessage());

@@ -114,18 +114,6 @@ public class RestaurantListFragment extends ListFragment {
 	private class RestaurantListAdapter extends ArrayAdapter<RestaurantInfo> {
 
 		private final Context mContext;
-//		private final List<RestaurantInfo> mValues;
-
-//		/**
-//		 * This is a runtime mapping between "More Info buttons"
-//		 * and there respective restaurants.
-//		 * NOTE (MH): Not exactly sure if this works
-//		 */
-//		private final HashMap<View, RestaurantInfo> mInfoMapping;
-//		
-//		private final HashMap<View, RestaurantInfo> mRestaurantMapping;
-//
-//		private final View.OnClickListener mButtonListener, mItemSelectedListener;
 
 		/**
 		 * 
@@ -136,50 +124,6 @@ public class RestaurantListFragment extends ListFragment {
 		public RestaurantListAdapter(Context context, List<RestaurantInfo> values) {
 			super(context, R.layout.listitem_restaurant, values); // Use our custom row layout
 			this.mContext = context;
-//			if (values != null) {
-//				this.mValues = new ArrayList<RestaurantInfo>(values);
-//			} else {
-//				this.mValues = new ArrayList<RestaurantInfo>();
-//			}
-//			mInfoMapping = new HashMap<View, RestaurantInfo>();
-//			mRestaurantMapping = new HashMap<View, RestaurantInfo>();
-//			mButtonListener = new View.OnClickListener() {
-//
-//				@Override
-//				public void onClick(View v) {
-//					// Have to handle the case where 
-//					// Listener is not yet instantiated
-//					if (mListener != null) {
-//						// Make sure the mapping has the right value
-//						RestaurantInfo info = mInfoMapping.get(v);
-//						if (info == null) {
-//							Log.w(TAG, "Unable to find restaurant " 
-//									+ "that is attached to this view: " + v);
-//							return; //FAIL
-//						}
-//						
-//						// Potentially change the attributes of the view
-//						// To show focus on a particular restaurant
-//						
-//						mListener.onRestaurantFocusedOn(info);
-//					}
-//				}
-//			};
-//			
-//			mItemSelectedListener = new View.OnClickListener() {
-//				
-//				@Override
-//				public void onClick(View v) {
-//					TextView restaurantView = (TextView) v.findViewById(R.id.label_restaurant_name);
-//					//String restName = restaurantView.getText().toString();
-//					
-//					RestaurantInfo restaurant = mRestaurantMapping.get(restaurantView);
-//					
-//					if (mListener != null && restaurant != null) {
-//						mListener.onRestaurantSelected(restaurant);
-//					}
-//				}
-//			};
 		}
 		
 		@Override
@@ -231,22 +175,9 @@ public class RestaurantListFragment extends ListFragment {
 			// For every restaurant to present create a handler for the restaurant;
 			// We are creating this view for the very first time
 			if (layoutView != null) {
+				// Create a handler just for the restaurant.
 				new RestaurantHandler(restToShow, vwTop, vwBot);
 			}
-			
-//			// Here is where we adjust the contents of the list row
-//			// with attributes determined by the restaurant
-//			// Now we are just setting the text to be the name of restaurant
-//			
-//			TextView restLabel = (TextView) rowView.findViewById(R.id.label_restaurant_name);
-//			restLabel.setOnClickListener(mItemSelectedListener);
-//			
-//			// Get the restaurant name by associating with the position
-//			String name = mValues.get(position).getName();
-//			restLabel.setText(name);	
-//			
-//			// add mapping to text view so listeners can reference later
-//			mRestaurantMapping.put(restLabel, mValues.get(position));
 
 			return convertView;
 		}
@@ -337,12 +268,6 @@ public class RestaurantListFragment extends ListFragment {
 					ExpandAnimation expandAni = new ExpandAnimation(mBottom, 500);
 					mBottom.startAnimation(expandAni);
 							
-//					} // Contract the bottom view if it is shown.
-//					else if (bottomVisibility == View.VISIBLE) {
-//						mExpandDownButton.setVisibility(View.VISIBLE);
-//						mBottom.setVisibility(View.GONE);
-//						// TODO Create fancy animation
-//					}	
 				} else if (v == mPickRestaurant) {
 					mListener.onRestaurantSelected(mInfo);
 				}
