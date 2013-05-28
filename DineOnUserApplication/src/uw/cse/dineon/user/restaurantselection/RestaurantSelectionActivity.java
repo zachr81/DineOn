@@ -302,6 +302,9 @@ RestaurantInfoFragment.RestaurantInfoListener {
 						return;
 					}
 					
+					// Clear all the old restaurants because we got something new.
+					mRestaurants.clear();
+					
 					// Each parse object represents one restaurant
 					// Populate our list of restaurants with 
 					for (ParseObject po: objects) {
