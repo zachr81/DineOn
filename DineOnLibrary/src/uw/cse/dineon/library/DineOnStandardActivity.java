@@ -4,10 +4,10 @@ import java.io.File;
 
 import uw.cse.dineon.library.image.DineOnImage;
 import uw.cse.dineon.library.image.ImageCache;
+import uw.cse.dineon.library.image.ImageCache.ImageGetCallback;
 import uw.cse.dineon.library.image.ImageIO;
 import uw.cse.dineon.library.image.ImageObtainable;
 import uw.cse.dineon.library.image.ImageObtainer;
-import uw.cse.dineon.library.image.ImageCache.ImageGetCallback;
 import uw.cse.dineon.library.util.DineOnConstants;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -57,6 +57,7 @@ public class DineOnStandardActivity extends FragmentActivity implements ImageObt
 	 * Holds a reference to the current GetImage Callback.
 	 */
 	private ImageGetCallback mGetImageCallback;
+	
 
 	/////////////////////////////////////////////////////////////////////
 	/////  Override Activity specific methods for correct behavior
