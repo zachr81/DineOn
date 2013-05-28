@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical" >
+    android:orientation="horizontal" >
 
 <!--     <TextView
         android:id="@+id/label_sort_by"
@@ -27,8 +27,8 @@
             android:src="@drawable/nearby" />
 
         <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
             android:background="#000000" />
 
         <ImageButton
@@ -41,8 +41,8 @@
             android:src="@drawable/friendsfavorites"/>
 
         <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
             android:background="#000000" />
 
         <ImageButton

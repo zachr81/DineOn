@@ -5,7 +5,6 @@ import java.util.List;
 
 import uw.cse.dineon.library.RestaurantInfo;
 import uw.cse.dineon.user.R;
-import uw.cse.dineon.user.restaurantselection.RestaurantInfoActivity;
 import uw.cse.dineon.user.restaurantselection.RestaurantInfoFragment;
 import android.app.Activity;
 import android.os.Bundle;
@@ -103,14 +102,10 @@ public class RestaurantHomeMainFragment extends Fragment {
 			switch (position) {
 			case 0: // Show restaurant info
 				f = new RestaurantInfoFragment();
-				data.putParcelable(RestaurantInfoActivity.EXTRA_RESTAURANT, 
-						mListener.getCurrentRestaurant());
 				f.setArguments(data);
 				break;
 			default:
 				f = new SubMenuFragment();
-				data.putParcelable(SubMenuFragment.EXTRA_MENU, 
-						this.mRestaurantInfo.getMenuList().get(position - 1));
 				f.setArguments(data);
 			}
 			

@@ -25,11 +25,10 @@ RestaurantHomeMainFragment.ReferenceDataListener {
 
 	public static final String EXTRA_RESTAURANT = "restaurant"; 
 
+	/**
+	 * A reference to the restaurant where we want to center all our request.
+	 */
 	private RestaurantInfo mRestaurant;
-	
-	private DiningSession mDiningSession;
-
-	
 	
 	//////////////////////////////////////////////////////////////////////
 	////  Android specific 
@@ -38,21 +37,15 @@ RestaurantHomeMainFragment.ReferenceDataListener {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
-		Bundle extras = getIntent().getExtras();
 		
-		if (extras != null && extras.containsKey(DineOnConstants.KEY_RESTAURANTINFO)) {
-			this.mRestaurant = extras.getParcelable(DineOnConstants.KEY_RESTAURANTINFO);
-		} else if (savedInstanceState != null 
-				&& savedInstanceState.containsKey(DineOnConstants.KEY_RESTAURANTINFO)) {
-			this.mRestaurant = savedInstanceState.getParcelable(DineOnConstants.KEY_RESTAURANTINFO);
-		} else if (DineOnUserApplication.getCurrentDiningSession() != null) {
-			this.mDiningSession = DineOnUserApplication.getCurrentDiningSession();
-			this.mRestaurant = this.mDiningSession.getRestaurantInfo();
+		DiningSession currentSession = mUser.getDiningSession();
+		if (currentSession != null) { // We have a current session with a restaurant info
+			mRestaurant = currentSession.getRestaurantInfo();
+		} else if (DineOnUserApplication.getRestaurantOfInterest() != null) {
+			mRestaurant = DineOnUserApplication.getRestaurantOfInterest();
 		}
-		
-		setContentView(R.layout.activity_restaurant_home);
-		
+	
+		setContentView(R.layout.activity_restaurant_home);	
 	}
 
 	//////////////////////////////////////////////////////////////////////

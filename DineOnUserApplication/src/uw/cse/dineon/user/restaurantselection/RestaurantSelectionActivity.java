@@ -72,11 +72,23 @@ RestaurantInfoFragment.RestaurantInfoListener {
 			ACTION_BAR.setTitle(R.string.actionbar_title_restaurant_selection);
 		}
 		
-		mRestaurants = new ArrayList<RestaurantInfo>();
+		// Clear out old restaurant of interest
+		DineOnUserApplication.setRestaurantOfInterest(null);
 		
-		//ParseQuery query = new ParseQuery(RestaurantInfo.class.getSimpleName());
-		//queryForRestaurants(query);
-		onShowUserFavorites();
+		mRestaurants = DineOnUserApplication.getRestaurantList();
+		// Free up the static memory
+		DineOnUserApplication.clearResaurantList();
+		if (mRestaurants == null) {
+			// This activity was started for the first time.
+			mRestaurants = new ArrayList<RestaurantInfo>();
+			onShowUserFavorites();
+		}
+	}
+	
+	@Override 
+	protected void onSaveInstanceState(Bundle outState) {
+		DineOnUserApplication.saveRestaurantList(mRestaurants);
+		super.onSaveInstanceState(outState);
 	}
 	
 	/**
@@ -100,6 +112,16 @@ RestaurantInfoFragment.RestaurantInfoListener {
 		if (frag != null && frag.isInLayout()) {
 			frag.addRestaurantInfos(infos);
 		}
+	}
+	
+	/**
+	 * Notifies the fragment state change.
+	 */
+	public void notifyFragment() {
+		FragmentManager fm = getSupportFragmentManager();
+		RestaurantListFragment frag = 
+				(RestaurantListFragment) fm.findFragmentById(R.id.restaurantList);
+		frag.notifyStateChange();
 	}
 	
 	@Override
@@ -129,34 +151,18 @@ RestaurantInfoFragment.RestaurantInfoListener {
 		// Continue on to next activity
 		Intent i = new Intent(this, RestaurantHomeActivity.class);
 		// send over the restaurantInfo
-		i.putExtra(DineOnConstants.KEY_RESTAURANTINFO, restaurant);
+		DineOnUserApplication.setRestaurantOfInterest(restaurant);
 		startActivity(i);
 	}
 	
-	/**
-	 * @param dsession DiningSession to change to
-	 */
-	public void diningSessionChangeActivity(DiningSession dsession) {
-		Intent i = new Intent(thisActivity, RestaurantHomeActivity.class);
-		i.putExtra(DineOnConstants.KEY_DININGSESSION, dsession);
-		startActivity(i);
-	}
-
-	@Override
-	public void onRestaurantFocusedOn(RestaurantInfo restaurant) {
-		
-		FragmentManager fm = getSupportFragmentManager();
-		RestaurantInfoFragment frag = 
-				(RestaurantInfoFragment) fm.findFragmentById(R.id.restaurantInfo);
-		// If the fragment already exists then just update its value
-		if (frag != null && frag.isInLayout()) {
-			frag.setRestaurantForDisplay(restaurant);
-		} else {
-			Intent i = new Intent(getApplicationContext(), RestaurantInfoActivity.class);	
-			i.putExtra(RestaurantInfoActivity.EXTRA_RESTAURANT, restaurant);
-			startActivity(i);
-		}
-	}
+//	/**
+//	 * @param dsession DiningSession to change to
+//	 */
+//	public void diningSessionChangeActivity(DiningSession dsession) {
+//		Intent i = new Intent(thisActivity, RestaurantHomeActivity.class);
+//		i.putExtra(DineOnConstants.KEY_DININGSESSION, dsession);
+//		startActivity(i);
+//	}
 
 	@Override
 	protected void onSearch(String query) {
@@ -171,7 +177,7 @@ RestaurantInfoFragment.RestaurantInfoListener {
 		createProgressDialog();
 		ParseQuery query = new ParseQuery(RestaurantInfo.class.getSimpleName());
 		query.whereEqualTo(RestaurantInfo.NAME, name);
-		queryForRestaurants(query, "No restaurants mtach. Check spelling.");
+		queryForRestaurants(query, "No restaurants match. Check spelling.");
 	}
 
 	@Override
@@ -289,22 +295,45 @@ RestaurantInfoFragment.RestaurantInfoListener {
 			@Override
 			public void done(List<ParseObject> objects, ParseException e) {
 				if (e == null) {
+					// Quickly notify the user if no restaurants are available
+					if (objects.isEmpty()) {
+						destroyProgressDialog();
+						showNoRestaurantsDialog(message);
+						return;
+					}
 					
-					for (int i = 0; i < objects.size(); i++) {
+					// Each parse object represents one restaurant
+					// Populate our list of restaurants with 
+					for (ParseObject po: objects) {
 						try {
-							ParseObject p = objects.get(i);
-							RestaurantInfo r = new RestaurantInfo(p);
-							mRestaurants.add(r);
+							mRestaurants.add(new RestaurantInfo(po));
 						} catch (ParseException e1) {
 							Log.d(TAG, e1.getMessage());
 						}
 					}
+					
+					// Destroy the progress dialog.
 					destroyProgressDialog();
-					if (objects.size() == 0) {
-						showNoRestaurantsDialog(message);
-					} else {
-						addListOfRestaurantInfos();
-					}
+					// notify the fragment of the change
+					notifyFragment();
+					
+					//for (int i = 0; i < objects.size(); i++) {
+//						try {
+//							ParseObject p = objects.get(i);
+//							RestaurantInfo r = new RestaurantInfo(p);
+//							mRestaurants.add(r);
+//						} catch (ParseException e1) {
+//							Log.d(TAG, e1.getMessage());
+//						}
+//					}
+//					
+					
+//					destroyProgressDialog();
+//					if (objects.size() == 0) {
+//						showNoRestaurantsDialog(message);
+//					} else {
+//						addListOfRestaurantInfos();
+//					}
 				} else { 
 					destroyProgressDialog();
 					showNoRestaurantsDialog("Problem getting restaurants:" + e.getMessage());
