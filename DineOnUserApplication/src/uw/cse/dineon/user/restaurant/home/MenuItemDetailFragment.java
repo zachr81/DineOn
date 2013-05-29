@@ -5,6 +5,7 @@ import uw.cse.dineon.user.R;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,10 +14,11 @@ import android.widget.TextView;
 /**
  * 
  * @author 
- *
  */
 public class MenuItemDetailFragment extends Fragment {
 
+	private static final String TAG = MenuItemDetailFragment.class.getSimpleName();
+	
 	public static final String KEY_MENU = "menu";
 	
 	private MenuItemDetailListener mListener;
@@ -57,6 +59,11 @@ public class MenuItemDetailFragment extends Fragment {
 	 * @param item MenuItem to set
 	 */
 	public void setMenuItem(MenuItem item) {
+		if (item == null) {
+			Log.w(TAG, "Null item attempted to be used");
+			return;
+		}
+		
 		this.mMenuItem = item;
 		
 		// set the title

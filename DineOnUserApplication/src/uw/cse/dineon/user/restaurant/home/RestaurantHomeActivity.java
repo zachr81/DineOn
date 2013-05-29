@@ -8,6 +8,7 @@ import uw.cse.dineon.user.DineOnUserActivity;
 import uw.cse.dineon.user.DineOnUserApplication;
 import uw.cse.dineon.user.R;
 import uw.cse.dineon.user.restaurant.home.MenuItemDetailFragment.MenuItemDetailListener;
+import uw.cse.dineon.user.restaurantselection.RestaurantSelectionActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -61,11 +62,6 @@ MenuItemDetailListener {
 		} else if (DineOnUserApplication.getRestaurantOfInterest() != null) {
 			mRestaurant = DineOnUserApplication.getRestaurantOfInterest();
 		}
-
-		if (savedInstanceState != null && savedInstanceState.containsKey(EXTRA_MENUITEM_NAME)) {
-			mItemOfFocus = findMenuItem(mRestaurant, 
-					savedInstanceState.getString(EXTRA_MENUITEM_NAME));
-		}
 		
 		setContentView(R.layout.activity_restaurant_home);	
 		
@@ -82,24 +78,6 @@ MenuItemDetailListener {
 		outState.putString(EXTRA_MENUITEM_NAME, mItemOfFocus.getTitle());
 	}
 	
-	/**
-	 * Find Item by name in Dining session restaurant.
-	 * @param info Restaurant that might contain item
-	 * @param itemName item name to search fors
-	 * @return Menu Item with name item name
-	 */
-	public static MenuItem findMenuItem(RestaurantInfo info, String itemName) {
-		if (info == null) {
-			return null;
-		}
-		
-		for (Menu menu: info.getMenuList()) {
-			for (MenuItem item : menu.getItems()) {
-				return item;
-			}
-		}
-		return null;
-	} 
 
 	//////////////////////////////////////////////////////////////////////
 	////   Call backs for Fragment methods
@@ -161,5 +139,12 @@ MenuItemDetailListener {
 	@Override
 	public MenuItem getMenuItem() {
 		return mItemOfFocus;
+	}
+	
+	@Override
+	public void onBackPressed() {
+		// We want on back to always go to restaurant selection.
+		Intent i = new Intent(this, RestaurantSelectionActivity.class);
+		startActivity(i);
 	}
 }
