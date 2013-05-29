@@ -122,7 +122,7 @@ public class RestaurantListFragment extends ListFragment {
 		 * @param values List of Strings
 		 */
 		public RestaurantListAdapter(Context context, List<RestaurantInfo> values) {
-			super(context, R.layout.listitem_restaurant, values); // Use our custom row layout
+			super(context, R.layout.listitem_restaurant_top, values); // Use our custom row layout
 			this.mContext = context;
 		}
 		

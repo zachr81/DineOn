@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import uw.cse.dineon.library.DiningSession;
 import uw.cse.dineon.library.LocatableStorable;
 import uw.cse.dineon.library.RestaurantInfo;
 import uw.cse.dineon.library.util.DineOnConstants;
@@ -36,8 +35,8 @@ import com.parse.ParseQuery;
  */
 public class RestaurantSelectionActivity extends DineOnUserActivity implements 
 RestaurantSelectionButtonsFragment.OnClickListener, // Listening for button actions
-RestaurantListFragment.RestaurantListListener, //  Listening for List items
-RestaurantInfoFragment.RestaurantInfoListener {
+RestaurantListFragment.RestaurantListListener //  Listening for List items
+{
 	
 	private final String TAG = this.getClass().getSimpleName();
 
@@ -232,19 +231,8 @@ RestaurantInfoFragment.RestaurantInfoListener {
 	}
 
 	@Override
-	public void onMakeReservation(String reservation) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
 	public RestaurantInfo getCurrentRestaurant() {
 		return currentRestaurant;
-	}
-	
-	@Override
-	public void setCurrentRestaurant(RestaurantInfo r) {
-		currentRestaurant = r;
 	}
 	
 	@Override
