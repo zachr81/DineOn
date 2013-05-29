@@ -26,7 +26,7 @@ public class Menu extends Storable {
 	 * Name of the menu.
 	 * IE "Dinner Menu", "Breakfast Menu", "Drinks"
 	 */
-	private final String mName;
+	private String mName;
 
 	/**
 	 * This is all the items that it contains.
@@ -61,6 +61,13 @@ public class Menu extends Storable {
 	 */
 	public String getName() {
 		return mName;
+	}
+	
+	/**
+	 * @param name The new name for the menu
+	 */
+	public void setName(String name){
+		this.mName = name;
 	}
 
 	/**
