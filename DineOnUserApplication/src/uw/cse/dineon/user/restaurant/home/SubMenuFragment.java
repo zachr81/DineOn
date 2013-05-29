@@ -188,10 +188,6 @@ public class SubMenuFragment extends ListFragment {
 	 */
 	public interface MenuItemListListener {
 
-
-		// TODO Place parameter preferable a "Restaurant" Instance
-
-
 		/**
 		 * TODO implement.
 		 * @param menuItem String

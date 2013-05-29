@@ -35,7 +35,7 @@ public class RestaurantHomeMainFragment extends Fragment {
 	private ReferenceDataListener mListener;
 	
 	private RestaurantInfo mRestaurantInfo;
-
+	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
@@ -50,9 +50,9 @@ public class RestaurantHomeMainFragment extends Fragment {
 
 		pager.setAdapter(adapter);
 		
-		if (this.mListener != null) {
-			this.mRestaurantInfo = this.mListener.getCurrentRestaurant();
-		}
+		// Here we know the activity has been created therefore there
+		// must be a restaurant to focus on
+		mRestaurantInfo = this.mListener.getCurrentRestaurant();
 
 		// Set initial page to the menu page
 		pager.setCurrentItem(0);
@@ -65,7 +65,6 @@ public class RestaurantHomeMainFragment extends Fragment {
 		super.onAttach(activity);
 		if (activity instanceof ReferenceDataListener) {
 			mListener = (ReferenceDataListener) activity;
-			this.mRestaurantInfo = this.mListener.getCurrentRestaurant();
 		} else {
 			throw new ClassCastException(activity.toString()
 					+ " must implemenet RestaurantHomeMainFragment.ReferenceDataListener");
@@ -96,17 +95,16 @@ public class RestaurantHomeMainFragment extends Fragment {
 		@Override
 		public Fragment getItem(int position) {
 			Fragment f = null;
-			Bundle data = new Bundle();
 			// make sure position is within bounds
 			position = Math.min(Math.max(position, 0), this.mRestaurantInfo.getMenuList().size());
 			switch (position) {
 			case 0: // Show restaurant info
 				f = new RestaurantInfoFragment();
-				f.setArguments(data);
+//				f.setArguments(data);
 				break;
 			default:
 				f = new SubMenuFragment();
-				f.setArguments(data);
+//				f.setArguments(data);
 			}
 			
 			this.mFragments.add(position, f);
