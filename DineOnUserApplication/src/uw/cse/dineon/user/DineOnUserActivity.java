@@ -512,12 +512,6 @@ OrderUpdateListener /* manipulation of list from the current order activity */ {
 	}
 
 	@Override
-	public void onRestaurantInfoRequested() {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
 	public void onViewCurrentBill() {
 		// TODO Auto-generated method stub
 	}

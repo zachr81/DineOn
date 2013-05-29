@@ -39,9 +39,7 @@ public class MenuItemDetailFragment extends Fragment {
 	@Override 
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
-		if (mListener != null) {
-			setMenuItem(mListener.getMenuItem());
-		}
+		setMenuItem(mListener.getMenuItem());
 	}
 	
 	@Override
@@ -49,7 +47,6 @@ public class MenuItemDetailFragment extends Fragment {
 		super.onAttach(activity);
 		if (activity instanceof MenuItemDetailListener) {
 			mListener = (MenuItemDetailListener) activity;
-			
 		} else {
 			throw new ClassCastException(activity.toString()
 					+ " must implemenet MenuItemDetailFragment.MenuItemDetailListener");
@@ -64,11 +61,11 @@ public class MenuItemDetailFragment extends Fragment {
 		
 		// set the title
 		TextView title = (TextView) this.mView.findViewById(R.id.label_menu_item_name);
-		title.setText(item.getTitle());
+		title.setText(mMenuItem.getTitle());
 		
 		// set the description
 		TextView description = (TextView) this.mView.findViewById(R.id.label_menu_item_description);
-		description.setText(item.getDescription());
+		description.setText(mMenuItem.getDescription());
 		
 		// TODO set the image
 		

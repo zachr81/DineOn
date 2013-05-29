@@ -188,7 +188,15 @@ public class DineOnStandardActivity extends FragmentActivity implements ImageObt
 	 * @param callback Callback to get back
 	 */
 	protected void getImage(final DineOnImage image, final ImageGetCallback callback) {
-
+		if (callback == null) {
+			return; // Cant call back to no one
+		}
+		
+		if (image == null) {
+			callback.onImageReceived(new RuntimeException("Null DineOnImage"), null);
+			return;
+		}
+		
 		// Check in memory cache
 		Bitmap ret = getBitmapFromMemCache(image);
 		if (ret != null) {

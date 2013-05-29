@@ -5,7 +5,6 @@ import java.util.List;
 
 import uw.cse.dineon.library.RestaurantInfo;
 import uw.cse.dineon.user.R;
-import uw.cse.dineon.user.restaurantselection.RestaurantInfoFragment;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -27,15 +26,15 @@ import android.view.ViewGroup;
  * @author mhotan
  */
 public class RestaurantHomeMainFragment extends Fragment {
-	
+
 	private static final String INFORMATION = "Information";
 
-	private final String TAG = this.getClass().getSimpleName();
+	private static final String TAG = RestaurantHomeMainFragment.class.getSimpleName();
 
 	private ReferenceDataListener mListener;
-	
+
 	private RestaurantInfo mRestaurantInfo;
-	
+
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
@@ -44,19 +43,18 @@ public class RestaurantHomeMainFragment extends Fragment {
 
 		ViewPager pager = (ViewPager)view.findViewById(R.id.pager_menu_info);
 
+		// Here we know the activity has been created therefore there
+		// must be a restaurant to focus on
+		mRestaurantInfo = mListener.getCurrentRestaurant();
+
 		// Use activity's Fragment Manager
 		RestaurantMenuCategoryAdapter adapter = 
 				new RestaurantMenuCategoryAdapter(getFragmentManager(), this.mRestaurantInfo);
-
 		pager.setAdapter(adapter);
-		
-		// Here we know the activity has been created therefore there
-		// must be a restaurant to focus on
-		mRestaurantInfo = this.mListener.getCurrentRestaurant();
 
 		// Set initial page to the menu page
 		pager.setCurrentItem(0);
-				
+
 		return view;
 	}
 
@@ -72,12 +70,12 @@ public class RestaurantHomeMainFragment extends Fragment {
 	}
 
 	/**
-	 * Adapter class that manages the view.
+	 * The adapter is in charge for managing the transitions between
+	 * fragments of a particular view.
 	 * @author mhotan
-	 *
 	 */
 	public class RestaurantMenuCategoryAdapter extends FragmentPagerAdapter {
-		
+
 		private List<Fragment> mFragments;
 		private RestaurantInfo mRestaurantInfo;
 
@@ -100,13 +98,11 @@ public class RestaurantHomeMainFragment extends Fragment {
 			switch (position) {
 			case 0: // Show restaurant info
 				f = new RestaurantInfoFragment();
-//				f.setArguments(data);
 				break;
 			default:
-				f = new SubMenuFragment();
-//				f.setArguments(data);
+				f = SubMenuFragment.getInstance(position - 1);
 			}
-			
+
 			this.mFragments.add(position, f);
 			return f;
 		}
@@ -128,7 +124,7 @@ public class RestaurantHomeMainFragment extends Fragment {
 			return this.mRestaurantInfo.getMenuList().size() + 1;
 		}
 	}
-	
+
 
 	/**
 	 * TODO implement.
@@ -143,7 +139,7 @@ public class RestaurantHomeMainFragment extends Fragment {
 		public RestaurantInfo getCurrentRestaurant();
 
 	}
-	
-	
+
+
 
 }
