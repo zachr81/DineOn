@@ -71,13 +71,6 @@ MenuItemDetailListener {
 			mSupportContainer.setVisibility(View.GONE);
 		}
 	}
-	
-	@Override
-	protected void onSaveInstanceState(Bundle outState) {
-		super.onSaveInstanceState(outState);
-		outState.putString(EXTRA_MENUITEM_NAME, mItemOfFocus.getTitle());
-	}
-	
 
 	//////////////////////////////////////////////////////////////////////
 	////   Call backs for Fragment methods

@@ -37,21 +37,21 @@ public class RestaurantSelectionActivity extends DineOnUserActivity implements
 RestaurantSelectionButtonsFragment.OnClickListener, // Listening for button actions
 RestaurantListFragment.RestaurantListListener //  Listening for List items
 {
-	
+
 	private final String TAG = this.getClass().getSimpleName();
 
 	public static final String EXTRA_USER = "USER";
-	
+
 	private static final int MENU_ITEM_FILTER = 1234;
-	
+
 	private List<RestaurantInfo> mRestaurants;
-	
+
 	private ProgressDialog mProgressDialog;
-	
+
 	private RestaurantInfo currentRestaurant;
-	
+
 	private RestaurantSelectionActivity thisActivity;
-	
+
 
 	//////////////////////////////////////////////////////////////////////
 	////  Android specific 
@@ -61,7 +61,7 @@ RestaurantListFragment.RestaurantListListener //  Listening for List items
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_restaurant_selection);
-		
+
 		this.thisActivity = this;
 
 		// Replace the Action bar title with a message letting the 
@@ -70,10 +70,10 @@ RestaurantListFragment.RestaurantListListener //  Listening for List items
 		if (ACTION_BAR != null) {
 			ACTION_BAR.setTitle(R.string.actionbar_title_restaurant_selection);
 		}
-		
+
 		// Clear out old restaurant of interest
 		DineOnUserApplication.setRestaurantOfInterest(null);
-		
+
 		mRestaurants = DineOnUserApplication.getRestaurantList();
 		// Free up the static memory
 		DineOnUserApplication.clearResaurantList();
@@ -83,13 +83,13 @@ RestaurantListFragment.RestaurantListListener //  Listening for List items
 			onShowUserFavorites();
 		}
 	}
-	
+
 	@Override 
 	protected void onSaveInstanceState(Bundle outState) {
 		DineOnUserApplication.saveRestaurantList(mRestaurants);
 		super.onSaveInstanceState(outState);
 	}
-	
+
 	/**
 	 * Add the list of restaurant infos to the list.
 	 */
@@ -97,7 +97,7 @@ RestaurantListFragment.RestaurantListListener //  Listening for List items
 		addRestaurantInfos(this.mRestaurants);
 		this.mRestaurants.clear();
 	}
-	
+
 	/**
 	 * Add a new restaurant info object to the restaurant list.
 	 * @param infos RestaurantInfo object to add to list.
@@ -112,7 +112,7 @@ RestaurantListFragment.RestaurantListListener //  Listening for List items
 			frag.addRestaurantInfos(infos);
 		}
 	}
-	
+
 	/**
 	 * Notifies the fragment state change.
 	 */
@@ -122,13 +122,13 @@ RestaurantListFragment.RestaurantListListener //  Listening for List items
 				(RestaurantListFragment) fm.findFragmentById(R.id.restaurantList);
 		frag.notifyStateChange();
 	}
-	
+
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		menu.add(0, MENU_ITEM_FILTER, 0, R.string.option_filter);
 		return super.onCreateOptionsMenu(menu);
 	}
-	
+
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
@@ -153,21 +153,21 @@ RestaurantListFragment.RestaurantListListener //  Listening for List items
 		DineOnUserApplication.setRestaurantOfInterest(restaurant);
 		startActivity(i);
 	}
-	
-//	/**
-//	 * @param dsession DiningSession to change to
-//	 */
-//	public void diningSessionChangeActivity(DiningSession dsession) {
-//		Intent i = new Intent(thisActivity, RestaurantHomeActivity.class);
-//		i.putExtra(DineOnConstants.KEY_DININGSESSION, dsession);
-//		startActivity(i);
-//	}
+
+	//	/**
+	//	 * @param dsession DiningSession to change to
+	//	 */
+	//	public void diningSessionChangeActivity(DiningSession dsession) {
+	//		Intent i = new Intent(thisActivity, RestaurantHomeActivity.class);
+	//		i.putExtra(DineOnConstants.KEY_DININGSESSION, dsession);
+	//		startActivity(i);
+	//	}
 
 	@Override
 	protected void onSearch(String query) {
 		onSearchForRestaurantByName(query);
 	}
-	
+
 	/**
 	 * Search for a restaurant by name.
 	 * @param name name of restaurant
@@ -217,7 +217,7 @@ RestaurantListFragment.RestaurantListListener //  Listening for List items
 		query.whereContainedIn("objectId", Arrays.asList(objIds));
 		queryForRestaurants(query, "No restaurants in your favorites. Add some.");
 	}
-	
+
 	/**
 	 * Query for restaurants using attributes set and populate selection list.
 	 * on return
@@ -234,7 +234,7 @@ RestaurantListFragment.RestaurantListListener //  Listening for List items
 	public RestaurantInfo getCurrentRestaurant() {
 		return currentRestaurant;
 	}
-	
+
 	@Override
 	public List<RestaurantInfo> getRestaurants() {
 		return mRestaurants;
@@ -271,7 +271,7 @@ RestaurantListFragment.RestaurantListListener //  Listening for List items
 	public void showNoRestaurantsDialog(String message) {
 		Toast.makeText(this, message, Toast.LENGTH_LONG).show();
 	}
-	
+
 	/**
 	 * Gets the FindCallback for when restaurants are found.
 	 * @param message to show if no restaurants found
@@ -289,10 +289,10 @@ RestaurantListFragment.RestaurantListListener //  Listening for List items
 						showNoRestaurantsDialog(message);
 						return;
 					}
-					
+
 					// Clear all the old restaurants because we got something new.
 					mRestaurants.clear();
-					
+
 					// Each parse object represents one restaurant
 					// Populate our list of restaurants with 
 					for (ParseObject po: objects) {
@@ -302,7 +302,7 @@ RestaurantListFragment.RestaurantListListener //  Listening for List items
 							Log.d(TAG, e1.getMessage());
 						}
 					}
-					
+
 					// Destroy the progress dialog.
 					destroyProgressDialog();
 					// notify the fragment of the change
@@ -313,7 +313,7 @@ RestaurantListFragment.RestaurantListListener //  Listening for List items
 					Log.d(TAG, "No restaurants where found in the cloud.");
 				}
 			}
-			
+
 		};
 	}
 }

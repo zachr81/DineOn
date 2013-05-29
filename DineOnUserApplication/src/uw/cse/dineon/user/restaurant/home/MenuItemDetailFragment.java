@@ -1,14 +1,19 @@
 package uw.cse.dineon.user.restaurant.home;
 
 import uw.cse.dineon.library.MenuItem;
+import uw.cse.dineon.library.image.DineOnImage;
+import uw.cse.dineon.library.image.ImageCache.ImageGetCallback;
+import uw.cse.dineon.library.image.ImageObtainable;
 import uw.cse.dineon.user.R;
 import android.app.Activity;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 /**
@@ -74,7 +79,19 @@ public class MenuItemDetailFragment extends Fragment {
 		TextView description = (TextView) this.mView.findViewById(R.id.label_menu_item_description);
 		description.setText(mMenuItem.getDescription());
 		
-		// TODO set the image
+		final ImageView IMAGEVIEW = (ImageView) mView.findViewById(R.id.image_menu_item);
+		DineOnImage image = item.getImage();
+		mListener.onGetImage(image, new ImageGetCallback() {
+			
+			@Override
+			public void onImageReceived(Exception e, Bitmap b) {
+				if (e == null) {
+					IMAGEVIEW.setImageBitmap(b);
+				} else {
+					IMAGEVIEW.setVisibility(View.GONE);
+				}
+			}
+		});
 		
 		// TODO set the allergens
 	}
@@ -83,7 +100,7 @@ public class MenuItemDetailFragment extends Fragment {
 	 * TODO implement.
 	 * @author mrathjen
 	 */
-	public interface MenuItemDetailListener {
+	public interface MenuItemDetailListener extends ImageObtainable {
 
 		/**
 		 * TODO get the current menu item.

@@ -248,8 +248,6 @@ public class SubMenuFragment extends ListFragment {
 			 */
 			private final EditText mSpecialInstructions;
 
-			private final Animation mExpandAnim;
-
 			/**
 			 * Creates a handler for this particular menu item portrayal in a list.
 			 * 
@@ -262,7 +260,6 @@ public class SubMenuFragment extends ListFragment {
 				mItem = item;
 				// Set the animation for all transitions
 				mBottom = bottom;
-				mExpandAnim = new ExpandAnimation(mBottom, 400);
 
 				// Assign the top portions 
 				mImage = (ImageView) top.findViewById(R.id.image_menuitem);
@@ -298,6 +295,8 @@ public class SubMenuFragment extends ListFragment {
 					});
 				}
 
+				mBottom.setVisibility(View.GONE);
+				
 				// Now add the onclick listeners to handle all the event driven from the user.
 				mMenuItemName.setOnClickListener(this);
 				mHint.setOnClickListener(this);
@@ -317,7 +316,7 @@ public class SubMenuFragment extends ListFragment {
 				// If the user clicks on the name or the hint
 				// Expand the view exposing more instructions.
 				if (v == mHint || v == mMenuItemName) {
-					mBottom.startAnimation(mExpandAnim);
+					mBottom.startAnimation(new ExpandAnimation(mBottom, 400));
 				} else if (v == mIncrementButton) {
 					incrementQty();
 				} else if (v == mDecrementButton) {
