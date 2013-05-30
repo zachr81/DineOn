@@ -35,7 +35,7 @@ implements OnCheckedChangeListener, OnClickListener {
 	
 	private static final String REQUEST = TAG + "_request";
 	
-	private TextView mTitle, mDetails, mTableNumber, mTimeTaken;
+	private TextView mTitle, mDetails, mTimeTaken;
 	private ArrayAdapter<String> mStaffAdapter;
 	private Map<RadioButton, String> mUrgencyMap;
 	private ImageButton mSendMessage, mSendTask;
