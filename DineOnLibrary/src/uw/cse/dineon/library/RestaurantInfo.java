@@ -37,14 +37,13 @@ public class RestaurantInfo extends LocatableStorable {
 	public static final String MENUS = "restaurantMenu";
 	public static final String HOURS = "restaurantHours";
 
-	private static final String UNDETERMINED = "Undetermined";
+	private static final String UNDETERMINED = "Unknown";
 
 	private final ParseUser mUser;
 	// Lets set the name of the restaurant once and only once.
 	private final String mName;
-	private String mAddress;
-	private String mHours;
 	private Address mAddress;
+	private String mHours;
 	private String mPhone;
 	private int mMainImageIndex; // Index of Main image
 	private final List<DineOnImage> mImageList; // Mapping of Parse Object IDs
@@ -62,8 +61,6 @@ public class RestaurantInfo extends LocatableStorable {
 		mUser = name;
 		mName = mUser.getUsername();
 		mAddress = new Address(Locale.getDefault());
-		mPhone = UNDETERMINED;
-		mAddress = UNDETERMINED;
 		mPhone = UNDETERMINED;
 		mHours = UNDETERMINED;
 		mMainImageIndex = 0;
@@ -83,12 +80,10 @@ public class RestaurantInfo extends LocatableStorable {
 		mName = mUser.getUsername();
 		mAddress = parseAddress(po.getString(ADDR));
 		mPhone = po.getString(PHONE);
-		mAddress = po.getString(ADDR);
-		mPhone = po.getString(PHONE);
-		mHours = po.getString(HOURS);
 		mMainImageIndex = po.getInt(IMAGE_MAIN);
 		mImageList = ParseUtil.toListOfStorables(DineOnImage.class, po.getList(IMAGE_LIST));
 		mMenus = ParseUtil.toListOfStorables(Menu.class, po.getList(MENUS));
+		mHours = po.getString(HOURS);
 	}
 
 
@@ -100,6 +95,7 @@ public class RestaurantInfo extends LocatableStorable {
 		po.put(NAME, mName);
 		po.put(ADDR, addressToString(mAddress));
 		po.put(PHONE, mPhone);
+		po.put(HOURS, mHours);
 		po.put(IMAGE_MAIN, mMainImageIndex);
 		po.put(IMAGE_LIST, ParseUtil.toListOfParseObjects(mImageList));
 		po.put(MENUS, ParseUtil.toListOfParseObjects(mMenus));	
