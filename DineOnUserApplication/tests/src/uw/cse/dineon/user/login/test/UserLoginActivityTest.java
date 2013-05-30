@@ -83,7 +83,7 @@ public class UserLoginActivityTest extends
 		super.tearDown();
 	}
 
-	public void testOnLogin() {
+	public void testOnLoginWithDiningSession() {
 		et_uname = (EditText) mActivity.findViewById(uw.cse.dineon.user.R.id.input_login_email);
 		et_passwd = (EditText) mActivity.findViewById(R.id.input_login_password);
 		int time = 5000;
@@ -105,6 +105,32 @@ public class UserLoginActivityTest extends
 	  			mInstrumentation.waitForMonitorWithTimeout(monRia, time);
 	  	assertNotNull(rha);
 	  	rha.finish();
+
+	}
+	
+	public void testOnLoginWithOutDiningSession() {
+		this.dineOnUser.setDiningSession(null);
+		et_uname = (EditText) mActivity.findViewById(uw.cse.dineon.user.R.id.input_login_email);
+		et_passwd = (EditText) mActivity.findViewById(R.id.input_login_password);
+		int time = 5000;
+		final DineOnUser DO = this.dineOnUser;
+		mActivity.runOnUiThread(new Runnable() {
+
+	      public void run() {
+	          et_uname.setText("");
+	          et_passwd.setText("");
+              Button loginButton = (Button) mActivity.findViewById(R.id.button_login);
+              loginButton.performClick();
+	          }
+		});
+
+		ActivityMonitor monRsa = this.mInstrumentation.addMonitor(
+			RestaurantSelectionActivity.class.getName(), null, false);
+    	mActivity.startRestSelectionAct(DO);
+	  	RestaurantSelectionActivity rsa = (RestaurantSelectionActivity) 
+	  			mInstrumentation.waitForMonitorWithTimeout(monRsa, time);
+	  	assertNotNull(rsa);
+	  	rsa.finish();
 
 	}
 }
