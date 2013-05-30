@@ -225,7 +225,7 @@ public class RestaurantListFragment extends ListFragment {
 				
 				// Set the values that will never change.
 				restaurantNameView.setText(mInfo.getName());
-				restaurantAddressView.setText(mInfo.getAddr());
+				restaurantAddressView.setText(mInfo.getAddr().toString());
 				restaurantHoursView.setText(
 						mContext.getResources().getString(R.string.hours_unknown));
 				restaurantPhoneView.setText(mInfo.getPhone());

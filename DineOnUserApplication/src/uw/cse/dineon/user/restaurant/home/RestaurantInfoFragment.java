@@ -91,7 +91,7 @@ public class RestaurantInfoFragment extends Fragment {
 		this.mRestaurant = restaurant;
 
 		mRestNameLabel.setText(mRestaurant.getName());
-		mAddressLabel.setText(mRestaurant.getAddr());
+		mAddressLabel.setText(mRestaurant.getAddr().toString());
 		mHoursLabel.setText("Hell yeah... 24/7!");
 		
 		// TODO Fix this so it is not random.
