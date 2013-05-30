@@ -2,21 +2,24 @@ package uw.cse.dineon.restaurant.active;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-
-import edu.umd.cs.findbugs.annotations.SuppressWarnings;
 
 import uw.cse.dineon.library.Order;
+import uw.cse.dineon.library.RestaurantInfo;
+import uw.cse.dineon.library.animation.ExpandAnimation;
+import uw.cse.dineon.library.image.DineOnImage;
+import uw.cse.dineon.library.image.ImageObtainable;
+import uw.cse.dineon.library.image.ImageCache.ImageGetCallback;
 import uw.cse.dineon.restaurant.R;
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -24,7 +27,9 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.SeekBar;
+import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
+import edu.umd.cs.findbugs.annotations.SuppressWarnings;
 
 /**
  * Fragment represents a List of Orders that are pending
@@ -46,7 +51,7 @@ public class OrderListFragment extends ListFragment {
 	private OrderListAdapter mAdapter;
 
 	private static final String ORDERS = "orders"; 
-	
+
 	/**
 	 * Creates a new Order List Fragment from a list of orders.
 	 * @param orders Orders to use
@@ -55,7 +60,7 @@ public class OrderListFragment extends ListFragment {
 	public static OrderListFragment newInstance(List<Order> orders) {
 		OrderListFragment f = new OrderListFragment();
 		Bundle args = new Bundle();
-		
+
 		Order[] orderArgs;
 		if (orders != null) {
 			orderArgs = new Order[orders.size()];
@@ -65,16 +70,16 @@ public class OrderListFragment extends ListFragment {
 		} else {
 			orderArgs = new Order[0];
 		}
-		
+
 		args.putParcelableArray(ORDERS, orderArgs);
 		f.setArguments(args);
 		return f;
 	}
-	
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		
+
 		Order[] orderArray = null;
 		if (savedInstanceState != null // From saved instance
 				&& savedInstanceState.containsKey(ORDERS)) {
@@ -84,28 +89,28 @@ public class OrderListFragment extends ListFragment {
 			// List are not contravariant in java... :-(
 			orderArray = (Order[])getArguments().getParcelableArray(ORDERS);	
 		}
-		
+
 		// Error check
 		if (orderArray == null) {
 			Log.e(TAG, "Unable to extract list of orders");
 			return;
 		}
-		
+
 		// Must convert to array because this allows dynamic additions
 		// Our Adapter needs a dynamic list.
 		List<Order> orders = new ArrayList<Order>(orderArray.length);
 		for (Order order : orderArray) {
 			orders.add(order);
 		}
-		
+
 		mAdapter = new OrderListAdapter(this.getActivity(), orders);
 		setListAdapter(mAdapter);
 	}
-	
+
 	@Override
 	public void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
-		ArrayList<Order> orders = mAdapter.getOrders();
+		List<Order> orders = mListener.getPendingOrders();
 		Order[] orderArray = new Order[orders.size()];
 		for (int i = 0; i < orderArray.length; ++i) {
 			orderArray[i] = orders.get(i);
@@ -187,23 +192,22 @@ public class OrderListFragment extends ListFragment {
 		void onProgressChanged(Order order, int progress);
 
 		/**
-		 * User(Restaurant Employee) wants to see details pertaining this order.
-		 * @param order order to reference
-		 */
-		void onRequestOrderDetail(Order order);
-
-		/**
 		 * Restaurant wants to notify customer that the order is complete.
 		 * @param order order to reference
 		 */
 		void onOrderComplete(Order order);
 
-//		/**
-//		 * Used to get the most recent up to date list of items to show.
-//		 * if returns null then no list will be added
-//		 * @return List of items to show
-//		 */
-//		List<Order> getCurrentOrders();
+		/**
+		 * User(Restaurant Employee) wants to see details pertaining this order.
+		 * @param order order to reference
+		 */
+		void onOrderSelected(Order order);
+
+		/**
+		 * Returns a non null list of orders to present.
+		 * @return return the list of orders.
+		 */
+		List<Order> getPendingOrders();
 
 	}
 
@@ -219,11 +223,6 @@ public class OrderListFragment extends ListFragment {
 	private class OrderListAdapter extends ArrayAdapter<Order> {
 
 		private final Context mContext;
-		private final List<Order> mOrders;
-		private final Map<View, Order> mViewToOrder;
-		private final OrderItemListener mItemListener;
-		private final OrderProgressListener mProgessListener;
-		private int expanded = -1;
 
 		/**
 		 * Creates an adapter that manages the addition and layout of
@@ -234,171 +233,180 @@ public class OrderListFragment extends ListFragment {
 		public OrderListAdapter(Context ctx, List<Order> orders) {
 			super(ctx, R.layout.listitem_restaurant_order_bot, orders);
 			this.mContext = ctx;
-			this.mOrders = orders;
-			this.mViewToOrder = new HashMap<View, Order>();
-			this.mItemListener = new OrderItemListener();
-			this.mProgessListener = new OrderProgressListener();
-		}
-		
-		/**
-		 * @return list of current orders.
-		 */
-		public ArrayList<Order> getOrders() {
-			return new ArrayList<Order>(mOrders);
-		} 
-
-		/**
-		 * Sets the arrow based on whether or not the list item
-		 * is expanded or not.
-		 * @param position The position of the list item to set
-		 * @param arrow The specified arrow to set
-		 */
-		private void setArrow(int position, ImageView arrow) {
-			if(position == expanded) {
-				arrow.setImageResource(R.drawable.navigation_next_item);
-			} else {
-				arrow.setImageResource(R.drawable.navigation_expand);
-			}
 		}
 
-		/**
-		 * Toggles expansion of the given list item.
-		 * Currently only one item can be expanded at a time
-		 * @param position The position of the list item to toggle
-		 */
-		public void expand(int position) {
+		@Override
+		public void add(Order o) {
+			super.add(o);
+			this.notifyDataSetChanged();
+		}
 
-			if(expanded == position) { //Already expanded, collapse it
-				expanded = -1;
-			} else {
-				expanded = position;
-			}
+		@Override
+		public void addAll(Collection<? extends Order> collection) {
+			super.addAll(collection);
 			notifyDataSetChanged();
+		}
+
+		@Override
+		public void clear() {
+			super.clear();
+			this.notifyDataSetChanged();
 		}
 
 		@SuppressWarnings("BC_UNCONFIRMED_CAST")
 		@Override
 		public View getView(final int position, View convertView, ViewGroup parent) {
 
+			// Establish a reference to the top and bottom of ex
 			View vwTop;
 			View vwBot;
 
-			final LinearLayout VIEW;
-			
+			LinearLayout layoutView = null;
+
 			if(convertView == null) {
-				VIEW = new LinearLayout(mContext);
-				VIEW.setOrientation(LinearLayout.VERTICAL);
+				layoutView = new LinearLayout(mContext);
+				layoutView.setOrientation(LinearLayout.VERTICAL);
 				LayoutInflater inflater = (LayoutInflater) mContext
 						.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 				vwTop = inflater.inflate(R.layout.listitem_restaurant_order_top, null, true);
 				vwBot = inflater.inflate(R.layout.listitem_restaurant_order_bot, null, true);
-				VIEW.addView(vwTop);
-				VIEW.addView(vwBot);
+				layoutView.addView(vwTop);
+				layoutView.addView(vwBot);
+				convertView = layoutView;
 			} else {
 				//Everything already created, just find them
-				VIEW = (LinearLayout) convertView;
-				vwTop = VIEW.findViewById(R.id.listitem_order_top);
-				vwBot = VIEW.findViewById(R.id.listitem_order_bot);
+				vwTop = convertView.findViewById(R.id.listitem_order_top);
+				vwBot = convertView.findViewById(R.id.listitem_order_bot);
 			}
 
-			Order order = mOrders.get(position);
+			Order orderToShow = getItem(position);
 
-			// Reference the correct UI components and set up
-			Button buttonCompleteOrder = (Button) VIEW.findViewById(R.id.button_completed_order);
-			TextView orderTitle = 
-					(TextView) VIEW.findViewById(R.id.button_order_title);
-			int table = order.getTableID();
-			
-			if(table == -1) { // No Table
-				orderTitle.setText(order.getOriginalUser().getName());
-			} else {
-				orderTitle.setText("Table " + order.getTableID() 
-						+ " - " + order.getOriginalUser().getName());
+			// For every restaurant to present create a handler for the order;
+			// We are creating this view for the very first time
+			if (layoutView != null) {
+				// Create a handler just for the restaurant.
+				new OrderHandler(orderToShow, vwTop, vwBot);
 			}
-			
-			SeekBar progressBar = (SeekBar) VIEW.findViewById(R.id.seekbar_order_progress);
-			progressBar.setMax(100);
-			progressBar.setProgress(0);
-
-			TextView time = (TextView) VIEW.findViewById(R.id.label_order_time);
-			time.setText(order.getOriginatingTime().toString());
-			
-			//Set up expand button
-			ImageView arrow = (ImageView) vwTop.findViewById(R.id.button_expand_order);
-			setArrow(position, arrow);
-
-			// Add the onclick listener that listens 
-			vwTop.setOnClickListener(new View.OnClickListener() {
-				public void onClick(View v) {
-					expand(position);
-
-					ImageView arrow = 
-							(ImageView) VIEW.findViewById(R.id.button_expand_order);
-					setArrow(position, arrow);
-					//Right arrow case -- goes to details fragment
-					if(expanded != position) {
-						mListener.onRequestOrderDetail(mOrders.get(position));
-					}				
-				}
-			});
-
-			if(expanded != position) {
-				vwBot.setVisibility(View.GONE);
-			} else {
-				vwBot.setVisibility(View.VISIBLE);
-			}
-
-			// Add to mapping to reference later
-			mViewToOrder.put(buttonCompleteOrder, order);
-			mViewToOrder.put(arrow, order);
-			mViewToOrder.put(progressBar, order);
-
-			// Add listener for reaction purposes
-			buttonCompleteOrder.setOnClickListener(mItemListener);
-			progressBar.setOnSeekBarChangeListener(mProgessListener);
-			return VIEW;
+			return convertView;
 		}
 
 		/**
 		 * Listener for certain item of an order item view.
 		 * @author mhotan
 		 */
-		private class OrderItemListener implements View.OnClickListener {
+		private class OrderHandler implements OnClickListener, OnSeekBarChangeListener {
+
+			private final Order mOrder;
+			private final ImageView mExpandDown;
+			private final ImageButton mPickOrder;
+			private final View mTop, mBottom;
+
+			/**
+			 * Build this handler from the Order and its corresponding views.
+			 * 
+			 * @param order Order to associate to.
+			 * @param top Top view for the order.
+			 * @param bottom bottom view for the order.
+			 */
+			public OrderHandler(Order order, View top, View bottom) {
+				mOrder = order;
+
+				mTop = top;
+				mBottom = bottom;
+
+				// Get a reference to all the top pieces 
+				final ImageView ORDERIMAGE = (ImageView) 
+						mTop.findViewById(R.id.image_order_thumbnail);
+				TextView orderTitle = 
+						(TextView) mTop.findViewById(R.id.label_order_title);
+				mExpandDown = (ImageView) 
+						mTop.findViewById(R.id.button_expand_order);
+				TextView time = (TextView) mTop.findViewById(R.id.label_order_time);
+				mPickOrder = (ImageButton) mBottom.findViewById(R.id.button_proceed);	
+				
+				// Get a reference to all the bottom pieces
+				Button buttonCompleteOrder = (Button) mBottom.findViewById(R.id.button_completed_order);
+
+				SeekBar progressBar = (SeekBar) mBottom.findViewById(R.id.seekbar_order_progress);
+
+
+				//Populate
+				int table = order.getTableID();
+
+				if(table == -1) { // No Table
+					orderTitle.setText(order.getOriginalUser().getName());
+				} else {
+					orderTitle.setText("Table " + order.getTableID() 
+							+ " - " + order.getOriginalUser().getName());
+				}
+
+				progressBar.setMax(100);
+				progressBar.setProgress(0);
+
+				time.setText(order.getOriginatingTime().toString());
+
+				// Add listeners for reaction purposes
+				buttonCompleteOrder.setOnClickListener(this);
+				progressBar.setOnSeekBarChangeListener(this);
+				
+				// Set the image of this order
+//				DineOnImage image = order.getMainImage();
+//				if (image != null) {
+//					mListener.onGetImage(image, new ImageGetCallback() {
+//
+//						@Override
+//						public void onImageReceived(Exception e, Bitmap b) {
+//							if (e == null) {
+//								// We got the image so set the bitmap
+//								ORDERIMAGE.setImageBitmap(b);
+//							}
+//						}
+//					});
+//				}
+
+				// Set the bottom view to initial to be invisible
+				mBottom.setVisibility(View.GONE);
+
+				mTop.setOnClickListener(this);
+				mPickOrder.setOnClickListener(this);
+			}
 
 			@Override
 			public void onClick(View v) {
 
-				Order order = mViewToOrder.get(v);
+				if (v == mTop || v == mPickOrder) { 
+					int bottomVisibility = mBottom.getVisibility();
+					// Expand the bottom view if it is not shown
+					// Hide the expand down button.
+					if (bottomVisibility == View.GONE) {
+						mExpandDown.setVisibility(View.GONE);
+					} else if (bottomVisibility == View.VISIBLE) {
+						mExpandDown.setVisibility(View.VISIBLE);
+					}
 
-				// TODO Auto-generated method stub
-				switch (v.getId()) {
-				case R.id.button_completed_order:
-					mAdapter.remove(order);
-					mListener.onOrderComplete(order);
+					// Expand the animation
+					ExpandAnimation expandAni = new ExpandAnimation(mBottom, 500);
+					mBottom.startAnimation(expandAni);
+
+				} else if (v.getId() == R.id.button_completed_order) {
+					mAdapter.remove(mOrder);
+					mListener.onOrderComplete(mOrder);
 					mAdapter.notifyDataSetChanged();
-					break;
-				default:
-					break;
+				}
+				
+				if (v == mPickOrder) {
+					mListener.onOrderSelected(mOrder);
 				}
 			}
-		}
-
-		/**
-		 * Listener for certain seekbar change regarding progress.
-		 * @author mhotan
-		 */
-		private class OrderProgressListener implements SeekBar.OnSeekBarChangeListener {
 
 			@Override
 			public void onProgressChanged(SeekBar seekBar, int progress,
 					boolean fromUser) {
-				// TODO Auto-generated method stub
-				Order order = mViewToOrder.get(seekBar);
-				mListener.onProgressChanged(order, progress);
+				mListener.onProgressChanged(mOrder, progress);
 
 				if (progress == seekBar.getMax()) {
-					mAdapter.remove(order);
-					mListener.onOrderComplete(order);
+					mAdapter.remove(mOrder);
+					mListener.onOrderComplete(mOrder);
 					mAdapter.notifyDataSetChanged();
 				}
 			}
@@ -408,7 +416,6 @@ public class OrderListFragment extends ListFragment {
 
 			@Override
 			public void onStopTrackingTouch(SeekBar seekBar) { }
-
 		}
 
 
