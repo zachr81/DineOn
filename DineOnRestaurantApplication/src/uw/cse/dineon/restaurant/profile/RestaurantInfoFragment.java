@@ -1,6 +1,7 @@
 package uw.cse.dineon.restaurant.profile;
 
 import java.util.List;
+import java.util.Locale;
 
 import uw.cse.dineon.library.RestaurantInfo;
 import uw.cse.dineon.library.image.DineOnImage;
@@ -15,17 +16,16 @@ import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.location.Address;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.telephony.PhoneNumberUtils;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.CompoundButton;
-import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -307,16 +307,34 @@ public class RestaurantInfoFragment extends Fragment {
 	 * 
 	 * @author mhotan 
 	 */
-	private class UserInputHandler implements View.OnClickListener, OnCheckedChangeListener {
+	private class UserInputHandler implements View.OnClickListener {
 
-		private final CheckBox mDefaultCheck;
-		private final ImageButton mTakePicButton, mChoosePicButton, mDeleteButton;
-		private final Button mSaveButton;
+		/**
+		 * Restaurant information to reference and alter.
+		 */
 		private final RestaurantInfo mInfo;
-		private final TextView mPhoneInput, mAddressInput;
+
+		// Buttons Specifically used for taking pictures of
+		// the restaurant
+		private final ImageButton mTakePicButton, mChoosePicButton, mDeleteButton;
+
+		// Save Button
+		private final Button mSaveButton;
+
+		/**
+		 * All the edit text fields to update.
+		 */
+		private final TextView mAddressLine1, mAddressLine2, mAddressCity, mAddressState,
+		mAddressZipCode, mPhoneInput;
+
+		/**
+		 * Gallery that holds all the images.
+		 */
 		private final LinearLayout mGallery;
 
-		private View mCurrentDefault;
+		/**
+		 * Have the view for the current selected Image.
+		 */
 		private View mCurrentSelected;
 
 		private final AddToRestaurantCallback mAddToRestaurant;
@@ -349,18 +367,28 @@ public class RestaurantInfoFragment extends Fragment {
 		 * @param info Restaurant info to assign.
 		 */
 		UserInputHandler(View view, RestaurantInfo info) {
+			// Restaurant info
 			mInfo = info;
-			mDefaultCheck = (CheckBox) view.findViewById(R.id.checkbox_is_default_image);
+
+			// Buttons to receive user button input. 
 			mTakePicButton = (ImageButton) view.findViewById(R.id.button_take_new_picture);
 			mChoosePicButton = (ImageButton) view.findViewById(R.id.button_add_image_gallery);
 			mDeleteButton = (ImageButton) view.findViewById(R.id.button_delete_image);
 			mSaveButton = (Button) view.findViewById(R.id.button_save_restaurant_info);
+
+			// Input text.
+			mAddressLine1 = (TextView) view.findViewById(R.id.edittext_restaurant_address_line1);
+			mAddressLine2 = (TextView) view.findViewById(R.id.edittext_restaurant_address_line2);
+			mAddressCity = (TextView) view.findViewById(R.id.edittext_restaurant_address_city);
+			mAddressState = (TextView) view.findViewById(R.id.edittext_restaurant_address_state);
+			mAddressZipCode = (TextView) view.
+					findViewById(R.id.edittext_restaurant_address_zipcode);
 			mPhoneInput = (TextView) view.findViewById(R.id.edittext_restaurant_phone);
-			mAddressInput = (TextView) view.findViewById(R.id.edittext_restaurant_address);
+
+			// Gallery image
 			mGallery = (LinearLayout) view.findViewById(R.id.gallery_restaurant_images);
 
-			if (mDefaultCheck == null 
-					|| mTakePicButton == null 
+			if (mTakePicButton == null 
 					|| mChoosePicButton == null 
 					|| mDeleteButton == null) {
 				throw new IllegalArgumentException(
@@ -369,7 +397,6 @@ public class RestaurantInfoFragment extends Fragment {
 
 			mAddToRestaurant = new AddToRestaurantCallback();
 
-			mDefaultCheck.setOnCheckedChangeListener(this);
 			mTakePicButton.setOnClickListener(this);
 			mChoosePicButton.setOnClickListener(this);
 			mDeleteButton.setOnClickListener(this);
@@ -408,45 +435,61 @@ public class RestaurantInfoFragment extends Fragment {
 				});
 
 			} else if (v == mSaveButton) {
-				mInfo.setAddr(mAddressInput.getText().toString());
-				mInfo.setPhone(mPhoneInput.getText().toString());
-				if (mCurrentDefault != null) {
-					mInfo.setMainImage(mGallery.indexOfChild(mCurrentDefault));
-				} else {
-					mInfo.setMainImage(-1);
+				String addressLine1 = mAddressLine1.getText().toString();
+				String addressLine2 = mAddressLine2.getText().toString();
+				String addressCity = mAddressCity.getText().toString();
+				String addressState = mAddressState.getText().toString();
+				String addressZip = mAddressZipCode.getText().toString();
+				String phoneNumber = mPhoneInput.getText().toString();
+				
+				if (phoneNumber != null) {
+					phoneNumber = PhoneNumberUtils.formatNumber(phoneNumber);
+					mPhoneInput.setText(phoneNumber);
 				}
+				
+				mInfo.setPhone(phoneNumber);
+				
+				// Build the address
+				Address address = new Address(Locale.getDefault());
+				address.setAddressLine(0, addressLine1);
+				address.setAddressLine(1, addressLine2);
+				address.setLocality(addressCity);
+				address.setAdminArea(addressState);
+				address.setPostalCode(addressZip);
+				mInfo.setAddr(address);
+				
 				mListener.onRestaurantInfoUpdate(mInfo);
 			} else { 
 				setSelected(v);
 			}
 		}
 
-		@Override
-		public void onCheckedChanged(CompoundButton buttonView,
-				boolean isChecked) {
-			if (mDefaultCheck == buttonView) {
-				// Check if there is an image selected.
-				if (isChecked) {
-					setDefaultImage(mCurrentSelected);
-				} else { // Uncheck
-					setDefaultImage(null); // No default image
-				}
-			}
-		}
+		//		@Override
+		//		public void onCheckedChanged(CompoundButton buttonView,
+		//				boolean isChecked) {
+		//			if (mDefaultCheck == buttonView) {
+		//				// Check if there is an image selected.
+		//				if (isChecked) {
+		//					setDefaultImage(mCurrentSelected);
+		//				} else { // Uncheck
+		//					setDefaultImage(null); // No default image
+		//				}
+		//			}
+		//		}
 
-		/**
-		 * Sets the inputted image as the default image.
-		 * @param v View to set as default.
-		 */
-		private void setDefaultImage(View v) { 
-			if (mCurrentDefault != null) {
-				mCurrentDefault.setBackgroundColor(Color.TRANSPARENT);
-			}
-			mCurrentDefault = v;
-			if (mCurrentDefault != null) {
-				mCurrentDefault.setBackgroundColor(Color.RED);
-			}
-		}
+		//		/**
+		//		 * Sets the inputted image as the default image.
+		//		 * @param v View to set as default.
+		//		 */
+		//		private void setDefaultImage(View v) { 
+		//			if (mCurrentDefault != null) {
+		//				mCurrentDefault.setBackgroundColor(Color.TRANSPARENT);
+		//			}
+		//			mCurrentDefault = v;
+		//			if (mCurrentDefault != null) {
+		//				mCurrentDefault.setBackgroundColor(Color.RED);
+		//			}
+		//		}
 
 		/**
 		 * Sets the restaurant Image as the currently selected image.
@@ -454,25 +497,25 @@ public class RestaurantInfoFragment extends Fragment {
 		 * @param restaurantImage To set as selected.
 		 */
 		private void setSelected(View restaurantImage) {
-			mDefaultCheck.setChecked(false);
-			
-			// In the case where there is nothing at all in this gallery
-			if (mCurrentDefault == null && mCurrentSelected == null) {
-				setDefaultImage(restaurantImage);
-				return;
-			}
-			
-			// If the image is the current defaulted image then no change is needed
-			if (restaurantImage == mCurrentDefault) {
-				mDefaultCheck.setChecked(true);
-				return;
-			}
+			//			mDefaultCheck.setChecked(false);
+			//			
+			//			// In the case where there is nothing at all in this gallery
+			//			if (mCurrentDefault == null && mCurrentSelected == null) {
+			//				setDefaultImage(restaurantImage);
+			//				return;
+			//			}
+			//			
+			//			// If the image is the current defaulted image then no change is needed
+			//			if (restaurantImage == mCurrentDefault) {
+			//				mDefaultCheck.setChecked(true);
+			//				return;
+			//			}
 
 			// reset the background of the old selected image.
 			if (mCurrentSelected != null) {
 				mCurrentSelected.setBackgroundColor(Color.TRANSPARENT);
 			}
-			
+
 			mCurrentSelected = restaurantImage;
 			mCurrentSelected.setBackgroundColor(Color.GRAY);
 		}
