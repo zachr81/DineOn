@@ -320,13 +320,13 @@ RequestDetailListener {
 			Fragment f;
 			switch (position) {
 			case 0:
-				f = OrderListFragment.newInstance(restaurant.getPendingOrders());
+				f = new OrderListFragment();
 				break;
 			case 1:
-				f = RequestListFragment.newInstance(restaurant.getCustomerRequests());
+				f = new RequestListFragment();
 				break;
 			case 2: // Should be 2
-				f = DiningSessionListFragment.newInstance(restaurant.getSessions());
+				f = new DiningSessionListFragment();
 				break;
 				// TODO Add more options
 			default:

@@ -1,22 +1,15 @@
 package uw.cse.dineon.restaurant.active;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
 import uw.cse.dineon.library.Order;
-import uw.cse.dineon.library.RestaurantInfo;
 import uw.cse.dineon.library.animation.ExpandAnimation;
-import uw.cse.dineon.library.image.DineOnImage;
-import uw.cse.dineon.library.image.ImageObtainable;
-import uw.cse.dineon.library.image.ImageCache.ImageGetCallback;
 import uw.cse.dineon.restaurant.R;
 import android.app.Activity;
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -34,7 +27,7 @@ import edu.umd.cs.findbugs.annotations.SuppressWarnings;
 /**
  * Fragment represents a List of Orders that are pending
  * for this restaurant.
- * @author mhotan
+ * @author glee23
  */
 public class OrderListFragment extends ListFragment {
 
@@ -52,70 +45,13 @@ public class OrderListFragment extends ListFragment {
 
 	private static final String ORDERS = "orders"; 
 
-	/**
-	 * Creates a new Order List Fragment from a list of orders.
-	 * @param orders Orders to use
-	 * @return an order list fragment.
-	 */
-	public static OrderListFragment newInstance(List<Order> orders) {
-		OrderListFragment f = new OrderListFragment();
-		Bundle args = new Bundle();
-
-		Order[] orderArgs;
-		if (orders != null) {
-			orderArgs = new Order[orders.size()];
-			for (int i = 0; i < orders.size(); i++) {
-				orderArgs[i] = orders.get(i);
-			}
-		} else {
-			orderArgs = new Order[0];
-		}
-
-		args.putParcelableArray(ORDERS, orderArgs);
-		f.setArguments(args);
-		return f;
-	}
-
 	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
+	public void onActivityCreated(Bundle savedInstanceState) {
+		super.onActivityCreated(savedInstanceState);
 
-		Order[] orderArray = null;
-		if (savedInstanceState != null // From saved instance
-				&& savedInstanceState.containsKey(ORDERS)) {
-			orderArray = (Order[])savedInstanceState.getParcelableArray(ORDERS);
-		} else if (getArguments() != null && getArguments().containsKey(ORDERS)) {
-			// Ugh have to convert to array for type reasons.
-			// List are not contravariant in java... :-(
-			orderArray = (Order[])getArguments().getParcelableArray(ORDERS);	
-		}
-
-		// Error check
-		if (orderArray == null) {
-			Log.e(TAG, "Unable to extract list of orders");
-			return;
-		}
-
-		// Must convert to array because this allows dynamic additions
-		// Our Adapter needs a dynamic list.
-		List<Order> orders = new ArrayList<Order>(orderArray.length);
-		for (Order order : orderArray) {
-			orders.add(order);
-		}
-
-		mAdapter = new OrderListAdapter(this.getActivity(), orders);
+		//We can assert that the listener has a non null list of dining sessions
+		mAdapter = new OrderListAdapter(getActivity(), mListener.getPendingOrders());
 		setListAdapter(mAdapter);
-	}
-
-	@Override
-	public void onSaveInstanceState(Bundle outState) {
-		super.onSaveInstanceState(outState);
-		List<Order> orders = mListener.getPendingOrders();
-		Order[] orderArray = new Order[orders.size()];
-		for (int i = 0; i < orderArray.length; ++i) {
-			orderArray[i] = orders.get(i);
-		}
-		outState.putParcelableArray(ORDERS, orderArray);
 	}
 
 	@Override
@@ -180,7 +116,7 @@ public class OrderListFragment extends ListFragment {
 
 	/**
 	 * Mandatory interface for this fragment.
-	 * @author mhotan
+	 * @author glee23
 	 */
 	public interface OrderItemListener {
 
@@ -231,7 +167,7 @@ public class OrderListFragment extends ListFragment {
 		 * @param orders List of strings
 		 */
 		public OrderListAdapter(Context ctx, List<Order> orders) {
-			super(ctx, R.layout.listitem_restaurant_order_bot, orders);
+			super(ctx, R.layout.listitem_restaurant_order_top, orders);
 			this.mContext = ctx;
 		}
 
@@ -325,10 +261,10 @@ public class OrderListFragment extends ListFragment {
 				mPickOrder = (ImageButton) mBottom.findViewById(R.id.button_proceed);	
 				
 				// Get a reference to all the bottom pieces
-				Button buttonCompleteOrder = (Button) mBottom.findViewById(R.id.button_completed_order);
+				Button buttonCompleteOrder = (Button) 
+						mBottom.findViewById(R.id.button_completed_order);
 
 				SeekBar progressBar = (SeekBar) mBottom.findViewById(R.id.seekbar_order_progress);
-
 
 				//Populate
 				int table = order.getTableID();
@@ -336,8 +272,8 @@ public class OrderListFragment extends ListFragment {
 				if(table == -1) { // No Table
 					orderTitle.setText(order.getOriginalUser().getName());
 				} else {
-					orderTitle.setText("Table " + order.getTableID() 
-							+ " - " + order.getOriginalUser().getName());
+					orderTitle.setText(getString(R.string.table) + order.getTableID() 
+							+ getString(R.string.dash) + order.getOriginalUser().getName());
 				}
 
 				progressBar.setMax(100);

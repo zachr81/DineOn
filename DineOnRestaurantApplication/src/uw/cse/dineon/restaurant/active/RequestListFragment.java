@@ -11,7 +11,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -38,58 +37,13 @@ public class RequestListFragment extends ListFragment {
 
 	private RequestListAdapter mAdapter;
 
-	/**
-	 * Creates a new customer list fragment.
-	 * @param requests list of requests
-	 * @return new fragment
-	 */
-	public static RequestListFragment newInstance(List<CustomerRequest> requests) {
-		RequestListFragment frag = new RequestListFragment();
-		Bundle args = new Bundle();
-
-		CustomerRequest[] requestsArray;
-		if (requests == null) {
-			requestsArray = new CustomerRequest[0];
-		} else {
-			requestsArray = new CustomerRequest[requests.size()];
-			for (int i = 0; i < requests.size(); ++i) {
-				requestsArray[i] = requests.get(i);
-			}
-		}
-
-		args.putParcelableArray(REQUESTS, requestsArray);
-		frag.setArguments(args);
-		return frag;
-	}
-
 	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
+	public void onActivityCreated(Bundle savedInstanceState) {
+		super.onActivityCreated(savedInstanceState);
 
-		CustomerRequest[] requestArray = null;
-		if (savedInstanceState != null // From saved instance
-				&& savedInstanceState.containsKey(REQUESTS)) {
-			requestArray = (CustomerRequest[])savedInstanceState.getParcelableArray(REQUESTS);
-		} else if (getArguments() != null && getArguments().containsKey(REQUESTS)) {
-			// Ugh have to convert to array for type reasons.
-			// List are not contravariant in java... :-(
-			requestArray = (CustomerRequest[])getArguments().getParcelableArray(REQUESTS);	
-		}
-
-		// Error check
-		if (requestArray == null) {
-			Log.e(TAG, "Unable to extract list of requests");
-			return;
-		}
-
-		// Obtain the current Requests
-		List<CustomerRequest> requests = new ArrayList<CustomerRequest>(requestArray.length);
-		for (CustomerRequest request : requestArray) {
-			requests.add(request);
-		}
-
-		mAdapter = new RequestListAdapter(this.getActivity(), requests);
-		setListAdapter(mAdapter);	
+		//We can assert that the listener has a non null list of dining sessions
+		mAdapter = new RequestListAdapter(getActivity(), mListener.getCurrentRequests());
+		setListAdapter(mAdapter);
 	}
 
 	@Override
@@ -165,7 +119,7 @@ public class RequestListFragment extends ListFragment {
 
 	/**
 	 * Mandatory Listener for this Fragment class.
-	 * @author mhotan
+	 * @author glee23
 	 */
 	public interface RequestItemListener {
 
@@ -184,7 +138,7 @@ public class RequestListFragment extends ListFragment {
 		public void onAssignStaffToRequest(CustomerRequest request, String staff);
 
 		/**
-		 * Removes a request. request is removed completely from this 
+		 * Removes a request. Request is removed completely from this 
 		 * list.  This is a notification method 
 		 * @param request String
 		 */
@@ -206,7 +160,7 @@ public class RequestListFragment extends ListFragment {
 
 	/**
 	 * Adpater to handle request management and layout.
-	 * @author mhotan
+	 * @author glee23
 	 */
 	private class RequestListAdapter extends ArrayAdapter<CustomerRequest> {
 
@@ -220,7 +174,7 @@ public class RequestListFragment extends ListFragment {
 		 * @param requests List of CustomerRequests
 		 */
 		public RequestListAdapter(Context ctx, List<CustomerRequest> requests) {
-			super(ctx, R.layout.listitem_restaurant_request_bot, requests);
+			super(ctx, R.layout.listitem_restaurant_request_top, requests);
 			this.mContext = ctx;
 			// For debug purposes we will add fake staff members
 			mStaff = new ArrayList<String>();
@@ -247,13 +201,6 @@ public class RequestListFragment extends ListFragment {
 			super.clear();
 			this.notifyDataSetChanged();
 		}
-
-		//		/**
-		//		 * @return Returns current list of requests.
-		//		 */
-		//		public ArrayList<CustomerRequest> getCurrentRequests() {
-		//			return new ArrayList<CustomerRequest>(mRequests);
-		//		}
 
 		@SuppressWarnings("BC_UNCONFIRMED_CAST")
 		@Override
@@ -292,7 +239,7 @@ public class RequestListFragment extends ListFragment {
 
 		/**
 		 * Listener for certain item of a customer request view.
-		 * @author mhotan
+		 * @author glee23
 		 */
 		private class CustomerRequestHandler implements OnClickListener {
 
@@ -336,7 +283,8 @@ public class RequestListFragment extends ListFragment {
 
 				//Populate
 
-				title.setText(mRequest.getDescription() + " - " + mRequest.getUserInfo().getName());
+				title.setText(mRequest.getDescription() 
+						+ getString(R.string.dash) + mRequest.getUserInfo().getName());
 
 
 				time.setText(mRequest.getOriginatingTime().toString());

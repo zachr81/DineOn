@@ -1,6 +1,5 @@
 package uw.cse.dineon.restaurant.active;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -45,71 +44,13 @@ public class DiningSessionListFragment extends ListFragment {
 
 	private DiningSessionListAdapter mAdapter;
 
-	/**
-	 * Creates a new customer list fragment.
-	 * @param sessions List of DiningSessions
-	 * @return New CustomerListFragment
-	 */
-	public static DiningSessionListFragment newInstance(List<DiningSession> sessions) {
-		DiningSessionListFragment frag = new DiningSessionListFragment();
-		Bundle args = new Bundle();
-
-		DiningSession[] dsArray;
-		if (sessions == null) {
-			dsArray = new DiningSession[0];
-		} else {
-			dsArray = new DiningSession[sessions.size()];
-			for (int i = 0; i < sessions.size(); ++i) {
-				dsArray[i] = sessions.get(i);
-			}
-		}
-
-		args.putParcelableArray(SESSIONS, dsArray);
-		frag.setArguments(args);
-		return frag;
-	}
-
 	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
+	public void onActivityCreated(Bundle savedInstanceState) {
+		super.onActivityCreated(savedInstanceState);
 
-
-		DiningSession[] dsArray = null;
-		if (savedInstanceState != null // From saved instance
-				&& savedInstanceState.containsKey(SESSIONS)) {
-			dsArray = (DiningSession[])savedInstanceState.getParcelableArray(SESSIONS);
-		} else if (getArguments() != null && getArguments().containsKey(SESSIONS)) {
-			// Ugh have to convert to array for type reasons.
-			// List are not contravariant in java... :-(
-			dsArray = (DiningSession[])getArguments().getParcelableArray(SESSIONS);	
-		}
-
-		// Error check
-		if (dsArray == null) {
-			Log.e(TAG, "Unable to extract list of dining sessions");
-			return;
-		}
-
-		// Must convert to array because this allows dynamic additions
-		// Our Adapter needs a dynamic list.
-		List<DiningSession> sessions = new ArrayList<DiningSession>(dsArray.length);
-		for (DiningSession session : dsArray) {
-			sessions.add(session);
-		}
-
-		mAdapter = new DiningSessionListAdapter(getActivity(), sessions);
+		//We can assert that the listener has a non null list of dining sessions
+		mAdapter = new DiningSessionListAdapter(getActivity(), mListener.getCurrentSessions());
 		setListAdapter(mAdapter);
-	}
-
-	@Override
-	public void onSaveInstanceState(Bundle outState) {
-		super.onSaveInstanceState(outState);
-		List<DiningSession> sessions = mListener.getCurrentSessions();
-		DiningSession[] dsArray = new DiningSession[sessions.size()];
-		for (int i = 0; i < dsArray.length; ++i) {
-			dsArray[i] = sessions.get(i);
-		}
-		outState.putParcelableArray(SESSIONS, dsArray);
 	}
 
 	@Override
@@ -169,7 +110,7 @@ public class DiningSessionListFragment extends ListFragment {
 
 	/**
 	 * List adapter for holding dining sessions.
-	 * @author mhotan
+	 * @author glee23
 	 */
 	private class DiningSessionListAdapter extends ArrayAdapter<DiningSession> {
 
@@ -178,11 +119,11 @@ public class DiningSessionListFragment extends ListFragment {
 		/**
 		 * Constructs a new UserList Adapter.
 		 * 
-		 * @param context The current context
-		 * @param sessionList The list of users to display
+		 * @param ctx The current context
+		 * @param sessions The list of users to display
 		 */
 		public DiningSessionListAdapter(Context ctx, List<DiningSession> sessions) {
-			super(ctx, R.layout.listitem_restaurant_request_bot, sessions);
+			super(ctx, R.layout.listitem_restaurant_request_top, sessions);
 			mContext = ctx;
 		}
 
@@ -203,28 +144,6 @@ public class DiningSessionListFragment extends ListFragment {
 			super.clear();
 			this.notifyDataSetChanged();
 		}
-
-
-
-		//		/**
-		//		 * 
-		//		 * @param customer DiningSession
-		//		 */
-		//		public void add(DiningSession customer) {
-		//			mDiningSessions.add(customer);
-		//			Log.v(TAG, "Added customer " + customer);
-		//			notifyDataSetChanged();
-		//		}
-		//
-		//		/**
-		//		 * 
-		//		 * @param customer DiningSession
-		//		 */
-		//		public void remove(DiningSession customer) {
-		//			mDiningSessions.remove(customer);
-		//			Log.v(TAG, "Removed customer " + customer);
-		//			notifyDataSetChanged();
-		//		}
 
 		@SuppressWarnings("BC_UNCONFIRMED_CAST")
 		@Override
@@ -265,7 +184,7 @@ public class DiningSessionListFragment extends ListFragment {
 
 		/**
 		 * Listener for certain item of a customer request view.
-		 * @author mhotan
+		 * @author glee23
 		 */
 		private class DiningSessionHandler implements OnClickListener {
 
@@ -314,10 +233,10 @@ public class DiningSessionListFragment extends ListFragment {
 
 					if(orders.size() == 0) {
 						orderText.setVisibility(View.GONE);
-						orderHeader.setText("No Orders");
+						orderHeader.setText(getString(R.string.no_orders));
 					} else {
 						orderText.setVisibility(View.VISIBLE);
-						orderHeader.setText("Orders");
+						orderHeader.setText(getString(R.string.label_orders));
 					}
 				}
 
@@ -328,13 +247,13 @@ public class DiningSessionListFragment extends ListFragment {
 
 					int tableID = o.getTableID();
 					if(tableID != -1) {
-						buf.append("Table ");
+						buf.append(getString(R.string.table));
 						buf.append(tableID);
 					}
 
-					buf.append("\n");
+					buf.append(getString(R.string.newline));
 					buf.append(o.getOriginatingTime().toString());
-					buf.append("\n\n");
+					buf.append(getString(R.string.newline) + getString(R.string.newline));
 				}
 				if(orders.size() != 0) {
 					buf.delete(buf.length() - 2, buf.length());
@@ -348,8 +267,8 @@ public class DiningSessionListFragment extends ListFragment {
 					UserInfo ui = infolist.get(0);
 					name = ui.getName();
 				} else {
-					Log.w(TAG, "Could not retrieve name.");
-					name = "No Customer!";
+					Log.w(TAG, getString(R.string.cant_retrieve_name));
+					name = getString(R.string.no_customer);
 				}
 
 				title.setText(name);
