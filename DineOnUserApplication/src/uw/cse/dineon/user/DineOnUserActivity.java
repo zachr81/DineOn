@@ -9,6 +9,8 @@ import org.json.JSONObject;
 
 import uw.cse.dineon.library.CurrentOrderItem;
 import uw.cse.dineon.library.CustomerRequest;
+import uw.cse.dineon.library.DineOnStandardActivity;
+import uw.cse.dineon.library.DineOnUser;
 import uw.cse.dineon.library.DiningSession;
 import uw.cse.dineon.library.MenuItem;
 import uw.cse.dineon.library.Order;
@@ -32,7 +34,6 @@ import android.content.Intent;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.MenuInflater;
 import android.view.View;
@@ -53,7 +54,7 @@ import com.parse.SaveCallback;
  * In Particular their user specific preferences
  * @author mhotan
  */
-public class DineOnUserActivity extends FragmentActivity implements 
+public class DineOnUserActivity extends DineOnStandardActivity implements 
 SatelliteListener,
 SubMenuFragment.MenuItemListListener, /* manipulation of order from sub menu */
 OrderUpdateListener /* manipulation of list from the current order activity */ { 
@@ -68,29 +69,33 @@ OrderUpdateListener /* manipulation of list from the current order activity */ {
 	/**
 	 * A self reference.
 	 */
-	private DineOnUserActivity thisActivity;
-
-	private HashMap<MenuItem, CurrentOrderItem> mMenuItemMappings;
+	private DineOnUserActivity This;
 
 	/**
 	 * Location Listener for location based services.
 	 */
 	private UserLocationListener mLocationListener;
 
+	/**
+	 * Set this value to the current dining user.
+	 */
+	protected DineOnUser mUser = DineOnUserApplication.getDineOnUser();
+	
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		thisActivity = this;
+		This = this;
 
 		mSat = new UserSatellite();
 
-		if (DineOnUserApplication.getDineOnUser() == null) {
+		if (mUser == null) {
 			Utility.getBackToLoginAlertDialog(this, 
 					"Unable to find your information", UserLoginActivity.class).show();
 		}
 
-		this.mMenuItemMappings = new HashMap<MenuItem, CurrentOrderItem>();		
+		//		this.mMenuItemMappings = new HashMap<MenuItem, CurrentOrderItem>();		
 		this.mLocationListener = new UserLocationListener();
 		try {
 			this.mLocationListener.requestLocationUpdates();
@@ -105,7 +110,6 @@ OrderUpdateListener /* manipulation of list from the current order activity */ {
 	protected void onNewIntent(Intent intent) {
 		handleSearchIntent(intent);
 	}
-
 
 	/**
 	 * Given an intent where the user request to search something, 
@@ -133,17 +137,6 @@ OrderUpdateListener /* manipulation of list from the current order activity */ {
 	}
 
 	/**
-	 * This automates the addition of the User Intent.
-	 * Should never be called when mUser is null.
-	 * @param intent Intent
-	 */
-	@Override
-	public void startActivity(Intent intent) {
-		// Adds the User object id
-		super.startActivity(intent);
-	}
-
-	/**
 	 * A valid user found this allows the ability for the Userinterface to initialize.
 	 * Any subclasses of this activity can use this as a sign that the user has been identified
 	 */
@@ -160,7 +153,7 @@ OrderUpdateListener /* manipulation of list from the current order activity */ {
 	@Override
 	protected void onResume() {
 		super.onResume();
-		mSat.register(DineOnUserApplication.getDineOnUser(), thisActivity);
+		mSat.register(DineOnUserApplication.getDineOnUser(), This);
 		intializeUI();
 
 	}
@@ -178,6 +171,7 @@ OrderUpdateListener /* manipulation of list from the current order activity */ {
 
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent intent) {
+		super.onActivityResult(requestCode, resultCode, intent);
 		if (intent == null) { 
 			return;
 		}
@@ -214,7 +208,7 @@ OrderUpdateListener /* manipulation of list from the current order activity */ {
 		final android.view.MenuItem ITEM1 = menu.findItem(R.id.option_bill);
 		ITEM1.setEnabled(false);
 		ITEM1.setVisible(false);
-		
+
 		final android.view.MenuItem ITEM2 = menu.findItem(R.id.option_view_order);
 		ITEM2.setEnabled(false);
 		ITEM2.setVisible(false);
@@ -229,6 +223,7 @@ OrderUpdateListener /* manipulation of list from the current order activity */ {
 		customActionBarButtons.add(menu.findItem(R.id.option_view_order));
 		setOnClick(M, customActionBarButtons);
 
+		// Set up search view.
 		final SearchView SEARCHVIEW = (SearchView) 
 				menu.findItem(R.id.option_search).getActionView();
 
@@ -262,10 +257,11 @@ OrderUpdateListener /* manipulation of list from the current order activity */ {
 	 */
 	public void startLoginActivity() {
 		Intent i = new Intent(this, UserLoginActivity.class);
-
 		// Making this null makes sure there is no 
 		// data leakage to the login page
 		DineOnUserApplication.setDineOnUser(null);
+		DineOnUserApplication.clearResaurantList();
+		DineOnUserApplication.setRestaurantOfInterest(null);
 		startActivity(i);
 		this.finish();
 	}
@@ -300,14 +296,21 @@ OrderUpdateListener /* manipulation of list from the current order activity */ {
 
 		// If checked in
 		if(DineOnUserApplication.getCurrentDiningSession() != null) {
+			
+			// Disable the check in button because we are already checked in.
 			disableMenuItem(menu, R.id.option_check_in);
+			
+			// Should be able to view any pending orders.
 			enableMenuItem(menu, R.id.option_view_order);
+			
 			// If there is an order to bill
 			if (DineOnUserApplication.getCurrentDiningSession().getOrders().size() > 0) {
 				enableMenuItem(menu, R.id.option_bill);
 			} else {
 				disableMenuItem(menu, R.id.option_bill);
 			}
+			
+			// There is a dining session therefore 
 			if (searchView != null) {
 				searchView.setEnabled(false);
 				searchView.setVisibility(View.INVISIBLE);
@@ -389,9 +392,9 @@ OrderUpdateListener /* manipulation of list from the current order activity */ {
 			//Unknown
 			Log.e(TAG, "None of the specified action items were selected.");
 		}
-//		if (i != null) {
-//			startActivity(i);
-//		}
+		//		if (i != null) {
+		//			startActivity(i);
+		//		}
 		return true;
 	}
 
@@ -403,26 +406,13 @@ OrderUpdateListener /* manipulation of list from the current order activity */ {
 	 * 		activity's data to.
 	 */
 	@Override
-	public void onSaveInstanceState(Bundle savedInstanceState) {
+	protected void onSaveInstanceState(Bundle savedInstanceState) {
 		// Save the ID if the user is not null
-		if (DineOnUserApplication.getDineOnUser() != null) {
-			savedInstanceState.putString(DineOnConstants.KEY_USER, 
-					DineOnUserApplication.getDineOnUser().getObjId());
-		}
+//		if (DineOnUserApplication.getDineOnUser() != null) {
+//			savedInstanceState.putString(DineOnConstants.KEY_USER, 
+//					DineOnUserApplication.getDineOnUser().getObjId());
+//		}
 		super.onSaveInstanceState(savedInstanceState);
-	}
-
-	/**
-	 * Restores an instance of a DiningSession from the given Bundle
-	 * parameter.
-	 *
-	 * @param savedInstanceState Bundle that holds session information
-	 * 		to be restored.
-	 */
-	@Override
-	public void onRestoreInstanceState(Bundle savedInstanceState) {
-		super.onRestoreInstanceState(savedInstanceState);
-		//		mDiningSession.unbundle(savedInstanceState.getBundle("diningSession"));
 	}
 
 	@Override
@@ -461,7 +451,7 @@ OrderUpdateListener /* manipulation of list from the current order activity */ {
 	 * @param dsession new dining session
 	 */
 	public void diningSessionChangeActivity(DiningSession dsession) {
-		Intent i = new Intent(thisActivity, RestaurantHomeActivity.class);
+		Intent i = new Intent(This, RestaurantHomeActivity.class);
 		DineOnUserApplication.setCurrentDiningSession(dsession);
 		startActivity(i);
 	}
@@ -507,9 +497,9 @@ OrderUpdateListener /* manipulation of list from the current order activity */ {
 	public void payBill() {
 		mSat.requestCheckOut(DineOnUserApplication.getCurrentDiningSession(), 
 				DineOnUserApplication.getCurrentDiningSession().getRestaurantInfo());
-		
+
 		Toast.makeText(this, "Payment Sent!", Toast.LENGTH_SHORT).show();
-		
+
 		// TODO Need to add a confirmation from restaurant that the user
 		// has successfully paid
 		DineOnUserApplication.setCurrentDiningSession(null);
@@ -517,12 +507,6 @@ OrderUpdateListener /* manipulation of list from the current order activity */ {
 
 	@Override
 	public void onMenuItemFocusedOn(uw.cse.dineon.library.MenuItem menuItem) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void onRestaurantInfoRequested() {
 		// TODO Auto-generated method stub
 
 	}
