@@ -384,11 +384,12 @@ public class RestaurantInfoFragment extends Fragment {
 			mAddressZipCode = (TextView) view.
 					findViewById(R.id.edittext_restaurant_address_zipcode);
 			mPhoneInput = (TextView) view.findViewById(R.id.edittext_restaurant_phone);
-
-			// Gallery image
+			mAddressInput = (TextView) view.findViewById(R.id.edittext_restaurant_address);
+			mHourInput = (TextView) view.findViewById(R.id.edittext_restaurant_hours);
 			mGallery = (LinearLayout) view.findViewById(R.id.gallery_restaurant_images);
-
-			if (mTakePicButton == null 
+			
+			if (mDefaultCheck == null 
+					|| mTakePicButton == null 
 					|| mChoosePicButton == null 
 					|| mDeleteButton == null) {
 				throw new IllegalArgumentException(
@@ -396,6 +397,9 @@ public class RestaurantInfoFragment extends Fragment {
 			} 
 
 			mAddToRestaurant = new AddToRestaurantCallback();
+			
+			mAddressInput.setText(info.getAddr());
+			mPhoneInput.setText(info.getPhone());
 
 			mTakePicButton.setOnClickListener(this);
 			mChoosePicButton.setOnClickListener(this);
@@ -435,16 +439,13 @@ public class RestaurantInfoFragment extends Fragment {
 				});
 
 			} else if (v == mSaveButton) {
-				String addressLine1 = mAddressLine1.getText().toString();
-				String addressLine2 = mAddressLine2.getText().toString();
-				String addressCity = mAddressCity.getText().toString();
-				String addressState = mAddressState.getText().toString();
-				String addressZip = mAddressZipCode.getText().toString();
-				String phoneNumber = mPhoneInput.getText().toString();
-				
-				if (phoneNumber != null) {
-					phoneNumber = PhoneNumberUtils.formatNumber(phoneNumber);
-					mPhoneInput.setText(phoneNumber);
+				mInfo.setAddr(mAddressInput.getText().toString());
+				mInfo.setPhone(mPhoneInput.getText().toString());
+				mInfo.setHours(mHourInput.getText().toString());
+				if (mCurrentDefault != null) {
+					mInfo.setMainImage(mGallery.indexOfChild(mCurrentDefault));
+				} else {
+					mInfo.setMainImage(-1);
 				}
 				
 				mInfo.setPhone(phoneNumber);

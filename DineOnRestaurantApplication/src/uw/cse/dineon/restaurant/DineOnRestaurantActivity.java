@@ -1,5 +1,7 @@
 package uw.cse.dineon.restaurant;
 
+import java.util.List;
+
 import uw.cse.dineon.library.CustomerRequest;
 import uw.cse.dineon.library.DiningSession;
 import uw.cse.dineon.library.Order;
@@ -170,6 +172,14 @@ implements SateliteListener {
 		mRestaurant.removeDiningSession(session);
 		mRestaurant.saveInBackGround(null);
 	}
+	
+	/**
+	 * Returns a list of sessions.
+	 * @return a list of sessions
+	 */
+	public List<DiningSession> getCurrentSessions() {
+		return mRestaurant.getSessions();
+	}
 
 	/**
 	 * Adds an Order to the state of this restaurant.
@@ -188,6 +198,14 @@ implements SateliteListener {
 	protected void completeOrder(Order order) {
 		mRestaurant.completeOrder(order);
 		mRestaurant.saveInBackGround(null);
+	}
+	
+	/**
+	 * Returns a list of pending orders.
+	 * @return a list of pending orders
+	 */
+	protected List<Order> getPendingOrders() {
+		return mRestaurant.getPendingOrders();
 	}
 
 	/**
@@ -209,6 +227,14 @@ implements SateliteListener {
 		// restaurant permanently.
 		mRestaurant.removeCustomerRequest(request);
 		mRestaurant.saveInBackGround(null);
+	}
+	
+	/**
+	 * Returns a list of customer requests.
+	 * @return a list of customer requests
+	 */
+	protected List<CustomerRequest> getCurrentRequests() {
+		return mRestaurant.getCustomerRequests();
 	}
 
 	/**

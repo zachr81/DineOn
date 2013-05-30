@@ -42,6 +42,8 @@ public class RestaurantInfo extends LocatableStorable {
 	private final ParseUser mUser;
 	// Lets set the name of the restaurant once and only once.
 	private final String mName;
+	private String mAddress;
+	private String mHours;
 	private Address mAddress;
 	private String mPhone;
 	private int mMainImageIndex; // Index of Main image
@@ -61,10 +63,12 @@ public class RestaurantInfo extends LocatableStorable {
 		mName = mUser.getUsername();
 		mAddress = new Address(Locale.getDefault());
 		mPhone = UNDETERMINED;
+		mAddress = UNDETERMINED;
+		mPhone = UNDETERMINED;
+		mHours = UNDETERMINED;
 		mMainImageIndex = 0;
 		mImageList = new ArrayList<DineOnImage>();
 		mMenus = new ArrayList<Menu>();
-		//TODO mRestaurantHours = ;
 	}
 
 	/**
@@ -79,10 +83,12 @@ public class RestaurantInfo extends LocatableStorable {
 		mName = mUser.getUsername();
 		mAddress = parseAddress(po.getString(ADDR));
 		mPhone = po.getString(PHONE);
+		mAddress = po.getString(ADDR);
+		mPhone = po.getString(PHONE);
+		mHours = po.getString(HOURS);
 		mMainImageIndex = po.getInt(IMAGE_MAIN);
 		mImageList = ParseUtil.toListOfStorables(DineOnImage.class, po.getList(IMAGE_LIST));
 		mMenus = ParseUtil.toListOfStorables(Menu.class, po.getList(MENUS));
-		//TODO mRestaurantHours = ;
 	}
 
 
@@ -97,7 +103,7 @@ public class RestaurantInfo extends LocatableStorable {
 		po.put(IMAGE_MAIN, mMainImageIndex);
 		po.put(IMAGE_LIST, ParseUtil.toListOfParseObjects(mImageList));
 		po.put(MENUS, ParseUtil.toListOfParseObjects(mMenus));	
-		// TODO po.put(HOURS, mRestaurantHours);
+		po.put(HOURS, mHours);
 		return po;
 	}
 	
@@ -211,6 +217,20 @@ public class RestaurantInfo extends LocatableStorable {
 		this.mAddress = address;
 	}
 
+	/**
+	 * @return hours of operation for restaurant
+	 */
+	public String getHours() {
+		return mHours;
+	}
+
+	/**
+	 * @param hours of operation to set
+	 */
+	public void setHours(String hours) {
+		this.mHours = hours;
+	}
+	
 	/**
 	 * @return phone number of Restaurant
 	 */
