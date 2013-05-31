@@ -68,17 +68,17 @@ public class Restaurant extends Storable {
 	/**
 	 * Temporary order used for persistent data references.
 	 */
-	public Order tempOrder;
+	private Order tempOrder;
 	
 	/**
 	 * Temporary request to store persistent reference.
 	 */
-	public CustomerRequest tempRequest;
+	private CustomerRequest tempRequest;
 	
 	/**
 	 * Temporary dining session for a persistent reference.
 	 */
-	public DiningSession tempDiningSession;
+	private DiningSession tempDiningSession;
 
 	/**
 	 * Create a bare bones Restaurant with just a name.
@@ -120,9 +120,7 @@ public class Restaurant extends Storable {
 		mCustomerRequests = ParseUtil.toListOfStorables(
 				CustomerRequest.class, po.getList(CUSTOMER_REQUESTS));
 	}
-
-
-
+	
 	@Override
 	public ParseObject packObject() {
 		ParseObject po = super.packObject();
@@ -404,6 +402,62 @@ public class Restaurant extends Storable {
 	public void delete(DiningSession session) {
 		mSessions.remove(session);
 		session.deleteFromCloud();
+	}
+	
+
+	/**
+	 * Sets the temporary order reference for this restaurant.
+	 * This temporary variable only survives as long as the user
+	 * is logged in and as long 
+	 * @param order Temporary order to set.
+	 */
+	public void setTempOrder(Order order) {
+		tempOrder = order;
+	}
+	
+	
+	/**
+	 * Temporary order set by setTempOrder.
+	 * @return temporary order reference, null if no reference is set
+	 */
+	public Order getTempOrder() {
+		return tempOrder;
+	}
+	
+	/**
+	 * Sets the temporary Customer request reference for this restaurant.
+	 * This temporary variable only survives as long as the user
+	 * is logged in and as long 
+	 * @param request Temporary request, or null if you want to remove any temporary request.
+	 */
+	public void setTempRequest(CustomerRequest request) {
+		tempRequest = request;
+	}
+	
+	/**
+	 * Gets the temporary request set by setTempRequest.
+	 * @return Temporary request, or null if none is available
+	 */
+	public CustomerRequest getTempCustomerRequest() {
+		return tempRequest;
+	}
+	
+	/**
+	 * Sets the temporary dining Session reference for this restaurant.
+	 * This temporary variable only survives as long as the user
+	 * is logged in and as long 
+	 * @param session Temporary Dining Session, or null if you want to remove any temporary request.
+	 */
+	public void setTempDiningSession(DiningSession session) {
+		tempDiningSession = session;
+	}
+	
+	/**
+	 * Gets the temporary dining session set by setTempDiningSession.
+	 * @return Temporary dining session, or null if none is available
+	 */
+	public DiningSession getTempDiningSession() {
+		return tempDiningSession;
 	}
 
 //	/**
