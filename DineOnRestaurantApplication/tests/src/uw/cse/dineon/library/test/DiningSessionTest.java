@@ -15,10 +15,13 @@ import android.app.Activity;
 import android.content.Context;
 import android.test.AndroidTestCase;
 
-import com.parse.Parse;
 import com.parse.ParseUser;
 
 /**
+ * DiningSessionTest tests the DiningSession library class
+ * and makes sure that users and orders can be added correctly.
+ * 
+ * White box tests
  * 
  * @author zach
  *
@@ -36,20 +39,19 @@ public class DiningSessionTest extends AndroidTestCase {
 	List<Order> orders;
 	RestaurantInfo testRInfo;
 
-//
-//	/**
-//	 * Default constructor. 
-//	 */
-//	public DiningSessionTest() {
-//		super();
-//	}
+	/**
+	 * Default constructor. 
+	 */
+	public DiningSessionTest() {
+		super();
+	}
 
 	@Override
 	protected void setUp() throws Exception { 
 		mUser = new ParseUser();
 		mUser.setEmail("dst@a.com");
 		mUser.setObjectId("245");
-		
+
 		FakeRestaurantInformation f = new FakeRestaurantInformation(mUser);
 
 		testUInfo = new UserInfo(mUser);
@@ -73,35 +75,22 @@ public class DiningSessionTest extends AndroidTestCase {
 
 	/**
 	 * Asserts that the session has the correct list of orders
-	 * 
-	 * White box
 	 */
 	public void testGetOrdersInitial() {
 		assertEquals(new ArrayList<Order>(), testSession.getOrders());
 	}
-	
-	public void testGetOrdersAfterAdd() {
-		List<Order> tempList = new ArrayList<Order>();
-		tempList.add(orders.get(1));
-		testSession.addPendingOrder(orders.get(1));
-		assertEquals(tempList, testSession.getOrders());
-	}
 
 	/**
 	 * Asserts that the session has the correct list of users stored
-	 * 
-	 * White box
 	 */
 	public void testGetUsersInitial() {
 		List<UserInfo> tempList = new ArrayList<UserInfo>();
 		tempList.add(testUInfo);
 		assertEquals(tempList, testSession.getUsers());
 	}
-	
+
 	/**
 	 * Asserts that the correct user is added
-	 * 
-	 * White box
 	 */
 	public void testAddUser() {
 		testSession.addUser(testUInfo);
@@ -110,11 +99,18 @@ public class DiningSessionTest extends AndroidTestCase {
 		tempList.add(testUInfo);
 		assertEquals(tempList, testSession.getUsers());
 	}
-	
+
+	/**
+	 * Asserts that the correct user is removed
+	 */
+	public void testRemoveUser() {
+		List<UserInfo> tempList = new ArrayList<UserInfo>();
+		testSession.removeUser(testUInfo);
+		assertEquals(tempList, testSession.getUsers());
+	}
+
 	/**
 	 * Asserts that the session has the correct table id stored
-	 * 
-	 * White box
 	 */
 	public void testGetTableID() {
 		assertEquals(32, testSession.getTableID());
@@ -122,8 +118,6 @@ public class DiningSessionTest extends AndroidTestCase {
 
 	/**
 	 * Asserts that the session has the correct changed table id stored
-	 * 
-	 * White box
 	 */
 	public void testResetTableID() {
 		testSession.resetTableID(42);
