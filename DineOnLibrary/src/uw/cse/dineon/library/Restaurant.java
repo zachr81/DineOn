@@ -21,12 +21,6 @@ import com.parse.ParseUser;
  */
 public class Restaurant extends Storable {
 
-	/*
-	 * Abstract Representation:
-	 * 
-	 * 
-	 */
-
 	// Parse used Keys
 	public static final String RESERVATION_LIST = "reservationList";
 	public static final String INFO = "restaurantInfo";
@@ -266,7 +260,17 @@ public class Restaurant extends Storable {
 		if (session == null) {
 			return;
 		}
-
+		//Remove pending orders
+		List<Order> orders = session.getOrders();
+		for (Order o : orders) {
+			mPendingOrders.remove(o);
+		}
+		//Remove customer requests
+		List<CustomerRequest> requests = session.getRequests();
+		for (CustomerRequest r : requests) {
+			mCustomerRequests.remove(r);
+		}
+		
 		// If we found the session.
 		if (mSessions.remove(session)) {
 			mPastUsers.addAll(session.getUsers());
@@ -309,12 +313,11 @@ public class Restaurant extends Storable {
 	}
 	
 	/**
-	 * Sets the main image of this to the one
-	 * at zero based index which.
-	 * @param which Index of the image to set as the main
+	 * Remove image.
+	 * @param image Image to remove.
 	 */
-	public void setImageMain(int which) {
-		mRestInfo.setMainImage(which);
+	public synchronized void removeImage(DineOnImage image) {
+		mRestInfo.removeImage(image);
 	}
 
 	/**
