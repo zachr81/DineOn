@@ -148,4 +148,12 @@ public final class TestUtility {
 		return new Restaurant(restUser);
 	}
 	
+	public static Restaurant createFakeRestaurant(ParseUser u) throws ParseException {
+		ParseUser restUser = new ParseUser();
+		restUser.setUsername("testRestUser");
+		restUser.setPassword("12345");
+		restUser.setObjectId("_marksrest");
+		return new Restaurant(restUser);
+	}
+	
 }
