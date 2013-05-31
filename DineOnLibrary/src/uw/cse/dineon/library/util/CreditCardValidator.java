@@ -53,6 +53,10 @@ public final class CreditCardValidator {
 			return false;
 		}
 
+		if(DineOnConstants.DEBUG) {
+			return true;
+		}
+		
 		return isValidNumber(cardNumber) 
 				&& isValidSecurityCode(cardNumber, securityCode)
 				&& isValidDate(expMo, expYr) && isValidZip(zip);

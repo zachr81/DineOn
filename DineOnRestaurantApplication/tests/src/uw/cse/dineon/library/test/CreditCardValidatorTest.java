@@ -1,6 +1,7 @@
 package uw.cse.dineon.library.test;
 
 import uw.cse.dineon.library.util.CreditCardValidator;
+import uw.cse.dineon.library.util.DineOnConstants;
 import android.test.AndroidTestCase;
 
 /**
@@ -24,7 +25,12 @@ public class CreditCardValidatorTest extends AndroidTestCase {
 	private String earlierYear = "2012";
 	private String laterYear = "2017";
 	private String validZip = "98105";
-
+	
+	@Override
+	protected void setUp() {
+		DineOnConstants.DEBUG = false;
+	}
+	
 	/**
 	 * Asserts that a valid 13 digit credit card is recognized as valid.
 	 */
