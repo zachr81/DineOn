@@ -108,7 +108,6 @@ public class DiningSessionDetailFragment extends Fragment {
 		ActionBar ab = getActivity().getActionBar();
 		if (mDiningSession == null) {
 			Log.e(TAG, "Current Dining session is null");
-			ab.setTitle("No Dining session selected");
 		} else {
 			ab.setTitle("Table " + mDiningSession.getTableID());
 			mUserAdapter = new UserListAdapter(getActivity(), mDiningSession.getUsers());
