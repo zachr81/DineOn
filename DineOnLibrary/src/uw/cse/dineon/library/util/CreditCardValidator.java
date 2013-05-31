@@ -120,6 +120,10 @@ public final class CreditCardValidator {
 	 * @return true if the security code is valid for the specified card
 	 */
 	private static boolean isValidDate(String expMo, String expYr) {
+		if(expMo.length() == 0 || expYr.length() < 4) {
+			return false;
+		}
+		
 		int month = Integer.parseInt(getDigitsOnly(expMo));
 		int year = Integer.parseInt(getDigitsOnly(expYr));
 		Calendar cal = Calendar.getInstance();
