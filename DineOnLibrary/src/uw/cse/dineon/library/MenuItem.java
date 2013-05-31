@@ -64,7 +64,7 @@ public class MenuItem extends Storable {
 	
 	/**
 	 * Sets the image of this menuitem.
-	 * @param image Image to use as default
+	 * @param image DineOnImage
 	 */
 	public void setImage(DineOnImage image) {
 		mImage = image;
