@@ -176,21 +176,6 @@ public class RestaurantInfo extends LocatableStorable {
 		}
 		return toParse;
 	}
-	
-	// TODO implement the hours field
-//	/**
-//	 * @return String Restaurant hours
-//	 */
-//	public String getHours() {
-//		return mRestaurantHours;
-//	}
-//	
-//	/**
-//	 * Set the hours.
-//	 */
-//	public void getHours(String hours) {
-//		mRestaurantHours = hours;
-//	}
 
 	/**
 	 * @return String Restaurant name
@@ -198,7 +183,7 @@ public class RestaurantInfo extends LocatableStorable {
 	public String getName() {
 		return mName;
 	}
-
+	
 	/**
 	 * @return addr String Restaurant address
 	 */
@@ -207,10 +192,17 @@ public class RestaurantInfo extends LocatableStorable {
 	}
 
 	/**
-	 * @param a String
+	 * Sets the current address of this restaurant. 
+	 * 
+	 * @param address Address to set the address value to.
 	 */
 	public void setAddr(Address address) {
 		this.mAddress = address;
+		
+		// Set the location based off this address
+		if (address.hasLatitude() && address.hasLongitude()) {
+			updateLocation(address.getLongitude(), address.getLatitude());
+		}
 	}
 
 	/**
@@ -258,15 +250,6 @@ public class RestaurantInfo extends LocatableStorable {
 	}
 
 	/**
-	 * @param pos int
-	 */
-	public void setMainImage(int pos) {
-		// This can be -1;
-		pos = Math.min(Math.max(0, pos), mImageList.size() - 1);
-		this.mMainImageIndex = pos;
-	}
-
-	/**
 	 * Returns a list of all the general images of this restaurant.
 	 * @return List of images.
 	 */
@@ -287,15 +270,16 @@ public class RestaurantInfo extends LocatableStorable {
 
 	/**
 	 * For a zero based index it removes the image at index.
-	 * @param index Index to remove
+	 * @param image Image to delete.
 	 * @return True upon success, false on failure
 	 */
-	public boolean removeImageAt(int index) {
-		if (index < 0 || index >= mImageList.size()) {
+	public boolean removeImage(DineOnImage image) {
+		if (image == null) {
 			return false;
 		}
-		mImageList.remove(index);
-		return true;
+		boolean removed = mImageList.remove(image);
+		image.deleteFromCloud();
+		return removed;
 	}
 	
 	/**
