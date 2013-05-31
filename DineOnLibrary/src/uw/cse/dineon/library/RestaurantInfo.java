@@ -85,9 +85,7 @@ public class RestaurantInfo extends LocatableStorable {
 		mMenus = ParseUtil.toListOfStorables(Menu.class, po.getList(MENUS));
 		mHours = po.getString(HOURS);
 	}
-
-
-
+	
 	@Override
 	public ParseObject packObject() {
 		ParseObject po = super.packObject();
@@ -101,80 +99,6 @@ public class RestaurantInfo extends LocatableStorable {
 		po.put(MENUS, ParseUtil.toListOfParseObjects(mMenus));	
 		po.put(HOURS, mHours);
 		return po;
-	}
-	
-	/**
-	 * Parses address from pre made string.
-	 * String has to be made from addressToString method.
-	 * @param addressString Address string to parse
-	 * @return parsed Address
-	 */
-	private static Address parseAddress(String addressString) {
-		Address newAdd = new Address(Locale.getDefault());
-		if (addressString == null) {
-			return newAdd;
-		}
-		
-		String[] tokens = addressString.split(ADDRESS_SPLITTER);	
-		if (tokens.length != 5) {
-			// illegal add string
-			return newAdd;
-		} 
-		
-		newAdd.setAddressLine(0, parseNullOrValue(tokens[0]));
-		newAdd.setAddressLine(1, parseNullOrValue(tokens[1]));
-		newAdd.setLocality(parseNullOrValue(tokens[2]));
-		newAdd.setAdminArea(parseNullOrValue(tokens[3]));
-		newAdd.setPostalCode(parseNullOrValue(tokens[4]));
-		return newAdd;
-	}
-	
-	/**
-	 * 
-	 * @param address Address to create into String.
-	 * @return internal string representation of address
-	 */
-	private static String addressToString(Address address) {
-		String[] addressVals = new String[5];
-		addressVals[0] = getOrNoValue(address.getAddressLine(0));
-		addressVals[1] = getOrNoValue(address.getAddressLine(1));
-		addressVals[2] = getOrNoValue(address.getLocality());
-		addressVals[3] = getOrNoValue(address.getAdminArea());
-		addressVals[4] =  getOrNoValue(address.getPostalCode());
-		
-		StringBuffer buffer = new StringBuffer();
-		for (int i = 0; i < addressVals.length; i++) {
-			buffer.append(addressVals[i]);
-			if (i != addressVals.length - 1) {
-				buffer.append(ADDRESS_SPLITTER);
-			}
-		}
-		
-		return buffer.toString();
-	}
-	
-	/**
-	 * Returns non null parcelable value.
-	 * @param val val to check
-	 * @return ADDRESS_NOVALUE if val is null.
-	 */
-	private static String getOrNoValue(String val) {
-		if (val == null || val.equals("")) {
-			return ADDRESS_NOVALUE;
-		}
-		return val.trim();
-	} 
-	
-	/**
-	 * For a parse entity String return represented value.
-	 * @param toParse String to parse
-	 * @return null if value of toParse is ADDRESS_NOVALUE
-	 */
-	private static String parseNullOrValue(String toParse) {
-		if (toParse ==  null || toParse.equals(ADDRESS_NOVALUE)) {
-			return null;
-		}
-		return toParse;
 	}
 
 	/**
@@ -258,6 +182,19 @@ public class RestaurantInfo extends LocatableStorable {
 	}
 	
 	/**
+	 * Remove the image at the index.
+	 * @param index Index to remove.
+	 */
+	public void removeAtIndex(int index) {
+		if (mImageList.isEmpty()) {
+			return;
+		}
+		index = Math.max(0, Math.min(index, mImageList.size() - 1));
+		DineOnImage image = mImageList.remove(index);
+		image.deleteFromCloud();
+	}
+	
+	/**
 	 * Adds an image to the end of the group of images.
 	 * @param image Image to add to the restaurant.
 	 */
@@ -270,7 +207,7 @@ public class RestaurantInfo extends LocatableStorable {
 
 	/**
 	 * For a zero based index it removes the image at index.
-	 * @param image Image to delete.
+	 * @param image Image to del
 	 * @return True upon success, false on failure
 	 */
 	public boolean removeImage(DineOnImage image) {
@@ -426,4 +363,82 @@ public class RestaurantInfo extends LocatableStorable {
 			return new RestaurantInfo[size];
 		}
 	};
+	
+	///////////////////////////////////////////////////////////
+	////  Private helper methods for storing addresses.
+	///////////////////////////////////////////////////////////
+	
+	/**
+	 * Parses address from pre made string.
+	 * String has to be made from addressToString method.
+	 * @param addressString Address string to parse
+	 * @return parsed Address
+	 */
+	private static Address parseAddress(String addressString) {
+		Address newAdd = new Address(Locale.getDefault());
+		if (addressString == null) {
+			return newAdd;
+		}
+		
+		String[] tokens = addressString.split(ADDRESS_SPLITTER);	
+		if (tokens.length != 5) {
+			// illegal add string
+			return newAdd;
+		} 
+		
+		newAdd.setAddressLine(0, parseNullOrValue(tokens[0]));
+		newAdd.setAddressLine(1, parseNullOrValue(tokens[1]));
+		newAdd.setLocality(parseNullOrValue(tokens[2]));
+		newAdd.setAdminArea(parseNullOrValue(tokens[3]));
+		newAdd.setPostalCode(parseNullOrValue(tokens[4]));
+		return newAdd;
+	}
+	
+	/**
+	 * 
+	 * @param address Address to create into String.
+	 * @return internal string representation of address
+	 */
+	private static String addressToString(Address address) {
+		String[] addressVals = new String[5];
+		addressVals[0] = getOrNoValue(address.getAddressLine(0));
+		addressVals[1] = getOrNoValue(address.getAddressLine(1));
+		addressVals[2] = getOrNoValue(address.getLocality());
+		addressVals[3] = getOrNoValue(address.getAdminArea());
+		addressVals[4] =  getOrNoValue(address.getPostalCode());
+		
+		StringBuffer buffer = new StringBuffer();
+		for (int i = 0; i < addressVals.length; i++) {
+			buffer.append(addressVals[i]);
+			if (i != addressVals.length - 1) {
+				buffer.append(ADDRESS_SPLITTER);
+			}
+		}
+		
+		return buffer.toString();
+	}
+	
+	/**
+	 * Returns non null parcelable value.
+	 * @param val val to check
+	 * @return ADDRESS_NOVALUE if val is null.
+	 */
+	private static String getOrNoValue(String val) {
+		if (val == null || val.equals("")) {
+			return ADDRESS_NOVALUE;
+		}
+		return val.trim();
+	} 
+	
+	/**
+	 * For a parse entity String return represented value.
+	 * @param toParse String to parse
+	 * @return null if value of toParse is ADDRESS_NOVALUE
+	 */
+	private static String parseNullOrValue(String toParse) {
+		if (toParse ==  null || toParse.equals(ADDRESS_NOVALUE)) {
+			return null;
+		}
+		return toParse;
+	}
 }

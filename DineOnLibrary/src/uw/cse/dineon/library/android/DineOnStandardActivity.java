@@ -39,7 +39,7 @@ public class DineOnStandardActivity extends FragmentActivity implements ImageObt
 
 	private static final String EXTRA_LOCATION = "_extra_location";
 	private static final String EXTRA_FILE_URI = "_extra_file_uri";
-	
+
 	/**
 	 * A reference to this activity.
 	 */
@@ -114,27 +114,29 @@ public class DineOnStandardActivity extends FragmentActivity implements ImageObt
 					+ "Are you on an emulator?", 
 					Toast.LENGTH_SHORT).show();
 		}
-		
+
 		// Attempt to restore old values only if they exist
-		mLocation = savedInstanceState.getParcelable(EXTRA_LOCATION);
-		if (savedInstanceState.containsKey(EXTRA_FILE_URI)) {
-			URI uri = (URI) savedInstanceState.getSerializable(EXTRA_FILE_URI);
-			mTempFile = new File(uri);
+		if (savedInstanceState != null) {
+			mLocation = savedInstanceState.getParcelable(EXTRA_LOCATION);
+			if (savedInstanceState.containsKey(EXTRA_FILE_URI)) {
+				URI uri = (URI) savedInstanceState.getSerializable(EXTRA_FILE_URI);
+				mTempFile = new File(uri);
+			}
 		}
 	}
-	
+
 	@Override
 	protected void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
-		
+
 		if (mLocation != null) {
 			outState.putParcelable(EXTRA_LOCATION, mLocation);
 		}
-		
+
 		if (mTempFile != null) {
 			outState.putSerializable(EXTRA_FILE_URI, mTempFile.toURI());
 		}
-		
+
 	}
 
 	@Override
