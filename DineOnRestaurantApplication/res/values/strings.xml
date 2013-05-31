@@ -88,4 +88,12 @@
     <string name="save_changes">Save Changes</string>
     <string name="hint_hours_of_operation">Hours of operation</string>
     
+    <string name="credit_card_header"><u>"Credit Card Information"</u></string>
+    <string name="invalid_card">"Invalid Credit Card Information Entered"</string>
+    <string name="disclaimer">By creating an account, you agree to allow DineOnRestaurant to charge your credit card a monthly fee of $99/month to use our service.</string>
+    <string name="credit_card_number">Credit Card Number</string>
+    <string name="security_code">Security Code</string>
+    <string name="expiration_month">Expiration Month</string>
+    <string name="expiration_year">Expiration Year</string>
+    <string name="zip_code">Zip Code</string>
 </resources>
