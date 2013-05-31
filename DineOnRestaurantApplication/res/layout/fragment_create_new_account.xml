@@ -89,7 +89,7 @@
             android:layout_width="wrap_content"
             android:layout_marginTop="18dp"
             android:hint="@string/expiration_year"
-            android:inputType="date" />
+            android:inputType="number" />
 
         <EditText
             android:id="@+id/input_zip_code"
