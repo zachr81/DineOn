@@ -108,6 +108,18 @@ public class RestaurantInfo extends LocatableStorable {
 	public Address getAddr() {
 		return mAddress;
 	}
+	
+	/**
+	 * Returns a human readable interpretation of String.
+	 * @return human readable address.
+	 */
+	public String getReadableAddress() {
+		if (mAddress == null) {
+			return UNDETERMINED;
+		}
+		String thoroughfare = mAddress.getThoroughfare();
+		return thoroughfare == null ? UNDETERMINED : thoroughfare;
+	}
 
 	/**
 	 * Sets the current address of this restaurant. 
