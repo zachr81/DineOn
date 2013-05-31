@@ -71,7 +71,7 @@ public class RestaurantInfoFragment extends Fragment {
 			mInputHandler = new UserInputHandler(view, info);
 			// Populate the gallery with all the current images
 			populateGallery(info);
-
+			getActivity().getActionBar().setTitle(info.getName());
 			return view;
 		} else {
 			// This fragment signifies there is no restaurant data.
@@ -81,6 +81,7 @@ public class RestaurantInfoFragment extends Fragment {
 			errorMessage.setText("Illegal Dining Session: " + info);
 			return view;
 		}
+		
 	}
 
 	@Override

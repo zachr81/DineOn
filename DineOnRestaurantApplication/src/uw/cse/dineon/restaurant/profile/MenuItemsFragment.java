@@ -132,6 +132,7 @@ public class MenuItemsFragment extends ListFragment {
 						// Canceled.
 					}
 				});
+		alert.show();
 
 	}
 
