@@ -1,10 +1,8 @@
 package uw.cse.dineon.restaurant.profile;
 
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 
 import uw.cse.dineon.library.RestaurantInfo;
 import uw.cse.dineon.library.image.DineOnImage;
@@ -40,12 +38,11 @@ import android.widget.Toast;
 /**
  * Main view that allows the user to access and see their restaurant.
  * 
- * 
  * @author mhotan
  */
 public class RestaurantInfoFragment extends Fragment {
 
-	private static final String TAG = RestaurantInfoFragment.class.getSimpleName();
+//	private static final String TAG = RestaurantInfoFragment.class.getSimpleName();
 	
 	private static final int IMAGEVIEW_WIDTH = 250;
 	private static final int IMAGEVIEW_HEIGHT = 250;
