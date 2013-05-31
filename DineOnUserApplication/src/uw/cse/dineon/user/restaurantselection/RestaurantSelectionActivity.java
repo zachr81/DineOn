@@ -200,8 +200,7 @@ RestaurantListFragment.RestaurantListListener { //  Listening for List items
 	@Override
 	public void onShowFriendsFavoriteRestaurants() {
 		// TODO
-		//createProgressDialog();
-		//ParseQuery query = new ParseQuery(RestaurantInfo.class.getSimpleName());
+		onShowUserFavorites();
 	}
 
 	@Override
