@@ -96,6 +96,9 @@ public final class CreditCardValidator {
 	 */
 	private static boolean isValidSecurityCode(
 			String cardNumber, String securityCode) {
+		if(cardNumber.length() < 13 || securityCode.length() < 2){
+			return false;
+		}
 		boolean isValid = false;
 		String digitsOnly = getDigitsOnly(cardNumber);
 		String scDigitsOnly = getDigitsOnly(securityCode);
