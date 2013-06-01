@@ -1,9 +1,5 @@
 package uw.cse.dineon.restaurant.test;
 
-import java.util.Random;
-
-import uw.cse.dineon.library.Restaurant;
-import uw.cse.dineon.library.RestaurantInfo;
 import uw.cse.dineon.restaurant.active.RestauarantMainActivity;
 import uw.cse.dineon.restaurant.login.CreateNewAccountFragment;
 import uw.cse.dineon.restaurant.login.CreateNewRestaurantAccountActivity;
@@ -16,14 +12,15 @@ import android.widget.EditText;
 
 import com.parse.Parse;
 import com.parse.ParseException;
-import com.parse.ParseObject;
-import com.parse.ParseQuery;
-import com.parse.ParseUser;
 
+/**
+ * Tests the Activity for creating a new restaurant account
+ * @author Zach
+ *
+ */
 public class CreateRestaurantAccountTest extends
 ActivityInstrumentationTestCase2<CreateNewRestaurantAccountActivity> {
 
-	private static final int WAIT_TIME = 10000;
 	private static final int WAIT_LOGIN_TIME = 500;
 	
 	private static String fakeUserName = "createRestAcctUN";
@@ -96,7 +93,7 @@ ActivityInstrumentationTestCase2<CreateNewRestaurantAccountActivity> {
 	/**
 	 * Asserts that a user correctly creates an account
 	 * with valid credentials.
-	 * Commented out because it requires a network call
+	 *TODO Commented out because it requires a network call
 	 * 
 	 * Black-box
 	 */
@@ -172,6 +169,7 @@ ActivityInstrumentationTestCase2<CreateNewRestaurantAccountActivity> {
 		RestauarantMainActivity startedActivity = (RestauarantMainActivity) monitor
 		        .waitForActivityWithTimeout(WAIT_LOGIN_TIME);
 		assertNull(startedActivity);
+		//TODO test that correct dialog appears 
 	}
 	
 	/**

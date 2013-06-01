@@ -9,7 +9,9 @@ import com.parse.ParseUser;
 
 
 /**
+ * Tests library class UserInfo
  * 
+ * White box tests
  * @author espeo196
  */
 public class UserInfoTest extends AndroidTestCase {
@@ -18,6 +20,8 @@ public class UserInfoTest extends AndroidTestCase {
 	ParseUser testUser;
 	UserInfo testUInfo;
 	
+	//Still contains a parse initialize to allow the ParseUser to set username, needed to test functionality of
+	//UserInfo's constructor
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
@@ -32,8 +36,6 @@ public class UserInfoTest extends AndroidTestCase {
 
 	/**
 	 * Asserts that the userinfo correctly stores a name and phone.
-	 * 
-	 * White box
 	 */
 	public void testDefault() {
 		assertEquals("Undetermined", testUInfo.getPhone());
@@ -42,8 +44,6 @@ public class UserInfoTest extends AndroidTestCase {
 
 	/**
 	 * Asserts that the userinfo correctly stores a name and phone.
-	 * 
-	 * White box
 	 */
 	public void testGetName() {
 		assertEquals("utester", testUser.getUsername());
@@ -52,8 +52,6 @@ public class UserInfoTest extends AndroidTestCase {
 	
 	/**
 	 * Asserts that the userinfo correctly stores a phone #.
-	 * 
-	 * White box
 	 */
 	public void testSetAndGetBasicPhoneNumber() {
 		testUInfo.setPhone("911");
@@ -62,8 +60,6 @@ public class UserInfoTest extends AndroidTestCase {
 	
 	/**
 	 * Asserts that the userinfo correctly stores an email.
-	 * 
-	 * White box
 	 */
 	public void testSetAndGetBasicEmail() {
 		testUInfo.setEmail("tester@cs.washington.edu");
