@@ -1,9 +1,5 @@
 package uw.cse.dineon.user.restaurant.home.test;
 
-import java.util.Date;
-import java.util.List;
-
-import uw.cse.dineon.library.CurrentOrderItem;
 import uw.cse.dineon.library.DineOnUser;
 import uw.cse.dineon.library.DiningSession;
 import uw.cse.dineon.library.Menu;
@@ -13,8 +9,10 @@ import uw.cse.dineon.library.Restaurant;
 import uw.cse.dineon.library.RestaurantInfo;
 import uw.cse.dineon.library.util.TestUtility;
 import uw.cse.dineon.user.DineOnUserApplication;
+import uw.cse.dineon.user.R;
 import uw.cse.dineon.user.restaurant.home.MenuItemDetailActivity;
 import uw.cse.dineon.user.restaurant.home.RestaurantHomeActivity;
+import uw.cse.dineon.user.restaurant.home.SubMenuFragment;
 import uw.cse.dineon.user.restaurantselection.RestaurantSelectionActivity;
 import android.app.Instrumentation;
 import android.app.Instrumentation.ActivityMonitor;
@@ -138,7 +136,7 @@ public class RestaurantHomeActivityTest extends
 	/**
 	 * Test the swiping of tabs in the restaurant home screen.
 	 */
-	public void testInfoMenuTabs() {
+	public void testInfoMenuTabsFragmentChange() {
 		android.support.v4.view.ViewPager pager = (android.support.v4.view.ViewPager) 
 				this.mActivity.findViewById(uw.cse.dineon.user.R.id.pager_menu_info);
 		assertNotNull(pager);
@@ -161,6 +159,5 @@ public class RestaurantHomeActivityTest extends
 		mInstrumentation.waitForIdleSync();
 		this.mActivity.finish();
 	}
-
 	
 }
