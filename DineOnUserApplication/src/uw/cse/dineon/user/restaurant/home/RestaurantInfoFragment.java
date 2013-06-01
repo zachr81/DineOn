@@ -49,6 +49,8 @@ public class RestaurantInfoFragment extends Fragment implements OnClickListener 
 	private RestaurantInfoListener mListener;
 
 	private RestaurantInfo mRestaurant;
+	
+	private AlertDialog mAlert;
 
 	// UI Components
 	private TextView mRestNameLabel, mAddressLabel, mHoursLabel;
@@ -63,6 +65,8 @@ public class RestaurantInfoFragment extends Fragment implements OnClickListener 
 
 		// Get the list from the activity.
 		mRestaurant = mListener.getCurrentRestaurant();
+		
+		mAlert = null;
 	}
 
 	@Override
@@ -76,7 +80,7 @@ public class RestaurantInfoFragment extends Fragment implements OnClickListener 
 		mHoursLabel = (TextView) view.findViewById(R.id.label_restaurant_hours);
 		mRatingBar = (RatingBar) view.findViewById(R.id.ratingbar_restaurant);
 		mGallery = (LinearLayout) view.findViewById(R.id.gallery_restaurant_images);
-
+				
 		mReqButton = (Button) view.findViewById(R.id.button_request);
 		mReqButton.setOnClickListener(this);
 		mReqButton.setVisibility(0);
@@ -91,6 +95,13 @@ public class RestaurantInfoFragment extends Fragment implements OnClickListener 
 		// Update the display
 		setRestaurantForDisplay(mRestaurant);
 
+		View v = view.findViewById(R.id.button_user_favorites);
+		if(v != null && v instanceof ImageButton) {
+			this.determineFavorite((ImageButton) v, this.mRestaurant);
+		} else {
+			Log.d(TAG, "Favorites button not found.");
+		}
+		
 		return view;
 	}
 
@@ -107,7 +118,7 @@ public class RestaurantInfoFragment extends Fragment implements OnClickListener 
 		this.mRestaurant = restaurant;
 
 		mRestNameLabel.setText(mRestaurant.getName());
-		mAddressLabel.setText(mRestaurant.getAddr().toString());
+		mAddressLabel.setText(mRestaurant.getReadableAddress());
 		mHoursLabel.setText(mRestaurant.getHours());
 		
 		// TODO Fix this so it is not random.
@@ -182,8 +193,7 @@ public class RestaurantInfoFragment extends Fragment implements OnClickListener 
 				ImageButton ib = (ImageButton) v;
 				if(ib.getTag().equals("notFavorite")) {
 					favoriteRestaurant(mRestaurant);
-				}
-				else if(ib.getTag().equals("isFavorite")) {
+				} else if(ib.getTag().equals("isFavorite")) {
 					unFavoriteRestaurant(mRestaurant);
 				}	
 			}
@@ -198,8 +208,8 @@ public class RestaurantInfoFragment extends Fragment implements OnClickListener 
 	 * @param ri RestaurantInfo to add to the user's favorites
 	 */
 	public void assignFavoriteImageResource(ImageButton ib,
-			DineOnUser dou,
-			RestaurantInfo ri) {
+				DineOnUser dou,
+				RestaurantInfo ri) {
 		if(!dou.isFavorite(ri)) {
 			ib.setImageResource(R.drawable.addtofavorites);
 			ib.setTag("notFavorite");
@@ -255,7 +265,7 @@ public class RestaurantInfoFragment extends Fragment implements OnClickListener 
 	 * @param ctx Context to create Layout in.
 	 * @return LinearLayout that contain an ImageView
 	 */
-	private static LinearLayout getStanderdLinearLayout(Context ctx) {
+	public static LinearLayout getStanderdLinearLayout(Context ctx) {
 		LinearLayout layout = new LinearLayout(ctx);
 		layout.setLayoutParams(new LayoutParams(IMAGEVIEW_WIDTH, IMAGEVIEW_HEIGHT));
 		layout.setGravity(Gravity.CENTER);
@@ -268,7 +278,7 @@ public class RestaurantInfoFragment extends Fragment implements OnClickListener 
 	 * @param b Bitmap to create a view with.  
 	 * @return ImageView with image centered and cropped appropiately.
 	 */
-	private static ImageView produceView(Context ctx, Bitmap b) {
+	public static ImageView produceView(Context ctx, Bitmap b) {
 		ImageView imageView = new ImageView(ctx);
 		imageView.setLayoutParams(new LayoutParams(
 				IMAGEVIEW_WIDTH, 
@@ -284,7 +294,7 @@ public class RestaurantInfoFragment extends Fragment implements OnClickListener 
 	 * @param resId Resource id of image
 	 * @return ImageView with image centered and cropped appropiately.
 	 */
-	private static ImageView produceView(Context ctx, int resId) {
+	public static ImageView produceView(Context ctx, int resId) {
 		ImageView imageView = new ImageView(ctx);
 		imageView.setLayoutParams(new LayoutParams(
 				IMAGEVIEW_WIDTH, 
@@ -299,7 +309,7 @@ public class RestaurantInfoFragment extends Fragment implements OnClickListener 
 	 * @param ctx Context to create progress bar in.
 	 * @return Indeterminate progress bar.
 	 */
-	private static View getLoadingImageProgressDialog(Context ctx) {
+	public static View getLoadingImageProgressDialog(Context ctx) {
 		ProgressBar p = new ProgressBar(ctx);
 		p.setIndeterminate(true);
 		return p;
@@ -352,7 +362,17 @@ public class RestaurantInfoFragment extends Fragment implements OnClickListener 
 				// Do nothing
 			}
 		});
-		alert.show();
+		this.mAlert = alert.show();
+	}
+	
+	/**
+	 * Destroy the alert dialog if in view.
+	 */
+	public void destroyAlertDialog() {
+		if (this.mAlert != null) {
+			this.mAlert.cancel();
+			this.mAlert = null;
+		}
 	}
 
 	/**

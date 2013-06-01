@@ -7,6 +7,15 @@ import uw.cse.dineon.library.Menu;
 import uw.cse.dineon.library.MenuItem;
 import android.test.AndroidTestCase;
 
+/**
+ * Tests for the library class Menu. This test class
+ * makes sure all the fields are correctly set and 
+ * returned.
+ * 
+ * White box tests
+ * @author Zach, glee23
+ *
+ */
 public class MenuTest extends AndroidTestCase {
 
 	List<MenuItem> testItems;
@@ -31,19 +40,21 @@ public class MenuTest extends AndroidTestCase {
 
 	/**
 	 * Asserts that the menu saves the correct title
-	 * 
-	 * White box
 	 */
-	public void testMenuString() {
-		
+	public void testGetName() {
 		assertEquals("beverages", testMenu.getName());
 		assertEquals(new ArrayList<MenuItem>(), testMenu.getItems());
 	}
 
 	/**
+	 * Asserts that the menu is empty to begin with
+	 */
+	public void testGetItemsInitial() {
+		assertEquals(new ArrayList<MenuItem>(), testMenu.getItems());
+	}
+	
+	/**
 	 * Asserts that the menu correctly adds an item
-	 * 
-	 * White box
 	 */
 	public void testAddNewItem() {
 		testMenu.addNewItem(testItem);
@@ -52,13 +63,28 @@ public class MenuTest extends AndroidTestCase {
 
 	/**
 	 * Asserts that the menu correctly removes an item
-	 * 
-	 * White box
 	 */
 	public void testRemoveItem() {
 		testMenu.addNewItem(testItem);
 		testMenu.removeItem(testItem);
 		assertEquals(new ArrayList<MenuItem>(), testMenu.getItems());
+	}
+	
+	/**
+	 * Asserts that the menu correctly reflects 
+	 * that it has an item in its list.
+	 */
+	public void testHasMenuItem() {
+		testMenu.addNewItem(testItem);
+		assertTrue(testMenu.hasMenuItem(testItem));
+	}
+	
+	/**
+	 * Asserts that the menu correctly reflects 
+	 * that it doesn't have an item not in its list.
+	 */
+	public void testDoesntHaveMenuItem() {
+		assertFalse(testMenu.hasMenuItem(testItem));
 	}
 
 }

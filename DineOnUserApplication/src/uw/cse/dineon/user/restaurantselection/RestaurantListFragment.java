@@ -190,7 +190,8 @@ public class RestaurantListFragment extends ListFragment {
 		private class RestaurantHandler implements OnClickListener {
 
 			private final RestaurantInfo mInfo;
-			private final ImageButton mExpandDownButton, mPickRestaurant;
+			private final ImageView mExpandDown;
+			private final ImageButton mPickRestaurant;
 			private final View mTop, mBottom;
 			
 			/**
@@ -211,7 +212,7 @@ public class RestaurantListFragment extends ListFragment {
 						mTop.findViewById(R.id.image_restaurant_thumbnail);
 				TextView restaurantNameView = (TextView) 
 						mTop.findViewById(R.id.label_restaurant_title);
-				mExpandDownButton = (ImageButton) 
+				mExpandDown = (ImageView) 
 						mTop.findViewById(R.id.button_expand_down);
 				
 				// Get a reference to all the bottom pieces
@@ -225,9 +226,14 @@ public class RestaurantListFragment extends ListFragment {
 				
 				// Set the values that will never change.
 				restaurantNameView.setText(mInfo.getName());
-				restaurantAddressView.setText(mInfo.getAddr().toString());
-				restaurantHoursView.setText(mInfo.getHours());
-				restaurantPhoneView.setText(mInfo.getPhone());
+				
+				String hours = getResources().getString(R.string.string_format_hours);
+				String phone = getResources().getString(R.string.string_format_phone);
+				String address = getResources().getString(R.string.string_format_address);
+				
+				restaurantAddressView.setText(String.format(address, mInfo.getReadableAddress()));
+				restaurantHoursView.setText(String.format(hours, mInfo.getHours()));
+				restaurantPhoneView.setText(String.format(phone, mInfo.getPhone()));
 				
 				// Set the image of this restaurant
 				DineOnImage image = info.getMainImage();
@@ -246,7 +252,6 @@ public class RestaurantListFragment extends ListFragment {
 				
 				// Set the bottom view to initial to be invisible
 				mBottom.setVisibility(View.GONE);
-				
 				mTop.setOnClickListener(this);
 				mPickRestaurant.setOnClickListener(this);
 			}
@@ -258,9 +263,9 @@ public class RestaurantListFragment extends ListFragment {
 					// Expand the bottom view if it is not shown
 					// Hide the expand down button.
 					if (bottomVisibility == View.GONE) {
-						mExpandDownButton.setVisibility(View.GONE);
+						mExpandDown.setVisibility(View.GONE);
 					} else if (bottomVisibility == View.VISIBLE) {
-						mExpandDownButton.setVisibility(View.VISIBLE);
+						mExpandDown.setVisibility(View.VISIBLE);
 					}
 					
 					// Expand the animation

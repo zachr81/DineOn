@@ -66,10 +66,12 @@ public final class TestUtility {
 	 */
 	public static List<CurrentOrderItem> createFakeOrderItems(int qty) {
 		List<CurrentOrderItem> items = new ArrayList<CurrentOrderItem>();
+		int i = 0;
 		for (MenuItem m : createFakeMenuItems(qty)) {
 			CurrentOrderItem newItem = new CurrentOrderItem(m);
-			newItem.setObjId("orderitem");
+			newItem.setObjId("orderitem" + i);
 			items.add(newItem);
+			i++;
 		}
 		return items;
 	}
@@ -87,7 +89,7 @@ public final class TestUtility {
 			MenuItem m = new MenuItem(
 					qty + 1 + i, 3.99, "FakeMenuItem " + (i + 1), 
 					"FakeMenuItemDescription " + (i + 1));	
-			m.setObjId("menuitem");
+			m.setObjId("menuitem" + i);
 			items.add(m);
 		}
 		return items;
@@ -129,9 +131,10 @@ public final class TestUtility {
 	public static DineOnUser createFakeUser() {
 		// create a user
 		ParseUser user = new ParseUser();
+		user.setObjectId("_marksuser");
 		user.setUsername("testUser");
 		user.setPassword("12345");
-		user.setObjectId("_marksuser");
+		user.setEmail("testUser@testUser.com");
 		return new DineOnUser(user);
 	}
 	

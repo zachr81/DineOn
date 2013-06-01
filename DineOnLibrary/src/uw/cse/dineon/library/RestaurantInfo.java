@@ -7,11 +7,7 @@ import java.util.Locale;
 import uw.cse.dineon.library.image.DineOnImage;
 import uw.cse.dineon.library.util.ParseUtil;
 import android.location.Address;
-import android.os.Parcel;
-import android.os.Parcelable;
-import android.util.Log;
 
-import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseUser;
@@ -22,8 +18,6 @@ import com.parse.ParseUser;
  *
  */
 public class RestaurantInfo extends LocatableStorable {
-
-	private static final String TAG = RestaurantInfo.class.getSimpleName();
 
 	private static final String ADDRESS_SPLITTER = "-:___:-";
 	private static final String ADDRESS_NOVALUE = "|-:NOVALUE:-|";
@@ -113,6 +107,56 @@ public class RestaurantInfo extends LocatableStorable {
 	 */
 	public Address getAddr() {
 		return mAddress;
+	}
+	
+	/**
+	 * Returns a human readable interpretation of String.
+	 * @return human readable address.
+	 */
+	public String getReadableAddress() {
+		if (mAddress == null) {
+			return UNDETERMINED;
+		}
+		
+		// This android provided code returns null.
+//		String thoroughfare = mAddress.getThoroughfare();
+//		return thoroughfare == null ? UNDETERMINED : thoroughfare;
+
+		String line1 = mAddress.getAddressLine(0);
+		String line2 = mAddress.getAddressLine(1);
+		String city = mAddress.getLocality();
+		String state = mAddress.getAdminArea();
+		String zipCode = mAddress.getPostalCode();
+
+		StringBuffer b = new StringBuffer();
+		if (line1 != null) {
+			b.append(line1);
+		}
+		if (line2 != null) {
+			if (b.length() > 0) {
+				b.append(" ");
+			}
+			b.append(line2);
+		}
+		if (city != null) {
+			if (b.length() > 0) {
+				b.append(", ");
+			}
+			b.append(city);
+		}
+		if (state != null) {
+			if (b.length() > 0) {
+				b.append(", ");
+			}
+			b.append(state);
+		}
+		if (zipCode != null) {
+			if (b.length() > 0) {
+				b.append(", ");
+			}
+			b.append(zipCode);
+		}
+		return b.toString();
 	}
 
 	/**
@@ -307,62 +351,62 @@ public class RestaurantInfo extends LocatableStorable {
 		return mMenus.remove(getMenu(menu.getName()));
 	}
 
-	/**
-	 * Creates Restaurant Info from a Parcel.
-	 * @param source Source to use to build Restaurant Info.
-	 */
-	public RestaurantInfo(Parcel source) {
-		super(source);
-		mUser = new ParseUser();
-		mUser.setObjectId(source.readString());
-		mUser.fetchInBackground(new GetCallback() {
-			
-			@Override
-			public void done(ParseObject o, ParseException e) {
-				if (e != null) {
-					Log.e(TAG, "Unable to fetch user");
-				}
-			}
-		});
-		mName = source.readString();
-		mAddress = parseAddress(source.readString());
-		mPhone = source.readString();
-		mMainImageIndex = source.readInt();
-		mImageList = new ArrayList<DineOnImage>();
-		source.readList(mImageList, String.class.getClassLoader());
-		mMenus = new ArrayList<Menu>();
-		source.readTypedList(mMenus, Menu.CREATOR);
-	}
-	
-	@Override
-	public void writeToParcel(Parcel dest, int flags) {
-		super.writeToParcel(dest, flags);
-		dest.writeString(mUser.getObjectId());
-		dest.writeString(mName);
-		dest.writeString(addressToString(mAddress));
-		dest.writeString(mPhone);
-		dest.writeInt(mMainImageIndex);
-		dest.writeList(mImageList);
-		dest.writeTypedList(mMenus);
-	}
-
-	/**
-	 * Parcelable creator object of a RestaurantInfo.
-	 * Can create a RestaurantInfo from a Parcel.
-	 */
-	public static final Parcelable.Creator<RestaurantInfo> CREATOR = 
-			new Parcelable.Creator<RestaurantInfo>() {
-
-		@Override
-		public RestaurantInfo createFromParcel(Parcel source) {
-			return new RestaurantInfo(source);
-		}
-
-		@Override
-		public RestaurantInfo[] newArray(int size) {
-			return new RestaurantInfo[size];
-		}
-	};
+//	/**
+//	 * Creates Restaurant Info from a Parcel.
+//	 * @param source Source to use to build Restaurant Info.
+//	 */
+//	public RestaurantInfo(Parcel source) {
+//		super(source);
+//		mUser = new ParseUser();
+//		mUser.setObjectId(source.readString());
+//		mUser.fetchInBackground(new GetCallback() {
+//			
+//			@Override
+//			public void done(ParseObject o, ParseException e) {
+//				if (e != null) {
+//					Log.e(TAG, "Unable to fetch user");
+//				}
+//			}
+//		});
+//		mName = source.readString();
+//		mAddress = parseAddress(source.readString());
+//		mPhone = source.readString();
+//		mMainImageIndex = source.readInt();
+//		mImageList = new ArrayList<DineOnImage>();
+//		source.readList(mImageList, String.class.getClassLoader());
+//		mMenus = new ArrayList<Menu>();
+//		source.readTypedList(mMenus, Menu.CREATOR);
+//	}
+//	
+//	@Override
+//	public void writeToParcel(Parcel dest, int flags) {
+//		super.writeToParcel(dest, flags);
+//		dest.writeString(mUser.getObjectId());
+//		dest.writeString(mName);
+//		dest.writeString(addressToString(mAddress));
+//		dest.writeString(mPhone);
+//		dest.writeInt(mMainImageIndex);
+//		dest.writeList(mImageList);
+//		dest.writeTypedList(mMenus);
+//	}
+//
+//	/**
+//	 * Parcelable creator object of a RestaurantInfo.
+//	 * Can create a RestaurantInfo from a Parcel.
+//	 */
+//	public static final Parcelable.Creator<RestaurantInfo> CREATOR = 
+//			new Parcelable.Creator<RestaurantInfo>() {
+//
+//		@Override
+//		public RestaurantInfo createFromParcel(Parcel source) {
+//			return new RestaurantInfo(source);
+//		}
+//
+//		@Override
+//		public RestaurantInfo[] newArray(int size) {
+//			return new RestaurantInfo[size];
+//		}
+//	};
 	
 	///////////////////////////////////////////////////////////
 	////  Private helper methods for storing addresses.

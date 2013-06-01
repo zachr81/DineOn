@@ -2,6 +2,7 @@ package uw.cse.dineon.restaurant.active;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import uw.cse.dineon.library.CustomerRequest;
@@ -25,15 +26,13 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 /**
- * Shows the details of the request.
+ * Shows the details of a customer request.
  * @author mhotan
  */
 public class RequestDetailFragment extends Fragment 
 implements OnCheckedChangeListener, OnClickListener {
 
 	private static final String TAG = RequestDetailFragment.class.getSimpleName();
-	
-	private static final String REQUEST = TAG + "_request";
 	
 	private TextView mTitle, mDetails, mTimeTaken;
 	private ArrayAdapter<String> mStaffAdapter;
@@ -47,18 +46,11 @@ implements OnCheckedChangeListener, OnClickListener {
 
 	private CustomerRequest mRequest;
 
-	/**
-	 * Creates a dining session that is ready to rock.
-	 * No need to call setOrder
-	 * @param request Order to use
-	 * @return Fragment to use.
-	 */
-	public static RequestDetailFragment newInstance(CustomerRequest request) {
-		Bundle args = new Bundle();
-		args.putParcelable(REQUEST, request);
-		RequestDetailFragment frag = new RequestDetailFragment();
-		frag.setArguments(args);
-		return frag;
+	@Override
+	public void onActivityCreated(Bundle savedInstanceState) {
+		super.onActivityCreated(savedInstanceState);
+		mRequest = mListener.getRequest();
+		updateState();
 	}
 	
 	@Override
@@ -73,11 +65,12 @@ implements OnCheckedChangeListener, OnClickListener {
 		mTimeTaken = (TextView) view.findViewById(R.id.label_request_time);
 
 		// TODO Add staff members implementation
-		ArrayList<String> staff = new ArrayList<String>();
-		staff.add("Bert");
-		staff.add("Ernie");
-		staff.add("Big Bird");
-		staff.add("Elmo");
+		String[] employees = getActivity().getResources().
+				getStringArray(R.array.default_employees);
+		List<String> staff = new ArrayList<String>();
+		for (String e: employees) {
+			staff.add(e);
+		}
 		mStaffAdapter = new ArrayAdapter<String>(getActivity(),
 				android.R.layout.simple_list_item_1, staff);
 		mStaffList = (Spinner) view.findViewById(R.id.spinner_staff);
@@ -108,25 +101,7 @@ implements OnCheckedChangeListener, OnClickListener {
 		mSendMessage.setOnClickListener(this);
 		mSendTask.setOnClickListener(this);
 
-		updateState();
-
 		return view;
-	}
-
-	@Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        
-        if (mRequest != null) {
-        	return;
-        }
-        
-        Bundle args = getArguments();
-        if (savedInstanceState != null) {
-        	setRequest((CustomerRequest)savedInstanceState.getParcelable(REQUEST));
-        } else if (args != null && args.containsKey(REQUEST)) {
-			setRequest((CustomerRequest) args.getParcelable(REQUEST));
-		}
 	}
 	
 	@Override
@@ -139,12 +114,6 @@ implements OnCheckedChangeListener, OnClickListener {
 					+ " must implemenet RequestDetailFragment.RequestDetailListener");
 		}
 	}
-	
-	@Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putParcelable(REQUEST, mRequest);
-    }
 
 	//////////////////////////////////////////////////////
 	//// Following are public setters.  That Activities can use
@@ -157,6 +126,11 @@ implements OnCheckedChangeListener, OnClickListener {
 	 * @param request request to update the fragment to
 	 */
 	public void setRequest(CustomerRequest request) {
+		if (request == null) {
+			Log.e(TAG, "Attempted to show a null request!");
+			return;
+		}
+		
 		mRequest = request;
 		updateState();
 	}
@@ -204,6 +178,14 @@ implements OnCheckedChangeListener, OnClickListener {
 		 * @param message Message to send for this order
 		 */
 		public void sendShoutOut(UserInfo user, String message);
+		
+		/**
+		 * This method allows the fragment to get the current customer request
+		 * to focus its display on. 
+		 * 
+		 * @return The Customer request to present.
+		 */
+		public CustomerRequest getRequest();
 
 	}
 

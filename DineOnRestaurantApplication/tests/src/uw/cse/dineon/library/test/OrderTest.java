@@ -9,9 +9,17 @@ import uw.cse.dineon.library.Order;
 import uw.cse.dineon.library.UserInfo;
 import android.test.AndroidTestCase;
 
-import com.parse.Parse;
 import com.parse.ParseUser;
 
+/**
+ * Tests the library class Order. This test class
+ * makes sure all the fields are correctly set and
+ * returned.
+ * 
+ * White box tests
+ * 
+ * @author Zach, glee23
+ */
 public class OrderTest extends AndroidTestCase {
 
 	UserInfo testUInfo;
@@ -19,13 +27,12 @@ public class OrderTest extends AndroidTestCase {
 	MenuItem testItem;
 	Order testOrder;
 	ParseUser testUser;
+	
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
-		Parse.initialize(this.getContext(), "RUWTM02tSuenJPcHGyZ0foyemuL6fjyiIwlMO0Ul", "wvhUoFw5IudTuKIjpfqQoj8dADTT1vJcJHVFKWtK");
 		
 		testUser = new ParseUser();
-		testUser.setUsername("tester1");
 		testUser.setPassword("pass");
 		
 		testUInfo = new UserInfo(testUser);
@@ -39,21 +46,41 @@ public class OrderTest extends AndroidTestCase {
 		testOrder = new Order(32, testUInfo, testItems);
 		testOrder.setObjId("to");
 	}
+	
 	@Override
 	protected void tearDown() throws Exception {
 		super.tearDown();
 	}
 
 	/**
-	 * Asserts that the Order correctly stores the expected data.
-	 * 
-	 * White box
+	 * Asserts that the Order correctly returns the table id.
 	 */
-	public void testOrderIntUserInfoListOfMenuItem() {
-		assertEquals(testItems, testOrder.getMenuItems());
-		assertEquals(testUInfo, testOrder.getOriginalUser());
+	public void testGetTableID() {
 		assertEquals(32, testOrder.getTableID());
-		
+	}
+	
+	/**
+	 * Asserts that the Order correctly returns the user.
+	 */
+	public void testGetOriginalUser() {
+		assertEquals(testUInfo, testOrder.getOriginalUser());
+	}
+	
+	/**
+	 * Asserts that the Order correctly returns an empty list
+	 * when there aren't any menu items.
+	 */
+	public void testGetNoMenuItems() {
+		testOrder = new Order(32, testUInfo, new ArrayList<CurrentOrderItem>());
+		assertEquals(new ArrayList<CurrentOrderItem>(), testOrder.getMenuItems());
+	}
+	
+	/**
+	 * Asserts that the Order correctly returns the list of 
+	 * menu items.
+	 */
+	public void testGetMenuItems() {
+		assertEquals(testItems, testOrder.getMenuItems());
 	}
 
 

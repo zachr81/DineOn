@@ -13,6 +13,9 @@ import uw.cse.dineon.restaurant.active.DiningSessionDetailFragment.DiningSession
 import uw.cse.dineon.restaurant.active.DiningSessionListFragment.DiningSessionListListener;
 import uw.cse.dineon.restaurant.active.OrderDetailFragment.OrderDetailListener;
 import uw.cse.dineon.restaurant.active.RequestDetailFragment.RequestDetailListener;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -116,10 +119,14 @@ RequestDetailListener {
 		if (frag != null) {
 			frag.deleteOrder(order);
 		}
+		
+		// TODO if the current detail fragment is showing the current order
+		// hide the fragment. and focus the screen.
+		
 
 		super.completeOrder(order);
 	}
-	
+
 	@Override 
 	protected void addCustomerRequest(CustomerRequest request) {
 		super.addCustomerRequest(request);
@@ -143,13 +150,28 @@ RequestDetailListener {
 		super.removeCustomerRequest(request);
 	}
 
-	
-	
-
 	//////////////////////////////////////////////////////////////////////
 	////	Listener for OrderDetailFragment.OrderDetailListener
 	////	For Fragment call backs  
 	//////////////////////////////////////////////////////////////////////
+
+	/**
+	 * Attempts to replace the current fragment in the container if the device is large enough.
+	 * If there is no fragment in the container then this expands the container.
+	 * If this method is unable to show the fragment it will start the activity class argument
+	 * @param frag Fragment to attempt to show.
+	 * @param activityclass Activity class to start 
+	 */
+	private void displayOrStartActivity(Fragment frag, Class<?> activityclass) {
+		// Attempt to create a new fragment and present it
+		if (replaceFragmentInContainer(frag)) {
+			return;
+		}
+
+		// We were unable to show a fragment.
+		Intent intent = new Intent(getApplicationContext(), activityclass);
+		startActivity(intent);
+	}
 
 	@Override
 	public void onRequestSelected(CustomerRequest request) {
@@ -157,15 +179,9 @@ RequestDetailListener {
 			return;
 		}
 
-		if (replaceFragmentInContainer(RequestDetailFragment.newInstance(request))) {
-			return;
-		}
-		
-		// TODO Expand out a fragment
-		Intent intent = new Intent(getApplicationContext(),
-				RequestDetailActivity.class);
-		intent.putExtra(RequestDetailActivity.EXTRA_REQUEST, request);
-		startActivity(intent);
+		// We must assign the correct reference to the Request to display.
+		mRestaurant.setTempRequest(request);
+		displayOrStartActivity(new RequestDetailFragment(), RequestDetailActivity.class);
 	}
 
 	@Override
@@ -174,17 +190,9 @@ RequestDetailListener {
 			return;
 		}
 
-		// If we were able to provide a fragment transaction
-		// Expand the fragment
-		if (replaceFragmentInContainer(OrderDetailFragment.newInstance(order))) {
-			return;
-		}
-
-		// TODO Expand out a fragment
-		Intent intent = new Intent(getApplicationContext(),
-				OrderDetailActivity.class);
-		intent.putExtra(OrderDetailActivity.EXTRA_ORDER, order);
-		startActivity(intent);
+		// We must assign 
+		mRestaurant.setTempOrder(order);
+		displayOrStartActivity(new OrderDetailFragment(), OrderDetailActivity.class);
 	}
 
 	@Override
@@ -193,19 +201,11 @@ RequestDetailListener {
 			return;
 		}
 
-		// If we were able to provide a fragment transaction
-		// Expand the fragment
-		if (replaceFragmentInContainer(DiningSessionDetailFragment.newInstance(ds))) {
-			return;
-		}
-
-		Intent intent = new Intent(getApplicationContext(),
+		mRestaurant.setTempDiningSession(ds);
+		displayOrStartActivity(new DiningSessionDetailFragment(), 
 				DiningSessionDetailActivity.class);
-
-		intent.putExtra(DiningSessionDetailActivity.EXTRA_DININGSESSION, ds);
-		startActivity(intent);
 	}
-	
+
 	@Override 
 	public List<DiningSession> getCurrentSessions() {
 		return super.getCurrentSessions();
@@ -245,12 +245,12 @@ RequestDetailListener {
 		// the customer request
 		removeCustomerRequest(request);
 	}	
-	
+
 	@Override 
 	public List<CustomerRequest> getCurrentRequests() {
 		return super.getCurrentRequests();
 	}
-	
+
 	@Override 
 	public List<Order> getPendingOrders() {
 		return super.getPendingOrders();
@@ -260,6 +260,31 @@ RequestDetailListener {
 	public void onProgressChanged(Order order, int progress) {
 		// TODO Implement
 		Log.i(TAG, "Progress of order: " + order + " changed to " + progress);
+		
+		if (progress != 100) {
+			return;
+		}
+		
+		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		builder.setTitle(R.string.title_complete_order);
+		builder.setMessage(R.string.message_complete_order_question);
+		final Order ORDER = order;
+		builder.setPositiveButton(R.string.ok, new OnClickListener() {
+			
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				completeOrder(ORDER);
+			}
+		});
+		builder.setNegativeButton(R.string.cancel, new OnClickListener() {
+			
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				dialog.dismiss();
+			}
+		});
+		builder.setCancelable(true);
+		builder.create().show();
 	}
 
 	@Override
@@ -276,7 +301,7 @@ RequestDetailListener {
 				"Shout out to " + user.getName() 
 				+ " \"" + message + "\"", Toast.LENGTH_SHORT).show();
 	}
-	
+
 	@Override
 	public void onSendTaskToStaff(CustomerRequest request, String staff,
 			String urgency) {
@@ -284,6 +309,22 @@ RequestDetailListener {
 		Toast.makeText(this, 
 				"Sending customer request " + request.getDescription() 
 				+ " to " + staff, Toast.LENGTH_SHORT).show();
+	}
+	
+
+	@Override
+	public CustomerRequest getRequest() {
+		return mRestaurant.getTempCustomerRequest();
+	}
+
+	@Override
+	public Order getOrder() {
+		return mRestaurant.getTempOrder();
+	}
+	
+	@Override
+	public DiningSession getDiningSession() {
+		return mRestaurant.getTempDiningSession();
 	}
 
 	//////////////////////////////////////////////////////////////////////
@@ -333,7 +374,8 @@ RequestDetailListener {
 				Log.wtf(TAG, "ScreenSlidePagerAdapter weird index requested: " + position);
 				return null;
 			}
-			return (mFragments[position] = f);
+			mFragments[position] = f;
+			return mFragments[position];
 		}
 
 		@Override
@@ -372,6 +414,9 @@ RequestDetailListener {
 		}
 	}
 
-	
+
+
+
+
 
 }

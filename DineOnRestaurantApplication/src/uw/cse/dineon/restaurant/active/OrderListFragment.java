@@ -1,15 +1,18 @@
 package uw.cse.dineon.restaurant.active;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
 import uw.cse.dineon.library.Order;
 import uw.cse.dineon.library.animation.ExpandAnimation;
+import uw.cse.dineon.library.image.ImageObtainable;
 import uw.cse.dineon.restaurant.R;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -43,14 +46,18 @@ public class OrderListFragment extends ListFragment {
 	 */
 	private OrderListAdapter mAdapter;
 
-	private static final String ORDERS = "orders"; 
-
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 
+		List<Order> orders = mListener.getPendingOrders();
+		if (orders == null) {
+			Log.e(TAG, "List of order retrieved is null");
+			orders = new ArrayList<Order>();
+		}
+		
 		//We can assert that the listener has a non null list of dining sessions
-		mAdapter = new OrderListAdapter(getActivity(), mListener.getPendingOrders());
+		mAdapter = new OrderListAdapter(getActivity(), orders);
 		setListAdapter(mAdapter);
 	}
 
@@ -90,6 +97,17 @@ public class OrderListFragment extends ListFragment {
 		}
 		mAdapter.notifyDataSetChanged();
 	}
+	
+	/**
+	 * Completes an order from this fragment.
+	 * Effectively removing it from the list.
+	 * @param order Order to complete
+	 */
+	public void completeOrder(Order order) {
+		mAdapter.remove(order);
+		mListener.onOrderComplete(order);
+		mAdapter.notifyDataSetChanged();
+	}
 
 	/**
 	 * Deletes this order if it finds it.
@@ -118,7 +136,7 @@ public class OrderListFragment extends ListFragment {
 	 * Mandatory interface for this fragment.
 	 * @author glee23
 	 */
-	public interface OrderItemListener {
+	public interface OrderItemListener extends ImageObtainable {
 
 		/**
 		 * Notifies the progress of this order has changed.
@@ -325,12 +343,8 @@ public class OrderListFragment extends ListFragment {
 					mBottom.startAnimation(expandAni);
 
 				} else if (v.getId() == R.id.button_completed_order) {
-					mAdapter.remove(mOrder);
-					mListener.onOrderComplete(mOrder);
-					mAdapter.notifyDataSetChanged();
-				}
-				
-				if (v == mPickOrder) {
+					completeOrder(mOrder);
+				} else if (v == mPickOrder) {
 					mListener.onOrderSelected(mOrder);
 				}
 			}
@@ -339,12 +353,6 @@ public class OrderListFragment extends ListFragment {
 			public void onProgressChanged(SeekBar seekBar, int progress,
 					boolean fromUser) {
 				mListener.onProgressChanged(mOrder, progress);
-
-				if (progress == seekBar.getMax()) {
-					mAdapter.remove(mOrder);
-					mListener.onOrderComplete(mOrder);
-					mAdapter.notifyDataSetChanged();
-				}
 			}
 
 			@Override
