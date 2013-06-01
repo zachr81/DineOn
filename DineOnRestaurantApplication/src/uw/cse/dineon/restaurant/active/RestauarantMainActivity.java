@@ -345,7 +345,8 @@ RequestDetailListener {
 				Log.wtf(TAG, "ScreenSlidePagerAdapter weird index requested: " + position);
 				return null;
 			}
-			return (mFragments[position] = f);
+			mFragments[position] = f;
+			return mFragments[position];
 		}
 
 		@Override
