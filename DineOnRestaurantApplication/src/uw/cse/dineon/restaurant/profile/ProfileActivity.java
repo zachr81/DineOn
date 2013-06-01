@@ -241,7 +241,6 @@ public class ProfileActivity extends DineOnRestaurantActivity implements
 		return getRestaurant().getInfo();
 	}
 
-	@Override
 	public void onSelectImageAsDefault(int i) {
 		// TODO set image at index I as the default
 	}
