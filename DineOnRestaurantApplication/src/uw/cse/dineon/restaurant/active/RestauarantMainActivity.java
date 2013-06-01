@@ -143,9 +143,6 @@ RequestDetailListener {
 		super.removeCustomerRequest(request);
 	}
 
-
-
-
 	//////////////////////////////////////////////////////////////////////
 	////	Listener for OrderDetailFragment.OrderDetailListener
 	////	For Fragment call backs  
