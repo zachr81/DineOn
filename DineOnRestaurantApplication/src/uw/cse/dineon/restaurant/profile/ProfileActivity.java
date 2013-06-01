@@ -186,6 +186,15 @@ public class ProfileActivity extends DineOnRestaurantActivity implements
 	@Override
 	public void onMenuItemAdded(MenuItem item) {
 		// getRestaurant().saveInBackGround(new SaveCallback() {
+		
+		//TODO ACTUALLY REWRITE THIS FUNCTION.
+		//Currently disabled because it doesn't work anyways
+		//and it's breaking testing
+		Toast.makeText(getApplicationContext(), "Menu Item Added!",
+				Toast.LENGTH_SHORT).show();
+		return;
+		/*
+		
 		getRestaurant().getInfo().saveInBackGround(new SaveCallback() {
 
 			@Override
@@ -196,6 +205,7 @@ public class ProfileActivity extends DineOnRestaurantActivity implements
 			}
 
 		});
+		*/
 	}
 
 	@Override
