@@ -188,7 +188,7 @@ RequestDetailListener {
 
 		// We must assign 
 		mRestaurant.setTempOrder(order);
-		displayOrStartActivity(new OrderDetailFragment(), RequestDetailActivity.class);
+		displayOrStartActivity(new OrderDetailFragment(), OrderDetailActivity.class);
 	}
 
 	@Override
