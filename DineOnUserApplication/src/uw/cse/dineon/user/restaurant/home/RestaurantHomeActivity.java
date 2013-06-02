@@ -85,6 +85,7 @@ MenuItemDetailListener {
 	public boolean onCreateOptionsMenu(Menu menu) {
 		boolean temp = super.onCreateOptionsMenu(menu);
 		this.disableMenuItem(menu, R.id.option_check_in);
+		this.disableMenuItem(menu, R.id.option_search);
 		return temp;
 	}
 	
@@ -92,6 +93,7 @@ MenuItemDetailListener {
 	public boolean onPrepareOptionsMenu(Menu menu) {
 		boolean temp = super.onPrepareOptionsMenu(menu);
 		this.disableMenuItem(menu, R.id.option_check_in);
+		this.disableMenuItem(menu, R.id.option_search);
 		return temp;
 	}
 	
