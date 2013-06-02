@@ -70,6 +70,7 @@ public class DiningSessionListFragment extends ListFragment {
 	public void addDiningSession(DiningSession session) {
 		if (mAdapter != null) {
 			mAdapter.add(session);
+			mAdapter.notifyDataSetChanged();
 		} else {
 			Log.d(TAG, "Attempted to add customer to nonexistent list!");
 		}
@@ -82,6 +83,7 @@ public class DiningSessionListFragment extends ListFragment {
 	public void removeDiningSession(DiningSession session) {
 		if (mAdapter != null) {
 			mAdapter.remove(session);
+			mAdapter.notifyDataSetChanged();
 		} else {
 			Log.d(TAG, "Attempted to remove customer from nonexistent list!");
 		}
