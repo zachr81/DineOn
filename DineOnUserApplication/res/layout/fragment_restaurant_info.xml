@@ -133,6 +133,21 @@
             android:orientation="horizontal" >
 
             <ImageButton
+                android:id="@+id/button_checkin"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="?android:attr/selectableItemBackground"
+                android:contentDescription="@string/label_nearby"
+                android:src="@drawable/checkin" />
+
+            <View
+                android:id="@+id/checkinline"
+                android:layout_width="1dp"
+                android:layout_height="match_parent"
+                android:background="#000000" />
+
+            <ImageButton
                 android:id="@+id/button_call"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -140,20 +155,6 @@
                 android:background="?android:attr/selectableItemBackground"
                 android:contentDescription="@string/label_call"
                 android:src="@drawable/callrestaurant" />
-
-            <View
-                android:layout_width="1dp"
-                android:layout_height="match_parent"
-                android:background="#000000" />
-
-            <ImageButton
-                android:id="@+id/button_make_reservation"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:background="?android:attr/selectableItemBackground"
-                android:contentDescription="@string/label_make_reservation"
-                android:src="@drawable/makereservation" />
 
             <View
                 android:layout_width="1dp"

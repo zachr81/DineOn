@@ -10,6 +10,7 @@ import uw.cse.dineon.library.image.ImageCache.ImageGetCallback;
 import uw.cse.dineon.library.image.ImageObtainable;
 import uw.cse.dineon.user.DineOnUserApplication;
 import uw.cse.dineon.user.R;
+import uw.cse.dineon.user.checkin.IntentIntegrator;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -64,6 +65,7 @@ public class RestaurantInfoFragment extends Fragment implements OnClickListener 
 	private TextView messageHeader;
 	private Spinner mSpinner;
 	private ArrayList<String> mRequests;
+	private ImageButton mCheckInButton;
 
 	@Override
 	public void onCreate(Bundle onSavedInstance) {
@@ -89,7 +91,18 @@ public class RestaurantInfoFragment extends Fragment implements OnClickListener 
 		mGallery = (LinearLayout) view.findViewById(R.id.gallery_restaurant_images);
 		mDefaultImage = (ImageView) view.findViewById(R.id.image_restaurant_placeholder);
 		mSpinner = (Spinner) view.findViewById(R.id.spinner_request_to_send);
-		
+		mCheckInButton = (ImageButton) view.findViewById(R.id.button_checkin);
+		mCheckInButton.setOnClickListener(this);
+		View checkInLine = (View) view.findViewById(R.id.checkinline);
+
+		if(DineOnUserApplication.getCurrentDiningSession() != null) {
+			mCheckInButton.setVisibility(View.GONE);
+			checkInLine.setVisibility(View.GONE);
+		} else {
+			mCheckInButton.setVisibility(View.VISIBLE);
+			checkInLine.setVisibility(View.VISIBLE);
+		}
+
 		String[] requests = getActivity().getResources().
 				getStringArray(R.array.request_list);
 		mRequests = new ArrayList<String>();
@@ -100,27 +113,27 @@ public class RestaurantInfoFragment extends Fragment implements OnClickListener 
 		messageHeader = (TextView) view.findViewById(R.id.label_message_waiter_header);
 		mSpinner.setAdapter(new ArrayAdapter<String>(getActivity(), 
 				android.R.layout.simple_list_item_1, mRequests));
-		
+
 		mSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 
-            public void onItemSelected(AdapterView<?> parent, View view,
-                    int pos, long id) {
-            	String request = (String) mSpinner.getSelectedItem();
-    			if(request.equals("Custom Request")) {
-    				getRequestDescription();
-    				mSpinner.setSelection(0);
-    			}
+			public void onItemSelected(AdapterView<?> parent, View view,
+					int pos, long id) {
+				String request = (String) mSpinner.getSelectedItem();
+				if(request.equals("Custom Request")) {
+					getRequestDescription();
+					mSpinner.setSelection(0);
+				}
 
-            }
+			}
 
-            public void onNothingSelected(AdapterView<?> arg0) {
-            	return;
-            }
-        });
-		
+			public void onNothingSelected(AdapterView<?> arg0) {
+				return;
+			}
+		});
+
 		mReqButton = (ImageButton) view.findViewById(R.id.button_request);
 		mReqButton.setOnClickListener(this);
-		
+
 		// if not in a dining session w/ this restaurant do not display
 		if(DineOnUserApplication.getCurrentDiningSession() == null 
 				|| !DineOnUserApplication.getCurrentDiningSession().
@@ -128,7 +141,7 @@ public class RestaurantInfoFragment extends Fragment implements OnClickListener 
 			mReqButton.setVisibility(View.GONE);
 			mSpinner.setVisibility(View.GONE);
 			messageHeader.setVisibility(View.GONE);
-			
+
 		} else {
 			mReqButton.setVisibility(View.VISIBLE);
 			mSpinner.setVisibility(View.VISIBLE);
@@ -168,7 +181,7 @@ public class RestaurantInfoFragment extends Fragment implements OnClickListener 
 		mRatingBar.setNumStars(5);
 		mRatingBar.setMax(mRatingBar.getNumStars());
 		mRatingBar.setRating((float)(Math.random() * mRatingBar.getNumStars()));
-		
+
 		// Dump the current views in the gallery
 		mGallery.removeAllViews();
 
@@ -199,13 +212,13 @@ public class RestaurantInfoFragment extends Fragment implements OnClickListener 
 				}
 			});
 		}
-		
+
 		if(images.size() != 0) {
 			mDefaultImage.setVisibility(View.GONE);
 		} else {
 			mDefaultImage.setVisibility(View.VISIBLE);
 		}
-		
+
 	}
 
 	@Override
@@ -388,7 +401,10 @@ public class RestaurantInfoFragment extends Fragment implements OnClickListener 
 			} else {
 				sendRequest(request);
 			}
-			
+
+		} else if(v.getId() == R.id.button_checkin) {
+			IntentIntegrator integrator = new IntentIntegrator(getActivity());
+			integrator.initiateScan();
 		}
 	}
 
