@@ -69,15 +69,6 @@ public class ProfileActivity extends DineOnUserActivity implements
 	
 		final android.view.Menu M = menu;
 
-		//Sets the necessary onClickListeners for the menu
-		//items with an action layout.
-//		final android.view.MenuItem ITEM = menu.findItem(R.id.option_view_order);
-//		ITEM.setEnabled(true);
-//		ITEM.setVisible(true);
-//		List<android.view.MenuItem> customActionBarButtons = new ArrayList<android.view.MenuItem>();
-//		customActionBarButtons.add(menu.findItem(R.id.option_view_order));
-//
-//		setOnClick(M, customActionBarButtons);
 		return true;
 	}
 	
