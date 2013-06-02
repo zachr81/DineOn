@@ -13,8 +13,11 @@ import uw.cse.dineon.library.Restaurant;
 import uw.cse.dineon.restaurant.DineOnRestaurantApplication;
 import uw.cse.dineon.restaurant.R;
 import uw.cse.dineon.restaurant.active.DiningSessionDetailActivity;
+import uw.cse.dineon.restaurant.active.OrderDetailActivity;
 import uw.cse.dineon.restaurant.active.RequestDetailActivity;
+import uw.cse.dineon.restaurant.active.RequestListFragment;
 import uw.cse.dineon.restaurant.active.RestauarantMainActivity;
+import android.app.Activity;
 import android.app.Instrumentation.ActivityMonitor;
 import android.content.Intent;
 import android.support.v4.view.PagerAdapter;
@@ -75,6 +78,7 @@ ActivityInstrumentationTestCase2<RestauarantMainActivity> {
 		List<CurrentOrderItem> items = new ArrayList<CurrentOrderItem>();
 		items.add(new CurrentOrderItem(new MenuItem(123, 1.99, "Yum yums", "description")));
 		mOrder = new Order(1, mUI.getUserInfo(), items);
+		mOrder.setObjId("435");
 		testSession = new DiningSession(1, mUI.getUserInfo(), mRestaurant.getInfo());
 		mRestaurant.addCustomerRequest(mRequest);
 		mRestaurant.addOrder(mOrder);
@@ -148,20 +152,20 @@ ActivityInstrumentationTestCase2<RestauarantMainActivity> {
 
 			@Override
 			public void run() {
-				//proButton.performClick(); TODO still fails
+				proButton.performClick();
 			}
 		});
 		
-//		ActivityMonitor monitor = getInstrumentation().addMonitor(
-//				OrderDetailActivity.class.getName(), null, false);
-//		
-//		OrderDetailActivity startedActivity = (OrderDetailActivity) monitor
-//		        .waitForActivityWithTimeout(WAIT_LOGIN_TIME);
-//		assertNotNull(startedActivity);
-//		
-//		if (startedActivity != null) {
-//			startedActivity.finish();
-//		}
+		ActivityMonitor monitor = getInstrumentation().addMonitor(
+				OrderDetailActivity.class.getName(), null, false);
+		
+		OrderDetailActivity startedActivity = (OrderDetailActivity) monitor
+		        .waitForActivityWithTimeout(WAIT_LOGIN_TIME);
+		assertNotNull(startedActivity);
+		
+		if (startedActivity != null) {
+			startedActivity.finish();
+		}
 		
 		
 	}
@@ -301,6 +305,72 @@ ActivityInstrumentationTestCase2<RestauarantMainActivity> {
 		assertNotNull(arrowButton);
 	}
 	
+	/**
+	 * Asserts that the customer request does not store nulls
+	 */
+	public void testOnRequestSelectedNull() {
+		mActivity.onRequestSelected(mRequest);
+		ActivityMonitor testMon = getInstrumentation().addMonitor(
+				RequestDetailActivity.class.getName(), null, false);
+		Activity testA = getInstrumentation().waitForMonitorWithTimeout(testMon, 4000);
+		testA.finish();
+		mActivity.onRequestSelected(null);
+		assertNotNull(mActivity.getRequest());
+	}
+	
+	/**
+	 * Asserts that orders are correctly updated with null and nonnull values
+	 */
+	public void testOnOrderSelected() {
+		mActivity.onOrderSelected(mOrder);
+		ActivityMonitor testMon = getInstrumentation().addMonitor(
+				OrderDetailActivity.class.getName(), null, false);
+		Activity testA = getInstrumentation().waitForMonitorWithTimeout(testMon, 4000);
+		testA.finish();
+		assertEquals(mOrder, mActivity.getOrder());
+		
+		mActivity.onOrderSelected(null);
+		assertNotNull(mActivity.getOrder());
+	}
+	
+	/**
+	 * Asserts that null dining sessions are not stored
+	 */
+	public void testOnDiningSessionSelectedNull() {
+		mActivity.onDiningSessionSelected(testSession);
+		
+		ActivityMonitor monRia = getInstrumentation().addMonitor(
+				DiningSessionDetailActivity.class.getName(), null, false);
+		Activity dsda = getInstrumentation().waitForMonitorWithTimeout(monRia, 4000);
+		if(dsda != null) dsda.finish();
+		mActivity.onDiningSessionSelected(null);
+		assertNotNull(mActivity.getDiningSession());
+		
+		
+	}
+	
+	/**
+	 * Tests that progress changed correctly displays
+	 */
+	public void testOnProgressChanged() {
+		mActivity.onProgressChanged(mOrder, 100);
+	}
+	
+	/**
+	 * Tests that shout outs are sent correctly
+	 */
+	public void testSendShoutOut() {
+		mActivity.sendShoutOut(mUI.getUserInfo(), "Testing");
+	}
+	
+	/**
+	 * Toast that tasks are sent to staff
+	 */
+	public void testOnSendTaskToStaff() {
+		mActivity.onSendTaskToStaff(mRequest, "Bert", "Low");
+	}
 	
 
+	
+	
 }
