@@ -2,6 +2,8 @@ package uw.cse.dineon.library.util;
 
 import java.text.DateFormat;
 import java.util.Locale;
+import edu.umd.cs.findbugs.annotations.SuppressWarnings;
+
 
 
 /**
@@ -9,6 +11,7 @@ import java.util.Locale;
  * with the applications.
  * @author mhotan
  */
+@SuppressWarnings("MS_SHOULD_BE_FINAL")
 public final class DineOnConstants {
 
 	/**
@@ -22,6 +25,11 @@ public final class DineOnConstants {
 	 * under different conditions
 	 */
 	public static boolean DEBUG = true;
+	
+	/**
+	 * Constant that controls whether applications are in testing mode.
+	 */
+	public static boolean TESTING = false;
 
 	// Parse Related Constants to access Parse API
 	public static final String APPLICATION_ID = "10dCEpc2D8Rp7pC2uFaLCN7CtRcNSeZkz8d7eAaX";

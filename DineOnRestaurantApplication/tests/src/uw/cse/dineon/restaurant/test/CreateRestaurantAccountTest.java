@@ -97,6 +97,11 @@ ActivityInstrumentationTestCase2<CreateNewRestaurantAccountActivity> {
 	@Override
 	protected void tearDown() throws Exception {
 		mActivity.finish();
+		mCreditCard = null;
+		mSecurityCode = null;
+		mExpMo = null;
+		mExpYr = null;
+		mZip = null;
 		super.tearDown();
 	}
 	
@@ -395,6 +400,9 @@ ActivityInstrumentationTestCase2<CreateNewRestaurantAccountActivity> {
 				submit.performClick();
 			} // end of run() method definition
 		});
+		
+		getInstrumentation().waitForIdleSync();
+		
 		RestauarantMainActivity startedActivity = (RestauarantMainActivity) monitor
 		        .waitForActivityWithTimeout(WAIT_LOGIN_TIME);
 		assertNull(startedActivity);
@@ -416,13 +424,16 @@ ActivityInstrumentationTestCase2<CreateNewRestaurantAccountActivity> {
 				passwordrepeat.setText(fakePassword);
 				mCreditCard.setText(fakeCreditCardNum);
 				mSecurityCode.setText(fakeSecurityCode);
-				mExpMo.setText("01");
+				mExpMo.setText("1");
 				mExpYr.setText("2013");
 				mZip.setText(zipCode);
 				submit.requestFocus();
 				submit.performClick();
 			} // end of run() method definition
 		});
+		
+		getInstrumentation().waitForIdleSync();
+		
 		RestauarantMainActivity startedActivity = (RestauarantMainActivity) monitor
 		        .waitForActivityWithTimeout(WAIT_LOGIN_TIME);
 		assertNull(startedActivity);

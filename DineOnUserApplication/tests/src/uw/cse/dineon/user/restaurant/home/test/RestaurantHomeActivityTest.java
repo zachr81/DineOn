@@ -33,10 +33,9 @@ public class RestaurantHomeActivityTest extends
 
 	private RestaurantHomeActivity mActivity;
 	private DineOnUser dineOnUser;
-
 	private Restaurant rest;
 	private Instrumentation mInstrumentation;
-	private long time = 1000;
+	private long time = 5000;
 	
 	public RestaurantHomeActivityTest() {
 		super(RestaurantHomeActivity.class);
@@ -105,6 +104,7 @@ public class RestaurantHomeActivityTest extends
 				.waitForActivityWithTimeout(time);
 		assertNotNull(itemSelect);
 		itemSelect.finish();
+		this.mActivity.finish();
 	}
 	
 	/** 
@@ -134,7 +134,11 @@ public class RestaurantHomeActivityTest extends
 				.waitForActivityWithTimeout(time);
 		assertNotNull(resSelect);
 		resSelect.destroyProgressDialog();
+		mInstrumentation.waitForIdleSync();
 		resSelect.finish();
+		
+		mInstrumentation.waitForIdleSync();		
+		this.mActivity.finish();
 	}
 	
 	/**
@@ -236,9 +240,7 @@ public class RestaurantHomeActivityTest extends
 		Bitmap b = BitmapFactory.decodeResource(this.mActivity.getResources(), R.drawable.chili);
 		ImageView mv2 = rInfo.produceView(this.mActivity, b);
 		assertNotNull(mv2);
-	
-//		assertNotNull(rInfo.getStanderdLinearLayout(this.mActivity));
-		
+			
 		this.mActivity.finish();
 	}
 	
@@ -292,6 +294,20 @@ public class RestaurantHomeActivityTest extends
 		assertNotNull(detailAct);
 		
 		detailAct.finish();
+		this.mActivity.finish();
+	}
+	
+	/**
+	 * Test that the correct restaurant info is being displayed.
+	 */
+	public void testInfoDisplay() {
+		// get address
+		TextView address = (TextView) this.mActivity.findViewById(R.id.label_restaurant_address);
+		assertEquals(rest.getInfo().getReadableAddress(), address.getText().toString());
+		// get hours
+		TextView hours = (TextView) this.mActivity.findViewById(R.id.label_restaurant_hours);
+		assertEquals(rest.getInfo().getHours(), hours.getText().toString());
+		mInstrumentation.waitForIdleSync();
 		this.mActivity.finish();
 	}
 }
