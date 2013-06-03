@@ -2,12 +2,13 @@ package uw.cse.dineon.user.test;
 
 
 import uw.cse.dineon.library.DineOnUser;
+import uw.cse.dineon.library.util.DineOnConstants;
+import uw.cse.dineon.library.util.ParseUtil;
 import uw.cse.dineon.library.util.TestUtility;
 import uw.cse.dineon.user.DineOnUserActivity;
 import uw.cse.dineon.user.DineOnUserApplication;
 import uw.cse.dineon.user.R;
 import uw.cse.dineon.user.general.ProfileActivity;
-import uw.cse.dineon.user.login.UserLoginActivity;
 import android.app.Instrumentation;
 import android.app.Instrumentation.ActivityMonitor;
 import android.content.Intent;
@@ -42,6 +43,8 @@ public class UserActivityTest extends ActivityInstrumentationTestCase2<DineOnUse
 	@Override
 	protected void tearDown() throws Exception{
 		super.tearDown();
+		this.setActivity(null);
+
 	}
 	
 	/**
@@ -87,27 +90,95 @@ public class UserActivityTest extends ActivityInstrumentationTestCase2<DineOnUse
 		assertTrue(this.mActivity instanceof DineOnUserActivity);
 		this.mActivity.finish();
 	}
-
+	
 	/**
-	 * Tests to see if the menu buttons perform the correct action
-	 * and return on back press
+	 * Tests the on receive of the user satellite.
 	 */
-	public void testMenuOptionLogOut(){
-		assertNotNull(this.mActivity);
-		assertNotNull(DineOnUserApplication.getDineOnUser());
-		this.mInstr.waitForIdleSync();
-		this.mInstr.sendKeyDownUpSync(KeyEvent.KEYCODE_MENU);
-		this.mInstr.waitForIdleSync();
-		ActivityMonitor logMon = this.mInstr.addMonitor(
-				UserLoginActivity.class.getName(), null, false);
-		assertTrue(this.mInstr.invokeMenuActionSync(this.mActivity, R.id.option_logout, 0));
-		assertTrue(this.mActivity.isFinishing() /*|| this.mActivity.isDestroyed()*/);
-		UserLoginActivity ula = (UserLoginActivity)
-				logMon.waitForActivityWithTimeout(5000);
-		
-		assertNull(DineOnUserApplication.getDineOnUser());
-		assertNotNull(ula);
-		ula.finish();
+	public void testUserSat(){
+		Intent i = new Intent();
+		i.putExtra(DineOnConstants.PARSE_CHANNEL, ParseUtil.getChannel(this.dineOnUser.getUserInfo()));
+		i.setAction("fake.action");
+		i.putExtra(DineOnConstants.PARSE_DATA, "{" + DineOnConstants.OBJ_ID + ":awda}");
+		this.mActivity.getSat().onReceive(this.mActivity, i);
+		this.mActivity.finish();
 	}
 	
+	/**
+	 * Tests the on receive of the user satellite.
+	 */
+	public void testUserSatwithNullIntent(){
+		Intent i = new Intent();
+		this.mActivity.getSat().onReceive(this.mActivity, i);
+		this.mActivity.finish();
+	}
+	
+	/**
+	 * Tests the on receive of the user satellite.
+	 */
+	public void testUserSatwithNullChannel(){
+		Intent i = new Intent();
+		i.setAction("fake.action");
+		i.putExtra(DineOnConstants.PARSE_DATA, "{" + DineOnConstants.OBJ_ID + ":awda}");
+		this.mActivity.getSat().onReceive(this.mActivity, i);
+		this.mActivity.finish();
+	}
+	
+	/**
+	 * Tests the on receive of the user satellite.
+	 */
+	public void testUserSatwithBadChannel(){
+		Intent i = new Intent();
+		i.putExtra(DineOnConstants.PARSE_CHANNEL, "badchan");
+
+		i.setAction("fake.action");
+		i.putExtra(DineOnConstants.PARSE_DATA, "{" + DineOnConstants.OBJ_ID + ":awda}");
+		this.mActivity.getSat().onReceive(this.mActivity, i);
+		this.mActivity.finish();
+	}
+
+	
+	/**
+	 * Test to see if the Checkin Dialog Creates itself and destroys itself 
+	 * properly
+	 */
+	public void testCheckinDialogCreationDestruction() {
+		final DineOnUserActivity DUA = this.mActivity; 
+		DUA.runOnUiThread(new Runnable() {
+	          public void run() {
+	        	  DUA.createProgressDialog("Hello", "Test World");
+	          }
+	      });
+		DUA.runOnUiThread(new Runnable() {
+	          public void run() {
+	        	  DUA.destroyProgressDialog();
+	          }
+	      });
+		mInstr.waitForIdleSync();
+		DUA.finish();
+	}
+	
+	/**
+	 * Test that on a timeout the checkin error dialog pops up.
+	 */
+	public void testCheckinTimeoutDialogCreation() {
+		final DineOnUserActivity DUA = this.mActivity; 
+		DUA.runOnUiThread(new Runnable() {
+	          public void run() {
+	        	  DUA.createProgressDialog("Hello", "Test World");
+	          }
+	      });
+		DUA.runOnUiThread(new Runnable() {
+	          public void run() {
+	        	  DUA.timerDelayRemoveDialog((long)500);
+	          }
+	      });
+		mInstr.waitForIdleSync();
+		try {
+			Thread.sleep(3000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		this.mActivity.finish();
+	}
 }
