@@ -16,7 +16,7 @@
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:layout_gravity="center"
-        android:text="Bill Details"
+        android:text="@string/bill_summary"
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <TableLayout
@@ -41,7 +41,7 @@
                 android:layout_gravity="right"
                 android:layout_weight="1"
                 android:textStyle="bold"
-                android:text="Subtotal"
+                android:text="@string/subtotal"
                 android:textAppearance="?android:attr/textAppearanceLarge" />
 
             <TextView
