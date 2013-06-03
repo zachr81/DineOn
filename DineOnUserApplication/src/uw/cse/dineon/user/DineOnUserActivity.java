@@ -81,7 +81,7 @@ OrderUpdateListener /* manipulation of list from the current order activity */ {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
+		Log.d(TAG, "Creating DineOnUserActivity");
 		This = this;
 
 		mSat = new UserSatellite();
@@ -93,6 +93,13 @@ OrderUpdateListener /* manipulation of list from the current order activity */ {
 
 	}
 
+	@Override
+	protected void onDestroy(){
+		super.onDestroy();
+		Log.d(TAG, "DineOnUserActivity destroyed");
+		
+	}
+	
 	@Override
 	protected void onNewIntent(Intent intent) {
 		handleSearchIntent(intent);
@@ -140,11 +147,10 @@ OrderUpdateListener /* manipulation of list from the current order activity */ {
 	@Override
 	protected void onResume() {
 		super.onResume();
-		Bundle ex = this.getIntent().getExtras();
-		if(ex == null || !ex.containsKey("isLoggingOut")) {
-			mSat.register(DineOnUserApplication.getDineOnUser(), This);
-			intializeUI();
-		}
+		Log.d(TAG, "Resuming DineOnUserActivity");
+		mSat.register(DineOnUserApplication.getDineOnUser(), This);
+		intializeUI();
+		
 	}
 
 	@Override
@@ -156,6 +162,7 @@ OrderUpdateListener /* manipulation of list from the current order activity */ {
 	protected void onPause() {
 		super.onPause();
 		mSat.unRegister();
+		
 		
 	}
 
@@ -247,12 +254,10 @@ OrderUpdateListener /* manipulation of list from the current order activity */ {
 	 */
 	public void startLoginActivity() {
 		Intent i = new Intent(this, UserLoginActivity.class);
-		Bundle b = new Bundle();
-		b.putBoolean("isLoggingOut", true);
-		i.putExtras(b);
-		this.getIntent().putExtras(b);
-		startActivity(i);
 		this.finish();
+		Log.d(TAG, "Finishing DineOnUserActivity before logout");
+		startActivity(i);
+		
 		
 	}
 

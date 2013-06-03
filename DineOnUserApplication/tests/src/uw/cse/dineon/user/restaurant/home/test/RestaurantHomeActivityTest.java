@@ -6,7 +6,6 @@ import uw.cse.dineon.library.Menu;
 import uw.cse.dineon.library.MenuItem;
 import uw.cse.dineon.library.Order;
 import uw.cse.dineon.library.Restaurant;
-import uw.cse.dineon.library.RestaurantInfo;
 import uw.cse.dineon.library.util.TestUtility;
 import uw.cse.dineon.user.DineOnUserApplication;
 import uw.cse.dineon.user.R;
@@ -24,23 +23,17 @@ import android.graphics.BitmapFactory;
 import android.support.v4.view.PagerAdapter;
 import android.test.ActivityInstrumentationTestCase2;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import com.parse.ParseUser;
-
 public class RestaurantHomeActivityTest extends
 		ActivityInstrumentationTestCase2<RestaurantHomeActivity> {
 
-	private ParseUser testUser;
-	private DiningSession testSession;
 	private RestaurantHomeActivity mActivity;
-	private ParseUser testUser1;
 	private DineOnUser dineOnUser;
-	private RestaurantInfo testRInfo;
+
 	private Restaurant rest;
 	private Instrumentation mInstrumentation;
 	private long time = 1000;
@@ -87,6 +80,7 @@ public class RestaurantHomeActivityTest extends
 	@Override
 	protected void tearDown() throws Exception {
 		super.tearDown();
+		this.setActivity(null);
 	}
 
 	/**
