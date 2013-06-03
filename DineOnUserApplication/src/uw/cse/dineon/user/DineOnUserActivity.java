@@ -16,14 +16,14 @@ import uw.cse.dineon.library.Order;
 import uw.cse.dineon.library.Reservation;
 import uw.cse.dineon.library.RestaurantInfo;
 import uw.cse.dineon.library.android.DineOnStandardActivity;
+import uw.cse.dineon.library.checkin.IntentIntegrator;
+import uw.cse.dineon.library.checkin.IntentResult;
 import uw.cse.dineon.library.util.DineOnConstants;
 import uw.cse.dineon.library.util.Utility;
 import uw.cse.dineon.user.UserSatellite.SatelliteListener;
 import uw.cse.dineon.user.bill.CurrentBillActivity;
 import uw.cse.dineon.user.bill.CurrentOrderActivity;
 import uw.cse.dineon.user.bill.CurrentOrderFragment.OrderUpdateListener;
-import uw.cse.dineon.user.checkin.IntentIntegrator;
-import uw.cse.dineon.user.checkin.IntentResult;
 import uw.cse.dineon.user.general.ProfileActivity;
 import uw.cse.dineon.user.login.UserLoginActivity;
 import uw.cse.dineon.user.restaurant.home.RestaurantHomeActivity;
@@ -76,9 +76,8 @@ OrderUpdateListener /* manipulation of list from the current order activity */ {
 
 	/**
 	 * Set this value to the current dining user.
+	 * @param savedInstanceState bundle to create activity from
 	 */
-	
-	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -142,7 +141,7 @@ OrderUpdateListener /* manipulation of list from the current order activity */ {
 	protected void onResume() {
 		super.onResume();
 		Bundle ex = this.getIntent().getExtras();
-		if(ex == null || !ex.containsKey("isLoggingOut")){
+		if(ex == null || !ex.containsKey("isLoggingOut")) {
 			mSat.register(DineOnUserApplication.getDineOnUser(), This);
 			intializeUI();
 		}

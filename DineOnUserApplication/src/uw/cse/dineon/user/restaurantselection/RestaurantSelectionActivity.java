@@ -110,7 +110,7 @@ RestaurantListFragment.RestaurantListListener { //  Listening for List items
 		adb.setMessage(R.string.string_log_out_alert);
 		adb.setCancelable(true);
 		final RestaurantSelectionActivity RSA = this;
-		adb.setPositiveButton("OK", new OnClickListener(){
+		adb.setPositiveButton("OK", new OnClickListener() {
 
 			@Override
 			public void onClick(DialogInterface arg0, int arg1) {
@@ -122,7 +122,7 @@ RestaurantListFragment.RestaurantListListener { //  Listening for List items
 			
 		});
 		
-		adb.setNegativeButton("Cancel", new OnClickListener(){
+		adb.setNegativeButton("Cancel", new OnClickListener() {
 
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
@@ -139,12 +139,15 @@ RestaurantListFragment.RestaurantListListener { //  Listening for List items
 	 * 
 	 * @return The instance of the alert dialog, null otherwise.
 	 */
-	public AlertDialog getLogoutAlertDialog(){
+	public AlertDialog getLogoutAlertDialog() {
 		return this.mAd;
 	}
 	
-	public void destroyLogoutAlert(){
-		if(this.mAd != null && this.mAd.isShowing()){
+	/**
+	 * Gets rid of alert box.
+	 */
+	public void destroyLogoutAlert() {
+		if(this.mAd != null && this.mAd.isShowing()) {
 			this.mAd.cancel();
 		}
 	}
@@ -177,7 +180,16 @@ RestaurantListFragment.RestaurantListListener { //  Listening for List items
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		menu.add(0, MENU_ITEM_FILTER, 0, R.string.option_filter);
-		return super.onCreateOptionsMenu(menu);
+		boolean temp = super.onCreateOptionsMenu(menu);
+		this.disableMenuItem(menu, R.id.option_check_in);
+		return temp;
+	}
+	
+	@Override
+	public boolean onPrepareOptionsMenu(Menu menu) {
+		boolean temp = super.onPrepareOptionsMenu(menu);
+		this.disableMenuItem(menu, R.id.option_check_in);
+		return temp;
 	}
 
 	@Override
