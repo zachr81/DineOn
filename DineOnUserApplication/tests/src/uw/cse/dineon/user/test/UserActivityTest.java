@@ -13,6 +13,7 @@ import android.app.Instrumentation;
 import android.app.Instrumentation.ActivityMonitor;
 import android.content.Intent;
 import android.test.ActivityInstrumentationTestCase2;
+import android.util.Log;
 import android.view.KeyEvent;
 
 public class UserActivityTest extends ActivityInstrumentationTestCase2<DineOnUserActivity>{
@@ -43,6 +44,8 @@ public class UserActivityTest extends ActivityInstrumentationTestCase2<DineOnUse
 	@Override
 	protected void tearDown() throws Exception{
 		super.tearDown();
+		this.setActivity(null);
+
 	}
 	
 	/**
@@ -89,27 +92,6 @@ public class UserActivityTest extends ActivityInstrumentationTestCase2<DineOnUse
 		this.mActivity.finish();
 	}
 
-	/**
-	 * Tests to see if the menu buttons perform the correct action
-	 * and return on back press
-	 */
-	public void testMenuOptionLogOut(){
-		assertNotNull(this.mActivity);
-		assertNotNull(DineOnUserApplication.getDineOnUser());
-		this.mInstr.waitForIdleSync();
-		this.mInstr.sendKeyDownUpSync(KeyEvent.KEYCODE_MENU);
-		this.mInstr.waitForIdleSync();
-		ActivityMonitor logMon = this.mInstr.addMonitor(
-				UserLoginActivity.class.getName(), null, false);
-		assertTrue(this.mInstr.invokeMenuActionSync(this.mActivity, R.id.option_logout, 0));
-		assertTrue(this.mActivity.isFinishing() /*|| this.mActivity.isDestroyed()*/);
-		UserLoginActivity ula = (UserLoginActivity)
-				logMon.waitForActivityWithTimeout(5000);
-		
-		assertNull(DineOnUserApplication.getDineOnUser());
-		assertNotNull(ula);
-		ula.finish();
-	}
 	
 	/**
 	 * Test to see if the Checkin Dialog Creates itself and destroys itself 
