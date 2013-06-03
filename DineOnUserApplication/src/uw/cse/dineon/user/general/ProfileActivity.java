@@ -1,6 +1,5 @@
 package uw.cse.dineon.user.general;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import com.parse.ParseException;
@@ -65,17 +64,6 @@ public class ProfileActivity extends DineOnUserActivity implements
 		//  UI Menu is updated this is done manually
 		inflater.inflate(R.menu.profile_menu, menu);
 	
-		final android.view.Menu M = menu;
-
-		//Sets the necessary onClickListeners for the menu
-		//items with an action layout.
-		final android.view.MenuItem ITEM = menu.findItem(R.id.option_bill);
-		ITEM.setEnabled(true);
-		ITEM.setVisible(true);
-		List<android.view.MenuItem> customActionBarButtons = new ArrayList<android.view.MenuItem>();
-		customActionBarButtons.add(menu.findItem(R.id.option_bill));
-
-		setOnClick(M, customActionBarButtons);
 		return true;
 	}
 	
@@ -94,10 +82,8 @@ public class ProfileActivity extends DineOnUserActivity implements
 		// If checked in
 		if(DineOnUserApplication.getCurrentDiningSession() != null) {
 			disableMenuItem(menu, R.id.option_check_in);
-			enableMenuItem(menu, R.id.option_bill);
 		} else { // If not checked in
 			enableMenuItem(menu, R.id.option_check_in);
-			disableMenuItem(menu, R.id.option_bill);
 		}
 		return true;		
 	}

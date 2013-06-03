@@ -64,7 +64,7 @@ public class Menu extends Storable {
 	/**
 	 * @param name The new name for the menu
 	 */
-	public void setName(String name){
+	public void setName(String name) {
 		this.mName = name;
 	}
 
@@ -123,8 +123,6 @@ public class Menu extends Storable {
 			return false;
 		}
 		return mItems.remove(item);
-
-		// TODO delete from database
 	}
 
 	/**
@@ -141,7 +139,15 @@ public class Menu extends Storable {
 		return po;
 	}
 
-
+	/**
+	 * Return the menu name for string.
+	 * @return String name of the menu
+	 */
+	@Override
+	public String toString() {
+		return mName;
+	}
+	
 //	/**
 //	 * Creates a new Menu from a given Parcel.
 //	 * 

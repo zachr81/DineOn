@@ -2,6 +2,8 @@ package uw.cse.dineon.restaurant.active;
 
 import java.util.List;
 
+import edu.umd.cs.findbugs.annotations.SuppressWarnings;
+
 import uw.cse.dineon.library.CurrentOrderItem;
 import uw.cse.dineon.library.Order;
 import uw.cse.dineon.library.UserInfo;
@@ -171,7 +173,8 @@ public class OrderDetailFragment extends Fragment implements OnClickListener {
 	 * View the relevant information of all the menu items.
 	 * @author mhotan
 	 */
-	private class MenuItemAdapter extends ArrayAdapter<CurrentOrderItem> {
+	@SuppressWarnings("SIC_INNER_SHOULD_BE_STATIC")
+	private static class MenuItemAdapter extends ArrayAdapter<CurrentOrderItem> {
 
 		private final Context mContext;
 		

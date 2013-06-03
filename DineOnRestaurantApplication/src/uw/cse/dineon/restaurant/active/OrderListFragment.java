@@ -19,7 +19,6 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.SeekBar;
@@ -174,6 +173,7 @@ public class OrderListFragment extends ListFragment {
 	 * Adapter to handle.
 	 * @author mhotan
 	 */
+	@SuppressWarnings("SIC_INNER_SHOULD_BE_STATIC")
 	private class OrderListAdapter extends ArrayAdapter<Order> {
 
 		private final Context mContext;
@@ -269,14 +269,14 @@ public class OrderListFragment extends ListFragment {
 				mBottom = bottom;
 
 				// Get a reference to all the top pieces 
-				final ImageView ORDERIMAGE = (ImageView) 
-						mTop.findViewById(R.id.image_order_thumbnail);
+//				final ImageView ORDERIMAGE = (ImageView) 
+//						mTop.findViewById(R.id.image_order_thumbnail);
 				TextView orderTitle = 
 						(TextView) mTop.findViewById(R.id.label_order_title);
 				mExpandDown = (ImageView) 
 						mTop.findViewById(R.id.button_expand_order);
 				TextView time = (TextView) mTop.findViewById(R.id.label_order_time);
-				mPickOrder = (Button) mBottom.findViewById(R.id.button_proceed);	
+				mPickOrder = (Button) mBottom.findViewById(R.id.button_proceed_order);	
 				
 				// Get a reference to all the bottom pieces
 				Button buttonCompleteOrder = (Button) 

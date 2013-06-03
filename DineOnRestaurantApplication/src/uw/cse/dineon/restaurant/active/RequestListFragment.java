@@ -267,14 +267,14 @@ public class RequestListFragment extends ListFragment {
 				mBottom = bottom;
 
 				// Get a reference to all the top pieces 
-				final ImageView REQUESTIMAGE = (ImageView) 
-						mTop.findViewById(R.id.image_order_thumbnail);
+//				final ImageView REQUESTIMAGE = (ImageView) 
+//						mTop.findViewById(R.id.image_order_thumbnail);
 				TextView title = (TextView) mTop.findViewById(R.id.label_request_title);
 
 				mExpandDown = (ImageView) 
 						mTop.findViewById(R.id.button_expand_request);
 				TextView time = (TextView) mTop.findViewById(R.id.label_request_time);
-				mPickRequest = (Button) mBottom.findViewById(R.id.button_proceed);	
+				mPickRequest = (Button) mBottom.findViewById(R.id.button_proceed_request);	
 
 				// Get a reference to all the bottom pieces
 				ImageButton assignStaffButton = (ImageButton) 
