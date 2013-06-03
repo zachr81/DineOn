@@ -1,6 +1,8 @@
 package uw.cse.dineon.user.test;
 
 
+import uw.cse.dineon.library.DineOnUser;
+import uw.cse.dineon.library.util.TestUtility;
 import uw.cse.dineon.user.DineOnUserActivity;
 import uw.cse.dineon.user.DineOnUserApplication;
 import uw.cse.dineon.user.R;
@@ -99,7 +101,7 @@ public class UserActivityTest extends ActivityInstrumentationTestCase2<DineOnUse
 		ActivityMonitor logMon = this.mInstr.addMonitor(
 				UserLoginActivity.class.getName(), null, false);
 		assertTrue(this.mInstr.invokeMenuActionSync(this.mActivity, R.id.option_logout, 0));
-		assertTrue(this.mActivity.isFinishing() || this.mActivity.isDestroyed());
+		assertTrue(this.mActivity.isFinishing() /*|| this.mActivity.isDestroyed()*/);
 		UserLoginActivity ula = (UserLoginActivity)
 				logMon.waitForActivityWithTimeout(5000);
 		
