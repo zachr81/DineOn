@@ -35,6 +35,8 @@ public class ImageCache {
 	private CacheCleaner mCleaner;
 	private SQLiteDatabase mDb;
 
+	private AsyncImageAdder mLastAdder;
+
 	private final Object mLock = new Object();
 
 	private static final String[] RELEVANT_COLUMNS = { 
@@ -69,6 +71,13 @@ public class ImageCache {
 	 * Closes the current database.
 	 */
 	public void close() {
+		// If there is a current thread processing still
+		// set the thread to close the DB
+		synchronized (mLock) {
+			if (mLastAdder != null) {
+				mLastAdder.setCloseOnFinish(true);
+			}
+		}
 		mDb.close();
 	}
 
@@ -108,6 +117,10 @@ public class ImageCache {
 	public boolean hasRecentInCache(DineOnImage image) {
 		Cursor cursor = null;
 		synchronized (mLock) {
+			if (!mDb.isOpen()) {
+				return false;
+			}
+			
 			cursor = mDb.query(
 					ImageSQLiteHelper.TABLE_IMAGES, 
 					CONTAINS_ELEMENT,
@@ -131,6 +144,10 @@ public class ImageCache {
 	private boolean hasVersionInCache(DineOnImage image) {
 		Cursor cursor = null;
 		synchronized (mLock) {
+			if (!mDb.isOpen()) {
+				return false;
+			}
+			
 			cursor = mDb.query(
 					ImageSQLiteHelper.TABLE_IMAGES, 
 					CONTAINS_ELEMENT,
@@ -155,6 +172,10 @@ public class ImageCache {
 	public void getImageFromCache(final DineOnImage image, final ImageGetCallback callback) {
 		Cursor cursor = null;
 		synchronized (mLock) {
+			if (!mDb.isOpen()) {
+				return;
+			}
+			
 			cursor = mDb.query(
 					ImageSQLiteHelper.TABLE_IMAGES, 
 					RELEVANT_COLUMNS,
@@ -280,6 +301,9 @@ public class ImageCache {
 		String where = ImageSQLiteHelper.COLUMN_PARSEID + " = ?";
 		int result = -1;
 		synchronized (mLock) {
+			if (!mDb.isOpen()) {
+				return;
+			}
 			result = mDb.update(ImageSQLiteHelper.TABLE_IMAGES, 
 					cv, where, new String[] {parseId});
 		}
@@ -307,7 +331,23 @@ public class ImageCache {
 	 * @param b Bitmap version of the image.
 	 */
 	private void addImageToDB(DineOnImage image, Bitmap b) {
-		new AsyncImageAdder(image, b).execute();
+		// Synchronize so that this operation is
+		// atomic with respect to data base calls
+		synchronized (mLock) {
+			// Here we check if the database is even open
+			// if it is then 
+			if (!mDb.isOpen()) {
+				return;
+			}
+			// If there was a previous last adder then 
+			// don't let it close the DB
+			if (mLastAdder != null) {
+				mLastAdder.setCloseOnFinish(false);
+			}
+			mLastAdder = new AsyncImageAdder(image, b);
+			mLastAdder.setCloseOnFinish(true);
+		} 
+		mLastAdder.execute();
 	}
 
 	/**
@@ -367,6 +407,10 @@ public class ImageCache {
 		@Override
 		protected Void doInBackground(Void... params) {
 			synchronized (mLock) {
+				if (!mDb.isOpen()) {
+					return null;
+				}
+				
 				Cursor cursor = mDb.query(ImageSQLiteHelper.TABLE_IMAGES,
 						DELETE_COLUMNS, null, null, null, null, null);
 
@@ -408,6 +452,26 @@ public class ImageCache {
 		private final DineOnImage mImage;
 		private final Bitmap mBitmap;
 
+		private boolean mCloseOnFinish;
+
+		/**
+		 * Sets whether this task will close the database one this back ground
+		 * activity finishes.
+		 * @param close true if you want this thread to close the database on close
+		 * 	false other wise
+		 */
+		public void setCloseOnFinish(boolean close) {
+			mCloseOnFinish = close;
+		}
+
+//		/**
+//		 * Shows if the thread is set to close.
+//		 * @return if thread will close the database on complete.
+//		 */
+//		public boolean isSetToClose(){
+//			return mCloseOnFinish;
+//		}
+
 		/**
 		 * Sets teh image adder to this dine on image 
 		 * and bitmap.
@@ -438,6 +502,11 @@ public class ImageCache {
 
 				// Fine grain locking over database insertion
 				synchronized (mLock) {
+					if (!mDb.isOpen()) {
+						Log.e(TAG, "Cannot add image in closed database");
+						return null;
+					}
+					
 					id = mDb.insert(ImageSQLiteHelper.TABLE_IMAGES, null, values);
 				}
 
@@ -448,6 +517,14 @@ public class ImageCache {
 				}
 			}
 			return null;
+		}
+
+		@Override
+		protected void onPostExecute(Void result) {
+			if (mCloseOnFinish) {
+				mDb.close();
+			}
+			mLastAdder = null;
 		}
 	}
 }

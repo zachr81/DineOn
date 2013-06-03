@@ -96,14 +96,8 @@ public class MenuItemsFragment extends ListFragment {
 			List<MenuItem> menuitems = currentMenu.getItems();
 			mAdapter = new RestaurantMenuItemAdapter(getActivity(), menuitems);
 			setListAdapter(mAdapter);
-		} else {
-			List<String> defList = new ArrayList<String>();
-			defList.add("Illegal Restaurant Info State");
-			ArrayAdapter<String> adapter = new ArrayAdapter<String>(
-					getActivity(), android.R.layout.simple_list_item_1, defList);
-			setListAdapter(adapter);
-		}
-		updateTitle();
+			updateTitle();
+		} 
 	}
 
 	/**
@@ -116,12 +110,12 @@ public class MenuItemsFragment extends ListFragment {
 		alert.setMessage("Please choose a title for your first menu");
 		// Stock input dialog code
 		// Set an EditText view to get user input
-		final EditText input = new EditText(getActivity());
-		alert.setView(input);
+		final EditText INPUT = new EditText(getActivity());
+		alert.setView(INPUT);
 
 		alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int whichButton) {
-				String value = input.getText().toString();
+				String value = INPUT.getText().toString();
 				m.setName(value);
 			}
 		});
@@ -130,6 +124,7 @@ public class MenuItemsFragment extends ListFragment {
 				new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int whichButton) {
 						// Canceled.
+						dialog.cancel();
 					}
 				});
 		alert.show();
@@ -149,15 +144,6 @@ public class MenuItemsFragment extends ListFragment {
 		// TODO Add your menu entries here
 		inflater.inflate(R.menu.menu_menu, menu);
 		super.onCreateOptionsMenu(menu, inflater);
-	}
-
-	@Override
-	public void onPrepareOptionsMenu(android.view.Menu menu) {
-		if (currentMenu == null) {
-
-		}
-
-		super.onPrepareOptionsMenu(menu);
 	}
 
 	@Override
@@ -577,7 +563,7 @@ public class MenuItemsFragment extends ListFragment {
 			/**
 			 * prepares callback for placing an image in the view.
 			 * 
-			 * @param view
+			 * @param view View to place image.
 			 */
 			public InitialGetImageCallback(ImageView view) {
 				mView = view;

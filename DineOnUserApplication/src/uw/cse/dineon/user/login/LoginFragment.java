@@ -1,6 +1,5 @@
 package uw.cse.dineon.user.login;
 
-import uw.cse.dineon.library.util.DevelopTools;
 import uw.cse.dineon.user.R;
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -65,7 +64,7 @@ public class LoginFragment extends android.support.v4.app.Fragment {
 		Button forgotPassword = (Button) view.findViewById(R.id.button_forgot_password);
 		forgotPassword.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
-				DevelopTools.getUnimplementedDialog(getActivity(), null).show();
+//				DevelopTools.getUnimplementedDialog(getActivity(), null).show();
 			}
 		});
 		

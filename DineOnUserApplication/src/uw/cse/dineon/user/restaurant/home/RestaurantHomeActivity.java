@@ -5,6 +5,7 @@ import com.parse.ParseUser;
 import com.parse.SaveCallback;
 
 import uw.cse.dineon.library.CustomerRequest;
+import uw.cse.dineon.library.DineOnUser;
 import uw.cse.dineon.library.DiningSession;
 import uw.cse.dineon.library.MenuItem;
 import uw.cse.dineon.library.RestaurantInfo;
@@ -19,6 +20,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
+import android.view.Menu;
 import android.view.View;
 import android.widget.FrameLayout;
 
@@ -62,7 +64,8 @@ MenuItemDetailListener {
 		super.onCreate(savedInstanceState);
 		
 		// Make sure we have the current restaurant
-		DiningSession currentSession = mUser.getDiningSession();
+		DineOnUser dou = DineOnUserApplication.getDineOnUser();
+		DiningSession currentSession = dou.getDiningSession();
 		if (currentSession != null) { // We have a current session with a restaurant info
 			mRestaurant = currentSession.getRestaurantInfo();
 		} else if (DineOnUserApplication.getRestaurantOfInterest() != null) {
@@ -78,6 +81,22 @@ MenuItemDetailListener {
 		}
 	}
 
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		boolean temp = super.onCreateOptionsMenu(menu);
+		this.disableMenuItem(menu, R.id.option_check_in);
+		this.disableMenuItem(menu, R.id.option_search);
+		return temp;
+	}
+	
+	@Override
+	public boolean onPrepareOptionsMenu(Menu menu) {
+		boolean temp = super.onPrepareOptionsMenu(menu);
+		this.disableMenuItem(menu, R.id.option_check_in);
+		this.disableMenuItem(menu, R.id.option_search);
+		return temp;
+	}
+	
 	//////////////////////////////////////////////////////////////////////
 	////   Call backs for Fragment methods
 	//////////////////////////////////////////////////////////////////////

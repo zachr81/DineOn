@@ -16,14 +16,14 @@ import uw.cse.dineon.library.Order;
 import uw.cse.dineon.library.Reservation;
 import uw.cse.dineon.library.RestaurantInfo;
 import uw.cse.dineon.library.android.DineOnStandardActivity;
+import uw.cse.dineon.library.checkin.IntentIntegrator;
+import uw.cse.dineon.library.checkin.IntentResult;
 import uw.cse.dineon.library.util.DineOnConstants;
 import uw.cse.dineon.library.util.Utility;
 import uw.cse.dineon.user.UserSatellite.SatelliteListener;
 import uw.cse.dineon.user.bill.CurrentBillActivity;
 import uw.cse.dineon.user.bill.CurrentOrderActivity;
 import uw.cse.dineon.user.bill.CurrentOrderFragment.OrderUpdateListener;
-import uw.cse.dineon.user.checkin.IntentIntegrator;
-import uw.cse.dineon.user.checkin.IntentResult;
 import uw.cse.dineon.user.general.ProfileActivity;
 import uw.cse.dineon.user.login.UserLoginActivity;
 import uw.cse.dineon.user.restaurant.home.RestaurantHomeActivity;
@@ -84,10 +84,8 @@ OrderUpdateListener /* manipulation of list from the current order activity */ {
 
 	/**
 	 * Set this value to the current dining user.
+	 * @param savedInstanceState bundle to create activity from
 	 */
-	protected DineOnUser mUser = DineOnUserApplication.getDineOnUser();
-	
-	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -95,7 +93,7 @@ OrderUpdateListener /* manipulation of list from the current order activity */ {
 		This = this;
 
 		mSat = new UserSatellite();
-
+		DineOnUser mUser = DineOnUserApplication.getDineOnUser();
 		if (mUser == null) {
 			Utility.getBackToLoginAlertDialog(this, 
 					"Unable to find your information", UserLoginActivity.class).show();
@@ -152,9 +150,11 @@ OrderUpdateListener /* manipulation of list from the current order activity */ {
 	@Override
 	protected void onResume() {
 		super.onResume();
-		mSat.register(DineOnUserApplication.getDineOnUser(), This);
-		intializeUI();
-
+		Bundle ex = this.getIntent().getExtras();
+		if(ex == null || !ex.containsKey("isLoggingOut")) {
+			mSat.register(DineOnUserApplication.getDineOnUser(), This);
+			intializeUI();
+		}
 	}
 
 	@Override
@@ -166,6 +166,7 @@ OrderUpdateListener /* manipulation of list from the current order activity */ {
 	protected void onPause() {
 		super.onPause();
 		mSat.unRegister();
+		
 	}
 
 	@Override
@@ -318,13 +319,13 @@ OrderUpdateListener /* manipulation of list from the current order activity */ {
 	 */
 	public void startLoginActivity() {
 		Intent i = new Intent(this, UserLoginActivity.class);
-		// Making this null makes sure there is no 
-		// data leakage to the login page
-		DineOnUserApplication.setDineOnUser(null);
-		DineOnUserApplication.clearResaurantList();
-		DineOnUserApplication.setRestaurantOfInterest(null);
+		Bundle b = new Bundle();
+		b.putBoolean("isLoggingOut", true);
+		i.putExtras(b);
+		this.getIntent().putExtras(b);
 		startActivity(i);
 		this.finish();
+		
 	}
 
 	/**

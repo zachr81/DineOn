@@ -5,16 +5,20 @@ import java.util.Date;
 import java.util.List;
 
 import uw.cse.dineon.library.CurrentOrderItem;
+import uw.cse.dineon.library.DineOnUser;
 import uw.cse.dineon.library.DiningSession;
 import uw.cse.dineon.library.MenuItem;
 import uw.cse.dineon.library.Order;
 import uw.cse.dineon.library.RestaurantInfo;
 import uw.cse.dineon.library.UserInfo;
 import uw.cse.dineon.library.util.FakeRestaurantInformation;
+import uw.cse.dineon.library.util.TestUtility;
 import android.app.Activity;
 import android.content.Context;
 import android.test.AndroidTestCase;
 
+import com.parse.ParseException;
+import com.parse.ParseObject;
 import com.parse.ParseUser;
 
 /**
@@ -49,10 +53,9 @@ public class DiningSessionTest extends AndroidTestCase {
 	@Override
 	protected void setUp() throws Exception { 
 		mUser = new ParseUser();
+		mUser.setUsername("username");
 		mUser.setEmail("dst@a.com");
 		mUser.setObjectId("245");
-
-		FakeRestaurantInformation f = new FakeRestaurantInformation(mUser);
 
 		testUInfo = new UserInfo(mUser);
 		testUInfo.setObjId("tui");
@@ -61,11 +64,10 @@ public class DiningSessionTest extends AndroidTestCase {
 		testSession = new DiningSession(32, new Date(3254645), testUInfo, testRInfo);
 
 		testItems = new ArrayList<CurrentOrderItem>();
-		List<MenuItem> menuItems = f.getFakeMenuItems();
+		List<MenuItem> menuItems = TestUtility.createFakeMenuItems(5);
 		for (MenuItem m : menuItems) {
 			testItems.add(new CurrentOrderItem(m));
 		}
-		orders = f.getFakeOrders();
 
 	}
 	@Override
@@ -124,6 +126,22 @@ public class DiningSessionTest extends AndroidTestCase {
 		assertEquals(42, testSession.getTableID());
 	}
 
+	/**
+	 * Asserts that the DiningSession stays the same when packed and
+	 * unpacked.
+	 */
+	public void testPackAndUnpack() throws ParseException {
+		
+		ParseObject pObj = testSession.packObject();
+		DiningSession unPacked = new DiningSession(pObj);
+		assertEquals(testSession.getObjId(), unPacked.getObjId());
+		assertEquals(testSession.getTableID(), unPacked.getTableID());
+		assertEquals(testSession.getOrders(), unPacked.getOrders());
+		assertEquals(testSession.getOriginatingTime(), unPacked.getOriginatingTime());
+		assertEquals(testSession.getRequests(), unPacked.getRequests());
+		assertEquals(testSession.getStartTime(), unPacked.getStartTime());
+		assertEquals(testSession.getUsers(), unPacked.getUsers());
 
+	}
 
 }

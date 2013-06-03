@@ -14,6 +14,10 @@ import uw.cse.dineon.library.Order;
 import uw.cse.dineon.library.Restaurant;
 import uw.cse.dineon.library.RestaurantInfo;
 import uw.cse.dineon.library.UserInfo;
+import uw.cse.dineon.library.image.DineOnImage;
+import uw.cse.dineon.library.image.ImageIO;
+
+import android.content.res.Resources;
 
 import com.parse.ParseException;
 import com.parse.ParseUser;
@@ -151,6 +155,29 @@ public final class TestUtility {
 		return new Restaurant(restUser);
 	}
 	
+	/**
+	 * From a resource and id create a test image.
+	 * @param res Resources to grab the image
+	 * @param resId Resource ID of the image
+	 * @return null if unable to locate image with correct id from resources
+	 */
+	public static DineOnImage getFakeImage(Resources res, int resId) {
+		DineOnImage image;
+		try {
+			image = new DineOnImage(ImageIO.loadBitmapFromResource(res, resId));
+		} catch (ParseException e) {
+			return null;
+		}
+		image.setObjId("test_" + resId);
+		return image;
+	}
+	
+	/**
+	 * Creates a fake restaurant for the given user.
+	 * @param u ParseUser to create a restaurant for
+	 * @return the new fake restaurant that is not saved to the cloud
+	 * @throws ParseException if there's an error with the given ParseUser (i.e. it's null)
+	 */
 	public static Restaurant createFakeRestaurant(ParseUser u) throws ParseException {
 		return createFakeRestaurant();
 	}

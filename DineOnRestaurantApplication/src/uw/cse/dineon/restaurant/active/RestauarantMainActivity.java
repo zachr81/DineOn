@@ -335,7 +335,7 @@ RequestDetailListener {
 	 * A simple pager adapter that represents 5 ScreenSlidePageFragment objects, in
 	 * sequence.
 	 */
-	private class ScreenSlidePagerAdapter extends FragmentPagerAdapter {
+	public class ScreenSlidePagerAdapter extends FragmentPagerAdapter {
 
 		private final Fragment[] mFragments;
 
@@ -352,7 +352,7 @@ RequestDetailListener {
 		@Override
 		public Fragment getItem(int position) {
 
-			Restaurant restaurant = getRestaurant();
+			Restaurant restaurant = mRestaurant;
 			assert (restaurant != null); // WTF if that is null?
 
 			// Narrow in position

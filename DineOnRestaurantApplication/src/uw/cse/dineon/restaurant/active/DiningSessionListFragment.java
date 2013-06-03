@@ -1,6 +1,5 @@
 package uw.cse.dineon.restaurant.active;
 
-import java.util.Collection;
 import java.util.List;
 
 import uw.cse.dineon.library.DiningSession;
@@ -70,8 +69,7 @@ public class DiningSessionListFragment extends ListFragment {
 	public void addDiningSession(DiningSession session) {
 		if (mAdapter != null) {
 			mAdapter.add(session);
-		} else {
-			Log.d(TAG, "Attempted to add customer to nonexistent list!");
+			mAdapter.notifyDataSetChanged();
 		}
 	}
 
@@ -82,8 +80,7 @@ public class DiningSessionListFragment extends ListFragment {
 	public void removeDiningSession(DiningSession session) {
 		if (mAdapter != null) {
 			mAdapter.remove(session);
-		} else {
-			Log.d(TAG, "Attempted to remove customer from nonexistent list!");
+			mAdapter.notifyDataSetChanged();
 		}
 	}
 
@@ -133,17 +130,17 @@ public class DiningSessionListFragment extends ListFragment {
 			this.notifyDataSetChanged();
 		}
 
-		@Override
-		public void addAll(Collection<? extends DiningSession> collection) {
-			super.addAll(collection);
-			notifyDataSetChanged();
-		}
-
-		@Override
-		public void clear() {
-			super.clear();
-			this.notifyDataSetChanged();
-		}
+//		@Override
+//		public void addAll(Collection<? extends DiningSession> collection) {
+//			super.addAll(collection);
+//			notifyDataSetChanged();
+//		}
+//
+//		@Override
+//		public void clear() {
+//			super.clear();
+//			this.notifyDataSetChanged();
+//		}
 
 		@SuppressWarnings("BC_UNCONFIRMED_CAST")
 		@Override
@@ -213,7 +210,7 @@ public class DiningSessionListFragment extends ListFragment {
 				TextView dateText = (TextView) mTop.findViewById(R.id.label_checkin_time);
 				mExpandDown = (ImageView) 
 						mTop.findViewById(R.id.button_expand_user);
-				mPickSession = (Button) mBottom.findViewById(R.id.button_proceed);	
+				mPickSession = (Button) mBottom.findViewById(R.id.button_proceed_session);	
 
 				// Get a reference to all the bottom pieces
 				TextView orderHeader = (TextView) 
